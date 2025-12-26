@@ -60,9 +60,9 @@ The primary goal of the system is to drastically reduce administrative workload 
 
 ## 👥 Team Vertex
 
-<p align="center">
+<!-- <p align="center">
   <img src="https://via.placeholder.com/800x200?text=Team+Vertex" alt="Team Vertex Banner">
-</p>
+</p> -->
 
 | Aleck Alejandro | Kathleen Citron | Justine Delima | Patricia Quiambao |
 | :---: | :---: | :---: | :---: |
