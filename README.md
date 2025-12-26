@@ -57,4 +57,16 @@ The primary goal of the system is to drastically reduce administrative workload 
 * **Benefit:** Provides a clear checklist of requirements, tracks their remaining hours accurately, and ensures faster receipt of completion certificates.
 
 ---
+
+## 👥 Team Vertex
+
+<p align="center">
+  <img src="https://via.placeholder.com/800x200?text=Team+Vertex" alt="Team Vertex Banner">
+</p>
+
+| Aleck Alejandro | Kathleen Citron | Justine Delima | Patricia Quiambao |
+| :---: | :---: | :---: | :---: |
+| <img src="https://via.placeholder.com/150" width="150"> | <img src="https://via.placeholder.com/150" width="150"> | <img src="https://via.placeholder.com/150" width="150"> | <img src="https://via.placeholder.com/150" width="150"> |
+
+---
 *Drafted for ROC.ph*
