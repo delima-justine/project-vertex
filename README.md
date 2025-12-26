@@ -66,7 +66,7 @@ The primary goal of the system is to drastically reduce administrative workload 
 
 | Aleck Alejandro | Kathleen Citron | Justine Delima | Patricia Quiambao |
 | :---: | :---: | :---: | :---: |
-| <img src="https://github.com/identicons/aleckalejandro.png" width="150"> | <img src="https://github.com/identicons/kathleencitron.png" width="150"> | <img src="https://github.com/identicons/justinedelima.png" width="150"> | <img src="https://github.com/identicons/patriciaquiambao.png" width="150"> |
+| <img src="https://api.dicebear.com/7.x/identicon/svg?seed=Aleck" width="150"> | <img src="https://api.dicebear.com/7.x/identicon/svg?seed=Kathleen" width="150"> | <img src="https://api.dicebear.com/7.x/identicon/svg?seed=Justine" width="150"> | <img src="https://api.dicebear.com/7.x/identicon/svg?seed=Patricia" width="150"> |
 
 ---
 *Drafted for ROC.ph*
