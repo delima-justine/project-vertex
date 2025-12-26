@@ -66,7 +66,7 @@ The primary goal of the system is to drastically reduce administrative workload 
 
 | Aleck Alejandro | Kathleen Citron | Justine Delima | Patricia Quiambao |
 | :---: | :---: | :---: | :---: |
-| <img src="https://via.placeholder.com/150" width="150"> | <img src="https://via.placeholder.com/150" width="150"> | <img src="https://via.placeholder.com/150" width="150"> | <img src="https://via.placeholder.com/150" width="150"> |
+| <img src="https://github.com/identicons/aleckalejandro.png" width="150"> | <img src="https://github.com/identicons/kathleencitron.png" width="150"> | <img src="https://github.com/identicons/justinedelima.png" width="150"> | <img src="https://github.com/identicons/patriciaquiambao.png" width="150"> |
 
 ---
 *Drafted for ROC.ph*
