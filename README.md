@@ -19,6 +19,11 @@ The primary goal of the system is to drastically reduce administrative workload 
 
 ## 3. Key Features & Modules
 
+### 💼 Job Postings & Recruitment
+* Integrated job board for browsing and applying to internship roles.
+* Streamlined application process with automated status updates.
+* Seamless transition: Successful applicants are automatically converted from "Applicant" to "Intern/Employee" accounts, granting access to full system features.
+
 ### 🕒 Automated Attendance Tracker
 * Eliminates manual timesheets.
 * Provides real-time clock-in/clock-out capabilities.
@@ -53,8 +58,8 @@ The primary goal of the system is to drastically reduce administrative workload 
 ### 🎓 Partner Schools and OJT Coordinators
 * **Benefit:** Gathers real-time visibility into their students' attendance and performance without needing to constantly email HR.
 
-### 🧑‍💻 Interns and Applicants
-* **Benefit:** Provides a clear checklist of requirements, tracks their remaining hours accurately, and ensures faster receipt of completion certificates.
+### 🧑‍💻 Applicants and Interns/Employees
+* **Benefit:** Provides a seamless journey from candidate to team member. Applicants can track their status, and upon acceptance, their account is upgraded to access attendance, documents, and progress monitoring tools.
 
 ---
 
