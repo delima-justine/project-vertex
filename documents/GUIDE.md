@@ -10,6 +10,13 @@ Ensure you have the following installed on your system:
 - [Node.js & NPM](https://nodejs.org/)
 - A database server (MySQL, PostgreSQL, or SQLite)
 
+### ⚠️ Database Requirement
+Before proceeding with the setup, you **must create a database** named `db_internconnect` in your database manager (e.g., phpMyAdmin, MySQL Workbench).
+
+- **Database Name:** `db_internconnect`
+- **Character Set:** `utf8mb4`
+- **Collation:** `utf8mb4_unicode_ci`
+
 ---
 
 ## Quick Start (Recommended)
@@ -42,6 +49,14 @@ cd internconnect
 composer install
 cp .env.example .env
 php artisan key:generate
+```
+
+**Note:** Ensure your `.env` file reflects the database name:
+```env
+DB_DATABASE=db_internconnect
+```
+
+```bash
 php artisan migrate
 php artisan serve
 ```
