@@ -72,6 +72,7 @@ The primary goal of the system is to drastically reduce administrative workload 
 | Aleck Alejandro | Kathleen Citron | Justine Delima | Patricia Quiambao |
 | :---: | :---: | :---: | :---: |
 | <img src="https://github.com/identicons/aleckalejandro.png" width="150"> | <img src="https://github.com/identicons/kat.png" width="150"> | <img src="https://github.com/identicons/justine.png" width="150"> | <img src="https://github.com/identicons/patricia.png" width="150"> |
+| **Developer** | **QA Tester / Database Administrator** | **Project Manager / Technical Lead** | **Documentation** |
 
 ---
 *Drafted for ROC.ph*
