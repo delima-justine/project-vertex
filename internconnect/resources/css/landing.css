@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Custom minimal styles for the landing page */
+:root {
+  --brand-dark: #083b54; /* deep blue */
+  --brand-yellow: #f5c400;
+}
+
+.btn-yellow {
+  @apply bg-yellow-400 text-gray-900 font-medium rounded-xl px-6 py-3 shadow-md;
+}
+
+.nav-bg {
+  background: var(--brand-dark);
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #06b6d4 0%, #0ea5a9 50%, #075985 100%);
+}
+
+.card-shadow {
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.18);
+}
