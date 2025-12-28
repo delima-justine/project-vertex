@@ -16,7 +16,7 @@
         <a href="#testimonials" class="hover:underline">Testimonials</a>
         <a href="#contact" class="hover:underline">Contact</a>
       </nav>
-      <a href="#contact" class="btn-yellow">Get Started</a>
+      <a href="#authentication" class="btn-yellow">Get Started</a>
     </div>
   </header>
 
@@ -27,7 +27,7 @@
           <h1 class="text-white text-3xl md:text-4xl font-semibold mb-6">Elevate Your Brand with Data-Driven Marketing</h1>
           <p class="text-white/90 mb-6">ROC.ph delivers cutting-edge digital marketing solutions that drive real results. From SEO to social media, we help businesses grow their online presence and reach their target audience.</p>
           <div class="flex gap-4">
-            <a href="#contact" class="btn-yellow inline-flex items-center">Get Started <span class="ml-3">→</span></a>
+            <a href="#authentication" class="btn-yellow inline-flex items-center">Get Started <span class="ml-3">→</span></a>
             <a href="#services" class="border border-white/60 text-white rounded-xl px-6 py-3">Learn More</a>
           </div>
         </div>
