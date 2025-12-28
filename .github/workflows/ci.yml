@@ -20,15 +20,15 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
-        extensions: mbstring, dom, fileinfo, sqlite3
+        php-version: '8.3'
+        extensions: mbstring, dom, fileinfo, sqlite3, xml, bcmath, tokenizer, zip, ctype, curl, gd, intl
         coverage: none
 
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
     - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
     - name: Generate Key
       run: php artisan key:generate
