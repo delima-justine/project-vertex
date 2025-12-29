@@ -11,10 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+        Schema::create('tbl_user', function (Blueprint $table) {
+            $table->id('user_id');
+            $table->string('first_name', 50)->nullable();
+            $table->string('last_name', 50)->nullable();
+            $table->string('email', 100)->unique()->nullable();
+            $table->string('contact_number', 15)->nullable();
+            $table->enum('user_role', ['Intern','Admin','HR','Coordinator'])->nullable();
+            $table->unsignedBigInteger('school_id')->nullable();
+            $table->foreign('school_id')->references('school_id')->on('tbl_school');
+            $table->unsignedBigInteger('coordinator_id')->nullable();
+            $table->foreign('coordinator_id')->references('coordinator_id')->on('tbl_coordinator');
+            $table->enum('status', ['Applicant','Active','Completed','Cleared'])->nullable();
+            
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -42,7 +51,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('tbl_user');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
