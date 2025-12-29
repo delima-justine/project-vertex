@@ -17,7 +17,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow flex items-center justify-center hero-gradient px-4">
+    <main class="flex-grow flex items-center justify-center hero-gradient p-7">
         
         <div class="w-full max-w-md bg-white rounded-2xl card-shadow p-8 md:p-10">
             
