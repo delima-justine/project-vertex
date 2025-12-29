@@ -12,3 +12,8 @@ Route::post('/admin/login', [AuthController::class, 'login'])->name('login.post'
 
 Route::get('/coordinator/login', [AuthController::class, 'showCoordinatorLogin'])->name('coordinator.login');
 Route::post('/coordinator/login', [AuthController::class, 'coordinatorLogin'])->name('coordinator.login.post');
+
+Route::get('/applicant/login', [AuthController::class, 'showApplicantLogin'])->name('applicant.login');
+Route::post('/applicant/login', [AuthController::class, 'applicantLogin'])->name('applicant.login.post');
+Route::get('/applicant/register', [AuthController::class, 'showApplicantRegister'])->name('applicant.register');
+Route::post('/applicant/register', [AuthController::class, 'applicantRegister'])->name('applicant.register.post');
