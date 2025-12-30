@@ -17,3 +17,10 @@ Route::get('/applicant/login', [AuthController::class, 'showApplicantLogin'])->n
 Route::post('/applicant/login', [AuthController::class, 'applicantLogin'])->name('applicant.login.post');
 Route::get('/applicant/register', [AuthController::class, 'showApplicantRegister'])->name('applicant.register');
 Route::post('/applicant/register', [AuthController::class, 'applicantRegister'])->name('applicant.register.post');
+
+use App\Http\Controllers\Admin\UserController;
+
+Route::middleware([])->prefix('admin')->group(function() {
+    Route::get('/', function(){ return view('admin.dashboard'); });
+    Route::resource('users', UserController::class, ['as' => 'admin']);
+});
