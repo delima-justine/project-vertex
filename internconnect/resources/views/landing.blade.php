@@ -27,7 +27,7 @@
           <h1 class="text-white text-3xl md:text-4xl font-semibold mb-6">Elevate Your Brand with Data-Driven Marketing</h1>
           <p class="text-white/90 mb-6">ROC.ph delivers cutting-edge digital marketing solutions that drive real results. From SEO to social media, we help businesses grow their online presence and reach their target audience.</p>
           <div class="flex gap-4">
-            <a href="/applicant/login" class="btn-yellow inline-flex items-center">Get Started <span class="ml-3">→</span></a>
+            <a href="/applicant/login" class="btn-yellow inline-flex items-center">Get Started <span class="ml-3"><i class="bi bi-arrow-right"></i></span></a>
             <a href="#services" class="border border-white/60 text-white rounded-xl px-6 py-3">Learn More</a>
           </div>
         </div>
@@ -46,22 +46,22 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="bg-white border rounded-xl p-6 shadow-sm">
-            <div class="w-12 h-12 bg-green-50 rounded-md mb-4 flex items-center justify-center">📈</div>
+            <div class="w-12 h-12 bg-green-50 rounded-md mb-4 flex items-center justify-center"><i class="bi bi-graph-up-arrow text-2xl text-green-600"></i></div>
             <h3 class="font-medium mb-2">SEO Optimization</h3>
             <p class="text-slate-400 text-sm">Boost your search rankings and drive organic traffic with our proven SEO strategies.</p>
           </div>
           <div class="bg-white border rounded-xl p-6 shadow-sm">
-            <div class="w-12 h-12 bg-blue-50 rounded-md mb-4 flex items-center justify-center">👥</div>
+            <div class="w-12 h-12 bg-blue-50 rounded-md mb-4 flex items-center justify-center"><i class="bi bi-people text-2xl text-blue-600"></i></div>
             <h3 class="font-medium mb-2">Social Media Marketing</h3>
             <p class="text-slate-400 text-sm">Engage your audience across platforms with compelling content and campaigns.</p>
           </div>
           <div class="bg-white border rounded-xl p-6 shadow-sm">
-            <div class="w-12 h-12 bg-yellow-50 rounded-md mb-4 flex items-center justify-center">📢</div>
+            <div class="w-12 h-12 bg-yellow-50 rounded-md mb-4 flex items-center justify-center"><i class="bi bi-megaphone text-2xl text-yellow-600"></i></div>
             <h3 class="font-medium mb-2">Content Marketing</h3>
             <p class="text-slate-400 text-sm">Create content that attracts, informs, and converts your target customers.</p>
           </div>
           <div class="bg-white border rounded-xl p-6 shadow-sm">
-            <div class="w-12 h-12 bg-red-50 rounded-md mb-4 flex items-center justify-center">📊</div>
+            <div class="w-12 h-12 bg-red-50 rounded-md mb-4 flex items-center justify-center"><i class="bi bi-bar-chart text-2xl text-red-600"></i></div>
             <h3 class="font-medium mb-2">PPC Advertising</h3>
             <p class="text-slate-400 text-sm">Drive immediate traffic with highly-targeted paid campaigns.</p>
           </div>
@@ -76,17 +76,35 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-white rounded-xl p-6 shadow-sm text-left">
-            <div class="text-yellow-400 mb-4">★★★★★</div>
+            <div class="text-yellow-400 mb-4">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
             <p class="text-slate-600 mb-4">ROC.ph transformed our digital presence completely. Our website traffic increased by 300% in just 6 months!</p>
             <div class="text-sm text-slate-500 font-medium">Maria Santos<br><span class="text-slate-400">TechStart Philippines</span></div>
           </div>
           <div class="bg-white rounded-xl p-6 shadow-sm text-left">
-            <div class="text-yellow-400 mb-4">★★★★★</div>
+            <div class="text-yellow-400 mb-4">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
             <p class="text-slate-600 mb-4">The team at ROC.ph is incredibly professional and results-driven. Our social media engagement has never been better.</p>
             <div class="text-sm text-slate-500 font-medium">John Cruz<br><span class="text-slate-400">EcoRetail Solutions</span></div>
           </div>
           <div class="bg-white rounded-xl p-6 shadow-sm text-left">
-            <div class="text-yellow-400 mb-4">★★★★★</div>
+            <div class="text-yellow-400 mb-4">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
             <p class="text-slate-600 mb-4">Outstanding service! Their strategic approach helped us generate quality leads consistently.</p>
             <div class="text-sm text-slate-500 font-medium">Anna Rodriguez<br><span class="text-slate-400">Global Consulting Group</span></div>
           </div>
@@ -102,11 +120,11 @@
 
           <div class="space-y-4">
             <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-yellow-400 rounded-md flex items-center justify-center">✉️</div>
+              <div class="w-12 h-12 bg-yellow-400 rounded-md flex items-center justify-center"><i class="bi bi-envelope text-2xl text-gray-900"></i></div>
               <div>hello@roc.ph</div>
             </div>
             <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-yellow-400 rounded-md flex items-center justify-center">📞</div>
+              <div class="w-12 h-12 bg-yellow-400 rounded-md flex items-center justify-center"><i class="bi bi-telephone text-2xl text-gray-900"></i></div>
               <div>+63 (2) 1234-5678</div>
             </div>
             <a href="#" class="mt-4 inline-block btn-yellow">Request a Consultation</a>

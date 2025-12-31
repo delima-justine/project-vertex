@@ -17,22 +17,22 @@
                 <ul class="space-y-1 px-2">
                     <li>
                         <a href="#" class="flex items-center px-4 py-3 bg-slate-700 rounded-lg text-white">
-                            <span class="mr-3">📊</span> Dashboard
+                            <span class="mr-3"><i class="bi bi-speedometer2"></i></span> Dashboard
                         </a>
                     </li>
                     <li>
                         <a href="#" class="flex items-center px-4 py-3 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition">
-                            <span class="mr-3">👥</span> Interns
+                            <span class="mr-3"><i class="bi bi-people"></i></span> Interns
                         </a>
                     </li>
                     <li>
                         <a href="#" class="flex items-center px-4 py-3 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition">
-                            <span class="mr-3">📢</span> Job Postings
+                            <span class="mr-3"><i class="bi bi-megaphone"></i></span> Job Postings
                         </a>
                     </li>
                     <li>
                         <a href="#" class="flex items-center px-4 py-3 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition">
-                            <span class="mr-3">📝</span> Applications
+                            <span class="mr-3"><i class="bi bi-file-earmark-text"></i></span> Applications
                         </a>
                     </li>
                 </ul>
@@ -41,7 +41,7 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:text-red-300 transition">
-                        <span class="mr-2">🚪</span> Logout
+                        <span class="mr-2"><i class="bi bi-box-arrow-right"></i></span> Logout
                     </button>
                 </form>
             </div>
@@ -69,7 +69,7 @@
                                 <h3 class="text-2xl font-bold text-gray-800 mt-1">12</h3>
                             </div>
                             <div class="p-2 bg-blue-50 rounded-lg text-blue-500">
-                                👥
+                                <i class="bi bi-people text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                                 <h3 class="text-2xl font-bold text-gray-800 mt-1">5</h3>
                             </div>
                             <div class="p-2 bg-green-50 rounded-lg text-green-500">
-                                📝
+                                <i class="bi bi-file-earmark-text text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                                 <h3 class="text-2xl font-bold text-gray-800 mt-1">3</h3>
                             </div>
                             <div class="p-2 bg-purple-50 rounded-lg text-purple-500">
-                                📂
+                                <i class="bi bi-folder text-2xl"></i>
                             </div>
                         </div>
                     </div>

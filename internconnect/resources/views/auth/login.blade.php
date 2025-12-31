@@ -12,7 +12,7 @@
     <header class="nav-bg text-white shadow-md">
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <a href="/" class="text-2xl font-semibold text-yellow-400 hover:text-yellow-300 transition">ROC.ph</a>
-            <a href="/" class="text-sm text-gray-200 hover:text-white transition">← Back to Home</a>
+            <a href="/" class="text-sm text-gray-200 hover:text-white transition"><i class="bi bi-arrow-left"></i> Back to Home</a>
         </div>
     </header>
 
@@ -23,7 +23,7 @@
             
             <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-yellow-50 text-yellow-600 rounded-full mb-4">
-                    <span class="text-2xl">💼</span>
+                    <span class="text-2xl"><i class="bi bi-briefcase"></i></span>
                 </div>
                 <h1 class="text-2xl font-bold text-gray-800 mb-2">HR & Admin Portal</h1>
                 <p class="text-gray-500">Sign in to manage the internal system</p>
