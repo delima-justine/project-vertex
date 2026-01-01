@@ -4,169 +4,198 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ROC.ph — Digital Marketing</title>
-    @vite(['resources/css/landing.css','resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
-<body class="antialiased text-gray-700">
-  <header class="nav-bg text-white shadow-md">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="text-2xl font-semibold text-yellow-400">ROC.ph</div>
-      <nav class="space-x-6">
-        <a href="#services" class="hover:underline">Services</a>
-        <a href="#about" class="hover:underline">About</a>
-        <a href="#testimonials" class="hover:underline">Testimonials</a>
-        <a href="#contact" class="hover:underline">Contact</a>
-      </nav>
-      <a href="/applicant/login" class="btn-yellow">Get Started</a>
+<body class="bg-light">
+  <!-- Navbar -->
+  <header class="nav-bg py-3 shadow-sm">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="fs-3 fw-bold text-warning">ROC.ph</div>
+        <nav class="d-none d-md-flex gap-4">
+          <a href="#services" class="text-white text-decoration-none hover-underline">Services</a>
+          <a href="#about" class="text-white text-decoration-none hover-underline">About</a>
+          <a href="#testimonials" class="text-white text-decoration-none hover-underline">Testimonials</a>
+          <a href="#contact" class="text-white text-decoration-none hover-underline">Contact</a>
+        </nav>
+        <a href="/applicant/login" class="btn btn-warning fw-bold px-4 rounded-pill">Get Started</a>
+      </div>
     </div>
   </header>
 
   <main>
-    <section class="hero-gradient py-20">
-      <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        <div>
-          <h1 class="text-white text-3xl md:text-4xl font-semibold mb-6">Elevate Your Brand with Data-Driven Marketing</h1>
-          <p class="text-white/90 mb-6">ROC.ph delivers cutting-edge digital marketing solutions that drive real results. From SEO to social media, we help businesses grow their online presence and reach their target audience.</p>
-          <div class="flex gap-4">
-            <a href="/applicant/login" class="btn-yellow inline-flex items-center">Get Started <span class="ml-3"><i class="bi bi-arrow-right"></i></span></a>
-            <a href="#services" class="border border-white/60 text-white rounded-xl px-6 py-3">Learn More</a>
+    <!-- Hero Section -->
+    <section class="hero-gradient py-5 py-md-5">
+      <div class="container py-5">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-6 text-white">
+            <h1 class="display-5 fw-bold mb-4">Elevate Your Brand with Data-Driven Marketing</h1>
+            <p class="lead opacity-90 mb-5">ROC.ph delivers cutting-edge digital marketing solutions that drive real results. From SEO to social media, we help businesses grow their online presence and reach their target audience.</p>
+            <div class="d-flex gap-3">
+              <a href="/applicant/login" class="btn btn-warning btn-lg px-4 rounded-pill fw-bold">Get Started <i class="bi bi-arrow-right ms-2"></i></a>
+              <a href="#services" class="btn btn-outline-light btn-lg px-4 rounded-pill">Learn More</a>
+            </div>
           </div>
-        </div>
-        <div class="flex justify-center md:justify-end">
-          <div class="w-80 h-52 bg-white rounded-2xl overflow-hidden card-shadow">
-            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=60&auto=format&fit=crop" alt="team" class="w-full h-full object-cover">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="services" class="py-16 bg-white">
-      <div class="max-w-6xl mx-auto px-6 text-center">
-        <h2 class="text-xl text-slate-700 mb-2">Our Services</h2>
-        <p class="text-slate-400 mb-8">Comprehensive marketing solutions tailored to your business needs</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="bg-white border rounded-xl p-6 shadow-sm">
-            <div class="w-12 h-12 bg-green-50 rounded-md mb-4 flex items-center justify-center"><i class="bi bi-graph-up-arrow text-2xl text-green-600"></i></div>
-            <h3 class="font-medium mb-2">SEO Optimization</h3>
-            <p class="text-slate-400 text-sm">Boost your search rankings and drive organic traffic with our proven SEO strategies.</p>
-          </div>
-          <div class="bg-white border rounded-xl p-6 shadow-sm">
-            <div class="w-12 h-12 bg-blue-50 rounded-md mb-4 flex items-center justify-center"><i class="bi bi-people text-2xl text-blue-600"></i></div>
-            <h3 class="font-medium mb-2">Social Media Marketing</h3>
-            <p class="text-slate-400 text-sm">Engage your audience across platforms with compelling content and campaigns.</p>
-          </div>
-          <div class="bg-white border rounded-xl p-6 shadow-sm">
-            <div class="w-12 h-12 bg-yellow-50 rounded-md mb-4 flex items-center justify-center"><i class="bi bi-megaphone text-2xl text-yellow-600"></i></div>
-            <h3 class="font-medium mb-2">Content Marketing</h3>
-            <p class="text-slate-400 text-sm">Create content that attracts, informs, and converts your target customers.</p>
-          </div>
-          <div class="bg-white border rounded-xl p-6 shadow-sm">
-            <div class="w-12 h-12 bg-red-50 rounded-md mb-4 flex items-center justify-center"><i class="bi bi-bar-chart text-2xl text-red-600"></i></div>
-            <h3 class="font-medium mb-2">PPC Advertising</h3>
-            <p class="text-slate-400 text-sm">Drive immediate traffic with highly-targeted paid campaigns.</p>
+          <div class="col-lg-6">
+            <div class="card overflow-hidden rounded-4 shadow-lg border-0">
+              <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=60&auto=format&fit=crop" alt="team" class="img-fluid">
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="testimonials" class="py-16 bg-slate-50">
-      <div class="max-w-6xl mx-auto px-6 text-center">
-        <h2 class="text-lg text-slate-700 mb-2">What Our Clients Say</h2>
-        <p class="text-slate-400 mb-8">Don't just take our word for it - hear from our satisfied clients</p>
+    <!-- Services Section -->
+    <section id="services" class="py-5 bg-white">
+      <div class="container py-5">
+        <div class="text-center mb-5">
+          <h2 class="fw-bold text-dark mb-2">Our Services</h2>
+          <p class="text-muted mx-auto" style="max-width: 600px;">Comprehensive marketing solutions tailored to your business needs</p>
+        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-white rounded-xl p-6 shadow-sm text-left">
-            <div class="text-yellow-400 mb-4">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
+        <div class="row g-4">
+          <!-- Service 1 -->
+          <div class="col-md-6 col-lg-3">
+            <div class="card h-100 p-4 shadow-sm border-0 bg-light">
+              <div class="bg-success bg-opacity-10 rounded-3 mb-4 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                <i class="bi bi-graph-up-arrow fs-2 text-success"></i>
+              </div>
+              <h5 class="fw-bold">SEO Optimization</h5>
+              <p class="text-muted small">Boost your search rankings and drive organic traffic with our proven SEO strategies.</p>
             </div>
-            <p class="text-slate-600 mb-4">ROC.ph transformed our digital presence completely. Our website traffic increased by 300% in just 6 months!</p>
-            <div class="text-sm text-slate-500 font-medium">Maria Santos<br><span class="text-slate-400">TechStart Philippines</span></div>
           </div>
-          <div class="bg-white rounded-xl p-6 shadow-sm text-left">
-            <div class="text-yellow-400 mb-4">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
+          <!-- Service 2 -->
+          <div class="col-md-6 col-lg-3">
+            <div class="card h-100 p-4 shadow-sm border-0 bg-light">
+              <div class="bg-primary bg-opacity-10 rounded-3 mb-4 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                <i class="bi bi-people fs-2 text-primary"></i>
+              </div>
+              <h5 class="fw-bold">Social Media</h5>
+              <p class="text-muted small">Engage your audience across platforms with compelling content and campaigns.</p>
             </div>
-            <p class="text-slate-600 mb-4">The team at ROC.ph is incredibly professional and results-driven. Our social media engagement has never been better.</p>
-            <div class="text-sm text-slate-500 font-medium">John Cruz<br><span class="text-slate-400">EcoRetail Solutions</span></div>
           </div>
-          <div class="bg-white rounded-xl p-6 shadow-sm text-left">
-            <div class="text-yellow-400 mb-4">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
+          <!-- Service 3 -->
+          <div class="col-md-6 col-lg-3">
+            <div class="card h-100 p-4 shadow-sm border-0 bg-light">
+              <div class="bg-warning bg-opacity-10 rounded-3 mb-4 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                <i class="bi bi-megaphone fs-2 text-warning"></i>
+              </div>
+              <h5 class="fw-bold">Content Marketing</h5>
+              <p class="text-muted small">Create content that attracts, informs, and converts your target customers.</p>
             </div>
-            <p class="text-slate-600 mb-4">Outstanding service! Their strategic approach helped us generate quality leads consistently.</p>
-            <div class="text-sm text-slate-500 font-medium">Anna Rodriguez<br><span class="text-slate-400">Global Consulting Group</span></div>
+          </div>
+          <!-- Service 4 -->
+          <div class="col-md-6 col-lg-3">
+            <div class="card h-100 p-4 shadow-sm border-0 bg-light">
+              <div class="bg-danger bg-opacity-10 rounded-3 mb-4 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                <i class="bi bi-bar-chart fs-2 text-danger"></i>
+              </div>
+              <h5 class="fw-bold">PPC Advertising</h5>
+              <p class="text-muted small">Drive immediate traffic with highly-targeted paid campaigns.</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="contact" class="py-16 hero-gradient">
-      <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        <div class="text-white">
-          <h3 class="text-2xl font-semibold mb-4">Ready to Grow Your Business?</h3>
-          <p class="mb-6 text-white/90">Let's discuss how we can help you achieve your marketing goals. Get a free consultation with our experts today.</p>
-
-          <div class="space-y-4">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-yellow-400 rounded-md flex items-center justify-center"><i class="bi bi-envelope text-2xl text-gray-900"></i></div>
-              <div>hello@roc.ph</div>
-            </div>
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-yellow-400 rounded-md flex items-center justify-center"><i class="bi bi-telephone text-2xl text-gray-900"></i></div>
-              <div>+63 (2) 1234-5678</div>
-            </div>
-            <a href="#" class="mt-4 inline-block btn-yellow">Request a Consultation</a>
-          </div>
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-5 bg-light">
+      <div class="container py-5">
+        <div class="text-center mb-5">
+          <h2 class="fw-bold text-dark mb-2">What Our Clients Say</h2>
+          <p class="text-muted">Don't just take our word for it - hear from our satisfied clients</p>
         </div>
 
-        <div class="flex justify-center md:justify-end">
-          <div class="w-80 h-52 bg-white rounded-2xl overflow-hidden card-shadow">
-            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=60&auto=format&fit=crop" alt="graph" class="w-full h-full object-cover">
+        <div class="row g-4">
+          @foreach([
+            ['name' => 'Maria Santos', 'company' => 'TechStart Philippines', 'text' => 'ROC.ph transformed our digital presence completely. Our website traffic increased by 300% in just 6 months!'],
+            ['name' => 'John Cruz', 'company' => 'EcoRetail Solutions', 'text' => 'The team at ROC.ph is incredibly professional and results-driven. Our social media engagement has never been better.'],
+            ['name' => 'Anna Rodriguez', 'company' => 'Global Consulting Group', 'text' => 'Outstanding service! Their strategic approach helped us generate quality leads consistently.']
+          ] as $testimonial)
+          <div class="col-lg-4">
+            <div class="card h-100 p-4 border-0 shadow-sm">
+              <div class="text-warning mb-3">
+                @for($i=0; $i<5; $i++) <i class="bi bi-star-fill"></i> @endfor
+              </div>
+              <p class="text-dark mb-4 fst-italic">"{{ $testimonial['text'] }}"</p>
+              <div class="mt-auto">
+                <h6 class="fw-bold mb-0 text-dark">{{ $testimonial['name'] }}</h6>
+                <small class="text-muted">{{ $testimonial['company'] }}</small>
+              </div>
+            </div>
+          </div>
+          @endforeach
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5 hero-gradient text-white">
+      <div class="container py-5">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-6">
+            <h2 class="display-6 fw-bold mb-4">Ready to Grow Your Business?</h2>
+            <p class="lead opacity-90 mb-5">Let's discuss how we can help you achieve your marketing goals. Get a free consultation with our experts today.</p>
+
+            <div class="d-flex flex-column gap-4 mb-5">
+              <div class="d-flex align-items-center gap-3">
+                <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                  <i class="bi bi-envelope fs-4"></i>
+                </div>
+                <span class="fs-5">hello@roc.ph</span>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                  <i class="bi bi-telephone fs-4"></i>
+                </div>
+                <span class="fs-5">+63 (2) 1234-5678</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-warning btn-lg px-5 rounded-pill fw-bold">Request a Consultation</a>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card overflow-hidden rounded-4 shadow-lg border-0">
+              <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=60&auto=format&fit=crop" alt="graph" class="img-fluid">
+            </div>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="bg-slate-800 text-slate-300 py-10">
-    <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div>
-        <div class="text-yellow-400 font-semibold mb-2">ROC.ph</div>
-        <p class="text-sm">Your trusted partner in digital marketing excellence.</p>
+  <!-- Footer -->
+  <footer class="bg-dark text-light py-5">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="fs-4 fw-bold text-warning mb-3">ROC.ph</div>
+          <p class="text-secondary small">Your trusted partner in digital marketing excellence. We provide data-driven strategies to help your business scale.</p>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <h6 class="fw-bold text-white mb-3">Services</h6>
+          <ul class="list-unstyled text-secondary small">
+            <li class="mb-2">SEO Optimization</li>
+            <li class="mb-2">Social Media Marketing</li>
+            <li class="mb-2">Content Marketing</li>
+            <li class="mb-2">PPC Advertising</li>
+          </ul>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <h6 class="fw-bold text-white mb-3">Company</h6>
+          <ul class="list-unstyled text-secondary small">
+            <li class="mb-2">About Us</li>
+            <li class="mb-2">Careers</li>
+            <li class="mb-2">Blog</li>
+            <li class="mb-2">Contact</li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <h4 class="font-medium mb-2 text-white">Services</h4>
-        <ul class="text-sm text-slate-400 space-y-1">
-          <li>SEO Optimization</li>
-          <li>Social Media</li>
-          <li>Content Marketing</li>
-          <li>PPC Advertising</li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-medium mb-2 text-white">Company</h4>
-        <ul class="text-sm text-slate-400 space-y-1">
-          <li>About Us</li>
-          <li>Careers</li>
-          <li>Blog</li>
-          <li>Contact</li>
-        </ul>
+      <hr class="my-5 border-secondary">
+      <div class="text-center text-secondary small">
+        © 2025 ROC.ph. All rights reserved.
       </div>
     </div>
-
-    <div class="max-w-6xl mx-auto px-6 mt-8 border-t border-slate-700 pt-6 text-center text-slate-500 text-sm">© 2025 ROC.ph. All rights reserved.</div>
   </footer>
 </body>
 </html>
