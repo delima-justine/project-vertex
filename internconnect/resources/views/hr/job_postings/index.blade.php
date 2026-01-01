@@ -3,29 +3,34 @@
 @section('header', 'Job Postings')
 
 @section('content')
-    <div class="mb-6 flex justify-end">
+    <div class="d-flex justify-content-end mb-4">
         <a href="{{ route('hr.job-postings.create') }}" class="btn btn-primary">+ Post New Job</a>
     </div>
 
-    <div style="background:#fff; border-radius:10px; padding:18px;">
-        <div style="display:flex; flex-direction:column; gap:14px">
-            @forelse($jobPostings as $job)
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; border:1px solid #eef2f5; border-radius:8px; background:#fff">
-                    <div>
-                        <div style="font-weight:600; margin-bottom:6px">{{ $job->title }}</div>
-                        <div style="color:#6b7280; font-size:13px">{{ $job->department }}</div>
-                        <div style="margin-top:10px; color:#6b7280; font-size:13px">{{ $job->applications_count ?? 0 }} applications · Posted {{ $job->post_date ? $job->post_date->diffForHumans() : '—' }}</div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:12px">
-                        <div class="px-2.5 py-1.5 rounded-full text-xs font-semibold {{ $job->is_active ? 'text-[#05332f] bg-[#bff3df]' : 'text-gray-500 bg-slate-100' }}">
-                            {{ $job->is_active ? 'Active' : 'Closed' }}
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <div class="d-flex flex-column gap-3">
+                @forelse($jobPostings as $job)
+                    <div class="d-flex justify-content-between align-items-center p-3 border rounded">
+                        <div>
+                            <h5 class="fw-bold mb-1">{{ $job->title }}</h5>
+                            <div class="text-muted small mb-2">{{ $job->department }}</div>
+                            <div class="text-muted small">
+                                {{ $job->applications_count ?? 0 }} applications · Posted {{ $job->post_date ? $job->post_date->diffForHumans() : '—' }}
+                            </div>
+                        </div>
+                        <div>
+                            @if($job->is_active)
+                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Active</span>
+                            @else
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2 rounded-pill">Closed</span>
+                            @endif
                         </div>
                     </div>
-                </div>
-            @empty
-                <div style="padding:18px; color:#6b7280">No job postings yet.</div>
-            @endforelse
+                @empty
+                    <div class="text-center text-muted py-4">No job postings yet.</div>
+                @endforelse
+            </div>
         </div>
     </div>
-
 @endsection

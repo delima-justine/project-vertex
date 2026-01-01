@@ -3,51 +3,55 @@
 @section('header', 'Edit User')
 
 @section('content')
-    <div class="mb-6 flex justify-end">
-        <a href="{{ route('hr.users.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">Back</a>
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{{ route('hr.users.index') }}" class="btn btn-secondary">Back</a>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
-        <form method="post" action="{{ route('hr.users.update', $user) }}">
-            @csrf
-            @method('PUT')
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block mb-1 font-medium text-gray-700">First Name</label>
-                        <input type="text" name="first_name" value="{{ old('first_name', $user->first_name) }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+    <div class="card shadow-sm mx-auto" style="max-width: 800px;">
+        <div class="card-body p-4">
+            <form method="post" action="{{ route('hr.users.update', $user) }}">
+                @csrf
+                @method('PUT')
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">First Name</label>
+                        <input type="text" name="first_name" value="{{ old('first_name', $user->first_name) }}" class="form-control">
+                        @error('first_name') <div class="text-danger small">{{ $message }}</div> @enderror
                     </div>
-                    <div>
-                        <label class="block mb-1 font-medium text-gray-700">Last Name</label>
-                        <input type="text" name="last_name" value="{{ old('last_name', $user->last_name) }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Last Name</label>
+                        <input type="text" name="last_name" value="{{ old('last_name', $user->last_name) }}" class="form-control">
+                        @error('last_name') <div class="text-danger small">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Email</label>
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}" class="form-control">
+                        @error('email') <div class="text-danger small">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Role</label>
+                        <select name="role" class="form-select">
+                            <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="hr" {{ $user->role == 'hr' ? 'selected' : '' }}>HR</option>
+                            <option value="coordinator" {{ $user->role == 'coordinator' ? 'selected' : '' }}>Coordinator</option>
+                            <option value="student" {{ $user->role == 'student' ? 'selected' : '' }}>Student</option>
+                        </select>
+                        @error('role') <div class="text-danger small">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">New Password <small class="text-muted fw-normal">(leave blank to keep)</small></label>
+                        <input type="password" name="password" class="form-control">
+                        @error('password') <div class="text-danger small">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Confirm Password</label>
+                        <input type="password" name="password_confirmation" class="form-control">
+                    </div>
+                    <div class="col-12 text-end mt-4">
+                        <button class="btn btn-primary px-4">Save Changes</button>
                     </div>
                 </div>
-                <div>
-                    <label class="block mb-1 font-medium text-gray-700">Email</label>
-                    <input type="email" name="email" value="{{ old('email', $user->email) }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
-                </div>
-                <div>
-                    <label class="block mb-1 font-medium text-gray-700">Role</label>
-                    <select name="role" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
-                        <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="hr" {{ $user->role == 'hr' ? 'selected' : '' }}>HR</option>
-                        <option value="coordinator" {{ $user->role == 'coordinator' ? 'selected' : '' }}>Coordinator</option>
-                        <option value="student" {{ $user->role == 'student' ? 'selected' : '' }}>Student</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block mb-1 font-medium text-gray-700">New Password (leave blank to keep)</label>
-                    <input type="password" name="password" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
-                </div>
-                <div>
-                    <label class="block mb-1 font-medium text-gray-700">Confirm Password</label>
-                    <input type="password" name="password_confirmation" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
-                </div>
-                <div class="pt-4 text-right">
-                    <button class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition shadow-sm">Save Changes</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-
 @endsection
