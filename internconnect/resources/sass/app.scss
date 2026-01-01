@@ -1,0 +1,33 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// Bootstrap Icons
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// Custom Styles
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    min-height: 100vh;
+    background-color: #212529; /* bg-dark */
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, .75);
+}
+
+.sidebar .nav-link.active {
+    color: #fff;
+    background-color: #0d6efd; /* primary */
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
