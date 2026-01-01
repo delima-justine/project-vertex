@@ -32,7 +32,7 @@
         <div style="margin-bottom:14px">Sarah Johnson<br/><small style="opacity:.8">HR Manager</small></div>
         <nav class="nav">
             <a href="/admin" class="{{ request()->is('admin') ? 'active' : '' }}">Dashboard</a>
-            <a href="/admin/job-postings" class="{{ request()->is('admin/job-postings*') ? 'active' : '' }}">Job Postings</a>
+            <a href="{{ route('admin.job-postings.index') }}" class="{{ request()->routeIs('admin.job-postings.*') ? 'active' : '' }}">Job Postings</a>
             <a href="/admin/applications" class="{{ request()->is('admin/applications*') ? 'active' : '' }}">Applications</a>
             <a href="/admin/users" class="{{ request()->is('admin/users*') ? 'active' : '' }}">Manage Users</a>
             <a href="#">Manage Interns</a>

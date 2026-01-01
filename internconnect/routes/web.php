@@ -20,14 +20,17 @@ Route::post('/applicant/login', [AuthController::class, 'applicantLogin'])->name
 Route::get('/applicant/register', [AuthController::class, 'showApplicantRegister'])->name('applicant.register');
 Route::post('/applicant/register', [AuthController::class, 'applicantRegister'])->name('applicant.register.post');
 
+use App\Http\Controllers\HR\JobPostingController;
+use App\Http\Controllers\HR\UserController;
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/hr/dashboard', [HRController::class, 'dashboard'])->name('hr.dashboard');
+    
+    // HR Routes
+    Route::prefix('hr')->name('hr.')->group(function() {
+        Route::resource('job-postings', JobPostingController::class);
+        Route::resource('users', UserController::class);
+    });
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
-
-use App\Http\Controllers\Admin\UserController;
-
-Route::middleware([])->prefix('admin')->group(function() {
-    Route::get('/', function(){ return view('admin.dashboard'); });
-    Route::resource('users', UserController::class, ['as' => 'admin']);
 });
