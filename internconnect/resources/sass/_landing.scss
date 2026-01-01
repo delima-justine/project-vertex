@@ -1,0 +1,35 @@
+// Custom minimal styles for the landing page
+:root {
+  --brand-dark: #083b54; /* deep blue */
+  --brand-yellow: #f5c400;
+}
+
+.btn-yellow {
+  background-color: var(--brand-yellow);
+  color: #111827;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #eab308; /* slightly darker yellow */
+    color: #111827;
+  }
+}
+
+.nav-bg {
+  background: var(--brand-dark);
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #06b6d4 0%, #0ea5a9 50%, #075985 100%);
+}
+
+.card-shadow {
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.18);
+}
