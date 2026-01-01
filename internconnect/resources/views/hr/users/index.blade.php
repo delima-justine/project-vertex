@@ -37,7 +37,7 @@
                             <td>{{ $user->first_name }}</td>
                             <td>{{ $user->last_name }}</td>
                             <td>{{ $user->email }}</td>
-                            <td><span class="badge bg-secondary">{{ ucfirst($user->role) }}</span></td>
+                            <td><span class="badge bg-secondary">{{ ucfirst($user->user_role) }}</span></td>
                             <td>{{ $user->created_at->format('Y-m-d') }}</td>
                             <td class="pe-4">
                                 <a href="{{ route('hr.users.edit', $user) }}" class="btn btn-sm btn-light border me-1">Edit</a>

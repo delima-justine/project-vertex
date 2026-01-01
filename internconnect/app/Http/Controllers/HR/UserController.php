@@ -34,12 +34,19 @@ class UserController extends Controller
             'role' => 'required|string',
         ]);
 
+        $roleMap = [
+            'admin' => 'Admin',
+            'hr' => 'HR',
+            'coordinator' => 'Coordinator',
+            'student' => 'Intern',
+        ];
+
         $user = User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => $data['role'],
+            'user_role' => $roleMap[$data['role']] ?? 'Intern',
         ]);
 
         return redirect()->route('hr.users.index')->with('success', 'User created');
@@ -60,10 +67,17 @@ class UserController extends Controller
             'role' => 'required|string',
         ]);
 
+        $roleMap = [
+            'admin' => 'Admin',
+            'hr' => 'HR',
+            'coordinator' => 'Coordinator',
+            'student' => 'Intern',
+        ];
+
         $user->first_name = $data['first_name'];
         $user->last_name = $data['last_name'];
         $user->email = $data['email'];
-        $user->role = $data['role'];
+        $user->user_role = $roleMap[$data['role']] ?? 'Intern';
         if (!empty($data['password'])) {
             $user->password = Hash::make($data['password']);
         }

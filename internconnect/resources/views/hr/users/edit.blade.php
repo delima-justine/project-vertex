@@ -28,16 +28,16 @@
                         <input type="email" name="email" value="{{ old('email', $user->email) }}" class="form-control">
                         @error('email') <div class="text-danger small">{{ $message }}</div> @enderror
                     </div>
-                    <div class="col-12">
-                        <label class="form-label fw-bold">Role</label>
-                        <select name="role" class="form-select">
-                            <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                            <option value="hr" {{ $user->role == 'hr' ? 'selected' : '' }}>HR</option>
-                            <option value="coordinator" {{ $user->role == 'coordinator' ? 'selected' : '' }}>Coordinator</option>
-                            <option value="student" {{ $user->role == 'student' ? 'selected' : '' }}>Student</option>
-                        </select>
-                        @error('role') <div class="text-danger small">{{ $message }}</div> @enderror
-                    </div>
+                <div>
+                    <label class="block mb-1 font-medium text-gray-700">Role</label>
+                    <select name="role" class="form-select">
+                        <option value="admin" {{ $user->user_role == 'Admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="hr" {{ $user->user_role == 'HR' ? 'selected' : '' }}>HR</option>
+                        <option value="coordinator" {{ $user->user_role == 'Coordinator' ? 'selected' : '' }}>Coordinator</option>
+                        <option value="student" {{ $user->user_role == 'Intern' ? 'selected' : '' }}>Student</option>
+                    </select>
+                    @error('role') <div class="text-danger small">{{ $message }}</div> @enderror
+                </div>
                     <div class="col-12">
                         <label class="form-label fw-bold">New Password <small class="text-muted fw-normal">(leave blank to keep)</small></label>
                         <input type="password" name="password" class="form-control">
