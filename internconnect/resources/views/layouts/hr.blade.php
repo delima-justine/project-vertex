@@ -15,7 +15,7 @@
             </div>
             <div class="list-group list-group-flush p-2">
                 <a href="{{ route('hr.dashboard') }}" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded {{ request()->routeIs('hr.dashboard') ? 'active' : '' }} mb-1">
-                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                    <i class="bi bi-house me-2"></i> Dashboard
                 </a>
                 <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded mb-1">
                     <i class="bi bi-people me-2"></i> Interns
