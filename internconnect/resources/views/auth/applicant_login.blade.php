@@ -83,10 +83,9 @@
                     </button>
                 </form>
 
-                <!-- Register Link -->
                 <div class="mt-4 text-center small">
                     <span class="text-muted">Don't have an account?</span> 
-                    <a href="{{ route('applicant.register') }}" class="text-success fw-bold text-decoration-none">Register here</a>
+                    <a href="{{ route('register') }}" class="text-success fw-bold text-decoration-none">Register here</a>
                 </div>
 
                 <!-- Footer -->
