@@ -31,7 +31,7 @@
                     <p class="text-muted small">Sign in to manage the internal system</p>
                 </div>
 
-                <form action="{{ route('login.post') }}" method="POST">
+                <form action="{{ route('auth.login.post') }}" method="POST">
                     @csrf
                     
                     <!-- Email Field -->

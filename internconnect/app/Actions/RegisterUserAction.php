@@ -18,7 +18,7 @@ class RegisterUserAction
                 $school = School::create([
                     'school_name' => $data['new_school_name'],
                     'address' => $data['new_school_address'],
-                    'branch_campus' => null, // Optional
+                    'branch_campus' => $data['new_school_campus'],
                 ]);
                 $data['selected_school'] = $school->school_id;
             }

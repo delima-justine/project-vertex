@@ -95,6 +95,11 @@
                     <input type="text" wire:model="new_school_address" id="new_school_address" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
                     @error('new_school_address') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
+                <div>
+                    <label for="new_school_campus" class="block text-sm font-medium text-gray-700">Branch/Campus</label>
+                    <input type="text" wire:model="new_school_campus" id="new_school_campus" placeholder="e.g., Main Campus" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    @error('new_school_campus') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
                 @endif
             </div>
 
@@ -123,7 +128,7 @@
         <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">
                 Already have an account?
-                <a href="#" class="font-medium text-teal-600 hover:text-teal-500">Sign in</a>
+                <a href="{{ route('auth.applicant.login') }}" class="font-medium text-teal-600 hover:text-teal-500">Sign in</a>
             </p>
         </div>
     </div>

@@ -22,6 +22,7 @@ class Register extends Component
     public $selected_school;
     public $new_school_name;
     public $new_school_address;
+    public $new_school_campus;
 
     public $schools = [];
 
@@ -38,7 +39,7 @@ class Register extends Component
     public function updatedUserRole($value)
     {
         // Reset everything when switching roles to prevent "sticky" fields
-        $this->reset(['selected_school', 'new_school_name', 'new_school_address']);
+        $this->reset(['selected_school', 'new_school_name', 'new_school_address', 'new_school_campus']);
     }
 
     public function updatedSelectedSchool($value)
@@ -46,6 +47,7 @@ class Register extends Component
         if ($value !== 'other') {
             $this->new_school_name = null;
             $this->new_school_address = null;
+            $this->new_school_campus = null;
         }
     }
 
@@ -91,12 +93,13 @@ class Register extends Component
             'selected_school' => $this->selected_school,
             'new_school_name' => $this->new_school_name,
             'new_school_address' => $this->new_school_address,
+            'new_school_campus' => $this->new_school_campus,
         ]);
 
         if ($this->user_role === 'Intern') {
-            return redirect()->to('http://localhost:8000/applicant/login');
+            return redirect()->to('/auth/applicant/login');
         } else {
-            return redirect()->to('http://localhost:8000/coordinator/login');
+            return redirect()->to('/auth/coordinator/login');
         }
     }
 
