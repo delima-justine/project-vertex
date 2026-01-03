@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
 use App\Http\Controllers\HRController;
+use App\Livewire\Register;
 
 Route::get('/', function () {
     return view('landing');
@@ -17,8 +17,8 @@ Route::post('/coordinator/login', [AuthController::class, 'coordinatorLogin'])->
 
 Route::get('/applicant/login', [AuthController::class, 'showApplicantLogin'])->name('applicant.login');
 Route::post('/applicant/login', [AuthController::class, 'applicantLogin'])->name('applicant.login.post');
-Route::get('/applicant/register', [AuthController::class, 'showApplicantRegister'])->name('applicant.register');
-Route::post('/applicant/register', [AuthController::class, 'applicantRegister'])->name('applicant.register.post');
+
+Route::get('/register', Register::class)->name('register');
 
 use App\Http\Controllers\HR\JobPostingController;
 use App\Http\Controllers\HR\UserController;
