@@ -19,7 +19,7 @@
           <a href="#testimonials" class="text-white text-decoration-none hover-underline">Testimonials</a>
           <a href="#contact" class="text-white text-decoration-none hover-underline">Contact</a>
         </nav>
-        <a href="/applicant/login" class="btn btn-warning fw-bold px-4 rounded-pill">Get Started</a>
+        <a href="/auth/applicant/login" class="btn btn-warning fw-bold px-4 rounded-pill">Get Started</a>
       </div>
     </div>
   </header>
@@ -33,7 +33,7 @@
             <h1 class="display-5 fw-bold mb-4">Elevate Your Brand with Data-Driven Marketing</h1>
             <p class="lead opacity-90 mb-5">ROC.ph delivers cutting-edge digital marketing solutions that drive real results. From SEO to social media, we help businesses grow their online presence and reach their target audience.</p>
             <div class="d-flex gap-3">
-              <a href="/applicant/login" class="btn btn-warning btn-lg px-4 rounded-pill fw-bold">Get Started <i class="bi bi-arrow-right ms-2"></i></a>
+              <a href="/auth/applicant/login" class="btn btn-warning btn-lg px-4 rounded-pill fw-bold">Get Started <i class="bi bi-arrow-right ms-2"></i></a>
               <a href="#services" class="btn btn-outline-light btn-lg px-4 rounded-pill">Learn More</a>
             </div>
           </div>

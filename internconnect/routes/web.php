@@ -9,16 +9,18 @@ Route::get('/', function () {
     return view('landing');
 });
 
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::prefix('auth')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login');
+    Route::post('/login', [AuthController::class, 'login'])->name('auth.login.post');
 
-Route::get('/coordinator/login', [AuthController::class, 'showCoordinatorLogin'])->name('coordinator.login');
-Route::post('/coordinator/login', [AuthController::class, 'coordinatorLogin'])->name('coordinator.login.post');
+    Route::get('/coordinator/login', [AuthController::class, 'showCoordinatorLogin'])->name('auth.coordinator.login');
+    Route::post('/coordinator/login', [AuthController::class, 'coordinatorLogin'])->name('auth.coordinator.login.post');
 
-Route::get('/applicant/login', [AuthController::class, 'showApplicantLogin'])->name('applicant.login');
-Route::post('/applicant/login', [AuthController::class, 'applicantLogin'])->name('applicant.login.post');
+    Route::get('/applicant/login', [AuthController::class, 'showApplicantLogin'])->name('auth.applicant.login');
+    Route::post('/applicant/login', [AuthController::class, 'applicantLogin'])->name('auth.applicant.login.post');
 
-Route::get('/register', Register::class)->name('register');
+    Route::get('/register', Register::class)->name('auth.register');
+});
 
 use App\Http\Controllers\HR\JobPostingController;
 use App\Http\Controllers\HR\UserController;

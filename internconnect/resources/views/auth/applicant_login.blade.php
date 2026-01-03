@@ -37,7 +37,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('applicant.login.post') }}" method="POST">
+                <form action="{{ route('auth.applicant.login.post') }}" method="POST">
                     @csrf
                     
                     <!-- Email Field -->
@@ -85,7 +85,7 @@
 
                 <div class="mt-4 text-center small">
                     <span class="text-muted">Don't have an account?</span> 
-                    <a href="{{ route('register') }}" class="text-success fw-bold text-decoration-none">Register here</a>
+                    <a href="{{ route('auth.register') }}" class="text-success fw-bold text-decoration-none">Register here</a>
                 </div>
 
                 <!-- Footer -->

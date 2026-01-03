@@ -30,7 +30,7 @@
                     <p class="text-muted small">Sign in to manage your student interns</p>
                 </div>
 
-                <form action="{{ route('coordinator.login.post') }}" method="POST">
+                <form action="{{ route('auth.coordinator.login.post') }}" method="POST">
                     @csrf
                     
                     <!-- Email Field -->
