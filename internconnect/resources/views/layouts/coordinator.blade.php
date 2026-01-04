@@ -38,7 +38,7 @@
                 <a href="{{ route('coordinator.support-docs') }}" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded {{ request()->routeIs('coordinator.support-docs') ? 'active' : '' }} mb-1">
                     <i class="bi bi-folder2 me-2"></i> Support Documents
                 </a>
-                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded mb-1">
+                <a href="{{ route('coordinator.settings') }}" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded {{ request()->routeIs('coordinator.settings') ? 'active' : '' }} mb-1">
                     <i class="bi bi-gear me-2"></i> Settings
                 </a>
             </div>
