@@ -32,7 +32,7 @@
                 <a href="{{ route('coordinator.dashboard') }}" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded {{ request()->routeIs('coordinator.dashboard') ? 'active' : '' }} mb-1">
                     <i class="bi bi-house me-2"></i> Dashboard
                 </a>
-                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded mb-1">
+                <a href="{{ route('coordinator.monitor-interns') }}" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded {{ request()->routeIs('coordinator.monitor-interns') ? 'active' : '' }} mb-1">
                     <i class="bi bi-people me-2"></i> Monitor Interns
                 </a>
                 <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded mb-1">

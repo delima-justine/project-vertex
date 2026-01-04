@@ -29,6 +29,7 @@ use App\Http\Controllers\CoordinatorController;
 Route::middleware(['auth'])->group(function () {
     Route::get('/hr/dashboard', [HRController::class, 'dashboard'])->name('hr.dashboard');
     Route::get('/coordinator/dashboard', [CoordinatorController::class, 'dashboard'])->name('coordinator.dashboard');
+    Route::get('/coordinator/monitor-interns', [CoordinatorController::class, 'monitorInterns'])->name('coordinator.monitor-interns');
     
     // HR Routes
     Route::prefix('hr')->name('hr.')->group(function() {

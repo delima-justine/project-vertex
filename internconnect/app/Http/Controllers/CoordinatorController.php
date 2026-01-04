@@ -13,4 +13,12 @@ class CoordinatorController extends Controller
     {
         return view('coordinator.dashboard');
     }
+
+    /**
+     * Display the monitor interns page.
+     */
+    public function monitorInterns()
+    {
+        return view('coordinator.monitor-interns');
+    }
 }
