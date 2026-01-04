@@ -14,6 +14,17 @@
             <div class="sidebar-heading border-bottom bg-dark text-white p-3 text-center">
                 <span class="fs-4 fw-bold text-warning">ROC.ph HR</span>
             </div>
+            
+            <div class="d-flex align-items-center gap-3 p-3 text-white">
+                <div class="bg-info rounded-circle d-flex align-items-center justify-content-center fw-bold text-white" style="width: 40px; height: 40px;">
+                    {{ substr(Auth::user()->first_name, 0, 1) }}{{ substr(Auth::user()->last_name, 0, 1) }}
+                </div>
+                <div>
+                    <div class="fw-semibold">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                    <small class="opacity-75">{{ Auth::user()->user_role }}</small>
+                </div>
+            </div>
+            
             <div class="list-group list-group-flush p-2">
                 <a href="{{ route('hr.dashboard') }}" class="list-group-item list-group-item-action bg-dark text-white border-0 rounded {{ request()->routeIs('hr.dashboard') ? 'active' : '' }} mb-1">
                     <i class="bi bi-house me-2"></i> Dashboard
@@ -43,23 +54,6 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm px-4 py-3">
                 <div class="container-fluid">
                     <h2 class="fs-4 m-0 text-dark">@yield('header', 'Dashboard')</h2>
-                    
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ms-auto mt-2 mt-lg-0 align-items-center">
-                            <li class="nav-item">
-                                <span class="text-secondary me-2">Welcome, {{ Auth::user()->first_name }}</span>
-                            </li>
-                            <li class="nav-item">
-                                <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 35px; height: 35px;">
-                                    {{ substr(Auth::user()->first_name, 0, 1) }}
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </nav>
 
