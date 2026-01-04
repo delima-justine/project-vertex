@@ -21,4 +21,12 @@ class CoordinatorController extends Controller
     {
         return view('coordinator.monitor-interns');
     }
+
+    /**
+     * Display the support documents page.
+     */
+    public function supportDocs()
+    {
+        return view('coordinator.support-docs');
+    }
 }
