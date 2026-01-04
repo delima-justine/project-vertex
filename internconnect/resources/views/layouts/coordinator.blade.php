@@ -48,8 +48,11 @@
             <div class="mt-auto p-3 border-top border-secondary">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                    <button 
+                      type="submit" 
+                      class="btn btn-outline-danger w-100 d-flex align-items-center 
+                        justify-content-center">
+                          <i class="bi bi-box-arrow-right me-2"></i> Logout
                     </button>
                 </form>
             </div>
@@ -57,17 +60,28 @@
 
         <!-- Page Content -->
         <div id="page-content-wrapper" class="w-100">
-            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm px-4 py-3">
+            <nav 
+              class="navbar navbar-expand-lg navbar-light 
+                bg-white border-bottom shadow-sm px-4 py-3">
                 <div class="container-fluid">
-                    <h2 class="fs-4 m-0 text-dark">@yield('header', 'Dashboard')</h2>
+                  <h2 
+                  class="fs-4 m-0 text-dark">
+                    @yield('header', 'Dashboard')
+                  </h2>
                 </div>
             </nav>
 
             <div class="container-fluid p-4">
                 @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div 
+                      class="alert alert-success alert-dismissible fade show" 
+                      role="alert">
                         {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button 
+                          type="button" 
+                          class="btn-close" 
+                          data-bs-dismiss="alert" 
+                          aria-label="Close"></button>
                     </div>
                 @endif
 
