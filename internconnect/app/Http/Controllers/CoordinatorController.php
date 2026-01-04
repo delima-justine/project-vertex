@@ -29,4 +29,12 @@ class CoordinatorController extends Controller
     {
         return view('coordinator.support-docs');
     }
+
+    /**
+     * Display the settings page.
+     */
+    public function settings()
+    {
+        return view('coordinator.settings');
+    }
 }
