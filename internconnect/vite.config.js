@@ -12,8 +12,7 @@ export default defineConfig({
         preprocessorOptions: {
             scss: {
                 quietDeps: false,
-                verbose: true,
-            },
+            }
         },
     },
     server: {
