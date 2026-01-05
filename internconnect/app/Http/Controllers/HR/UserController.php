@@ -5,7 +5,11 @@ namespace App\Http\Controllers\HR;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Coordinator;
+use App\Models\School;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -21,7 +25,9 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('hr.users.create');
+        $schools = School::all();
+        $coordinators = Coordinator::with('school')->get();
+        return view('hr.users.create', compact('schools', 'coordinators'));
     }
 
     public function store(Request $request)
@@ -32,6 +38,8 @@ class UserController extends Controller
             'email' => 'required|email|unique:tbl_user,email',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required|string',
+            'school_id' => 'nullable|exists:tbl_school,school_id',
+            'assign_coordinator_id' => 'nullable|exists:tbl_coordinator,coordinator_id',
         ]);
 
         $roleMap = [
@@ -41,20 +49,51 @@ class UserController extends Controller
             'student' => 'Intern',
         ];
 
-        $user = User::create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'user_role' => $roleMap[$data['role']] ?? 'Intern',
-        ]);
+        DB::beginTransaction();
+        
+        try {
+            $coordinatorId = null;
+            
+            if ($data['role'] === 'coordinator') {
+                $uniqueKey = strtoupper(Str::random(8));
+                
+                $coordinator = Coordinator::create([
+                    'first_name' => $data['first_name'],
+                    'last_name' => $data['last_name'],
+                    'email' => $data['email'],
+                    'school_id' => $data['school_id'] ?? null,
+                    'unique_key' => $uniqueKey,
+                ]);
+                
+                $coordinatorId = $coordinator->coordinator_id;
+            }
 
-        return redirect()->route('hr.users.index')->with('success', 'User created');
+            $user = User::create([
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'user_role' => $roleMap[$data['role']] ?? 'Intern',
+                'school_id' => $data['school_id'] ?? null,
+                'coordinator_id' => $coordinatorId ?? ($data['assign_coordinator_id'] ?? null),
+            ]);
+            
+            DB::commit();
+            
+            return redirect()->route('hr.users.index')->with('success', 'User created successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('User creation failed: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return back()->withInput()->withErrors(['error' => 'Failed to create user: ' . $e->getMessage()]);
+        }
     }
 
     public function edit(User $user)
     {
-        return view('hr.users.edit', compact('user'));
+        $schools = School::all();
+        $coordinators = Coordinator::with('school')->get();
+        return view('hr.users.edit', compact('user', 'schools', 'coordinators'));
     }
 
     public function update(Request $request, User $user)
@@ -65,6 +104,8 @@ class UserController extends Controller
             'email' => 'required|email|unique:tbl_user,email,'.$user->user_id.',user_id',
             'password' => 'nullable|string|min:6|confirmed',
             'role' => 'required|string',
+            'school_id' => 'nullable|exists:tbl_school,school_id',
+            'assign_coordinator_id' => 'nullable|exists:tbl_coordinator,coordinator_id',
         ]);
 
         $roleMap = [
@@ -74,16 +115,61 @@ class UserController extends Controller
             'student' => 'Intern',
         ];
 
-        $user->first_name = $data['first_name'];
-        $user->last_name = $data['last_name'];
-        $user->email = $data['email'];
-        $user->user_role = $roleMap[$data['role']] ?? 'Intern';
-        if (!empty($data['password'])) {
-            $user->password = Hash::make($data['password']);
-        }
-        $user->save();
+        DB::beginTransaction();
+        
+        try {
+            $newRole = $roleMap[$data['role']] ?? 'Intern';
+            $oldRole = $user->user_role;
+            
+            if ($newRole === 'Coordinator' && $oldRole !== 'Coordinator') {
+                $uniqueKey = strtoupper(Str::random(8));
+                
+                $coordinator = Coordinator::create([
+                    'first_name' => $data['first_name'],
+                    'last_name' => $data['last_name'],
+                    'email' => $data['email'],
+                    'school_id' => $data['school_id'] ?? null,
+                    'unique_key' => $uniqueKey,
+                ]);
+                
+                $user->coordinator_id = $coordinator->coordinator_id;
+            } elseif ($newRole === 'Coordinator' && $oldRole === 'Coordinator' && $user->coordinator_id) {
+                $coordinator = Coordinator::find($user->coordinator_id);
+                if ($coordinator) {
+                    $coordinator->update([
+                        'first_name' => $data['first_name'],
+                        'last_name' => $data['last_name'],
+                        'email' => $data['email'],
+                        'school_id' => $data['school_id'] ?? null,
+                    ]);
+                }
+            } elseif ($newRole !== 'Coordinator' && $oldRole === 'Coordinator' && $user->coordinator_id) {
+                $user->coordinator_id = null;
+            }
 
-        return redirect()->route('hr.users.index')->with('success', 'User updated');
+            $user->first_name = $data['first_name'];
+            $user->last_name = $data['last_name'];
+            $user->email = $data['email'];
+            $user->user_role = $newRole;
+            $user->school_id = $data['school_id'] ?? null;
+            
+            if ($newRole !== 'Coordinator') {
+                $user->coordinator_id = $data['assign_coordinator_id'] ?? null;
+            }
+            
+            if (!empty($data['password'])) {
+                $user->password = Hash::make($data['password']);
+            }
+            
+            $user->save();
+            
+            DB::commit();
+            
+            return redirect()->route('hr.users.index')->with('success', 'User updated successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->withErrors(['error' => 'Failed to update user: ' . $e->getMessage()]);
+        }
     }
 
     public function destroy(User $user)

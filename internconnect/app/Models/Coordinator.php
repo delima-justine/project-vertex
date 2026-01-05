@@ -10,7 +10,6 @@ class Coordinator extends Model
     protected $primaryKey = 'coordinator_id';
 
     protected $fillable = [
-        'coordinator_id',
         'first_name',
         'last_name',
         'email',
