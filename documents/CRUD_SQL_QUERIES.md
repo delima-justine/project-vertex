@@ -74,6 +74,10 @@ This document contains all CRUD (Create, Read, Update, Delete) SQL queries **act
 | **READ** | `SELECT * FROM tbl_user WHERE user_role = 'Intern' AND coordinator_id = ?` | Get interns for coordinator (eager loaded with relationships) |
 | **READ** | `SELECT * FROM tbl_progress WHERE user_id IN (...)` | Get progress records for interns (eager loaded via `with(['progress'])`) |
 | **READ** | `SELECT * FROM tbl_attendance WHERE user_id IN (...)` | Get attendance records for interns (eager loaded via `with(['attendances'])`) |
+| **READ** | `SELECT * FROM tbl_attendance WHERE user_id IN (...) ORDER BY created_at DESC LIMIT 3` | Get recent attendance for dashboard activity (CoordinatorController@dashboard) |
+| **READ** | `SELECT * FROM tbl_document WHERE user_id IN (...)` | Get document records for interns (eager loaded via `with(['documents'])`) |
+| **READ** | `SELECT * FROM tbl_document WHERE user_id IN (...) AND verification_status = 'Pending'` | Count pending documents for dashboard (CoordinatorController@dashboard) |
+| **READ** | `SELECT * FROM tbl_document WHERE user_id IN (...) ORDER BY submission_date DESC LIMIT 2` | Get recent document submissions for dashboard activity (CoordinatorController@dashboard) |
 | **READ** | `SELECT ja.*, jp.* FROM tbl_job_application ja LEFT JOIN tbl_job_posting jp ON ja.job_id = jp.job_id WHERE ja.user_id IN (...)` | Get job applications with job details (eager loaded via `with(['jobApplications.job'])`) |
 
 ---
