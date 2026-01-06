@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class CoordinatorController extends Controller
 {
@@ -112,6 +113,67 @@ class CoordinatorController extends Controller
      */
     public function settings()
     {
-        return view('coordinator.settings');
+        $user = Auth::user();
+        $coordinator = $user->coordinator;
+        
+        return view('coordinator.settings', compact('user', 'coordinator'));
+    }
+
+    /**
+     * Update coordinator profile settings.
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        $coordinator = $user->coordinator;
+
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
+            'email' => 'required|email|max:100|unique:tbl_user,email,' . $user->user_id . ',user_id',
+            'contact_number' => 'nullable|string|max:15',
+        ]);
+
+        // Update User record
+        $user->update([
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'contact_number' => $validated['contact_number'],
+        ]);
+
+        // Update Coordinator record if exists
+        if ($coordinator) {
+            $coordinator->update([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+            ]);
+        }
+
+        return redirect()->route('coordinator.settings')->with('success', 'Profile updated successfully!');
+    }
+
+    /**
+     * Update coordinator password.
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        return redirect()->route('coordinator.settings')->with('success', 'Password updated successfully!');
     }
 }
