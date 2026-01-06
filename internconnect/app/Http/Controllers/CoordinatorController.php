@@ -14,7 +14,101 @@ class CoordinatorController extends Controller
      */
     public function dashboard()
     {
-        return view('coordinator.dashboard');
+        $user = Auth::user();
+        
+        // If user doesn't have coordinator_id, return empty dashboard
+        if (!$user->coordinator_id) {
+            return view('coordinator.dashboard', [
+                'totalInterns' => 0,
+                'activeInterns' => 0,
+                'avgProgress' => 0,
+                'pendingDocuments' => 0,
+                'recentActivities' => collect([])
+            ]);
+        }
+        
+        // Get all interns assigned to this coordinator
+        $interns = User::where('user_role', 'Intern')
+            ->where('coordinator_id', $user->coordinator_id)
+            ->with(['progress', 'attendances', 'documents'])
+            ->get();
+        
+        // Calculate statistics
+        $totalInterns = $interns->count();
+        $activeInterns = $interns->where('status', 'Active')->count();
+        
+        // Calculate average progress
+        $totalProgress = 0;
+        $internsWithProgress = 0;
+        
+        foreach ($interns as $intern) {
+            if ($intern->progress && $intern->progress->required_hours > 0) {
+                $progressPercentage = ($intern->progress->logged_hours / $intern->progress->required_hours) * 100;
+                $totalProgress += $progressPercentage;
+                $internsWithProgress++;
+            }
+        }
+        
+        $avgProgress = $internsWithProgress > 0 ? round($totalProgress / $internsWithProgress) : 0;
+        
+        // Count pending documents across all interns
+        $pendingDocuments = 0;
+        foreach ($interns as $intern) {
+            $pendingDocuments += $intern->documents->where('verification_status', 'Pending')->count();
+        }
+        
+        // Get recent activities (recent attendances and document submissions)
+        $recentActivities = collect();
+        
+        // Get recent attendance records
+        foreach ($interns as $intern) {
+            $recentAttendances = $intern->attendances()
+                ->orderBy('created_at', 'desc')
+                ->take(3)
+                ->get();
+            
+            foreach ($recentAttendances as $attendance) {
+                $recentActivities->push([
+                    'type' => 'attendance',
+                    'intern_name' => $intern->first_name . ' ' . $intern->last_name,
+                    'description' => 'Clocked in at ' . $attendance->time_in->format('g:i A'),
+                    'time' => $attendance->created_at,
+                    'icon' => 'clock',
+                    'color' => 'primary'
+                ]);
+            }
+            
+            // Get recent document submissions
+            $recentDocs = $intern->documents()
+                ->orderBy('submission_date', 'desc')
+                ->take(2)
+                ->get();
+            
+            foreach ($recentDocs as $doc) {
+                $recentActivities->push([
+                    'type' => 'document',
+                    'intern_name' => $intern->first_name . ' ' . $intern->last_name,
+                    'description' => 'Submitted ' . $doc->doc_type,
+                    'time' => $doc->created_at,
+                    'icon' => 'file-earmark-text',
+                    'color' => 'success'
+                ]);
+            }
+        }
+        
+        // Sort activities by time and take the 5 most recent
+        $recentActivities = $recentActivities
+            ->sortByDesc('time')
+            ->take(5)
+            ->values();
+        
+        return view('coordinator.dashboard', compact(
+            'totalInterns',
+            'activeInterns', 
+            'avgProgress',
+            'pendingDocuments',
+            'recentActivities'
+        ));
     }
 
     /**
