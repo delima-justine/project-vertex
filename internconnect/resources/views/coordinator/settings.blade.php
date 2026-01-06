@@ -29,6 +29,26 @@
 
         <!-- Settings Content -->
         <div class="col-lg-9">
+            <!-- Success/Error Messages -->
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="tab-content">
                 <!-- Profile Settings -->
                 <div class="tab-pane fade show active" id="profile-settings">
@@ -44,40 +64,62 @@
                                 </div>
                             </div>
 
-                            <form>
-                                <!-- Profile Photo -->
+                            <form method="POST" action="{{ route('coordinator.update-profile') }}">
+                                @csrf
+                                
+                                <!-- Profile Photo Display (No upload) -->
                                 <div class="mb-4 text-center">
                                     <div class="bg-info rounded-circle d-inline-flex align-items-center justify-content-center fw-bold text-white mb-3" style="width: 100px; height: 100px; font-size: 48px;">
-                                        {{ substr(Auth::user()->first_name, 0, 1) }}{{ substr(Auth::user()->last_name, 0, 1) }}
+                                        {{ substr($user->first_name, 0, 1) }}{{ substr($user->last_name, 0, 1) }}
                                     </div>
-                                    <div>
-                                        <button type="button" class="btn btn-outline-primary btn-sm">
-                                            <i class="bi bi-camera me-2"></i>Change Photo
-                                        </button>
-                                        <div class="text-muted small mt-2">JPG, PNG or GIF. Max size 2MB</div>
+                                    <div class="text-muted small">
+                                        Profile Avatar
                                     </div>
                                 </div>
 
                                 <div class="row g-3">
-                                    <!-- Full Name -->
+                                    <!-- First Name -->
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Full Name</label>
+                                        <label class="form-label fw-semibold">First Name <span class="text-danger">*</span></label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-white">
                                                 <i class="bi bi-person text-muted"></i>
                                             </span>
-                                            <input type="text" class="form-control" value="{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}">
+                                            <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror" 
+                                                   value="{{ old('first_name', $user->first_name) }}" required>
+                                            @error('first_name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <!-- Last Name -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Last Name <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white">
+                                                <i class="bi bi-person text-muted"></i>
+                                            </span>
+                                            <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" 
+                                                   value="{{ old('last_name', $user->last_name) }}" required>
+                                            @error('last_name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
                                     <!-- Email Address -->
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Email Address</label>
+                                        <label class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-white">
                                                 <i class="bi bi-envelope text-muted"></i>
                                             </span>
-                                            <input type="email" class="form-control" value="{{ Auth::user()->email }}">
+                                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
+                                                   value="{{ old('email', $user->email) }}" required>
+                                            @error('email')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
@@ -88,46 +130,40 @@
                                             <span class="input-group-text bg-white">
                                                 <i class="bi bi-telephone text-muted"></i>
                                             </span>
-                                            <input type="tel" class="form-control" value="{{ Auth::user()->contact_number ?? '+63 917 555 1234' }}" placeholder="+63 917 555 1234">
+                                            <input type="tel" name="contact_number" class="form-control @error('contact_number') is-invalid @enderror" 
+                                                   value="{{ old('contact_number', $user->contact_number) }}" placeholder="+63 917 555 1234">
+                                            @error('contact_number')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
-                                    <!-- Position -->
+                                    <!-- Position (Read-only) -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Position</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-white">
                                                 <i class="bi bi-briefcase text-muted"></i>
                                             </span>
-                                            <input type="text" class="form-control" value="{{ Auth::user()->user_role }}" readonly>
+                                            <input type="text" class="form-control" value="{{ $user->user_role }}" readonly>
                                         </div>
                                     </div>
 
-                                    <!-- Department -->
+                                    <!-- School (Read-only) -->
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Department</label>
+                                        <label class="form-label fw-semibold">School</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-white">
                                                 <i class="bi bi-building text-muted"></i>
                                             </span>
-                                            <input type="text" class="form-control" value="Operations" placeholder="Operations">
-                                        </div>
-                                    </div>
-
-                                    <!-- Location -->
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Location</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-white">
-                                                <i class="bi bi-geo-alt text-muted"></i>
-                                            </span>
-                                            <input type="text" class="form-control" value="Manila, Philippines" placeholder="Manila, Philippines">
+                                            <input type="text" class="form-control" 
+                                                   value="{{ $user->school ? $user->school->school_name : 'N/A' }}" readonly>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="mt-4 text-end">
-                                    <button type="button" class="btn btn-outline-secondary me-2">Cancel</button>
+                                    <button type="reset" class="btn btn-outline-secondary me-2">Reset</button>
                                     <button type="submit" class="btn btn-primary">
                                         <i class="bi bi-save me-2"></i>Save Changes
                                     </button>
@@ -156,19 +192,32 @@
                                 <h6 class="fw-bold mb-1">Change Password</h6>
                                 <p class="text-muted small mb-3">Update your password to keep your account secure</p>
 
-                                <form>
+                                <form method="POST" action="{{ route('coordinator.update-password') }}">
+                                    @csrf
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label class="form-label fw-semibold">Current Password</label>
-                                            <input type="password" class="form-control" placeholder="Enter current password">
+                                            <label class="form-label fw-semibold">Current Password <span class="text-danger">*</span></label>
+                                            <input type="password" name="current_password" 
+                                                   class="form-control @error('current_password') is-invalid @enderror" 
+                                                   placeholder="Enter current password" required>
+                                            @error('current_password')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                         <div class="col-12">
-                                            <label class="form-label fw-semibold">New Password</label>
-                                            <input type="password" class="form-control" placeholder="Enter new password">
+                                            <label class="form-label fw-semibold">New Password <span class="text-danger">*</span></label>
+                                            <input type="password" name="new_password" 
+                                                   class="form-control @error('new_password') is-invalid @enderror" 
+                                                   placeholder="Enter new password (min. 8 characters)" required>
+                                            @error('new_password')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                         <div class="col-12">
-                                            <label class="form-label fw-semibold">Confirm New Password</label>
-                                            <input type="password" class="form-control" placeholder="Confirm new password">
+                                            <label class="form-label fw-semibold">Confirm New Password <span class="text-danger">*</span></label>
+                                            <input type="password" name="new_password_confirmation" 
+                                                   class="form-control" 
+                                                   placeholder="Confirm new password" required>
                                         </div>
                                     </div>
                                     <div class="mt-3">
