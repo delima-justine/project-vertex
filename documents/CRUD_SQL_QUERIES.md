@@ -14,7 +14,7 @@ This document contains all CRUD (Create, Read, Update, Delete) SQL queries **act
 
 ## User Management
 
-### Location: `app/Http/Controllers/HR/UserController.php`, `app/Http/Controllers/AuthController.php`, `app/Actions/RegisterUserAction.php`
+### Location: `app/Http/Controllers/HR/UserController.php`, `app/Http/Controllers/AuthController.php`, `app/Actions/RegisterUserAction.php`, `app/Http/Controllers/CoordinatorController.php`
 
 | Type | Query | Description |
 |------|-------|-------------|
@@ -23,21 +23,23 @@ This document contains all CRUD (Create, Read, Update, Delete) SQL queries **act
 | **READ** | `SELECT * FROM tbl_user WHERE (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?) ORDER BY user_id DESC LIMIT 15 OFFSET ?` | Search and list users with pagination (UserController@index) |
 | **READ** | `SELECT * FROM tbl_user WHERE user_role = 'Intern' AND coordinator_id = ?` | Get all interns assigned to a specific coordinator (CoordinatorController@monitorInterns) |
 | **UPDATE** | `UPDATE tbl_user SET first_name = ?, last_name = ?, email = ?, contact_number = ?, user_role = ?, school_id = ?, coordinator_id = ? WHERE user_id = ?` | Update user information (UserController@update) |
-| **UPDATE** | `UPDATE tbl_user SET password = ? WHERE user_id = ?` | Update user password (UserController@update - conditional) |
+| **UPDATE** | `UPDATE tbl_user SET first_name = ?, last_name = ?, email = ?, contact_number = ? WHERE user_id = ?` | Update coordinator profile (CoordinatorController@updateProfile) |
+| **UPDATE** | `UPDATE tbl_user SET password = ? WHERE user_id = ?` | Update user password (UserController@update, CoordinatorController@updatePassword - conditional) |
 | **DELETE** | `DELETE FROM tbl_user WHERE user_id = ?` | Delete a user account (UserController@destroy) |
 
 ---
 
 ## Coordinator Management
 
-### Location: `app/Http/Controllers/HR/UserController.php`, `app/Actions/RegisterUserAction.php`
+### Location: `app/Http/Controllers/HR/UserController.php`, `app/Actions/RegisterUserAction.php`, `app/Http/Controllers/CoordinatorController.php`
 
 | Type | Query | Description |
 |------|-------|-------------|
 | **CREATE** | `INSERT INTO tbl_coordinator (first_name, last_name, email, school_id, unique_key) VALUES (?, ?, ?, ?, ?)` | Create a new coordinator record (used in UserController@store and UserController@update) |
 | **READ** | `SELECT c.*, s.school_name, s.branch_campus, s.address FROM tbl_coordinator c LEFT JOIN tbl_school s ON c.school_id = s.school_id` | Get all coordinators with school information (UserController@create, UserController@edit) |
-| **READ** | `SELECT * FROM tbl_coordinator WHERE coordinator_id = ?` | Find coordinator by ID (UserController@update) |
+| **READ** | `SELECT * FROM tbl_coordinator WHERE coordinator_id = ?` | Find coordinator by ID (UserController@update, CoordinatorController@settings) |
 | **UPDATE** | `UPDATE tbl_coordinator SET first_name = ?, last_name = ?, email = ?, school_id = ? WHERE coordinator_id = ?` | Update coordinator information (UserController@update) |
+| **UPDATE** | `UPDATE tbl_coordinator SET first_name = ?, last_name = ?, email = ? WHERE coordinator_id = ?` | Update coordinator profile (CoordinatorController@updateProfile) |
 
 ---
 
