@@ -32,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/coordinator/monitor-interns', [CoordinatorController::class, 'monitorInterns'])->name('coordinator.monitor-interns');
     Route::get('/coordinator/support-docs', [CoordinatorController::class, 'supportDocs'])->name('coordinator.support-docs');
     Route::get('/coordinator/settings', [CoordinatorController::class, 'settings'])->name('coordinator.settings');
+    Route::post('/coordinator/update-profile', [CoordinatorController::class, 'updateProfile'])->name('coordinator.update-profile');
+    Route::post('/coordinator/update-password', [CoordinatorController::class, 'updatePassword'])->name('coordinator.update-password');
     
     // HR Routes
     Route::prefix('hr')->name('hr.')->group(function() {
