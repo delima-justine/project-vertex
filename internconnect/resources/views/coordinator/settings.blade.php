@@ -13,12 +13,9 @@
                         <a href="#profile-settings" class="list-group-item list-group-item-action border-0 rounded mb-1 active" id="profile-tab" data-bs-toggle="pill">
                             <i class="bi bi-person me-2"></i> Profile Settings
                         </a>
-                        <a href="#notifications" class="list-group-item list-group-item-action border-0 rounded mb-1 disabled text-muted" style="opacity: 0.6;">
+                        {{-- <a href="#notifications" class="list-group-item list-group-item-action border-0 rounded mb-1 disabled text-muted" style="opacity: 0.6;">
                             <i class="bi bi-bell me-2"></i> Notifications
-                        </a>
-                        <a href="#preferences" class="list-group-item list-group-item-action border-0 rounded mb-1 disabled text-muted" style="opacity: 0.6;">
-                            <i class="bi bi-sliders me-2"></i> Preferences
-                        </a>
+                        </a> --}}
                         <a href="#security-settings" class="list-group-item list-group-item-action border-0 rounded mb-1" id="security-tab" data-bs-toggle="pill">
                             <i class="bi bi-lock me-2"></i> Security
                         </a>
