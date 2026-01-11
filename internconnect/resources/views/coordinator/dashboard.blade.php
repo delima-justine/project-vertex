@@ -114,9 +114,9 @@
 						<a href="{{ route('coordinator.monitor-interns') }}" class="btn btn-outline-primary text-start">
 							<i class="bi bi-people me-2"></i>Monitor Interns
 						</a>
-						<a href="{{ route('coordinator.support-docs') }}" class="btn btn-outline-primary text-start">
+						{{-- <a href="{{ route('coordinator.support-docs') }}" class="btn btn-outline-primary text-start">
 							<i class="bi bi-folder me-2"></i>Support Documents
-						</a>
+						</a> --}}
 						<a href="{{ route('coordinator.settings') }}" class="btn btn-outline-primary text-start">
 							<i class="bi bi-gear me-2"></i>Settings
 						</a>
