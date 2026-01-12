@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <title>Profile | ROC.PH</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+    @vite(['resources/sass/intern.profile.scss'])
 </head>
 <body>
 
 <div class="app">
 
-    // SIDEBAR 
+    {{-- SIDEBAR --}}
     <aside class="sidebar">
         <div class="logo">
             <span class="badge">R</span>
@@ -30,19 +30,19 @@
         </div>
 
         <nav>
-            <a href="/">Home</a>
-            <a href="#">Job Search</a>
+            <a href="{{ route('intern.dashboard') }}">Home</a>
+            <a href="{{ route('intern.job.search') }}">Job Search</a>
             <a href="#">Jobs Feed</a>
             <a href="#">Notifications <span class="notif">3</span></a>
-            <a class="active" href="/profile">Profile</a>
+            <a class="active" href="{{ route('intern.profile') }}">Profile</a>
             <a class="logout" href="#">Logout</a>
         </nav>
     </aside>
 
-    //  MAIN 
+    {{--  MAIN  --}}
     <main class="main">
 
-        // PROFILE HEADER
+        {{-- PROFILE HEADER --}}
         <section class="profile-header">
             <div>
                 <h3>Profile Management</h3>
@@ -51,7 +51,6 @@
             <button class="edit-btn">Edit Profile</button>
         </section>
 
-        // COVER 
         <section class="cover">
             <div class="avatar-large"></div>
             <div class="info">
@@ -60,7 +59,7 @@
             </div>
         </section>
 
-        // ABOUT 
+        {{-- ABOUT --}}
         <section class="card">
             <h3>About Me</h3>
             <p>
@@ -75,10 +74,10 @@
             </div>
         </section>
 
-        // SKILLS & EXPERIENCE 
+        {{-- SKILLS --}}
         <section class="grid">
 
-            // SKILLS 
+            {{-- SKILLS --}}
             <div class="card">
                 <h3>Skills</h3>
 
@@ -108,7 +107,7 @@
                 </div>
             </div>
 
-            // EXPERIENCE 
+            {{-- EXPERIENCE --}}
             <div class="card">
                 <h3>Experience</h3>
 

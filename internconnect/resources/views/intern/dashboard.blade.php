@@ -24,11 +24,11 @@
         </div>
 
         <nav class="menu">
-            <a href="/intern/dashboard" class="active">Home</a>
-            <a href="/intern/job.search">Job Search</a>
-            {{-- <a href="">Jobs Feed</a> --}}
-            {{-- <a href=>Notifications <span class="notif">3</span></a> --}}
-            <a href="/intern/profile">Profile</a>
+            <a class="active" href="{{ route('intern.dashboard') }}">Home</a>
+            <a href="{{ route('intern.job.search') }}">Job Search</a>
+            <a>Jobs Feed</a>
+            <a>Notifications <span class="notif">3</span></a>
+            <a href="{{ route('intern.profile') }}">Profile</a>
             <a class="logout">Logout</a>
         </nav>
     </aside>
