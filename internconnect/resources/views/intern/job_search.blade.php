@@ -43,7 +43,7 @@
             </div>
 
             <div class="job-action">
-                <button>Apply Now</button>
+                <a href="{{ route('intern.job.application') }}">Apply Now</a>
                 <p class="salary">₱15,000 - ₱20,000/month</p>
             </div>
         </div>
@@ -62,7 +62,7 @@
             </div>
 
             <div class="job-action">
-                <button>Apply Now</button>
+                <a href="{{ route('intern.job.application') }}">Apply Now</a>
                 <p class="salary">₱12,000 - ₱18,000/month</p>
             </div>
         </div>
@@ -81,7 +81,7 @@
             </div>
 
             <div class="job-action">
-                <button>Apply Now</button>
+                <a href="{{ route('intern.job.application') }}">Apply Now</a>
                 <p class="salary">₱10,000 - ₱15,000/month</p>
             </div>
         </div>
@@ -100,7 +100,7 @@
             </div>
 
             <div class="job-action">
-                <button>Apply Now</button>
+                <a href="{{ route('intern.job.application') }}">Apply Now</a>
                 <p class="salary">₱18,000 - ₱25,000/month</p>
             </div>
         </div>

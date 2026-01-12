@@ -193,13 +193,14 @@ body {
   .job-action {
     text-align: right;
 
-    button {
+    a {
       background: #0f3c5f;
       color: #fff;
       border: none;
       padding: 8px 16px;
       border-radius: 8px;
       cursor: pointer;
+      text-decoration: none;
     }
 
     .salary {
