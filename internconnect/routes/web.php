@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HRController;
 use App\Livewire\Register;
+use App\Http\Controllers\HR\JobPostingController;
+use App\Http\Controllers\HR\UserController;
+use App\Http\Controllers\CoordinatorController;
 
 Route::get('/', function () {
     return view('landing');
@@ -21,10 +24,6 @@ Route::prefix('auth')->group(function () {
 
     Route::get('/register', Register::class)->name('auth.register');
 });
-
-use App\Http\Controllers\HR\JobPostingController;
-use App\Http\Controllers\HR\UserController;
-use App\Http\Controllers\CoordinatorController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/hr/dashboard', [HRController::class, 'dashboard'])->name('hr.dashboard');
