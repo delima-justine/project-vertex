@@ -31,7 +31,7 @@
             <a class="{{ request()->routeIs('intern.job.search') ? 'active' : '' }}" href="{{ route('intern.job.search') }}">Job Search</a>
             {{-- <a href="#">Jobs Feed</a>
             <a href="#">Notifications <span class="notif">3</span></a> --}}
-            <a class="{{ request()->routeIs('intern.profile') ? 'active' : '' }}" href="{{ route('intern.profile') }}">Profile</a>
+            <a class="{{ request()->routeIs('intern.profile') ? 'active' : '' }}" href="{{ route('intern.profile', auth()->id()) }}">Profile</a>
             <a class="logout" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf

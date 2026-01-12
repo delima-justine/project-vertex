@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class InternController extends Controller
 {
     // Profile of the intern
-    public function profile() {
-        // Fetch and return profile logic here
+    public function profile($id) {
+        // Fetch profile logic here
+        $intern_details = User::findOrFail($id);
+
+        return view('intern.profile', compact('intern_details'));
     }
 
     // Update Profile of the intern

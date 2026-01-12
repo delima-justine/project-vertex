@@ -7,6 +7,7 @@ use App\Livewire\Register;
 use App\Http\Controllers\HR\JobPostingController;
 use App\Http\Controllers\HR\UserController;
 use App\Http\Controllers\CoordinatorController;
+use App\Http\Controllers\InternController;
 
 Route::get('/', function () {
     return view('landing');
@@ -47,9 +48,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('intern.dashboard');
 
     // Intern Profile Route
-    Route::get('/intern/profile', function () {
-        return view('intern.profile');
-    })->name('intern.profile');
+    Route::get('/intern/profile/{id}', 
+        [InternController::class, 'profile'])->name('intern.profile');
 
     // Job Search Route
     Route::get('/intern/job-search', function () {

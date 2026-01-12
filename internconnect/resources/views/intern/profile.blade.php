@@ -19,8 +19,12 @@
     <section class="cover">
         <div class="avatar-large"></div>
         <div class="info">
-            <h2>John Doe</h2>
-            <p>📍 Manila, Philippines &nbsp; ✉ john.doe@example.com &nbsp; ☎ +63 912 345 6789</p>
+            <h2>{{ $intern_details->first_name }} {{ $intern_details->last_name }}</h2>
+            {{-- 📍 Manila, Philippines &nbsp;  --}}
+            <p> 
+                ✉ {{ $intern_details->email }} &nbsp; 
+                ☎ {{ $intern_details->contact_number }}
+            </p>
         </div>
     </section>
 
