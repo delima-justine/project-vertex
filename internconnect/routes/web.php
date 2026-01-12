@@ -42,5 +42,16 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('users', UserController::class);
     });
 
+    // Intern Dashboard Route
+    Route::get('/', function () {
+    return view('intern.dashboard');
+});
+
+    Route::get('/intern.dashboard', function () {
+    return view('intern.dashboard');
+});
+
+
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
