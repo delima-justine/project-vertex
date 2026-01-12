@@ -3,11 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HRController;
+use App\Http\Controllers\HR\DashboardController;
 use App\Livewire\Register;
 
 Route::get('/', function () {
     return view('landing');
 });
+
+// Redirect /login to /auth/login for convenience
+Route::get('/login', function () {
+    return redirect('/auth/login');
+})->name('login');
 
 Route::prefix('auth')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login');
@@ -37,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     
     // HR Routes
     Route::prefix('hr')->name('hr.')->group(function() {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('interns', [HRController::class, 'interns'])->name('interns');
         Route::resource('job-postings', JobPostingController::class);
         Route::resource('users', UserController::class);
