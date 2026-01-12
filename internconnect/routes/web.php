@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     // HR Routes
     Route::prefix('hr')->name('hr.')->group(function() {
         Route::get('interns', [HRController::class, 'interns'])->name('interns');
+        Route::get('interns/{internId}', [HRController::class, 'viewInternProfile'])->name('interns.show');
         Route::resource('job-postings', JobPostingController::class);
         Route::resource('users', UserController::class);
     });
