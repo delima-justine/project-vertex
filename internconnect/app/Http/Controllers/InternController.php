@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JobPosting;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,9 @@ class InternController extends Controller
     // Returns available jobs for the intern
     public function getJobs() {
         // Fetch jobs logic here
+        $jobs = JobPosting::all(); // Replace with actual job posting::all();
+
+        return view('intern.job_search', compact('jobs'));
     }
 
     // Get single job details
