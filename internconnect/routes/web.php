@@ -51,13 +51,15 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Intern Dashboard Route
-    Route::get('/intern/dashboard', function () {
-        return view('intern.dashboard');
-    })->name('intern.dashboard');
+    Route::get('/intern/dashboard', [InternController::class, 'dashboard'])->name('intern.dashboard');
 
     // Intern Profile Route
     Route::get('/intern/profile/{id}', 
         [InternController::class, 'profile'])->name('intern.profile');
+
+    // Intern Edit Profile Route
+    Route::get('/intern/profile-edit', [InternController::class, 'editProfile'])->name('intern.profile.edit');
+    Route::post('/intern/profile-update', [InternController::class, 'updateProfile'])->name('intern.profile.update');
 
     // Job Search Route
     Route::get('/intern/job-search', [InternController::class, 'getJobs'])->name('intern.job.search');

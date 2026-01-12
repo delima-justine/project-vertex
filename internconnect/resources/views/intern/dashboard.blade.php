@@ -8,25 +8,25 @@
 
 @section('content')
     <section class="welcome">
-        <h1>Welcome back, Intern!</h1>
-        <p>You have 3 upcoming tasks and 5 applications in review.</p>
+        <h1>Welcome back, {{ $user->first_name }}!</h1>
+        <p>You have {{ $pendingApplications }} applications in review and {{ $interviewingApplications }} interviews scheduled.</p>
     </section>
 
     <section class="stats">
         <div class="card blue">
-            <span>12</span>
+            <span>{{ $totalApplications }}</span>
             <p>Applications</p>
         </div>
         <div class="card yellow">
-            <span>5</span>
+            <span>{{ $pendingApplications }}</span>
             <p>In Review</p>
         </div>
         <div class="card green">
-            <span>3</span>
+            <span>{{ $interviewingApplications }}</span>
             <p>Interviews</p>
         </div>
         <div class="card red">
-            <span>1</span>
+            <span>{{ $offersCount }}</span>
             <p>Offers</p>
         </div>
     </section>
@@ -34,27 +34,30 @@
     <section class="lower">
         <div class="panel">
             <h3>Recent Activity</h3>
-            <ul>
-                <li>Applied to Marketing Intern at Tech Corp <small>2 hours ago</small></li>
-                <li>Profile viewed by Digital Agency <small>5 hours ago</small></li>
-                <li>Interview scheduled with StartupXYZ <small>1 day ago</small></li>
-                <li>Application updated for Social Media Role <small>2 days ago</small></li>
-            </ul>
+            @if($recentApplications->count() > 0)
+                <ul>
+                    @foreach($recentApplications as $application)
+                        <li>
+                            Applied to {{ $application->jobPosting->title }}
+                            <small>{{ $application->application_date->diffForHumans() }}</small>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-muted">No recent applications yet.</p>
+            @endif
         </div>
 
         <div class="panel">
-            <h3>Upcoming Tasks</h3>
+            <h3>Quick Links</h3>
             <div class="task high">
-                Interview with StartupXYZ
-                <small>Tomorrow, 2:00 PM</small>
+                <a href="{{ route('intern.job.search') }}">Browse Job Postings</a>
             </div>
             <div class="task medium">
-                Submit portfolio for TechCorp
-                <small>Dec 10, 5:00 PM</small>
+                <a href="{{ route('intern.profile', $user->user_id) }}">View Your Profile</a>
             </div>
             <div class="task low">
-                Follow up with Digital Agency
-                <small>Dec 12</small>
+                <a href="{{ route('intern.job.application') }}">My Applications</a>
             </div>
         </div>
     </section>
