@@ -51,6 +51,18 @@ Route::middleware(['auth'])->group(function () {
     return view('intern.dashboard');
 });
 
+// Intern Profile Route
+Route::get('/', function () {
+    return redirect('/intern.profile');
+});
+
+Route::get('/intern.profile', function () {
+    return view('intern.profile');
+});
+
+
+
+
 
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
