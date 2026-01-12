@@ -30,5 +30,11 @@ class SchoolSeeder extends Seeder
             'branch_campus' => 'Manila',
             'address' => 'Manila, Philippines',
         ]);
+
+        School::create([
+            'school_name' => 'Polytechnic University of the Philippines - Taguig Campus',
+            'branch_campus' => 'Taguig',
+            'address' => 'Taguig, Philippines',
+        ]);
     }
 }

@@ -3,11 +3,21 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HRController;
+use App\Http\Controllers\HR\DashboardController;
 use App\Livewire\Register;
+use App\Http\Controllers\HR\JobPostingController;
+use App\Http\Controllers\HR\UserController;
+use App\Http\Controllers\CoordinatorController;
+use App\Http\Controllers\InternController;
 
 Route::get('/', function () {
     return view('landing');
 });
+
+// Redirect /login to /auth/login for convenience
+Route::get('/login', function () {
+    return redirect('/auth/login');
+})->name('login');
 
 Route::prefix('auth')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login');
@@ -22,10 +32,6 @@ Route::prefix('auth')->group(function () {
     Route::get('/register', Register::class)->name('auth.register');
 });
 
-use App\Http\Controllers\HR\JobPostingController;
-use App\Http\Controllers\HR\UserController;
-use App\Http\Controllers\CoordinatorController;
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/hr/dashboard', [HRController::class, 'dashboard'])->name('hr.dashboard');
     Route::get('/coordinator/dashboard', [CoordinatorController::class, 'dashboard'])->name('coordinator.dashboard');
@@ -37,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     
     // HR Routes
     Route::prefix('hr')->name('hr.')->group(function() {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('interns', [HRController::class, 'interns'])->name('interns');
         Route::get('interns/{internId}', [HRController::class, 'viewInternProfile'])->name('interns.show');
         Route::resource('job-postings', JobPostingController::class);
@@ -49,14 +56,11 @@ Route::middleware(['auth'])->group(function () {
     })->name('intern.dashboard');
 
     // Intern Profile Route
-    Route::get('/intern/profile', function () {
-        return view('intern.profile');
-    })->name('intern.profile');
+    Route::get('/intern/profile/{id}', 
+        [InternController::class, 'profile'])->name('intern.profile');
 
     // Job Search Route
-    Route::get('/intern/job-search', function () {
-        return view('intern.job_search');
-    })->name('intern.job.search');
+    Route::get('/intern/job-search', [InternController::class, 'getJobs'])->name('intern.job.search');
 
     Route::get('intern/job-applications', function () {
         return view('intern.job_application');

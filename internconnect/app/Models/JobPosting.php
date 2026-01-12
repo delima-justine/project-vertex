@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class JobPosting extends Model
 {
+    use HasFactory;
+
     protected $table = 'tbl_job_posting';
     protected $primaryKey = 'job_id';
 

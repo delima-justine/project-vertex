@@ -185,7 +185,7 @@ body {
     margin: 5px 0;
   }
 
-  .tags {
+  .description {
     margin-top: 10px;
 
     span {
@@ -214,6 +214,46 @@ body {
     .salary {
       margin-top: 10px;
       font-weight: bold;
+    }
+  }
+}
+
+// PAGINATION
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 30px;
+  list-style: none;
+
+  .page-item {
+    .page-link {
+      color: $dark;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s;
+
+      &:hover {
+        background: #f1f5f9;
+        border-color: $primary;
+        color: $primary;
+      }
+    }
+
+    &.active .page-link {
+      background: $primary;
+      color: #fff;
+      border-color: $primary;
+    }
+
+    &.disabled .page-link {
+      color: #94a3b8;
+      background: #f8fafc;
+      cursor: not-allowed;
+      pointer-events: none;
     }
   }
 }

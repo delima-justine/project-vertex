@@ -86,7 +86,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            return redirect()->route('intern.dashboard');
         }
 
         return back()->withErrors([
@@ -119,6 +119,6 @@ class AuthController extends Controller
         // Let's log them in for simplicity as per the current scope, 
         // or redirect to login with a success message.
         
-        return redirect()->route('applicant.login')->with('success', 'Registration successful! Please check your email for verification.');
+        return redirect()->route('auth.applicant.login')->with('success', 'Registration successful! Please check your email for verification.');
     }
 }
