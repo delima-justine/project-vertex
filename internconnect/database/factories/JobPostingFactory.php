@@ -23,7 +23,7 @@ class JobPostingFactory extends Factory
             'department' => $this->faker->randomElement(['IT', 'HR', 'Marketing', 'Finance']),
             'salary_range' => $this->faker->numberBetween(30000, 100000),
             'posted_by_user_id' => 1, // Assuming user with ID 1 exists
-            'post_date' => $this->faker->date(),
+            'post_date' => $this->faker->dateTimeBetween('-7 years', '-6 years')->format('Y-m-d'),
         ];
     }
 }
