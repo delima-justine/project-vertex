@@ -23,7 +23,8 @@
         <button>Search</button>
     </section>
 
-    <p class="count">Showing 4 jobs</p>
+    {{-- JOB COUNT --}}
+    <p class="count">Showing {{ $jobs->count() }} jobs</p>
 
     {{-- JOB LISTINGS --}}
     <section class="jobs">
