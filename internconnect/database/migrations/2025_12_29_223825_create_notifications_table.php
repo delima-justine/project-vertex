@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('notification_id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('user_id')->on('tbl_user');
-            $table->enum('type', ['Late','Missed Time-in','Document Due','Milestone Achieved'])->nullable();
+            $table->enum('type', ['Late','Missed Time-in','Document Due','Milestone Achieved','New Job Posted','Job Recommendation'])->nullable();
             $table->string('message', 255)->nullable();
             $table->dateTime('send_date')->nullable();
             $table->boolean('is_read')->nullable();

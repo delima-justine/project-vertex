@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             CoordinatorSeeder::class,
             InternSeeder::class,
             JobPostingSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }

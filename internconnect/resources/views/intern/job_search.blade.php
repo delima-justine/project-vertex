@@ -13,7 +13,6 @@
             <h2>Job Search</h2>
             <p>Find your next marketing opportunity</p>
         </div>
-        <div class="bell">🔔<span>3</span></div>
     </section>
 
     {{-- SEARCH --}}

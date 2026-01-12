@@ -9,6 +9,7 @@ use App\Http\Controllers\HR\JobPostingController;
 use App\Http\Controllers\HR\UserController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\InternController;
+use App\Http\Controllers\Api\NotificationController;
 
 Route::get('/', function () {
     return view('landing');
@@ -67,6 +68,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('intern/job-applications', function () {
         return view('intern.job_application');
     })->name('intern.job.application');
+
+    // API Routes for Notifications (using session-based auth)
+    Route::prefix('api')->group(function () {
+        Route::prefix('notifications')->group(function () {
+            Route::get('/', [NotificationController::class, 'index']);
+            Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
+            Route::put('/{id}/read', [NotificationController::class, 'read']);
+            Route::put('/read-all', [NotificationController::class, 'readAll']);
+        });
+    });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

@@ -123,8 +123,8 @@ class HRController extends Controller
             'status' => $status,
             'status_badge' => $statusBadge,
             'status_text' => $statusText,
-            'documents_count' => $intern->documents ? count($intern->documents) : 0,
-            'applications_count' => $intern->jobApplications ? count($intern->jobApplications) : 0,
+            'documents_count' => $intern->documents()->count(),
+            'applications_count' => $intern->jobApplications()->count(),
             'created_at' => $intern->created_at,
         ];
 
