@@ -7,7 +7,9 @@ export default defineConfig({
             input: [
                 'resources/sass/app.scss',
                 'resources/js/app.js',
-                'resources/sass/intern.dashboard.scss'
+                'resources/sass/intern.dashboard.scss',
+                'resources/sass/intern.profile.scss',
+                'resources/sass/intern.job_search.scss'
             ],
             refresh: true,
         }),
