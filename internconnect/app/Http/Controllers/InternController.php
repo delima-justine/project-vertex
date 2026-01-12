@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JobPosting;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 
 class InternController extends Controller
 {
@@ -24,7 +25,7 @@ class InternController extends Controller
     // Returns available jobs for the intern
     public function getJobs() {
         // Fetch jobs logic here
-        $jobs = JobPosting::all(); // Replace with actual job posting::all();
+        $jobs = JobPosting::orderBy('created_at', 'desc')->paginate(10);
 
         return view('intern.job_search', compact('jobs'));
     }
