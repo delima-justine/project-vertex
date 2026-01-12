@@ -33,6 +33,7 @@ class AdminUserSeeder extends Seeder
             'user_role' => 'Intern',
             'status' => 'Active',
             'password' => Hash::make('password123'),    
+            'coordinator_id' => 1,
         ]);
 
         // Sample Coordinator
