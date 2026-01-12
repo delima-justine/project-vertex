@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('last_name', 50)->nullable();
             $table->string('email', 100)->unique()->nullable();
             $table->string('contact_number', 15)->nullable();
-            $table->enum('user_role', ['Intern','Admin','HR','Coordinator'])->nullable();
+            $table->enum('user_role', ['Intern','HR','Coordinator'])->nullable();
             $table->unsignedBigInteger('school_id')->nullable();
             $table->foreign('school_id')->references('school_id')->on('tbl_school');
             $table->unsignedBigInteger('coordinator_id')->nullable();
