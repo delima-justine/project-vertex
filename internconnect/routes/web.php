@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('hr')->name('hr.')->group(function() {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('interns', [HRController::class, 'interns'])->name('interns');
+        Route::get('interns/{internId}', [HRController::class, 'viewInternProfile'])->name('interns.show');
         Route::resource('job-postings', JobPostingController::class);
         Route::resource('users', UserController::class);
     });
