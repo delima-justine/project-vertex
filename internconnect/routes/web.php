@@ -43,45 +43,19 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Intern Dashboard Route
-    Route::get('/', function () {
-    return view('intern.dashboard');
-});
+    Route::get('/intern/dashboard', function () {
+        return view('intern.dashboard');
+    })->name('intern.dashboard');
 
-    Route::get('/intern.dashboard', function () {
-    return view('intern.dashboard');
-});
+    // Intern Profile Route
+    Route::get('/intern/profile', function () {
+        return view('intern.profile');
+    })->name('intern.profile');
 
-// Intern Profile Route
-Route::get('/', function () {
-    return redirect('/intern.profile');
-});
-
-Route::get('/intern.profile', function () {
-    return view('intern.profile');
-});
-
-// Job Search Route
-Route::get('/', function () {
-    return redirect('/intern.dashboard');
-});
-
-Route::get('/intern.dashboard', function () {
-    return view('intern.dashboard');
-});
-
-Route::get('/intern.profile', function () {
-    return view('intern.profile');
-});
-
-Route::get('/job.search', function () {
-    return view('job.search');
-});
-
-
-
-
-
-
+    // Job Search Route
+    Route::get('/intern/job-search', function () {
+        return view('intern.job_search');
+    })->name('intern.job.search');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
