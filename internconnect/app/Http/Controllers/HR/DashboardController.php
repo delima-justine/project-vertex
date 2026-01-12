@@ -30,6 +30,13 @@ class DashboardController extends Controller
             $pendingDocuments = 0;
         }
 
+        // Count total job postings
+        try {
+            $totalJobPostings = JobPosting::count();
+        } catch (\Exception $e) {
+            $totalJobPostings = 0;
+        }
+
         // Fetch all recent activities from multiple sources
         $activities = collect([]);
 
@@ -128,6 +135,6 @@ class DashboardController extends Controller
         // Sort by date (newest first) and take only 10 recent activities
         $recentActivities = $activities->sortByDesc('date')->take(10);
 
-        return view('hr.dashboard', compact('totalInterns', 'activeApplications', 'pendingDocuments', 'recentActivities'));
+        return view('hr.dashboard', compact('totalInterns', 'activeApplications', 'pendingDocuments', 'totalJobPostings', 'recentActivities'));
     }
 }

@@ -5,7 +5,7 @@
 @section('content')
     <div class="row g-4 mb-4">
         <!-- Stat Card 1 -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card h-100 border-start border-4 border-primary">
                 <div class="card-body d-flex justify-content-between align-items-start">
                     <div>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <!-- Stat Card 2 -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card h-100 border-start border-4 border-success">
                 <div class="card-body d-flex justify-content-between align-items-start">
                     <div>
@@ -33,7 +33,7 @@
             </div>
         </div>
         <!-- Stat Card 3 -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card h-100 border-start border-4 border-warning">
                 <div class="card-body d-flex justify-content-between align-items-start">
                     <div>
@@ -42,6 +42,20 @@
                     </div>
                     <div class="bg-light rounded p-2 text-warning">
                         <i class="bi bi-folder fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Stat Card 4 -->
+        <div class="col-md-3">
+            <div class="card h-100 border-start border-4 border-info">
+                <div class="card-body d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-uppercase text-muted fw-bold small mb-1">Total Job Posts</p>
+                        <h3 class="fw-bold mb-0">{{ $totalJobPostings }}</h3>
+                    </div>
+                    <div class="bg-light rounded p-2 text-info">
+                        <i class="bi bi-briefcase fs-4"></i>
                     </div>
                 </div>
             </div>
