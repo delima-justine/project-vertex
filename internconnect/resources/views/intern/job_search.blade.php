@@ -33,17 +33,17 @@
         <div class="job-card">
             <div class="job-info">
                 <h3>{{ $job->title }}</h3>
-                <strong>{{ $job->postedBy->name ?? 'Unknown Company' }}</strong>
+                <strong>{{ $job->department ?? 'Unknown Department' }}</strong>
                 <p>
                     📍 {{ $job->location ?? 'Location not specified' }} 
                     • {{ $job->employment_type ?? 'Employment type not specified' }} 
                     • {{ $job->post_date->diffForHumans() }}
                 </p>
 
-                <div class="tags">
-                    <span>Social Media</span>
-                    <span>Content Creation</span>
-                    <span>Analytics</span>
+                <div class="description">
+                    <p>
+                        {{ $job->description }}
+                    </p>
                 </div>
             </div>
 
@@ -54,4 +54,7 @@
         </div>
         @endforeach
     </section>
+
+    {{-- Pagination --}}
+    {{ $jobs->links('pagination::bootstrap-5') }}
 @endsection
