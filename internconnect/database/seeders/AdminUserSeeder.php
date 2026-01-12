@@ -24,18 +24,6 @@ class AdminUserSeeder extends Seeder
             'password' => Hash::make('password123'),
         ]);
 
-        // Sample Intern
-        User::create([
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'intern@roc.ph',
-            'contact_number' => '09123456789',
-            'user_role' => 'Intern',
-            'status' => 'Active',
-            'password' => Hash::make('password123'),    
-            'coordinator_id' => 1,
-        ]);
-
         // Sample Coordinator
         User::create([
             'first_name' => 'Jane',
