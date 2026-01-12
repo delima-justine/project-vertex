@@ -13,7 +13,9 @@
             <h3>Profile Management</h3>
             <p>Manage your profile and showcase your skills</p>
         </div>
-        <button class="edit-btn">Edit Profile</button>
+        @if(auth()->id() == $intern_details->user_id)
+            <a href="{{ route('intern.profile.edit') }}" class="edit-btn">Edit Profile</a>
+        @endif
     </section>
 
     <section class="cover">
@@ -32,14 +34,19 @@
     <section class="card">
         <h3>About Me</h3>
         <p>
-            Passionate marketing student seeking internship opportunities to apply my skills
-            in social media management, content creation, and digital marketing.
+            {{ $intern_details->about ?? 'No bio added yet.' }}
         </p>
 
         <div class="links">
-            <a>linkedin.com/in/johndoe</a>
-            <a>github.com/johndoe</a>
-            <a>johndoe.com</a>
+            @if($intern_details->linkedin_url)
+                <a href="{{ $intern_details->linkedin_url }}" target="_blank">{{ $intern_details->linkedin_url }}</a>
+            @endif
+            @if($intern_details->github_url)
+                <a href="{{ $intern_details->github_url }}" target="_blank">{{ $intern_details->github_url }}</a>
+            @endif
+            @if($intern_details->portfolio_url)
+                <a href="{{ $intern_details->portfolio_url }}" target="_blank">{{ $intern_details->portfolio_url }}</a>
+            @endif
         </div>
     </section>
 

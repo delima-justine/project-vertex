@@ -19,10 +19,10 @@
         </div>
 
         <div class="user">
-            <div class="avatar">JD</div>
+            <div class="avatar">{{ strtoupper(substr(Auth::user()->first_name, 0, 1) . substr(Auth::user()->last_name, 0, 1)) }}</div>
             <div>
-                <strong>John Doe</strong>
-                <small>Intern</small>
+                <strong>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</strong>
+                <small>{{ Auth::user()->user_role }}</small>
             </div>
         </div>
 

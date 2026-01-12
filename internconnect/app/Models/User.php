@@ -30,6 +30,10 @@ class User extends Authenticatable
         'coordinator_id',
         'status',
         'password',
+        'about',
+        'linkedin_url',
+        'github_url',
+        'portfolio_url',
     ];
 
     /**

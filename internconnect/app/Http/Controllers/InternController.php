@@ -4,11 +4,47 @@ namespace App\Http\Controllers;
 
 use App\Models\JobPosting;
 use App\Models\User;
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class InternController extends Controller
 {
+    // Dashboard for the intern
+    public function dashboard()
+    {
+        $user = Auth::user();
+        
+        // Get statistics for the logged-in intern
+        $totalApplications = JobApplication::where('user_id', $user->user_id)->count();
+        $pendingApplications = JobApplication::where('user_id', $user->user_id)
+            ->where('hr_status', 'Pending Review')
+            ->count();
+        $interviewingApplications = JobApplication::where('user_id', $user->user_id)
+            ->where('hr_status', 'Interviewing')
+            ->count();
+        $offersCount = JobApplication::where('user_id', $user->user_id)
+            ->where('hr_status', 'Hired')
+            ->count();
+
+        // Get recent job applications
+        $recentApplications = JobApplication::where('user_id', $user->user_id)
+            ->with('jobPosting')
+            ->orderBy('application_date', 'desc')
+            ->limit(4)
+            ->get();
+
+        return view('intern.dashboard', compact(
+            'user',
+            'totalApplications',
+            'pendingApplications',
+            'interviewingApplications',
+            'offersCount',
+            'recentApplications'
+        ));
+    }
+
     // Profile of the intern
     public function profile($id) {
         // Fetch profile logic here
@@ -17,9 +53,28 @@ class InternController extends Controller
         return view('intern.profile', compact('intern_details'));
     }
 
+    // Show edit profile form
+    public function editProfile()
+    {
+        $user = Auth::user();
+        return view('intern.profile-edit', compact('user'));
+    }
+
     // Update Profile of the intern
     public function updateProfile(Request $request) {
-       // Update profile logic here
+        $user = Auth::user();
+        
+        $validated = $request->validate([
+            'about' => 'nullable|string|max:1000',
+            'linkedin_url' => 'nullable|url|max:255',
+            'github_url' => 'nullable|url|max:255',
+            'portfolio_url' => 'nullable|url|max:255',
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->route('intern.profile', $user->user_id)
+            ->with('success', 'Profile updated successfully!');
     }
 
     // Returns available jobs for the intern
