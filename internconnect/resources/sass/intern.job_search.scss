@@ -24,6 +24,11 @@ body {
   background: $dark;
   color: #fff;
   padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 
   .logo {
     display: flex;
@@ -89,7 +94,10 @@ body {
 // MAIN
 .main {
   flex: 1;
+  margin-left: 260px;
   padding: 30px;
+  overflow-y: auto;
+  min-height: 100vh;
 }
 
 // HEADER
@@ -193,13 +201,14 @@ body {
   .job-action {
     text-align: right;
 
-    button {
+    a {
       background: #0f3c5f;
       color: #fff;
       border: none;
       padding: 8px 16px;
       border-radius: 8px;
       cursor: pointer;
+      text-decoration: none;
     }
 
     .salary {

@@ -64,5 +64,9 @@ Route::middleware(['auth'])->group(function () {
         return view('intern.job_search');
     })->name('intern.job.search');
 
+    Route::get('intern/job-applications', function () {
+        return view('intern.job_application');
+    })->name('intern.job.application');
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
