@@ -28,17 +28,17 @@ This document contains all CRUD (Create, Read, Update, Delete) SQL queries **act
 - `POST /coordinator/update-password` - Update coordinator password (CoordinatorController@updatePassword)
 - `GET /intern/profile/{id}` - View intern profile (InternController@profile)
 
-| Type | Query | Description |
-|------|-------|-------------|
-| **CREATE** | `INSERT INTO tbl_user (first_name, last_name, email, contact_number, password, user_role, school_id, coordinator_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)` | Create a new user account (used in UserController@store and RegisterUserAction) |
-| **CREATE** | `INSERT INTO tbl_user (first_name, last_name, email, contact_number, password, user_role, status) VALUES (?, ?, ?, ?, ?, 'Intern', 'Applicant')` | Create applicant/intern account (used in AuthController@applicantRegister and RegisterUserAction) |
-| **READ** | `SELECT * FROM tbl_user WHERE (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?) ORDER BY user_id DESC LIMIT 15 OFFSET ?` | Search and list users with pagination (UserController@index) |
-| **READ** | `SELECT * FROM tbl_user WHERE user_role = 'Intern' AND coordinator_id = ?` | Get all interns assigned to a specific coordinator (CoordinatorController@dashboard, CoordinatorController@monitorInterns) |
-| **READ** | `SELECT * FROM tbl_user WHERE user_id = ?` | Find user by ID (InternController@profile) |
-| **UPDATE** | `UPDATE tbl_user SET first_name = ?, last_name = ?, email = ?, contact_number = ?, user_role = ?, school_id = ?, coordinator_id = ?, password = ? WHERE user_id = ?` | Update user information (UserController@update) |
-| **UPDATE** | `UPDATE tbl_user SET first_name = ?, last_name = ?, email = ?, contact_number = ? WHERE user_id = ?` | Update coordinator profile (CoordinatorController@updateProfile) |
-| **UPDATE** | `UPDATE tbl_user SET password = ? WHERE user_id = ?` | Update user password (UserController@update, CoordinatorController@updatePassword - conditional) |
-| **DELETE** | `DELETE FROM tbl_user WHERE user_id = ?` | Delete a user account (UserController@destroy) |
+| Type | Laravel Method | Query | Description |
+|------|----------------|-------|-------------|
+| **CREATE** | `User::create()` | `INSERT INTO tbl_user (first_name, last_name, email, contact_number, password, user_role, school_id, coordinator_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)` | Create a new user account (used in UserController@store and RegisterUserAction) |
+| **CREATE** | `User::create()` | `INSERT INTO tbl_user (first_name, last_name, email, contact_number, password, user_role, status) VALUES (?, ?, ?, ?, ?, 'Intern', 'Applicant')` | Create applicant/intern account (used in AuthController@applicantRegister and RegisterUserAction) |
+| **READ** | `User::when()->orderBy()->paginate()` | `SELECT * FROM tbl_user WHERE (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?) ORDER BY user_id DESC LIMIT 15 OFFSET ?` | Search and list users with pagination (UserController@index) |
+| **READ** | `User::where()->where()->with()->get()` | `SELECT * FROM tbl_user WHERE user_role = 'Intern' AND coordinator_id = ?` | Get all interns assigned to a specific coordinator (CoordinatorController@dashboard, CoordinatorController@monitorInterns) |
+| **READ** | `User::findOrFail()` | `SELECT * FROM tbl_user WHERE user_id = ?` | Find user by ID (InternController@profile) |
+| **UPDATE** | `$user->update()` / `$user->save()` | `UPDATE tbl_user SET first_name = ?, last_name = ?, email = ?, contact_number = ?, user_role = ?, school_id = ?, coordinator_id = ?, password = ? WHERE user_id = ?` | Update user information (UserController@update) |
+| **UPDATE** | `$user->update()` | `UPDATE tbl_user SET first_name = ?, last_name = ?, email = ?, contact_number = ? WHERE user_id = ?` | Update coordinator profile (CoordinatorController@updateProfile) |
+| **UPDATE** | `$user->update()` | `UPDATE tbl_user SET password = ? WHERE user_id = ?` | Update user password (UserController@update, CoordinatorController@updatePassword - conditional) |
+| **DELETE** | `$user->delete()` | `DELETE FROM tbl_user WHERE user_id = ?` | Delete a user account (UserController@destroy) |
 
 ---
 
@@ -52,13 +52,13 @@ This document contains all CRUD (Create, Read, Update, Delete) SQL queries **act
 - `GET /coordinator/settings` - View coordinator settings (CoordinatorController@settings)
 - `POST /coordinator/update-profile` - Update coordinator profile (CoordinatorController@updateProfile)
 
-| Type | Query | Description |
-|------|-------|-------------|
-| **CREATE** | `INSERT INTO tbl_coordinator (first_name, last_name, email, school_id, unique_key) VALUES (?, ?, ?, ?, ?)` | Create a new coordinator record (used in UserController@store, UserController@update, and RegisterUserAction@execute) |
-| **READ** | `SELECT c.*, s.school_name, s.branch_campus, s.address FROM tbl_coordinator c LEFT JOIN tbl_school s ON c.school_id = s.school_id` | Get all coordinators with school information (UserController@create, UserController@edit) |
-| **READ** | `SELECT * FROM tbl_coordinator WHERE coordinator_id = ?` | Find coordinator by ID (UserController@update, CoordinatorController@settings) |
-| **UPDATE** | `UPDATE tbl_coordinator SET first_name = ?, last_name = ?, email = ?, school_id = ? WHERE coordinator_id = ?` | Update coordinator information (UserController@update) |
-| **UPDATE** | `UPDATE tbl_coordinator SET first_name = ?, last_name = ?, email = ? WHERE coordinator_id = ?` | Update coordinator profile (CoordinatorController@updateProfile) |
+| Type | Laravel Method | Query | Description |
+|------|----------------|-------|-------------|
+| **CREATE** | `Coordinator::create()` | `INSERT INTO tbl_coordinator (first_name, last_name, email, school_id, unique_key) VALUES (?, ?, ?, ?, ?)` | Create a new coordinator record (used in UserController@store, UserController@update, and RegisterUserAction@execute) |
+| **READ** | `Coordinator::with()->get()` | `SELECT c.*, s.school_name, s.branch_campus, s.address FROM tbl_coordinator c LEFT JOIN tbl_school s ON c.school_id = s.school_id` | Get all coordinators with school information (UserController@create, UserController@edit) |
+| **READ** | `Coordinator::find()` | `SELECT * FROM tbl_coordinator WHERE coordinator_id = ?` | Find coordinator by ID (UserController@update, CoordinatorController@settings) |
+| **UPDATE** | `$coordinator->update()` | `UPDATE tbl_coordinator SET first_name = ?, last_name = ?, email = ?, school_id = ? WHERE coordinator_id = ?` | Update coordinator information (UserController@update) |
+| **UPDATE** | `$coordinator->update()` | `UPDATE tbl_coordinator SET first_name = ?, last_name = ?, email = ? WHERE coordinator_id = ?` | Update coordinator profile (CoordinatorController@updateProfile) |
 
 ---
 
@@ -71,10 +71,10 @@ This document contains all CRUD (Create, Read, Update, Delete) SQL queries **act
 - `GET /hr/users/{user}/edit` - List schools for user editing (HR\UserController@edit)
 - `GET /auth/register` - List schools for registration (Register@mount - Livewire)
 
-| Type | Query | Description |
-|------|-------|-------------|
-| **CREATE** | `INSERT INTO tbl_school (school_name, address, branch_campus) VALUES (?, ?, ?)` | Create a new school/partner institution (RegisterUserAction@execute) |
-| **READ** | `SELECT * FROM tbl_school` | Get all schools (UserController@create, UserController@edit, Register@mount) |
+| Type | Laravel Method | Query | Description |
+|------|----------------|-------|-------------|
+| **CREATE** | `School::create()` | `INSERT INTO tbl_school (school_name, address, branch_campus) VALUES (?, ?, ?)` | Create a new school/partner institution (RegisterUserAction@execute) |
+| **READ** | `School::all()` | `SELECT * FROM tbl_school` | Get all schools (UserController@create, UserController@edit, Register@mount) |
 
 ---
 
@@ -88,11 +88,11 @@ This document contains all CRUD (Create, Read, Update, Delete) SQL queries **act
 - `POST /hr/job-postings` - Store new job posting (HR\JobPostingController@store)
 - `GET /intern/job-search` - List jobs for interns (InternController@getJobs)
 
-| Type | Query | Description |
-|------|-------|-------------|
-| **CREATE** | `INSERT INTO tbl_job_posting (title, description, requirements, department, salary_range, posted_by_user_id, post_date) VALUES (?, ?, ?, ?, ?, ?, ?)` | Create a new job posting (JobPostingController@store) |
-| **READ** | `SELECT jp.*, COUNT(ja.application_id) as applications_count FROM tbl_job_posting jp LEFT JOIN tbl_job_application ja ON jp.job_id = ja.job_id GROUP BY jp.job_id ORDER BY jp.post_date DESC` | Get all job postings with application counts (JobPostingController@index) |
-| **READ** | `SELECT * FROM tbl_job_posting ORDER BY created_at DESC LIMIT 10 OFFSET ?` | Get paginated job postings for intern job search (InternController@getJobs) |
+| Type | Laravel Method | Query | Description |
+|------|----------------|-------|-------------|
+| **CREATE** | `JobPosting::create()` | `INSERT INTO tbl_job_posting (title, description, requirements, department, salary_range, posted_by_user_id, post_date) VALUES (?, ?, ?, ?, ?, ?, ?)` | Create a new job posting (JobPostingController@store) |
+| **READ** | `JobPosting::withCount()->orderBy()->get()` | `SELECT jp.*, COUNT(ja.application_id) as applications_count FROM tbl_job_posting jp LEFT JOIN tbl_job_application ja ON jp.job_id = ja.job_id GROUP BY jp.job_id ORDER BY jp.post_date DESC` | Get all job postings with application counts (JobPostingController@index) |
+| **READ** | `JobPosting::orderBy()->paginate()` | `SELECT * FROM tbl_job_posting ORDER BY created_at DESC LIMIT 10 OFFSET ?` | Get paginated job postings for intern job search (InternController@getJobs) |
 
 ---
 
@@ -104,16 +104,16 @@ This document contains all CRUD (Create, Read, Update, Delete) SQL queries **act
 - `GET /coordinator/dashboard` - Coordinator dashboard with statistics (CoordinatorController@dashboard)
 - `GET /coordinator/monitor-interns` - Monitor interns page (CoordinatorController@monitorInterns)
 
-| Type | Query | Description |
-|------|-------|-------------|
-| **READ** | `SELECT * FROM tbl_user WHERE user_role = 'Intern' AND coordinator_id = ?` | Get interns for coordinator (eager loaded with relationships in dashboard and monitorInterns) |
-| **READ** | `SELECT * FROM tbl_progress WHERE user_id IN (...)` | Get progress records for interns (eager loaded via `with(['progress'])`) |
-| **READ** | `SELECT * FROM tbl_attendance WHERE user_id IN (...)` | Get attendance records for interns (eager loaded via `with(['attendances'])`) |
-| **READ** | `SELECT * FROM tbl_attendance WHERE user_id = ? ORDER BY created_at DESC LIMIT 3` | Get recent attendance for dashboard activity (CoordinatorController@dashboard) |
-| **READ** | `SELECT * FROM tbl_document WHERE user_id IN (...)` | Get document records for interns (eager loaded via `with(['documents'])`) |
-| **READ** | `SELECT * FROM tbl_document WHERE user_id IN (...) AND verification_status = 'Pending'` | Count pending documents for dashboard (CoordinatorController@dashboard) |
-| **READ** | `SELECT * FROM tbl_document WHERE user_id = ? ORDER BY submission_date DESC LIMIT 2` | Get recent document submissions for dashboard activity (CoordinatorController@dashboard) |
-| **READ** | `SELECT ja.*, jp.* FROM tbl_job_application ja LEFT JOIN tbl_job_posting jp ON ja.job_id = jp.job_id WHERE ja.user_id IN (...)` | Get job applications with job details (eager loaded via `with(['jobApplications.job'])`) |
+| Type | Laravel Method | Query | Description |
+|------|----------------|-------|-------------|
+| **READ** | `User::where()->where()->with()->get()` | `SELECT * FROM tbl_user WHERE user_role = 'Intern' AND coordinator_id = ?` | Get interns for coordinator (eager loaded with relationships in dashboard and monitorInterns) |
+| **READ** | `$intern->progress` (relationship) | `SELECT * FROM tbl_progress WHERE user_id IN (...)` | Get progress records for interns (eager loaded via `with(['progress'])`) |
+| **READ** | `$intern->attendances` (relationship) | `SELECT * FROM tbl_attendance WHERE user_id IN (...)` | Get attendance records for interns (eager loaded via `with(['attendances'])`) |
+| **READ** | `$intern->attendances()->orderBy()->take()->get()` | `SELECT * FROM tbl_attendance WHERE user_id = ? ORDER BY created_at DESC LIMIT 3` | Get recent attendance for dashboard activity (CoordinatorController@dashboard) |
+| **READ** | `$intern->documents` (relationship) | `SELECT * FROM tbl_document WHERE user_id IN (...)` | Get document records for interns (eager loaded via `with(['documents'])`) |
+| **READ** | `$intern->documents->where()` (collection filter) | `SELECT * FROM tbl_document WHERE user_id IN (...) AND verification_status = 'Pending'` | Count pending documents for dashboard (CoordinatorController@dashboard) |
+| **READ** | `$intern->documents()->orderBy()->take()->get()` | `SELECT * FROM tbl_document WHERE user_id = ? ORDER BY submission_date DESC LIMIT 2` | Get recent document submissions for dashboard activity (CoordinatorController@dashboard) |
+| **READ** | `$intern->jobApplications->job` (relationship) | `SELECT ja.*, jp.* FROM tbl_job_application ja LEFT JOIN tbl_job_posting jp ON ja.job_id = jp.job_id WHERE ja.user_id IN (...)` | Get job applications with job details (eager loaded via `with(['jobApplications.job'])`) |
 
 ---
 
