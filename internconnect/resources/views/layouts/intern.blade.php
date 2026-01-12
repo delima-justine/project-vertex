@@ -32,7 +32,10 @@
             {{-- <a href="#">Jobs Feed</a>
             <a href="#">Notifications <span class="notif">3</span></a> --}}
             <a class="{{ request()->routeIs('intern.profile') ? 'active' : '' }}" href="{{ route('intern.profile') }}">Profile</a>
-            <a class="logout" href="#">Logout</a>
+            <a class="logout" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </nav>
     </aside>
 
