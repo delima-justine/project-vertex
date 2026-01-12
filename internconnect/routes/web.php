@@ -60,6 +60,24 @@ Route::get('/intern.profile', function () {
     return view('intern.profile');
 });
 
+// Job Search Route
+Route::get('/', function () {
+    return redirect('/intern.dashboard');
+});
+
+Route::get('/intern.dashboard', function () {
+    return view('intern.dashboard');
+});
+
+Route::get('/intern.profile', function () {
+    return view('intern.profile');
+});
+
+Route::get('/job.search', function () {
+    return view('job.search');
+});
+
+
 
 
 
