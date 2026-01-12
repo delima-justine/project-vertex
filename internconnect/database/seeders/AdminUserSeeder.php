@@ -17,7 +17,7 @@ class AdminUserSeeder extends Seeder
         User::create([
             'first_name' => 'Ron Oliver',
             'last_name' => 'Clarin',
-            'email' => 'admin@roc.ph',
+            'email' => 'hr@roc.ph',
             'contact_number' => '09123456789',
             'user_role' => 'HR',
             'status' => 'Active',
