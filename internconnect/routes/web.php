@@ -52,9 +52,7 @@ Route::middleware(['auth'])->group(function () {
         [InternController::class, 'profile'])->name('intern.profile');
 
     // Job Search Route
-    Route::get('/intern/job-search', function () {
-        return view('intern.job_search');
-    })->name('intern.job.search');
+    Route::get('/intern/job-search', [InternController::class, 'getJobs'])->name('intern.job.search');
 
     Route::get('intern/job-applications', function () {
         return view('intern.job_application');
