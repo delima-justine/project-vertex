@@ -3,7 +3,13 @@
 @section('header', 'Manage Users')
 
 @section('content')
-    <div class="d-flex justify-content-end mb-4">
+    <div class="d-flex justify-content-end gap-2 mb-4">
+        <a href="{{ route('hr.users.backup') }}" class="btn btn-outline-secondary" title="Backup all users">
+            <i class="bi bi-download"></i> Backup
+        </a>
+        <a href="{{ route('hr.users.restore') }}" class="btn btn-outline-info" title="Restore from backup">
+            <i class="bi bi-upload"></i> Restore
+        </a>
         <a href="{{ route('hr.users.create') }}" class="btn btn-primary">Create User</a>
     </div>
 

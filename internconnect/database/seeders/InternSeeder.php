@@ -14,8 +14,7 @@ class InternSeeder extends Seeder
      */
     public function run(): void
     {
-        // Intern seeding logic here
-        // Sample Intern
+        // Sample Intern without requiring coordinator_id
         User::create([
             'first_name' => 'John',
             'last_name' => 'Doe',
@@ -24,7 +23,17 @@ class InternSeeder extends Seeder
             'user_role' => 'Intern',
             'status' => 'Active',
             'password' => Hash::make('password123'),    
-            'coordinator_id' => 1,
+        ]);
+
+        // Additional test intern
+        User::create([
+            'first_name' => 'Jane',
+            'last_name' => 'Johnson',
+            'email' => 'intern2@roc.ph',
+            'contact_number' => '09123456789',
+            'user_role' => 'Intern',
+            'status' => 'Active',
+            'password' => Hash::make('password123'),    
         ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Models\JobPosting;
 use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class JobPostingController extends Controller
 {
@@ -109,5 +110,73 @@ class JobPostingController extends Controller
     {
         $jobPosting->delete();
         return redirect()->route('hr.job-postings.index')->with('success', 'Job posting deleted successfully');
+    }
+
+    public function backup()
+    {
+        try {
+            $jobPostings = JobPosting::with('postedBy', 'applications')->get();
+            $filename = 'job_postings_backup_' . date('Y-m-d_H-i-s') . '.json';
+            
+            $backup = [
+                'backup_date' => now(),
+                'total_postings' => count($jobPostings),
+                'job_postings' => $jobPostings
+            ];
+
+            return response()->json($backup, 200, [
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"'
+            ])->header('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Backup failed: ' . $e->getMessage()]);
+        }
+    }
+
+    public function restoreForm()
+    {
+        return view('hr.job_postings.restore');
+    }
+
+    public function restore(Request $request)
+    {
+        $request->validate([
+            'backup_file' => 'required|file|mimes:json'
+        ]);
+
+        try {
+            $file = $request->file('backup_file');
+            $content = json_decode(file_get_contents($file->getRealPath()), true);
+
+            if (!isset($content['job_postings']) || !is_array($content['job_postings'])) {
+                return back()->withErrors(['error' => 'Invalid backup file format']);
+            }
+
+            DB::beginTransaction();
+
+            $restored = 0;
+            foreach ($content['job_postings'] as $jobData) {
+                $jobPosting = JobPosting::updateOrCreate(
+                    ['job_id' => $jobData['job_id']],
+                    [
+                        'title' => $jobData['title'],
+                        'description' => $jobData['description'],
+                        'requirements' => $jobData['requirements'] ?? null,
+                        'department' => $jobData['department'],
+                        'salary_range' => $jobData['salary_range'] ?? null,
+                        'posted_by_user_id' => $jobData['posted_by_user_id'],
+                        'post_date' => $jobData['post_date'],
+                    ]
+                );
+                $restored++;
+            }
+
+            DB::commit();
+
+            return redirect()->route('hr.job-postings.index')->with('success', "Successfully restored {$restored} job postings from backup");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Job posting restore failed: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Restore failed: ' . $e->getMessage()]);
+        }
     }
 }

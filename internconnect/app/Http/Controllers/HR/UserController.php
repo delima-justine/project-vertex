@@ -174,7 +174,108 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        $user->delete();
-        return redirect()->route('hr.users.index')->with('success', 'User deleted');
+        try {
+            DB::beginTransaction();
+
+            // Delete related records first (cascade delete manually)
+            // Delete notifications
+            \App\Models\Notification::where('user_id', $user->user_id)->delete();
+            
+            // Delete job applications
+            \App\Models\JobApplication::where('user_id', $user->user_id)->delete();
+            
+            // Delete progress records
+            \App\Models\Progress::where('user_id', $user->user_id)->delete();
+            
+            // Delete documents
+            \App\Models\Document::where('user_id', $user->user_id)->delete();
+            
+            // Delete the user
+            $user->delete();
+
+            DB::commit();
+            return redirect()->route('hr.users.index')->with('success', 'User and related records deleted successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('User deletion failed: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to delete user: ' . $e->getMessage()]);
+        }
+    }
+
+    public function backup()
+    {
+        try {
+            $users = User::all();
+            $filename = 'users_backup_' . date('Y-m-d_H-i-s') . '.json';
+            
+            $backup = [
+                'backup_date' => now(),
+                'total_users' => count($users),
+                'users' => $users
+            ];
+
+            return response()->json($backup, 200, [
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"'
+            ])->header('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Backup failed: ' . $e->getMessage()]);
+        }
+    }
+
+    public function restoreForm()
+    {
+        return view('hr.users.restore');
+    }
+
+    public function restore(Request $request)
+    {
+        $request->validate([
+            'backup_file' => 'required|file|mimes:json'
+        ]);
+
+        try {
+            $file = $request->file('backup_file');
+            $content = json_decode(file_get_contents($file->getRealPath()), true);
+
+            if (!isset($content['users']) || !is_array($content['users'])) {
+                return back()->withErrors(['error' => 'Invalid backup file format']);
+            }
+
+            DB::beginTransaction();
+
+            $restored = 0;
+            foreach ($content['users'] as $userData) {
+                $updateData = [
+                    'first_name' => $userData['first_name'],
+                    'last_name' => $userData['last_name'],
+                    'email' => $userData['email'],
+                    'user_role' => $userData['user_role'],
+                    'school_id' => $userData['school_id'] ?? null,
+                    'coordinator_id' => $userData['coordinator_id'] ?? null,
+                ];
+
+                // Include password if available in backup, otherwise use a temporary one
+                if (!empty($userData['password'])) {
+                    $updateData['password'] = $userData['password'];
+                } else {
+                    // Generate a temporary password if not in backup
+                    $updateData['password'] = Hash::make('TempPassword123!' . $userData['user_id']);
+                }
+
+                $user = User::updateOrCreate(
+                    ['user_id' => $userData['user_id']],
+                    $updateData
+                );
+                $restored++;
+            }
+
+            DB::commit();
+
+            return redirect()->route('hr.users.index')->with('success', "Successfully restored {$restored} users from backup");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('User restore failed: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Restore failed: ' . $e->getMessage()]);
+        }
     }
 }

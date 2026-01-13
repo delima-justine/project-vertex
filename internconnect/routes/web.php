@@ -48,7 +48,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('interns', [HRController::class, 'interns'])->name('interns');
         Route::get('interns/{internId}', [HRController::class, 'viewInternProfile'])->name('interns.show');
         Route::resource('job-postings', JobPostingController::class);
+        Route::get('job-postings-backup', [JobPostingController::class, 'backup'])->name('job-postings.backup');
+        Route::get('job-postings-restore', [JobPostingController::class, 'restoreForm'])->name('job-postings.restore');
+        Route::post('job-postings-restore', [JobPostingController::class, 'restore'])->name('job-postings.restore.post');
         Route::resource('users', UserController::class);
+        Route::get('users-backup', [UserController::class, 'backup'])->name('users.backup');
+        Route::get('users-restore', [UserController::class, 'restoreForm'])->name('users.restore');
+        Route::post('users-restore', [UserController::class, 'restore'])->name('users.restore.post');
     });
 
     // Intern Dashboard Route
