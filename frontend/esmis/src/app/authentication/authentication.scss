@@ -10,3 +10,43 @@ main {
 h1 {
   margin: 0;
 }
+
+img {
+  width: 100px;
+  height: auto;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+  button, input {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.pup-logo {
+  width: 80px;
+  height: auto;
+  margin-bottom: 10px;
+}
