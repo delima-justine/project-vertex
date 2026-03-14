@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'app-authentication',
@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './authentication.scss',
 })
 export class Authentication {
+  showPassword = signal(false);
 
+  togglePasswordVisibility() {
+    this.showPassword.set(!this.showPassword());
+  }
 }

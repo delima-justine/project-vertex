@@ -15,10 +15,12 @@
         <div class="input-group mb-3">
           <input 
             class="form-control"
-            type="password" 
+            [type]="showPassword() ? 'text' : 'password'" 
             placeholder="Password"/>
 
-          <button class="input-group-text">
+          <button 
+            class="input-group-text"
+            (click)="togglePasswordVisibility()">
             <i class="bi bi-eye"></i>
           </button>
         </div>
