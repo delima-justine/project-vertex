@@ -42,6 +42,20 @@ img {
     font-weight: bold;
     color: #800000;
   }
+
+  button {
+    background-color: #800000;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #a00000;
+    }
+  }
 }
 
 .login-container {
