@@ -22,7 +22,7 @@ img {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 420px;
+  max-width: 480px;
   width: 100%;
 }
 
@@ -30,9 +30,10 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 480px;
   width: 100%;
 
-  button, input {
+  .login-btn {
     width: 100%;
     margin-top: 10px;
   }
@@ -43,7 +44,7 @@ img {
     color: #800000;
   }
 
-  button {
+  .login-btn {
     background-color: #800000;
     color: white;
     font-weight: bold;
@@ -62,7 +63,7 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 85vh;
+  height: 100vh;
 }
 
 .pup-logo {
