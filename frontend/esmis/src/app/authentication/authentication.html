@@ -19,6 +19,7 @@
             placeholder="Password"/>
 
           <button 
+            type="button"
             class="input-group-text"
             (click)="togglePasswordVisibility()">
             <i class="bi bi-eye"></i>
@@ -27,7 +28,8 @@
 
         <button 
           class="login-btn btn btn-primary"
-          type="button">
+          type="button"
+          (click)="login()">
             Login
         </button>
       </div>
