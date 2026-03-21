@@ -23,5 +23,10 @@ export const routes: Routes = [
     loadComponent: () => import('./notifications/notifications')
       .then(m => m.Notifications),
     title: 'Notifications'
+  }, 
+  {
+    path: 'admin/reports',
+    loadComponent: () => import('./reports/reports').then(m => m.Reports),
+    title: 'Reports'
   }
 ];
