@@ -3,7 +3,8 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '', 
-    loadComponent: () => import('./authentication/authentication').then(m => m.Authentication),
+    loadComponent: () => import('./authentication/authentication')
+      .then(m => m.Authentication),
     title: 'Login to SMIS'
   },
   {
@@ -13,7 +14,14 @@ export const routes: Routes = [
   },
   {
     path: 'admin/user-management',
-    loadComponent: () => import('./user-management/user-management').then(m => m.UserManagement),
+    loadComponent: () => import('./user-management/user-management')
+      .then(m => m.UserManagement),
     title: 'User Management'
+  },
+  {
+    path: 'admin/notifications',
+    loadComponent: () => import('./notifications/notifications')
+      .then(m => m.Notifications),
+    title: 'Notifications'
   }
 ];
