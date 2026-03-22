@@ -66,6 +66,7 @@
       background-color: #ecf0f11a;
       margin-left: 5px;
       border-radius: 6px;
+      margin-left: 10px;
     }
   }
 
@@ -75,6 +76,7 @@
     background-color: #ecf0f11a;
     margin-left: 5px;
     border-radius: 6px;
+    margin-left: 10px;
   }
 }
 
@@ -123,14 +125,27 @@
   text-align: center;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: row;
   align-content: center;
   gap: 70px;
 
   &:hover {
-    background-color: #a00000;
-    color: white;
+    border: 3px solid transparent;
+    border-left-color: #ecf0f1;
+    background-color: #ecf0f11a;
+    margin-left: 5px;
+    border-radius: 6px;
+    margin-left: 10px;
+  }
+
+  .active {
+    border: 3px solid transparent;
+    border-left-color: #ecf0f1;
+    background-color: #ecf0f11a;
+    margin-left: 5px;
+    border-radius: 6px;
+    margin-left: 10px;
   }
 }
