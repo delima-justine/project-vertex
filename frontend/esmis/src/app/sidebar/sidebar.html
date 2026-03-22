@@ -22,11 +22,46 @@
       <span>Notifications</span>
     </div>
 
-    <div class="nav-link">
-      <i class="bi bi-cart-fill"></i>
-      <span>Orders</span>
+    <div class="orders-link" (click)="toggleDropdown()">
+      <div class="d-flex flex-row gap-2">
+        <i class="bi bi-cart-fill"></i>
+        <span>Orders</span>
+      </div>
+      
+      <!-- Dropdown Icon -->
+      <i [class]="isDropdownOpen() ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
     </div>
 
+    @if(isDropdownOpen()) {
+      <!-- Hidden Options for Orders -->
+      <div class="dropdown-container">
+        <div class="new-req dropdown-item">
+          <i class="bi bi-plus-circle-fill"></i>
+          <span>Create New Request</span>
+        </div>
+
+        <div class="pending-req dropdown-item">
+          <i class="bi bi-clock-fill"></i>
+          <span>Pending</span>
+        </div>
+
+        <div class="approved-req dropdown-item">
+          <i class="bi bi-hand-thumbs-up-fill"></i>
+          <span>Approved</span>
+        </div>
+
+        <div class="released-req dropdown-item">
+          <i class="bi bi-truck"></i>
+          <span>Released</span>
+        </div>
+
+        <div class="disapproved-req dropdown-item">
+          <i class="bi bi-x-circle-fill"></i>
+          <span>Disapproved</span>
+        </div>
+      </div>
+    }
+    
     <div class="nav-link" routerLink="/admin/reports">
       <i class="bi bi-graph-up"></i>
       <span>Reports</span>
