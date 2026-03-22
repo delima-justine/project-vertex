@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink } from "@angular/router";
 
 @Component({
@@ -8,5 +8,9 @@ import { RouterLink } from "@angular/router";
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
+  isDropdownOpen = signal(false);
 
+  toggleDropdown() {
+    this.isDropdownOpen.set(!this.isDropdownOpen());
+  }
 }
