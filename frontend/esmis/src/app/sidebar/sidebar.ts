@@ -8,9 +8,11 @@ import { RouterLink } from "@angular/router";
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-  isDropdownOpen = signal(false);
+  isDropdownOpen = signal(localStorage.getItem('isDropdownOpen') === 'true');
 
   toggleDropdown() {
-    this.isDropdownOpen.set(!this.isDropdownOpen());
+    const next = !this.isDropdownOpen();
+    this.isDropdownOpen.set(next);
+    localStorage.setItem('isDropdownOpen', String(next));
   }
 }
