@@ -49,5 +49,11 @@ export const routes: Routes = [
     path: 'released-requests',
     loadComponent: () => import('./released/released').then(m => m.Released),
     title: 'Released Requests'
+  },
+  {
+    path: 'disapproved-requests',
+    loadComponent: () => import('./disapproved/disapproved')
+      .then(m => m.Disapproved),
+    title: 'Disapproved Requests'
   }
 ];
