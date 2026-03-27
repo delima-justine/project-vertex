@@ -39,5 +39,10 @@ export const routes: Routes = [
     path: 'pending-requests',
     loadComponent: () => import('./pending/pending').then(m => m.Pending),
     title: 'Pending Requests'
+  },
+  {
+    path: 'approved-requests',
+    loadComponent: () => import('./approved/approved').then(m => m.Approved),
+    title: 'Approved Requests'
   }
 ];
