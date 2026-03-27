@@ -34,5 +34,10 @@ export const routes: Routes = [
     loadComponent: () => import('./create-request/create-request')
       .then(m => m.CreateRequest),
     title: 'Create Request'
+  },
+  {
+    path: 'pending-requests',
+    loadComponent: () => import('./pending/pending').then(m => m.Pending),
+    title: 'Pending Requests'
   }
 ];
