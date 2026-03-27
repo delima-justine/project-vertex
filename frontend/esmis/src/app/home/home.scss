@@ -1,7 +1,54 @@
 main {
   height: 100vh;
-  width: 100%;
+  /* account for 250px sidebar so content doesn't overflow */
+  width: calc(100% - 250px);
+  max-width: 1190px;
+  // 644px, 774px for laptop
   position: fixed;
   left: 250px;
+  right: 0;
+  padding: 20px 74px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.main-panel {
+  background: linear-gradient(
+    135deg, rgba(186, 52, 22, 0.8) 0%, rgba(30, 58, 138, 0.9) 100%);
+  background-color: #800020;
+  color: #ffffff;
   padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+
+  span {
+    font-size: 24px;
+    font-weight: 700;
+  }
+}
+
+@media(min-width: 768px) and (max-width: 1024px) {
+  main {
+    max-width: 774px;
+    width: calc(100% - 250px);
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+  main {
+    max-width: 1190px;
+    width: calc(100% - 250px);
+  }
+}
+
+/* Mobile: collapse sidebar space so main fits the viewport */
+@media (max-width: 767px) {
+  main {
+    position: relative;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
 }
