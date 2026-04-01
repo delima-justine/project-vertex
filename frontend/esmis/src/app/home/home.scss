@@ -79,6 +79,19 @@ main {
   tbody tr:last-child td:last-child  { border-bottom-right-radius: 8px; }
 }
 
+.fourth-row .card-header {
+  border-left: 4px solid #800000;
+}
+
+.supply-table-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
 
 @media(min-width: 768px) and (max-width: 1024px) {
   main {
