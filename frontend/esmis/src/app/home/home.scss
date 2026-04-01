@@ -52,14 +52,14 @@ main {
   width: 300px;
 }
 
-.fourth-row > table {
+.fourth-row > .card-body > table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   margin-top: 20px;
 
   thead th {
-    background-color: #800000;
+    background-color: #800000 !important;
     color: #ffffff;
     padding: 12px 8px;
     text-align: left;
@@ -92,6 +92,49 @@ main {
   margin-top: 10px;
 }
 
+.functionalities-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  .search-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 5px;
+  }
+
+  .btn-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 5px;
+  }
+}
+
+.functionalities-container > .filters {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 5px;
+
+  select {
+    width: 200px;
+    padding: 6px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+  }
+
+  span {
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 12px;
+  }
+}
 
 @media(min-width: 768px) and (max-width: 1024px) {
   main {
