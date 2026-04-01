@@ -78,44 +78,76 @@
         
         <p>Manage and track all your inventory supplies</p>
       </div>
-      <!-- TODO: Content of Fourth Row -->
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th>Stock Number</th>
-            <th>Item Description</th>
-            <th>Category</th>
-            <th>Unit</th>
-            <th>Status</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+      
+      <div class="card-body">
+        <div class="functionalities-container">
+          <div class="filters">
+            <span class="fw-bold text-secondary">Filter by</span>
 
-        <tbody>
-          <tr>
-            <td>12345</td>
-            <td>Gauze Pads</td>
-            <td>Medical Supplies</td>
-            <td>Box</td>
-            <td>In Stock</td>
-            <td>50</td>
-            <td><button>Edit</button></td>
-          </tr>
+            <select class="form-select">
+              <option value="category">All Stock</option>
+              <option value="status">Available</option>
+              <option value="unit">Low Stock</option>
+              <option value="unit">No Stock</option>
+            </select>
 
-          <tr>
-            <td>67890</td>
-            <td>Syringes</td>
-            <td>Medical Supplies</td>
-            <td>Pack</td>
-            <td>Low Stock</td>
-            <td>10</td>
-            <td><button>Edit</button></td>
-          </tr>
+            <select class="form-select">
+              <option value="category">All Categories</option>
+              <option value="status">Status</option>
+              <option value="unit">Unit</option>
+            </select>
+          </div>
 
-          <!-- More rows as needed -->
-        </tbody>
-      </table>
+          <div class="search-container">
+            <input type="text" placeholder="Search for supplies">
+            <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+          </div>
+
+          <div class="btn-container">
+            <button class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Supply</button>
+            <button class="btn btn-success"><i class="bi bi-printer"></i> Print</button>
+          </div>
+        </div>
+
+        <!-- TODO: Content of Fourth Row -->
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Stock Number</th>
+              <th>Item Description</th>
+              <th>Category</th>
+              <th>Unit</th>
+              <th>Status</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>12345</td>
+              <td>Gauze Pads</td>
+              <td>Medical Supplies</td>
+              <td>Box</td>
+              <td>In Stock</td>
+              <td>50</td>
+              <td><button>Edit</button></td>
+            </tr>
+
+            <tr>
+              <td>67890</td>
+              <td>Syringes</td>
+              <td>Medical Supplies</td>
+              <td>Pack</td>
+              <td>Low Stock</td>
+              <td>10</td>
+              <td><button>Edit</button></td>
+            </tr>
+
+            <!-- More rows as needed -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </main>
