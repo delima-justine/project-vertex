@@ -136,6 +136,37 @@ main {
   }
 }
 
+.third-row-chart {
+  width: 550px;
+  
+  .card-header {
+    border-left: 4px solid #800000;
+
+    .span {
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+}
+
+.third-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+
+  .three-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 260px;
+    
+    .span {
+      color: #ffffff !important;
+    }
+  }
+}
+
 @media(min-width: 768px) and (max-width: 1024px) {
   main {
     max-width: 774px;
