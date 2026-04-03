@@ -36,6 +36,33 @@ main {
   }
 }
 
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 20px;
+
+  thead th {
+    background-color: #800000 !important;
+    color: #ffffff;
+    padding: 12px 8px;
+    text-align: left;
+  }
+
+  tbody td {
+    background-color: #ffffff;
+    padding: 12px 8px;
+    color: #333333;
+    border-top: 1px solid #e9e9e9;
+  }
+
+  /* Rounded corners: apply to header first/last and last row first/last cells */
+  thead th:first-child { border-top-left-radius: 8px; }
+  thead th:last-child  { border-top-right-radius: 8px; }
+  tbody tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+  tbody tr:last-child td:last-child  { border-bottom-right-radius: 8px; }
+}
+
 @media(min-width: 768px) and (max-width: 1024px) {
   main {
     max-width: 774px;
