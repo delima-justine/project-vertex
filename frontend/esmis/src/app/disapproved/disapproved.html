@@ -3,11 +3,63 @@
 
 <!-- Main Content -->
 <main>
-  <div class="content-container">
-    <h1>Disapproved Requests</h1>
-    <p>
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab debitis 
-      molestiae id, aliquid eos.
-    </p>
+  <div class="header-panel">
+    <i class="bi bi-clipboard2-x-fill me-1 text-white"></i>
+    <span>Disapproved/Expired/Cancelled Requests</span>
+  </div>
+
+  <div class="functionalities-container card">
+    <div class="card-body">
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="bi bi-search"></i>
+        </span>
+        <input type="text" class="form-control" placeholder="Search requests...">
+      </div>
+      
+      <select class="form-select" aria-label="Filter by category">
+        <option selected>All Offices</option>
+        <option value="1">Property Custodian</option>
+        <option value="2">User</option>
+      </select>
+
+      <select class="form-select" aria-label="Filter by status">
+        <option selected>Newest First</option>
+        <option value="1">Oldest First</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table Container -->
+  <div class="table-container">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Date Denied/Updated</th>
+          <th>Purpose</th>
+          <th>Status</th>
+          <th>Requestor</th>
+          <th>Date Requested</th>
+          <th>Updated By</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>2024-06-01 10:30 AM</td>
+          <td>For medical use in the clinic</td>
+          <td><span class="status disapproved">Disapproved</span></td>
+          <td>John Doe</td>
+          <td>2024-06-01 10:30 AM</td>
+          <td>John Doe</td>
+          <td>
+            <button class="btn btn-sm btn-primary">
+              <i class="bi bi-eye-fill"></i> View Request
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </main>
