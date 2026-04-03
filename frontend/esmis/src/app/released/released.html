@@ -3,9 +3,72 @@
 
 <!-- Main Content -->
 <main>
-  <h1>Released Requests</h1>
-  <p>
-    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab debitis 
-    molestiae id, aliquid eos.
-  </p>
+  <div class="header-panel">
+    <i class="bi bi-clipboard-pulse me-1 text-white"></i>
+    <span>Released Requests</span>
+  </div>
+
+  <div class="functionalities-container card">
+    <div class="card-body">
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="bi bi-search"></i>
+        </span>
+        <input type="text" class="form-control" placeholder="Search pending requests...">
+      </div>
+      
+      <select class="form-select" aria-label="Filter by category">
+        <option selected>All Offices</option>
+        <option value="1">Property Custodian</option>
+        <option value="2">User</option>
+      </select>
+
+      <div class="btn-container">
+        <button class="btn btn-primary refresh-btn">
+          <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Container -->
+  <div class="table-container">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Stk #</th>
+          <th>Requester</th>
+          <th>Office</th>
+          <th>Supply Name</th>
+          <th>Qty</th>
+          <th>Purpose</th>
+          <th>Status</th>
+          <th>Date/Time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>12345</td>
+          <td>John Doe</td>
+          <td>Property Custodian</td>
+          <td>Item Description</td>
+          <td>50</td>
+          <td>For medical use in the clinic</td>
+          <td><span class="status pending">Pending</span></td>
+          <td>2024-06-01 10:30 AM</td>
+          <td>
+            <button class="btn btn-sm btn-danger">
+              <i class="bi bi-x-circle-fill"></i>
+            </button>
+
+            <button class="btn btn-sm btn-success">
+              <i class="bi bi-check-circle-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </main>
