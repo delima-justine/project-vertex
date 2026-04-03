@@ -3,5 +3,92 @@ main {
   width: 100%;
   position: fixed;
   left: 250px;
+  right: 0;
+  padding: 20px 74px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  background-color: #f8f9fa;
+}
+
+.header-panel {
+  background-color: #800020;
   padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+
+  i {
+    font-size: 24px;
+    color: #ffffff;
+  }
+
+  span {
+    font-size: 24px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+}
+
+.functionalities-container > .card-body {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 10px;
+  justify-content: space-between;
+}
+
+.table-container {
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+
+    thead th {
+      background-color: #800000 !important;
+      color: #ffffff;
+      padding: 12px 8px;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    tbody td {
+      background-color: #ffffff;
+      padding: 12px 8px;
+      color: #333333;
+      border-top: 1px solid #e9e9e9;
+      font-size: 15px;
+    }
+
+    /* Rounded corners: apply to header first/last and last row first/last cells */
+    thead th:first-child { border-top-left-radius: 8px; }
+    thead th:last-child  { border-top-right-radius: 8px; }
+    tbody tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+    tbody tr:last-child td:last-child  { border-bottom-right-radius: 8px; }
+  }
+}
+
+@media(min-width: 768px) and (max-width: 1024px) {
+  main {
+    max-width: 774px;
+    width: calc(100% - 250px);
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+  main {
+    max-width: 1190px;
+    width: calc(100% - 250px);
+  }
+}
+
+/* Mobile: collapse sidebar space so main fits the viewport */
+@media (max-width: 767px) {
+  main {
+    position: relative;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
 }
