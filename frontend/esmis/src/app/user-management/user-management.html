@@ -2,10 +2,27 @@
 <app-sidebar/>
 
 <main>
-  <div class="content-container">
-    <h1>User Management</h1>
-    <p>
-      This is the user management page. Here you can manage users, roles, and permissions.
-    </p>
+  <div class="header-panel">
+    <span>User Management</span>
   </div>
+
+  <!-- Functionalities Container -->
+   <div class="functionalities-container">
+    <div class="b-r-function">
+      <button class="btn btn-success">
+        <i class="bi bi-box-arrow-in-down me-1"></i>
+        <span>Backup Database</span>
+      </button>
+
+      <button class="btn btn-danger">
+        <i class="bi bi-upload me-1"></i>
+        <span>Restore Database</span>
+      </button>
+    </div>
+    
+    <button class="btn btn-primary">
+      <i class="bi bi-person-plus-fill me-1"></i>
+      <span>Add User</span>
+    </button>
+   </div>
 </main>

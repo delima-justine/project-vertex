@@ -3,5 +3,61 @@ main {
   width: 100%;
   position: fixed;
   left: 250px;
+  right: 0;
+  padding: 20px 74px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  background-color: #f8f9fa;
+}
+
+.header-panel {
+  background-color: #800020;
   padding: 20px;
+  border-radius: 8px;
+
+  span {
+    font-size: 24px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+}
+
+.functionalities-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 20px;
+  justify-content: space-between;
+
+  .b-r-function {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+  }
+}
+
+@media(min-width: 768px) and (max-width: 1024px) {
+  main {
+    max-width: 774px;
+    width: calc(100% - 250px);
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+  main {
+    max-width: 1190px;
+    width: calc(100% - 250px);
+  }
+}
+
+/* Mobile: collapse sidebar space so main fits the viewport */
+@media (max-width: 767px) {
+  main {
+    position: relative;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
 }
