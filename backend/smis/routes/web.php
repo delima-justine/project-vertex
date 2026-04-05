@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\SupplyController;
 use App\Http\Controllers\UnitController;
@@ -18,3 +19,4 @@ Route::resource('supplies', SupplyController::class);
 Route::resource('units', UnitController::class);
 Route::resource('roles', RolesController::class);
 Route::resource('supply-requests', SupplyRequestController::class);
+Route::resource('offices', OfficeController::class);
