@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\SupplyController;
@@ -20,3 +21,4 @@ Route::resource('units', UnitController::class);
 Route::resource('roles', RolesController::class);
 Route::resource('supply-requests', SupplyRequestController::class);
 Route::resource('offices', OfficeController::class);
+Route::apiResource('notifications', NotificationController::class);
