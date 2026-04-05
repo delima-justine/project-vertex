@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OfficeController;
@@ -24,3 +25,4 @@ Route::resource('supply-requests', SupplyRequestController::class);
 Route::resource('offices', OfficeController::class);
 Route::apiResource('notifications', NotificationController::class);
 Route::apiResource('categories', CategoryController::class);
+Route::apiResource('archives', ArchiveController::class);
