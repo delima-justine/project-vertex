@@ -17,6 +17,6 @@ export class Authentication {
 
   login() {
     // Initial Implementation
-    this.router.navigate(['/admin/home']);
+    this.router.navigate(['/home']);
   }
 }
