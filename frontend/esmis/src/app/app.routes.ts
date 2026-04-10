@@ -8,9 +8,9 @@ export const routes: Routes = [
     title: 'Login to SMIS'
   },
   {
-    path: 'admin/home',
+    path: 'home',
     loadComponent: () => import('./home/home').then(m => m.Home),
-    title: 'Admin Dashboard'
+    title: 'Dashboard'
   },
   {
     path: 'admin/user-management',
@@ -19,13 +19,13 @@ export const routes: Routes = [
     title: 'User Management'
   },
   {
-    path: 'admin/notifications',
+    path: 'notifications',
     loadComponent: () => import('./notifications/notifications')
       .then(m => m.Notifications),
     title: 'Notifications'
   }, 
   {
-    path: 'admin/reports',
+    path: 'reports',
     loadComponent: () => import('./reports/reports').then(m => m.Reports),
     title: 'Reports'
   },
