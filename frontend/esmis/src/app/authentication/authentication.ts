@@ -39,6 +39,7 @@ export class Authentication {
         error: (err) => {
           console.error('Login failed:', err);
           alert("Invalid email or password. Please try again.");
+          this.loginForm.reset();
         }
       });
     }
