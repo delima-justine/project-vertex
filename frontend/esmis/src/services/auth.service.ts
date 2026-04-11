@@ -15,7 +15,7 @@ export class AuthService {
   login(credentials: any) {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: any) => {
-        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('auth_token', response.token);
         this.currentUser.set(response.user);
       })
     );
@@ -24,14 +24,14 @@ export class AuthService {
   logout() {
     return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
       tap(() => {
-        localStorage.removeItem('authToken');
+        localStorage.removeItem('auth_token');
         this.currentUser.set(null);
       })
     );
   }
 
   getToken() {
-    return localStorage.getItem('authToken');
+    return localStorage.getItem('auth_token');
   }
 
   isLoggedIn(): boolean {
