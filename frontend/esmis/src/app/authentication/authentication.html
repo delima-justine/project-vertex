@@ -7,31 +7,47 @@
         <h6>Supply Management Information System</h6>
 
         <h5>Login</h5>
-        <input 
-          class="form-control mb-3 mt-3"
-          type="text" 
-          placeholder="Office or Email"/>
-
-        <div class="input-group mb-3">
+        <form [formGroup]="loginForm">
           <input 
-            class="form-control"
-            [type]="showPassword() ? 'text' : 'password'" 
-            placeholder="Password"/>
+            class="form-control mb-2 mt-2"
+            type="text" 
+            placeholder="Office or Email"
+            formControlName="email"/>
+          
+          @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <span class="text-danger mb-1 error-message">
+              Please enter a valid email or office name.
+            </span>
+          }
+
+          <div class="input-group mb-2">
+            <input 
+              class="form-control"
+              [type]="showPassword() ? 'text' : 'password'" 
+              placeholder="Password"
+              formControlName="password"/>
+
+            <button 
+              type="button"
+              class="input-group-text"
+              (click)="togglePasswordVisibility()">
+              <i [class]="showPassword() ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+            </button>
+          </div>
+
+          @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <span class="text-danger mb-1 error-message">
+              Password must be at least 8 characters long.
+            </span>
+          }
 
           <button 
+            class="login-btn btn btn-primary"
             type="button"
-            class="input-group-text"
-            (click)="togglePasswordVisibility()">
-            <i class="bi bi-eye"></i>
+            (click)="login()">
+              Login
           </button>
-        </div>
-
-        <button 
-          class="login-btn btn btn-primary"
-          type="button"
-          (click)="login()">
-            Login
-        </button>
+        </form>
 
         <!-- Forgot Password -->
         <div class="text-center mt-3">
@@ -42,8 +58,8 @@
   </div>
 
   <!-- Footer -->
-  <div class="footer-container">
+  <!-- <div class="footer-container">
     <p class="fw-bold">SMIS Website</p>
     <p>| Developed by Astral Angels 2025. All Rights Reserved</p>
-  </div>
+  </div> -->
 </main>
