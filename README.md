@@ -4,7 +4,7 @@
 
 ## 🔍 System Overview
 
-A web-based Supply Management Information System designed for Pamantasan ng Lungsod ng Pasig (PUPT), enabling efficient tracking, requesting, and management of institutional supplies.
+A web-based Supply Management Information System designed for Polytechnic University of the Philippines - Taguig Campus (PUPT), enabling efficient tracking, requesting, and management of institutional supplies.
 
 ---
 
