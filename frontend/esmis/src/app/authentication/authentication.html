@@ -49,6 +49,12 @@
           </button>
         </form>
 
+        @if(isFailed()) {
+          <span class="text-danger mt-1 mb-1 error-message">
+            Invalid email or password. Please try again.
+          </span>
+        }
+
         <!-- Forgot Password -->
         <div class="text-center mt-3">
           <a href="#">Forgot Password?</a>

@@ -15,6 +15,7 @@ export class Authentication {
   loginForm: FormGroup;
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
+  isFailed = signal(false);
 
   constructor() {
     this.loginForm = this.formBuilder.group({
@@ -34,12 +35,14 @@ export class Authentication {
       this.authService.login(loginValue).subscribe({
         next: (res) => {
           console.log('Login successful:', res);
+          this.isFailed.set(false);
           this.router.navigate(['/home']);
         },
         error: (err) => {
           console.error('Login failed:', err);
           alert("Invalid email or password. Please try again.");
           this.loginForm.reset();
+          this.isFailed.set(true);
         }
       });
     }
