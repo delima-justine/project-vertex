@@ -5,7 +5,15 @@
   <div class="content-container">
     <!-- Main Panel -->
     <div class="main-panel">
-      <span>Welcome User Role, Name!</span>
+      @if(user()?.role?.role_name === 'admin') {
+        <span>Welcome Admin, </span>
+      } @else if(user()?.role?.role_name === "superadmin") {
+        <span>Welcome Super Admin, </span>
+      } @else {
+        <span>Welcome User, </span>
+      }
+      
+      <span>{{ user()?.first_name }} {{ user()?.last_name }}!</span>
       <p>Manage your inventory and track supplies efficiently</p>
     </div>
 
