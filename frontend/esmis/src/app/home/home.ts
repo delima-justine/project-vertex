@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -8,5 +9,6 @@ import { Sidebar } from "../sidebar/sidebar";
   styleUrl: './home.scss',
 })
 export class Home {
-
+  authService = inject(AuthService);
+  user = this.authService.currentUser;
 }
