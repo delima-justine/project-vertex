@@ -19,7 +19,7 @@ export class Authentication {
 
   constructor() {
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required]],
       password: ['', Validators.required],
     });
   }
