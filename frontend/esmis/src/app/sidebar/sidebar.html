@@ -15,13 +15,15 @@
       <span>Home</span>
     </div>
 
-    <div 
-      class="nav-link" 
-      routerLink="/admin/user-management"
-      routerLinkActive="active">
-      <i class="bi bi-people-fill"></i>
-      <span>User Management</span>
-    </div>
+    @if(authService.currentUser()?.role?.role_name?.toLowerCase() === 'admin' || authService.currentUser()?.role?.role_name?.toLowerCase() === 'superadmin') {
+      <div 
+        class="nav-link" 
+        routerLink="/admin/user-management"
+        routerLinkActive="active">
+        <i class="bi bi-people-fill"></i>
+        <span>User Management</span>
+      </div>
+    }
 
     <div 
       class="nav-link" 
