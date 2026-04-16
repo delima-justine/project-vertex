@@ -48,7 +48,7 @@ class AuthController extends Controller
 
         // Return the user data and token in the response
         return response([
-            'user' => $user,
+            'user' => $user->load('role', 'office'),
             'token' => $token
         ], 200); // 200 = Success
     }

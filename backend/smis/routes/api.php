@@ -9,7 +9,7 @@ Route::get('/user/profile', function (Request $request) {
     return $request->user()->load('role');
 })->middleware('auth:sanctum');
 
-Route::middleware(['auth:sanctum', 'role:Admin,SuperAdmin'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:admin,superadmin'])->group(function () {
     Route::get('/user', [UserController::class, 'index']);
     Route::post('/user', [UserController::class, 'store']);
     Route::get('/user/{user}', [UserController::class, 'show']);
