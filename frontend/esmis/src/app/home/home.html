@@ -131,22 +131,23 @@
           <div class="filters">
             <span class="fw-bold text-secondary">Filter by</span>
 
-            <select class="form-select">
-              <option value="all">All Stock</option>
+            <select class="form-select" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)">
+              <option value="all">All Status</option>
               <option value="Available">Available</option>
               <option value="Low Stock">Low Stock</option>
               <option value="Out of Stock">Out of Stock</option>
             </select>
 
-            <select class="form-select">
-              <option value="category">All Categories</option>
-              <option value="status">Status</option>
-              <option value="unit">Unit</option>
+            <select class="form-select" [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event)">
+              <option value="all">All Categories</option>
+              @for(cat of categories(); track cat.id) {
+                <option [value]="cat.id">{{ cat.category_name }}</option>
+              }
             </select>
           </div>
 
           <div class="search-container">
-            <input type="text" placeholder="Search for supplies">
+            <input type="text" placeholder="Search for supplies" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)">
             <button class="btn btn-primary"><i class="bi bi-search"></i></button>
           </div>
 
@@ -171,7 +172,7 @@
           </thead>
 
           <tbody>
-            @for(supply of supplies(); track supply.stock_num) {
+            @for(supply of filteredSupplies(); track supply.stock_num) {
               <tr>
                 <td>{{ supply.stock_num }}</td>
                 <td>{{ supply.item_desc }}</td>
