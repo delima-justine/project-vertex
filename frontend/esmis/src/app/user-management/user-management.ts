@@ -38,9 +38,9 @@ export class UserManagement {
   });
 
   roleOptions = [
-    { id: 1, name: 'Admin' },
-    { id: 2, name: 'SuperAdmin' },
-    { id: 3, name: 'User' },
+    { id: 1, name: 'admin' },
+    { id: 2, name: 'superadmin' },
+    { id: 3, name: 'user' },
   ];
 
   officeOptions = [
