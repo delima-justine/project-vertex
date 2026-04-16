@@ -6,6 +6,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Office;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
@@ -59,5 +60,10 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Roles::class, 'role_id');
+    }
+
+    public function office()
+    {
+        return $this->belongsTo(Office::class, 'office_id');
     }
 }
