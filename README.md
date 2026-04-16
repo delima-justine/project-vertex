@@ -66,6 +66,6 @@ A web-based Supply Management Information System designed for Polytechnic Univer
 | Aleck Alejandro | Kathleen Citron | Justine Delima | Patricia Quiambao |
 | :---: | :---: | :---: | :---: |
 | <img src="https://github.com/identicons/aleckalejandro.png" width="150"> | <img src="https://github.com/identicons/kat.png" width="150"> | <img src="https://github.com/identicons/justine.png" width="150"> | <img src="https://github.com/identicons/patricia.png" width="150"> |
-| **Developer** | **QA Tester 1/Developer** | **Project Manager/Developer** | **Documentation Analyst/QA Tester 2** |
+| **Developer** | **QA Tester 1** | **Project Manager** | **Documentation Analyst** |
 
 ---
