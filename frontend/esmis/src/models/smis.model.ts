@@ -8,6 +8,28 @@ export type Office = {
   office_name: string;
 };
 
+export type Category = {
+  id: number;
+  category_name: string;
+};
+
+export type Unit = {
+  id: number;
+  unit_name: string;
+};
+
+export type Supply = {
+  stock_num: string;
+  item_desc: string;
+  quantity: number;
+  status: string;
+  remarks: string;
+  category_id: number;
+  unit_id: number;
+  category?: Category;
+  unit?: Unit;
+};
+
 export type User = {
   id: number;
   first_name: string;
