@@ -12,7 +12,7 @@ class Supply extends Model
     protected $table = 'tbl_supply';
 
     // Define the custom primary key
-    protected $primary_key = 'stock_num';
+    protected $primaryKey = 'stock_num';
 
     // Tell Laravel that stock_num is not an auto-incrementing integer
     public $incrementing = false;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Supply;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SupplyController extends Controller
 {
@@ -41,7 +42,11 @@ class SupplyController extends Controller
     public function update(Request $request, Supply $supply)
     {
         $validated = $request->validate([
-            'stock_num' => 'required|string|unique:tbl_supply,stock_num,' . $supply->stock_num . ',stock_num',
+            'stock_num' => [
+                'required',
+                'string',
+                Rule::unique('tbl_supply', 'stock_num')->ignore($supply->stock_num, 'stock_num'),
+            ],
             'item_desc' => 'required|string',
             'quantity' => 'required|integer',
             'category_id' => 'required|integer',
