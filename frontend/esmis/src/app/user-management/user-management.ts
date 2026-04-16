@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Sidebar } from '../sidebar/sidebar';
-import { User, Office } from '../../models/smis.model';
+import { User, Office, Role } from '../../models/smis.model';
 import { UserManagementService } from '../../services/user-management.service';
 
 @Component({
@@ -37,17 +37,13 @@ export class UserManagement {
     password: ['', [Validators.minLength(8)]],
   });
 
-  roleOptions = [
-    { id: 1, name: 'admin' },
-    { id: 2, name: 'superadmin' },
-    { id: 3, name: 'user' },
-  ];
-
+  roleOptions: Role[] = [];
   officeOptions: Office[] = [];
 
   constructor() {
     this.loadUsers();
     this.loadOffices();
+    this.loadRoles();
   }
 
   loadOffices() {
@@ -57,6 +53,17 @@ export class UserManagement {
       },
       error: () => {
         console.error('Failed to load offices');
+      }
+    });
+  }
+
+  loadRoles() {
+    this.userService.listRoles().subscribe({
+      next: (roles) => {
+        this.roleOptions = roles;
+      },
+      error: () => {
+        console.error('Failed to load roles');
       }
     });
   }
