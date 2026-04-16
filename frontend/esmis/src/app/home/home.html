@@ -19,61 +19,25 @@
 
     <!-- Second Row -->
     <div class="second-row">
-      <!-- TODO: Content of Second Row -->
       <div class="first-card card bg-primary">
-        <!-- Header -->
-        <div>
-          <span>Total Products</span>
-        </div>
-
-        <!-- Body -->
-        <div>
-          <span>100</span>
-        </div>
-
-        <!-- Footer -->
-        <div>
-          <span>Active Inventory Items</span>
-        </div>
+        <div><span>Total Products</span></div>
+        <div><span>{{ supplies().length }}</span></div>
+        <div><span>Active Inventory Items</span></div>
       </div>
       <div class="second-card card bg-success">
-        <!-- Header -->
-        <div>
-          <span>Total Stock</span>
-        </div>
-
-        <!-- Body -->
-        <div>
-          <span>5</span>
-        </div>
-
-        <!-- Footer -->
-        <div>
-          <span>Available Units</span>
-        </div>
+        <div><span>Total Stock</span></div>
+        <div><span>{{ supplies().length }}</span></div>
+        <div><span>Available Units</span></div>
       </div>
-
       <div class="third-card card bg-danger">
-        <!-- Header -->
-        <div>
-          <span>Low Stock Items</span>
-        </div>
-
-        <!-- Body -->
-        <div>
-          <span>3</span>
-        </div>
-
-        <!-- Footer -->
-        <div>
-          <span>Needs restocking</span>
-        </div>
+        <div><span>Low Stock Items</span></div>
+        <div><span>0</span></div>
+        <div><span>Needs restocking</span></div>
       </div>
     </div>
 
     <!-- Third Row -->
     <div class="third-row mt-4">
-      <!-- TODO: Content of Third Row -->
       <div class="card third-row-chart">
         <div class="card-header">
           <div class="d-flex flex-column gap-1">
@@ -81,13 +45,10 @@
               <i class="bi bi-graph-up text-primary"></i>
               <span class="text-primary fw-medium">Inventory Status Overview</span>
             </div>
-            
             <p>Quick view of your current stock levels</p>
           </div>
         </div>
-
         <div class="card-body">
-          <!-- Placeholder for chart or graph -->
           <div class="chart-placeholder">
             <span>Chart goes here</span>
           </div>
@@ -95,23 +56,9 @@
       </div>
 
       <div class="three-cards">
-        <div class="card">
-          <div class="card-body">
-            <span>Stock Availability</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-body">
-            <span>Items Need Restocking</span>
-          </div>
-        </div>
-
-        <div class="card bg">
-          <div class="card-body">
-            <span>Recently Released</span>
-          </div>
-        </div>
+        <div class="card"><div class="card-body"><span>Stock Availability</span></div></div>
+        <div class="card"><div class="card-body"><span>Items Need Restocking</span></div></div>
+        <div class="card bg"><div class="card-body"><span>Recently Released</span></div></div>
       </div>
     </div>
 
@@ -122,15 +69,12 @@
           <i class="bi bi-boxes text-primary"></i>
           <span>Supplies Management</span>
         </div>
-        
         <p>Manage and track all your inventory supplies</p>
       </div>
       
       <div class="card-body">
         <div class="functionalities-container">
           <div class="filters">
-            <!-- <span class="fw-bold text-secondary">Filter by</span> -->
-
             <select class="form-select" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)">
               <option value="all">All Status</option>
               <option value="Available">Available</option>
@@ -138,37 +82,33 @@
               <option value="Out of Stock">Out of Stock</option>
             </select>
 
-            <select class="form-select" [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event)">
-              <option value="all">All Categories</option>
-              @for(cat of categories(); track cat.id) {
-                <option [value]="cat.id">{{ cat.category_name }}</option>
-              }
-            </select>
+            <div class="category-filter-container d-flex gap-1 align-items-center">
+              <select class="form-select" [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event)">
+                <option value="all">All Categories</option>
+                @for(cat of categories(); track cat.id) {
+                  <option [value]="cat.id">{{ cat.category_name }}</option>
+                }
+              </select>
+            </div>
 
             <div class="search-container">
-              <input 
-                type="text" 
-                class="form-control"
-                placeholder="Search for supplies" 
-                [ngModel]="searchTerm()" 
-                (ngModelChange)="searchTerm.set($event)">
-            <!-- <button class="btn btn-primary"><i class="bi bi-search"></i></button> -->
-          </div>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                  <i class="bi bi-search text-secondary"></i>
+                </span>
+                <input 
+                  type="text" 
+                  class="form-control border-start-0"
+                  placeholder="Search for supplies" 
+                  [ngModel]="searchTerm()" 
+                  (ngModelChange)="searchTerm.set($event)">
+              </div>
+            </div>
           </div>
 
           <div class="btn-container">
-            <button 
-              class="btn btn-primary" 
-              (click)="openAddModal()">
-                <i class="bi bi-plus-lg"></i> 
-                Add Supply
-            </button>
-
-            <button 
-              class="btn btn-success">
-                <i class="bi bi-printer"></i>
-                 Print
-              </button>
+            <button class="btn btn-primary" (click)="openAddModal()"><i class="bi bi-plus-lg"></i> Add Supply</button>
+            <button class="btn btn-success"><i class="bi bi-printer"></i> Print</button>
           </div>
         </div>
 
@@ -185,7 +125,6 @@
               <th>Actions</th>
             </tr>
           </thead>
-
           <tbody>
             @for(supply of filteredSupplies(); track supply.stock_num) {
               <tr>
@@ -202,18 +141,13 @@
                 </td>
                 <td>{{ supply.quantity }}</td>
                 <td>
-                  <button class="btn btn-sm btn-warning me-1" (click)="openEditModal(supply)">
-                    <i class="bi bi-pencil-square"></i></button>
-                  <button class="btn btn-sm btn-danger me-1" (click)="onDelete(supply.stock_num)">
-                    <i class="bi bi-trash"></i></button>
-                  <button class="btn btn-sm btn-info">
-                    <i class="bi bi-clock-history"></i></button>
+                  <button class="btn btn-sm btn-warning me-1" (click)="openEditModal(supply)"><i class="bi bi-pencil-square"></i></button>
+                  <button class="btn btn-sm btn-danger me-1" (click)="onDelete(supply.stock_num)"><i class="bi bi-trash"></i></button>
+                  <button class="btn btn-sm btn-info"><i class="bi bi-clock-history"></i></button>
                 </td>
               </tr>
             } @empty {
-              <tr>
-                <td colspan="7" class="text-center">No supplies found.</td>
-              </tr>
+              <tr><td colspan="7" class="text-center">No supplies found.</td></tr>
             }
           </tbody>
         </table>
@@ -221,6 +155,8 @@
     </div>
   </div>
 </main>
+
+<!-- Modals -->
 
 <!-- Supply Modal -->
 <div class="modal fade" id="supplyModal" tabindex="-1" aria-labelledby="supplyModalLabel" aria-hidden="true">
@@ -243,21 +179,27 @@
           <div class="row mb-3">
             <div class="col">
               <label for="category_id" class="form-label">Category</label>
-              <select class="form-select" id="category_id" formControlName="category_id">
-                <option value="">Select Category</option>
-                @for(cat of categories(); track cat.id) {
-                  <option [value]="cat.id">{{ cat.category_name }}</option>
-                }
-              </select>
+              <div class="input-group">
+                <select class="form-select" id="category_id" formControlName="category_id">
+                  <option value="">Select Category</option>
+                  @for(cat of categories(); track cat.id) {
+                    <option [value]="cat.id">{{ cat.category_name }}</option>
+                  }
+                </select>
+                <button class="btn btn-outline-primary" type="button" (click)="openCategoryModal()"><i class="bi bi-plus-lg"></i></button>
+              </div>
             </div>
             <div class="col">
               <label for="unit_id" class="form-label">Unit</label>
-              <select class="form-select" id="unit_id" formControlName="unit_id">
-                <option value="">Select Unit</option>
-                @for(u of units(); track u.id) {
-                  <option [value]="u.id">{{ u.unit_name }}</option>
-                }
-              </select>
+              <div class="input-group">
+                <select class="form-select" id="unit_id" formControlName="unit_id">
+                  <option value="">Select Unit</option>
+                  @for(u of units(); track u.id) {
+                    <option [value]="u.id">{{ u.unit_name }}</option>
+                  }
+                </select>
+                <button class="btn btn-outline-primary" type="button" (click)="openUnitModal()"><i class="bi bi-plus-lg"></i></button>
+              </div>
             </div>
           </div>
           <div class="row mb-3">
@@ -281,11 +223,73 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="supplyForm.invalid">
-            {{ isEditMode ? 'Update' : 'Save' }} Supply
-          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="supplyForm.invalid">{{ isEditMode ? 'Update' : 'Save' }} Supply</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- Category Management Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="categoryModalLabel">Manage Categories</h5>
+        <button type="button" class="btn-close" (click)="closeCategoryModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-4">
+          <input type="text" class="form-control" placeholder="New Category Name" [ngModel]="newCategoryName()" (ngModelChange)="newCategoryName.set($event)">
+          <button class="btn btn-primary" type="button" (click)="addCategory()"><i class="bi bi-plus-lg"></i> Add</button>
+        </div>
+        <h6 class="mb-3">Existing Categories</h6>
+        <div class="list-group">
+          @for(cat of categories(); track cat.id) {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              {{ cat.category_name }}
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(cat.id)"><i class="bi bi-trash"></i></button>
+            </div>
+          } @empty {
+            <div class="list-group-item text-center text-muted">No categories found.</div>
+          }
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeCategoryModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Unit Management Modal -->
+<div class="modal fade" id="unitModal" tabindex="-1" aria-labelledby="unitModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="unitModalLabel">Manage Units</h5>
+        <button type="button" class="btn-close" (click)="closeUnitModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-4">
+          <input type="text" class="form-control" placeholder="New Unit Name" [ngModel]="newUnitName()" (ngModelChange)="newUnitName.set($event)">
+          <button class="btn btn-primary" type="button" (click)="addUnit()"><i class="bi bi-plus-lg"></i> Add</button>
+        </div>
+        <h6 class="mb-3">Existing Units</h6>
+        <div class="list-group">
+          @for(u of units(); track u.id) {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              {{ u.unit_name }}
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteUnit(u.id)"><i class="bi bi-trash"></i></button>
+            </div>
+          } @empty {
+            <div class="list-group-item text-center text-muted">No units found.</div>
+          }
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeUnitModal()">Close</button>
+      </div>
     </div>
   </div>
 </div>

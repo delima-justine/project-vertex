@@ -26,6 +26,8 @@ export class Home implements OnInit {
   searchTerm = signal('');
   selectedStatus = signal('all');
   selectedCategory = signal('all');
+  newCategoryName = signal('');
+  newUnitName = signal('');
 
   filteredSupplies = computed(() => {
     return this.supplies().filter(supply => {
@@ -142,6 +144,104 @@ export class Home implements OnInit {
 
   closeModal() {
     const modalElement = document.getElementById('supplyModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.hide();
+    }
+  }
+
+  // Category Management
+  openCategoryModal() {
+    this.closeModal();
+    this.newCategoryName.set('');
+    const modalElement = document.getElementById('categoryModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.show();
+    }
+  }
+
+  addCategory() {
+    const name = this.newCategoryName().trim();
+    if (!name) return;
+
+    this.supplyService.createCategory(name).subscribe({
+      next: () => {
+        this.newCategoryName.set('');
+        this.loadData();
+      },
+      error: (err) => {
+        console.error('Error adding category:', err);
+        alert('Failed to add category. It might already exist.');
+      }
+    });
+  }
+
+  deleteCategory(id: number) {
+    if (confirm('Are you sure you want to delete this category? This might fail if supplies are using it.')) {
+      this.supplyService.deleteCategory(id).subscribe({
+        next: () => {
+          this.loadData();
+        },
+        error: (err) => {
+          console.error('Error deleting category:', err);
+          alert('Failed to delete category. Ensure no supplies are linked to it.');
+        }
+      });
+    }
+  }
+
+  closeCategoryModal() {
+    const modalElement = document.getElementById('categoryModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.hide();
+    }
+  }
+
+  // Unit Management
+  openUnitModal() {
+    this.closeModal();
+    this.newUnitName.set('');
+    const modalElement = document.getElementById('unitModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.show();
+    }
+  }
+
+  addUnit() {
+    const name = this.newUnitName().trim();
+    if (!name) return;
+
+    this.supplyService.createUnit(name).subscribe({
+      next: () => {
+        this.newUnitName.set('');
+        this.loadData();
+      },
+      error: (err) => {
+        console.error('Error adding unit:', err);
+        alert('Failed to add unit. It might already exist.');
+      }
+    });
+  }
+
+  deleteUnit(id: number) {
+    if (confirm('Are you sure you want to delete this unit? This might fail if supplies are using it.')) {
+      this.supplyService.deleteUnit(id).subscribe({
+        next: () => {
+          this.loadData();
+        },
+        error: (err) => {
+          console.error('Error deleting unit:', err);
+          alert('Failed to delete unit. Ensure no supplies are linked to it.');
+        }
+      });
+    }
+  }
+
+  closeUnitModal() {
+    const modalElement = document.getElementById('unitModal');
     if (modalElement) {
       const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
       modal.hide();
