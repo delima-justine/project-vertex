@@ -13,12 +13,6 @@
             type="text" 
             placeholder="Office or Email"
             formControlName="email"/>
-          
-          @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-            <span class="text-danger mb-1 error-message">
-              Please enter a valid email or office name.
-            </span>
-          }
 
           <div class="input-group mb-2">
             <input 
