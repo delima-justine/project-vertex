@@ -129,7 +129,7 @@
       <div class="card-body">
         <div class="functionalities-container">
           <div class="filters">
-            <span class="fw-bold text-secondary">Filter by</span>
+            <!-- <span class="fw-bold text-secondary">Filter by</span> -->
 
             <select class="form-select" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)">
               <option value="all">All Status</option>
@@ -144,16 +144,31 @@
                 <option [value]="cat.id">{{ cat.category_name }}</option>
               }
             </select>
-          </div>
 
-          <div class="search-container">
-            <input type="text" placeholder="Search for supplies" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)">
-            <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+            <div class="search-container">
+              <input 
+                type="text" 
+                class="form-control"
+                placeholder="Search for supplies" 
+                [ngModel]="searchTerm()" 
+                (ngModelChange)="searchTerm.set($event)">
+            <!-- <button class="btn btn-primary"><i class="bi bi-search"></i></button> -->
+          </div>
           </div>
 
           <div class="btn-container">
-            <button class="btn btn-primary" (click)="openAddModal()"><i class="bi bi-plus-lg"></i> Add Supply</button>
-            <button class="btn btn-success"><i class="bi bi-printer"></i> Print</button>
+            <button 
+              class="btn btn-primary" 
+              (click)="openAddModal()">
+                <i class="bi bi-plus-lg"></i> 
+                Add Supply
+            </button>
+
+            <button 
+              class="btn btn-success">
+                <i class="bi bi-printer"></i>
+                 Print
+              </button>
           </div>
         </div>
 
