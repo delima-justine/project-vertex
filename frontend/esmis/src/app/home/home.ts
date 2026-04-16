@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Sidebar } from "../sidebar/sidebar";
 import { AuthService } from '../../services/auth.service';
 import { SupplyService } from '../../services/supply.service';
@@ -8,7 +8,7 @@ import { Supply, Category, Unit } from '../../models/smis.model';
 
 @Component({
   selector: 'app-home',
-  imports: [Sidebar, CommonModule, ReactiveFormsModule],
+  imports: [Sidebar, CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -22,10 +22,29 @@ export class Home implements OnInit {
   categories = signal<Category[]>([]);
   units = signal<Unit[]>([]);
 
+  // Filter signals
+  searchTerm = signal('');
+  selectedStatus = signal('all');
+  selectedCategory = signal('all');
+
+  filteredSupplies = computed(() => {
+    return this.supplies().filter(supply => {
+      const search = this.searchTerm().toLowerCase();
+      const matchesSearch = !search || 
+                            supply.item_desc.toLowerCase().includes(search) ||
+                            supply.stock_num.toLowerCase().includes(search);
+
+      const matchesStatus = this.selectedStatus() === 'all' || supply.status === this.selectedStatus();
+      const matchesCategory = this.selectedCategory() === 'all' || supply.category_id.toString() === this.selectedCategory();
+
+      return matchesSearch && matchesStatus && matchesCategory;
+    });
+  });
+
   supplyForm: FormGroup;
   isEditMode = false;
   currentStockNum: string | null = null;
-
+  
   constructor() {
     this.supplyForm = this.fb.group({
       stock_num: ['', Validators.required],
