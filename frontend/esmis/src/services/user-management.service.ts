@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../models/smis.model';
+import { User, Office } from '../models/smis.model';
 
 export type PaginatedUsers = {
   data: User[];
@@ -27,6 +27,10 @@ export type UserPayload = {
 export class UserManagementService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:8000/api';
+
+  listOffices(): Observable<Office[]> {
+    return this.http.get<Office[]>(`${this.apiUrl}/offices`);
+  }
 
   listUsers(page = 1, search = ''): Observable<PaginatedUsers> {
     const params: Record<string, string> = { page: String(page) };
