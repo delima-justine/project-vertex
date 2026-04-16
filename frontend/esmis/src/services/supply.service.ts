@@ -18,8 +18,24 @@ export class SupplyService {
     return this.http.get<Category[]>(`${this.apiUrl}/categories`);
   }
 
+  createCategory(name: string): Observable<Category> {
+    return this.http.post<Category>(`${this.apiUrl}/categories`, { category_name: name });
+  }
+
+  deleteCategory(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/categories/${id}`);
+  }
+
   listUnits(): Observable<Unit[]> {
     return this.http.get<Unit[]>(`${this.apiUrl}/units`);
+  }
+
+  createUnit(name: string): Observable<Unit> {
+    return this.http.post<Unit>(`${this.apiUrl}/units`, { unit_name: name });
+  }
+
+  deleteUnit(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/units/${id}`);
   }
 
   getSupply(stockNum: string): Observable<Supply> {
