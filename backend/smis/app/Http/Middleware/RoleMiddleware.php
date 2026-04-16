@@ -15,9 +15,24 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (!$request->user() || !in_array($request->user()->role->role_name, $roles)) {
-            return response(['message' => 'Unauthorized'], 403);
+        $user = $request->user();
+        
+        if (!$user) {
+            return response(['message' => 'Unauthenticated'], 401);
         }
+
+        // Ensure role relationship is loaded
+        if (!$user->role) {
+            return response(['message' => 'User has no assigned role'], 403);
+        }
+
+        $currentRole = strtolower($user->role->role_name);
+        $allowedRoles = array_map('strtolower', $roles);
+
+        if (!in_array($currentRole, $allowedRoles)) {
+            return response(['message' => 'Forbidden: You do not have the required role. Required: ' . implode(', ', $roles) . '. Your role: ' . $user->role->role_name], 403);
+        }
+
         return $next($request);
     }
 }

@@ -1,9 +1,136 @@
 <!-- Sidebar Component -->
-<app-sidebar/>
+<app-sidebar></app-sidebar>
 
 <main>
   <div class="header-panel">
     <span>User Management</span>
+  </div>
+
+  <div class="functionalities-container">
+    <div class="b-r-function">
+      <button class="btn btn-primary" type="button" (click)="openAddUser()">
+        <i class="bi bi-person-plus-fill me-1"></i>
+        <span>Add User</span>
+      </button>
+      <button class="btn btn-outline-secondary" type="button" (click)="loadUsers(currentPage())">
+        <i class="bi bi-arrow-clockwise me-1"></i>
+        <span>Refresh</span>
+      </button>
+    </div>
+
+    <div class="search-row d-flex align-items-center gap-2">
+      <input
+        type="search"
+        class="form-control"
+        [formControl]="searchControl"
+        placeholder="Search users by name, email, or role"
+      />
+      <button class="btn btn-primary" type="button" (click)="loadUsers(1)">Search</button>
+    </div>
+  </div>
+
+  <div *ngIf="feedback()" class="alert alert-info mt-3">{{ feedback() }}</div>
+
+  <section *ngIf="formVisible()" class="user-form card mb-4 p-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5>{{ editMode() ? 'Edit User' : 'Add User' }}</h5>
+      <button class="btn btn-sm btn-light" type="button" (click)="cancelForm()">Close</button>
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="saveUser()">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">First Name</label>
+          <input class="form-control" formControlName="first_name" />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">M. Initial</label>
+          <input class="form-control" formControlName="middle_initial" maxlength="1" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Last Name</label>
+          <input class="form-control" formControlName="last_name" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input class="form-control" formControlName="email" type="email" />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Role</label>
+          <select class="form-select" formControlName="role_id">
+            <option [ngValue]="null">Select role</option>
+            <option *ngFor="let role of roleOptions" [value]="role.id">{{ role.role_name }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Office</label>
+          <select class="form-select" formControlName="office_id">
+            <option [ngValue]="null">Select office</option>
+            <option *ngFor="let office of officeOptions" [value]="office.id">{{ office.office_name }}</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Password</label>
+          <input class="form-control" formControlName="password" type="password" />
+          <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="form-text text-danger">
+            Password must be at least 8 characters.
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-success" type="submit">{{ editMode() ? 'Save Changes' : 'Create User' }}</button>
+        <button class="btn btn-secondary" type="button" (click)="cancelForm()">Cancel</button>
+      </div>
+    </form>
+  </section>
+
+  <div *ngIf="isLoading()" class="text-center py-4">Loading users...</div>
+
+  <table *ngIf="!isLoading()" class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Office</th>
+        <th>First Name</th>
+        <th>M. Initial</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users(); trackBy: trackByUser">
+        <td>{{ user.office?.office_name || user.office_id }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.middle_initial || '-' }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role?.role_name || 'N/A' }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-1" type="button" (click)="editUser(user)">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          
+          @if(user.role?.role_name?.toLowerCase() !== 'superadmin') {
+            <button class="btn btn-sm btn-danger" type="button" (click)="deleteUser(user)">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          }
+        </td>
+      </tr>
+      <tr *ngIf="users().length === 0">
+        <td colspan="7" class="text-center py-4">No users found.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!isLoading() && users().length > 0" class="d-flex justify-content-between align-items-center mt-3">
+    <small>Page {{ currentPage() }} of {{ lastPage() }} — {{ totalUsers() }} users total</small>
+    <div class="btn-group">
+      <button class="btn btn-outline-secondary btn-sm" type="button" (click)="previousPage()" [disabled]="currentPage() <= 1">Previous</button>
+      <button class="btn btn-outline-secondary btn-sm" type="button" (click)="nextPage()" [disabled]="currentPage() >= lastPage()">Next</button>
+    </div>
   </div>
 
   <!-- Functionalities Container -->
@@ -19,61 +146,5 @@
         <span>Restore Database</span>
       </button>
     </div>
-    
-    <button class="btn btn-primary">
-      <i class="bi bi-person-plus-fill me-1"></i>
-      <span>Add User</span>
-    </button>
    </div>
-
-   <table class="table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Office</th>
-        <th>F. Name</th>
-        <th>M. Initial</th>
-        <th>L. Name</th>
-        <th>Role</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>Office of the University Registrar</td>
-        <td>John</td>
-        <td>D.</td>
-        <td>Doe</td>
-        <td>Admin</td>
-        <td>
-          <button class="btn btn-sm btn-warning me-1">
-            <i class="bi bi-pencil-fill"></i>
-          </button>
-
-          <button class="btn btn-sm btn-danger">
-            <i class="bi bi-trash-fill"></i>
-          </button>
-        </td>
-      </tr>
-
-      <tr>
-        <td>Office of the University Registrar</td>
-        <td>Jane</td>
-        <td>A.</td>
-        <td>Smith</td>
-        <td>User</td>
-        <td>
-          <button class="btn btn-sm btn-warning me-1">
-            <i class="bi bi-pencil-fill"></i>
-          </button>
-
-          <button class="btn btn-sm btn-danger">
-            <i class="bi bi-trash-fill"></i>
-          </button>
-        </td>
-      </tr>
-
-      <!-- Add more user rows as needed -->
-    </tbody>
-   </table>
 </main>

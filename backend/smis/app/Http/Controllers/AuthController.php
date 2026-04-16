@@ -17,30 +17,40 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        $identifier = $fields['email'];
+        $loginValue = $fields['email'];
 
-        // Find user by email or office name
-        // We join tbl_office to check for the office name as well
-        $user = User::where('email', $identifier)
-            ->orWhereHas('office', function($query) use ($identifier) {
-                $query->where('office_name', $identifier);
+        // Find all users matching email or office name
+        $users = User::where('email', $loginValue)
+            ->orWhereHas('office', function($query) use ($loginValue) {
+                $query->where('office_name', $loginValue);
             })
-            ->first();
+            ->get();
+
+        $user = null;
+        foreach ($users as $u) {
+            if (Hash::check($fields['password'], $u->password)) {
+                $user = $u;
+                break;
+            }
+        }
 
         // Check if user exists and password is correct
-        if (!$user || !Hash::check($fields['password'], $user->password)) {
+        // Hash::check compares the plain text password with the hashed password in DB
+        if (!$user) {
             return response([
                 'message' => 'Invalid credentials'
-            ], 401);
+            ], 401); // 401 = Unauthorized
         }
 
         // Create new api token for this specific user
+        // auth_token is just a label for the token
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Return the user data and token in the response
         return response([
-            'user' => $user,
+            'user' => $user->load('role', 'office'),
             'token' => $token
-        ], 200);
+        ], 200); // 200 = Success
     }
 
     // Logout
