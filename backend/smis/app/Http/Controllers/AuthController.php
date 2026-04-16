@@ -13,16 +13,30 @@ class AuthController extends Controller
     {
         // Validate the request
         $fields = $request->validate([
-            'email' => 'required|string|email',
+            'email' => 'required|string',
             'password' => 'required|string'
         ]);
 
-        // Find user in the tbl_user table 
-        $user = User::where('email', $fields['email'])->first();
+        $loginValue = $fields['email'];
+
+        // Find all users matching email or office name
+        $users = User::where('email', $loginValue)
+            ->orWhereHas('office', function($query) use ($loginValue) {
+                $query->where('office_name', $loginValue);
+            })
+            ->get();
+
+        $user = null;
+        foreach ($users as $u) {
+            if (Hash::check($fields['password'], $u->password)) {
+                $user = $u;
+                break;
+            }
+        }
 
         // Check if user exists and password is correct
         // Hash::check compares the plain text password with the hashed password in DB
-        if (!$user || !Hash::check($fields['password'], $user->password)) {
+        if (!$user) {
             return response([
                 'message' => 'Invalid credentials'
             ], 401); // 401 = Unauthorized
