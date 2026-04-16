@@ -66,7 +66,7 @@
           <label class="form-label">Office</label>
           <select class="form-select" formControlName="office_id">
             <option [ngValue]="null">Select office</option>
-            <option *ngFor="let office of officeOptions" [value]="office.id">{{ office.name }}</option>
+            <option *ngFor="let office of officeOptions" [value]="office.id">{{ office.office_name }}</option>
           </select>
         </div>
         <div class="col-md-6">

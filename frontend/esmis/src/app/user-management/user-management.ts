@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Sidebar } from '../sidebar/sidebar';
-import { User } from '../../models/smis.model';
+import { User, Office } from '../../models/smis.model';
 import { UserManagementService } from '../../services/user-management.service';
 
 @Component({
@@ -43,14 +43,22 @@ export class UserManagement {
     { id: 3, name: 'user' },
   ];
 
-  officeOptions = [
-    { id: 1, name: 'Office of the University Registrar' },
-    { id: 2, name: 'Office of Student Affairs' },
-    { id: 3, name: 'Office of the Dean' },
-  ];
+  officeOptions: Office[] = [];
 
   constructor() {
     this.loadUsers();
+    this.loadOffices();
+  }
+
+  loadOffices() {
+    this.userService.listOffices().subscribe({
+      next: (offices) => {
+        this.officeOptions = offices;
+      },
+      error: () => {
+        console.error('Failed to load offices');
+      }
+    });
   }
 
   loadUsers(page = 1) {
