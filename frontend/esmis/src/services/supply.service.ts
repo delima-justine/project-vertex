@@ -53,4 +53,8 @@ export class SupplyService {
   deleteSupply(stockNum: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/supplies/${stockNum}`);
   }
+
+  createSupplyRequest(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/supply-requests`, payload);
+  }
 }
