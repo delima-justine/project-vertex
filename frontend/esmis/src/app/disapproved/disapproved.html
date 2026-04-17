@@ -14,19 +14,13 @@
         <span class="input-group-text">
           <i class="bi bi-search"></i>
         </span>
-        <input type="text" class="form-control" placeholder="Search requests...">
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Search requests..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)">
       </div>
-      
-      <select class="form-select" aria-label="Filter by category">
-        <option selected>All Offices</option>
-        <option value="1">Property Custodian</option>
-        <option value="2">User</option>
-      </select>
-
-      <select class="form-select" aria-label="Filter by status">
-        <option selected>Newest First</option>
-        <option value="1">Oldest First</option>
-      </select>
     </div>
   </div>
 
@@ -35,30 +29,42 @@
     <table class="table table-striped table-hover">
       <thead>
         <tr>
-          <th>Date Denied/Updated</th>
+          <th>Stk #</th>
+          <th>Requestor</th>
+          <th>Office</th>
+          <th>Supply Name</th>
+          <th>Qty</th>
           <th>Purpose</th>
           <th>Status</th>
-          <th>Requestor</th>
           <th>Date Requested</th>
-          <th>Updated By</th>
+          <th>Disapproved By</th>
           <th>Action</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr>
-          <td>2024-06-01 10:30 AM</td>
-          <td>For medical use in the clinic</td>
-          <td><span class="status disapproved">Disapproved</span></td>
-          <td>John Doe</td>
-          <td>2024-06-01 10:30 AM</td>
-          <td>John Doe</td>
-          <td>
-            <button class="btn btn-sm btn-primary">
-              <i class="bi bi-eye-fill"></i> View Request
-            </button>
-          </td>
-        </tr>
+        @for (req of filteredRequests(); track req.id) {
+          <tr>
+            <td>{{ req.supply_id }}</td>
+            <td>{{ req.user?.first_name }} {{ req.user?.last_name }}</td>
+            <td>{{ req.user?.office?.office_name }}</td>
+            <td>{{ req.supply?.item_desc }}</td>
+            <td>{{ req.quantity_req }}</td>
+            <td>{{ req.purpose }}</td>
+            <td><span class="badge bg-danger">Disapproved</span></td>
+            <td>{{ req.created_at | date:'MMM d, y, h:mm a' }}</td>
+            <td>{{ req.approver?.first_name }} {{ req.approver?.last_name }}</td>
+            <td>
+              <button class="btn btn-sm btn-primary">
+                <i class="bi bi-eye-fill"></i> View
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="10" class="text-center">No disapproved requests found.</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
