@@ -19,6 +19,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('supply-requests', SupplyRequestController::class)->parameters([
         'supply-requests' => 'supply_request'
     ]);
+    Route::get('/supplies', [SupplyController::class, 'index']);
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/units', [UnitController::class, 'index']);
 });
 
 Route::middleware(['auth:sanctum', 'role:admin,superadmin'])->group(function () {
@@ -30,11 +33,11 @@ Route::middleware(['auth:sanctum', 'role:admin,superadmin'])->group(function () 
     Route::patch('/user/{user}', [UserController::class, 'update']);
     Route::delete('/user/{user}', [UserController::class, 'destroy']);
 
-    Route::apiResource('supplies', SupplyController::class)->parameters([
+    Route::apiResource('supplies', SupplyController::class)->except(['index'])->parameters([
         'supplies' => 'supply'
     ]);
-    Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('units', UnitController::class);
+    Route::apiResource('categories', CategoryController::class)->except(['index']);
+    Route::apiResource('units', UnitController::class)->except(['index']);
 });
 
 Route::post('/login', [AuthController::class, 'login']);
