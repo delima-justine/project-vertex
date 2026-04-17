@@ -8,9 +8,15 @@ use Illuminate\Http\Request;
 class SupplyRequestController extends Controller
 {
     // Returns request with related user and supply data
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(SupplyRequest::with(['user', 'supply'])->get());
+        $query = SupplyRequest::with(['user.office', 'supply.category', 'supply.unit']);
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        return response()->json($query->get());
     }
 
     public function store(Request $request)
