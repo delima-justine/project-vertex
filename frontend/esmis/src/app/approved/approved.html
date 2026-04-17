@@ -17,19 +17,9 @@
         <input 
           type="text" 
           class="form-control" 
-          placeholder="Search approved requests...">
-      </div>
-      
-      <select class="form-select" aria-label="Filter by category">
-        <option selected>All Offices</option>
-        <option value="1">Property Custodian</option>
-        <option value="2">User</option>
-      </select>
-
-      <div class="btn-container">
-        <button class="btn btn-primary refresh-btn">
-          <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-        </button>
+          placeholder="Search approved requests..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)">
       </div>
     </div>
   </div>
@@ -46,31 +36,35 @@
           <th>Qty</th>
           <th>Purpose</th>
           <th>Status</th>
-          <th>Date/Time</th>
+          <th>Date Requested</th>
+          <th>Approved By</th>
           <th>Actions</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr>
-          <td>12345</td>
-          <td>John Doe</td>
-          <td>Property Custodian</td>
-          <td>Item Description</td>
-          <td>50</td>
-          <td>For medical use in the clinic</td>
-          <td><span class="status pending">Pending</span></td>
-          <td>2024-06-01 10:30 AM</td>
-          <td>
-            <button class="btn btn-sm btn-danger">
-              <i class="bi bi-x-circle-fill"></i>
-            </button>
-
-            <button class="btn btn-sm btn-success">
-              <i class="bi bi-check-circle-fill"></i>
-            </button>
-          </td>
-        </tr>
+        @for (req of filteredRequests(); track req.id) {
+          <tr>
+            <td>{{ req.supply_id }}</td>
+            <td>{{ req.user?.first_name }} {{ req.user?.last_name }}</td>
+            <td>{{ req.user?.office?.office_name }}</td>
+            <td>{{ req.supply?.item_desc }}</td>
+            <td>{{ req.quantity_req }}</td>
+            <td>{{ req.purpose }}</td>
+            <td><span class="badge bg-success">Approved</span></td>
+            <td>{{ req.created_at | date:'MMM d, y, h:mm a' }}</td>
+            <td>{{ req.approver?.first_name }} {{ req.approver?.last_name }}</td>
+            <td>
+              <button class="btn btn-sm btn-info me-1" title="Release" (click)="releaseRequest(req)">
+                <i class="bi bi-truck"></i>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="10" class="text-center">No approved requests found.</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
