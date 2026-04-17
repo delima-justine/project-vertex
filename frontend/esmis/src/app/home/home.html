@@ -121,10 +121,13 @@
               <th>Category</th>
               <th>Unit</th>
               <th>Status</th>
-              <th>Quantity</th>
-              <th>Actions</th>
+              @if(user()?.role?.role_name  === 'admin' || user()?.role?.role_name === 'superadmin') {
+                <th>Quantity</th>
+                <th>Actions</th>
+              }
             </tr>
           </thead>
+          
           <tbody>
             @for(supply of filteredSupplies(); track supply.stock_num) {
               <tr>
@@ -139,12 +142,14 @@
                     'bg-danger': supply.status === 'Out of Stock'
                   }">{{ supply.status }}</span>
                 </td>
-                <td>{{ supply.quantity }}</td>
-                <td>
-                  <button class="btn btn-sm btn-warning me-1" (click)="openEditModal(supply)"><i class="bi bi-pencil-square"></i></button>
-                  <button class="btn btn-sm btn-danger me-1" (click)="onDelete(supply.stock_num)"><i class="bi bi-trash"></i></button>
-                  <button class="btn btn-sm btn-info"><i class="bi bi-clock-history"></i></button>
-                </td>
+                @if(user()?.role?.role_name  === 'admin' || user()?.role?.role_name === 'superadmin') {
+                  <td>{{ supply.quantity }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-warning me-1" (click)="openEditModal(supply)"><i class="bi bi-pencil-square"></i></button>
+                    <button class="btn btn-sm btn-danger me-1" (click)="onDelete(supply.stock_num)"><i class="bi bi-trash"></i></button>
+                    <button class="btn btn-sm btn-info"><i class="bi bi-clock-history"></i></button>
+                  </td>
+                }
               </tr>
             } @empty {
               <tr><td colspan="7" class="text-center">No supplies found.</td></tr>
