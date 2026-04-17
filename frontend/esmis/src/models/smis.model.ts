@@ -41,3 +41,18 @@ export type User = {
   role?: Role;
   office?: Office;
 };
+
+export type SupplyRequest = {
+  id: number;
+  user_id: number;
+  supply_id: string;
+  quantity_req: number;
+  purpose: string;
+  status: string;
+  approved_by?: number;
+  created_at: string;
+  updated_at: string;
+  user?: User;
+  supply?: Supply;
+  approver?: User;
+};

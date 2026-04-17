@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Supply, Category, Unit } from '../models/smis.model';
+import { Supply, Category, Unit, SupplyRequest } from '../models/smis.model';
 
 @Injectable({
   providedIn: 'root',
@@ -56,5 +56,17 @@ export class SupplyService {
 
   createSupplyRequest(payload: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/supply-requests`, payload);
+  }
+
+  listSupplyRequests(status?: string): Observable<SupplyRequest[]> {
+    let params = new HttpParams();
+    if (status) {
+      params = params.set('status', status);
+    }
+    return this.http.get<SupplyRequest[]>(`${this.apiUrl}/supply-requests`, { params });
+  }
+
+  updateSupplyRequest(id: number, payload: Partial<SupplyRequest>): Observable<SupplyRequest> {
+    return this.http.patch<SupplyRequest>(`${this.apiUrl}/supply-requests/${id}`, payload);
   }
 }
