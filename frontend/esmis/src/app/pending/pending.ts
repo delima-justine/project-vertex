@@ -76,7 +76,7 @@ export class Pending implements OnInit {
   disapproveRequest(request: SupplyRequest) {
     if (confirm(`Are you sure you want to disapprove request for ${request.supply?.item_desc}?`)) {
       this.supplyService.updateSupplyRequest(request.id, {
-        status: 'declined'
+        status: 'disapproved'
       }).subscribe({
         next: () => {
           alert('Request disapproved.');
