@@ -11,7 +11,7 @@
   <div class="content-container card">
     <div class="card-body">
       <div class="functionality">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" (click)="openModal()">
           <i class="bi bi-plus-circle-fill me-1"></i>
           <span>Add Items</span>
         </button>
@@ -36,18 +36,26 @@
           </thead>
 
           <tbody>
-            <tr>
-              <td>12345</td>
-              <td>Item Description</td>
-              <td>Medical Supplies</td>
-              <td>Box</td>
-              <td>50</td>
-              <td>
-                <button class="btn btn-danger btn-sm">
-                  <i class="bi bi-trash-fill"></i> Remove
-                </button>
-              </td>
-            </tr>
+            @for (item of requestList; track item.stock_num; let i = $index) {
+              <tr>
+                <td>{{ item.stock_num }}</td>
+                <td>{{ item.item_desc }}</td>
+                <td>{{ item.category?.category_name }}</td>
+                <td>{{ item.unit?.unit_name }}</td>
+                <td>
+                  <input type="number" class="form-control" [(ngModel)]="item.quantity_req" min="1" [max]="item.quantity">
+                </td>
+                <td>
+                  <button class="btn btn-danger btn-sm" (click)="removeItem(i)">
+                    <i class="bi bi-trash-fill"></i> Remove
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="text-center">No items added to request list.</td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
@@ -62,13 +70,56 @@
           <textarea 
             class="form-control" 
             rows="4" 
+            [(ngModel)]="purpose"
             placeholder="Enter the purpose of this request..."></textarea>
         </div>
 
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" (click)="submitRequest()" [disabled]="requestList.length === 0 || !purpose">
           <i class="bi bi-send-fill me-1"></i>Submit
         </button>
       </div>
     </div>
   </div>
 </main>
+
+<!-- Modal -->
+<div class="modal fade" id="supplyInventoryModal" tabindex="-1" aria-labelledby="supplyInventoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="supplyInventoryModalLabel">Select Supplies</h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body overflow-auto" style="max-height: 400px;">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Stock Num</th>
+              <th>Item Desc</th>
+              <th>Available</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (supply of availableSupplies; track supply.stock_num) {
+              <tr>
+                <td>{{ supply.stock_num }}</td>
+                <td>{{ supply.item_desc }}</td>
+                <td>{{ supply.quantity }}</td>
+                <td>
+                  <button class="btn btn-success btn-sm" (click)="addItem(supply)">
+                    <i class="bi bi-plus-circle"></i> Add
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
