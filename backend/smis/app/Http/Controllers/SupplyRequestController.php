@@ -44,7 +44,7 @@ class SupplyRequestController extends Controller
     public function update(Request $request, SupplyRequest $supply_request)
     {
         $validated = $request->validate([
-            'status' => 'sometimes|in:pending,approved,released,declined',
+            'status' => 'sometimes|in:pending,approved,released,disapproved',
             'approved_by' => 'required_if:status,approved|exists:tbl_user,id',
             'quantity_req' => 'sometimes|integer|min:1',
         ]);
