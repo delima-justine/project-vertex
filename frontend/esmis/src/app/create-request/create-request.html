@@ -96,7 +96,9 @@
             <tr>
               <th>Stock Num</th>
               <th>Item Desc</th>
-              <th>Available</th>
+              <th>Category</th>
+              <th>Unit</th>
+              <th>Availability</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -105,9 +107,17 @@
               <tr>
                 <td>{{ supply.stock_num }}</td>
                 <td>{{ supply.item_desc }}</td>
-                <td>{{ supply.quantity }}</td>
+                <td>{{ supply.category?.category_name }}</td>
+                <td>{{ supply.unit?.unit_name }}</td>
                 <td>
-                  <button class="btn btn-success btn-sm" (click)="addItem(supply)">
+                  <span class="badge" [ngClass]="{
+                    'bg-success': supply.status === 'Available',
+                    'bg-warning': supply.status === 'Low Stock',
+                    'bg-danger': supply.status === 'Out of Stock'
+                  }">{{ supply.status }}</span>
+                </td>
+                <td>
+                  <button class="btn btn-success btn-sm" (click)="addItem(supply)" [disabled]="supply.status === 'Out of Stock'">
                     <i class="bi bi-plus-circle"></i> Add
                   </button>
                 </td>
