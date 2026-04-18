@@ -37,7 +37,13 @@ class SupplyRequestController extends Controller
     // Returns request with related user, supply, and approver data
     public function show(SupplyRequest $supply_request)
     {
-        return response()->json($supply_request->load(['user', 'supply', 'approver']));
+        return response()->json($supply_request->load([
+            'user.office', 
+            'user.role', 
+            'supply.category', 
+            'supply.unit', 
+            'approver.role'
+        ]));
     }
 
     // Update request status and approver
