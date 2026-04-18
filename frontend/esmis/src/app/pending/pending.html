@@ -17,7 +17,7 @@
         <input 
           type="text" 
           class="form-control" 
-          placeholder="Search pending requests..."
+          placeholder="Search by requester or item..."
           [ngModel]="searchTerm()"
           (ngModelChange)="searchTerm.set($event)">
       </div>
@@ -42,49 +42,35 @@
     <table class="table table-striped table-hover">
       <thead>
         <tr>
-          <th>Stk #</th>
           <th>Requester</th>
           <th>Office</th>
-          <th>Supply Name</th>
-          <th>Qty</th>
-          <th>Purpose</th>
+          <th>Items Summary</th>
+          <th>Total Qty</th>
           <th>Status</th>
-          <th>Date/Time</th>
+          <th>Date Requested</th>
           <th>Actions</th>
         </tr>
       </thead>
 
       <tbody>
-        @for (req of filteredRequests(); track req.id) {
+        @for (batch of filteredRequests(); track batch.id) {
           <tr>
-            <td>{{ req.supply_id }}</td>
-            <td>{{ req.user?.first_name }} {{ req.user?.last_name }}</td>
-            <td>{{ req.user?.office?.office_name }}</td>
-            <td>{{ req.supply?.item_desc }}</td>
-            <td>{{ req.quantity_req }}</td>
-            <td>{{ req.purpose }}</td>
+            <td>{{ batch.user?.first_name }} {{ batch.user?.last_name }}</td>
+            <td>{{ batch.office }}</td>
+            <td>{{ batch.itemSummary }}</td>
+            <td>{{ batch.totalQty }}</td>
             <td><span class="badge bg-warning text-dark">Pending</span></td>
-            <td>{{ req.created_at | date:'MMM d, y, h:mm a' }}</td>
+            <td>{{ batch.date | date:'MMM d, y' }}</td>
             <td class="action-buttons">
-              <!-- View Request -->
-              <button class="btn btn-sm btn-info me-1" (click)="viewRequest(req)">
-                <i class="bi bi-eye-fill"></i>
-              </button>
-
-              <!-- Disapprove Request -->
-              <button class="btn btn-sm btn-danger me-1" (click)="disapproveRequest(req)">
-                <i class="bi bi-x-circle-fill"></i>
-              </button>
-
-              <!-- Edit RIS -->
-              <button class="btn btn-sm btn-secondary ms-1" (click)="editRIS(req)">
-                <i class="bi bi-pencil-fill"></i>
+              <!-- View Batch -->
+              <button class="btn btn-sm btn-info me-1" (click)="viewRequest(batch)">
+                <i class="bi bi-eye-fill"></i> View Batch
               </button>
             </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="9" class="text-center">No pending requests found.</td>
+            <td colspan="7" class="text-center">No pending requests found.</td>
           </tr>
         }
       </tbody>
@@ -94,83 +80,62 @@
   <!-- Request Details Modal -->
   @if (isModalOpen()) {
     <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Request Details</h5>
+            <h5 class="modal-title">Batch Request Details</h5>
             <button type="button" class="btn-close" (click)="closeModal()"></button>
           </div>
           <div class="modal-body">
-            @if (selectedRequest()) {
-              <div class="primary-request mb-4">
-                <h6 class="border-bottom pb-2">Primary Request</h6>
-                <div class="row g-3">
-                  <div class="col-md-6">
-                    <strong>Requester:</strong> {{ selectedRequest()?.user?.first_name }} {{ selectedRequest()?.user?.last_name }}
+            @if (selectedBatch().length > 0) {
+              <div class="batch-header mb-4 p-3 bg-light rounded">
+                <div class="row">
+                  <div class="col-md-4">
+                    <strong>Requester:</strong> {{ selectedBatch()[0].user?.first_name }} {{ selectedBatch()[0].user?.last_name }}
                   </div>
-                  <div class="col-md-6">
-                    <strong>Office:</strong> {{ selectedRequest()?.user?.office?.office_name }}
+                  <div class="col-md-4">
+                    <strong>Office:</strong> {{ selectedBatch()[0].user?.office?.office_name }}
                   </div>
-                  <div class="col-md-6">
-                    <strong>Supply:</strong> {{ selectedRequest()?.supply?.item_desc }} ({{ selectedRequest()?.supply_id }})
-                  </div>
-                  <div class="col-md-6">
-                    <strong>Quantity:</strong> {{ selectedRequest()?.quantity_req }}
-                  </div>
-                  <div class="col-md-12">
-                    <strong>Purpose:</strong> {{ selectedRequest()?.purpose }}
-                  </div>
-                  <div class="col-md-6">
-                    <strong>Status:</strong> <span class="badge bg-warning text-dark">{{ selectedRequest()?.status }}</span>
-                  </div>
-                  <div class="col-md-6">
-                    <strong>Date Requested:</strong> {{ selectedRequest()?.created_at | date:'MMM d, y, h:mm a' }}
+                  <div class="col-md-4">
+                    <strong>Date:</strong> {{ selectedBatch()[0].created_at | date:'MMM d, y, h:mm a' }}
                   </div>
                 </div>
               </div>
 
-              <div class="other-requests">
-                <h6 class="border-bottom pb-2">Other Requests by this User</h6>
-                @if (userRequests().length > 0) {
-                  <div class="table-responsive">
-                    <table class="table table-sm table-hover">
-                      <thead>
-                        <tr>
-                          <th>Stk #</th>
-                          <th>Supply</th>
-                          <th>Qty</th>
-                          <th>Status</th>
-                          <th>Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @for (ureq of userRequests(); track ureq.id) {
-                          <tr>
-                            <td>{{ ureq.supply_id }}</td>
-                            <td>{{ ureq.supply?.item_desc }}</td>
-                            <td>{{ ureq.quantity_req }}</td>
-                            <td>
-                              <span class="badge" 
-                                [class.bg-warning]="ureq.status === 'pending'"
-                                [class.bg-success]="ureq.status === 'approved' || ureq.status === 'released'"
-                                [class.bg-danger]="ureq.status === 'disapproved'">
-                                {{ ureq.status }}
-                              </span>
-                            </td>
-                            <td>{{ ureq.created_at | date:'MMM d, y' }}</td>
-                          </tr>
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                } @else {
-                  <p class="text-muted small">No other requests found for this user.</p>
-                }
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Stk #</th>
+                      <th>Supply Name</th>
+                      <th>Qty</th>
+                      <th>Purpose</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (req of selectedBatch(); track req.id) {
+                      <tr>
+                        <td>{{ req.supply_id }}</td>
+                        <td>{{ req.supply?.item_desc }}</td>
+                        <td>{{ req.quantity_req }}</td>
+                        <td>{{ req.purpose }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
               </div>
             }
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+            <div class="ms-auto">
+              <button type="button" class="btn btn-outline-danger me-2" (click)="disapproveBatch()">
+                <i class="bi bi-x-circle-fill me-1"></i>Disapprove Batch
+              </button>
+              <button type="button" class="btn btn-primary" (click)="editBatchRIS()">
+                <i class="bi bi-pencil-square me-1"></i>Edit Batch RIS
+              </button>
+            </div>
           </div>
         </div>
       </div>
