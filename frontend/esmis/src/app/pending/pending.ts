@@ -22,6 +22,10 @@ export class Pending implements OnInit {
   searchTerm = signal('');
   selectedOffice = signal('all');
 
+  selectedRequest = signal<SupplyRequest | null>(null);
+  userRequests = signal<SupplyRequest[]>([]);
+  isModalOpen = signal(false);
+
   router = inject(Router);
 
   filteredRequests = computed(() => {
@@ -67,6 +71,7 @@ export class Pending implements OnInit {
         next: () => {
           alert('Request approved successfully!');
           this.loadPendingRequests();
+          if (this.isModalOpen()) this.closeModal();
         },
         error: (err) => {
           console.error('Error approving request', err);
@@ -84,6 +89,7 @@ export class Pending implements OnInit {
         next: () => {
           alert('Request disapproved.');
           this.loadPendingRequests();
+          if (this.isModalOpen()) this.closeModal();
         },
         error: (err) => {
           console.error('Error disapproving request', err);
@@ -96,5 +102,25 @@ export class Pending implements OnInit {
   editRIS(request: SupplyRequest) {
     // Redirect to edit page
     this.router.navigate(['/requests/edit-ris', request.id]);
+  }
+
+  viewRequest(request: SupplyRequest) {
+    this.selectedRequest.set(request);
+    this.isModalOpen.set(true);
+    
+    // Fetch other requests by this user
+    this.supplyService.listSupplyRequests(undefined, request.user_id).subscribe({
+      next: (data) => {
+        // Exclude the current request from "other requests"
+        this.userRequests.set(data.filter(r => r.id !== request.id));
+      },
+      error: (err) => console.error('Error fetching user requests', err)
+    });
+  }
+
+  closeModal() {
+    this.isModalOpen.set(false);
+    this.selectedRequest.set(null);
+    this.userRequests.set([]);
   }
 }

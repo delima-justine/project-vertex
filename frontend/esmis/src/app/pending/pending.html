@@ -66,6 +66,12 @@
             <td><span class="badge bg-warning text-dark">Pending</span></td>
             <td>{{ req.created_at | date:'MMM d, y, h:mm a' }}</td>
             <td class="action-buttons">
+              <!-- View Request -->
+              <button class="btn btn-sm btn-info me-1" (click)="viewRequest(req)">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+
+              <!-- Disapprove Request -->
               <button class="btn btn-sm btn-danger me-1" (click)="disapproveRequest(req)">
                 <i class="bi bi-x-circle-fill"></i>
               </button>
@@ -84,4 +90,90 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Request Details Modal -->
+  @if (isModalOpen()) {
+    <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Request Details</h5>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          </div>
+          <div class="modal-body">
+            @if (selectedRequest()) {
+              <div class="primary-request mb-4">
+                <h6 class="border-bottom pb-2">Primary Request</h6>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <strong>Requester:</strong> {{ selectedRequest()?.user?.first_name }} {{ selectedRequest()?.user?.last_name }}
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Office:</strong> {{ selectedRequest()?.user?.office?.office_name }}
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Supply:</strong> {{ selectedRequest()?.supply?.item_desc }} ({{ selectedRequest()?.supply_id }})
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Quantity:</strong> {{ selectedRequest()?.quantity_req }}
+                  </div>
+                  <div class="col-md-12">
+                    <strong>Purpose:</strong> {{ selectedRequest()?.purpose }}
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Status:</strong> <span class="badge bg-warning text-dark">{{ selectedRequest()?.status }}</span>
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Date Requested:</strong> {{ selectedRequest()?.created_at | date:'MMM d, y, h:mm a' }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="other-requests">
+                <h6 class="border-bottom pb-2">Other Requests by this User</h6>
+                @if (userRequests().length > 0) {
+                  <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                      <thead>
+                        <tr>
+                          <th>Stk #</th>
+                          <th>Supply</th>
+                          <th>Qty</th>
+                          <th>Status</th>
+                          <th>Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (ureq of userRequests(); track ureq.id) {
+                          <tr>
+                            <td>{{ ureq.supply_id }}</td>
+                            <td>{{ ureq.supply?.item_desc }}</td>
+                            <td>{{ ureq.quantity_req }}</td>
+                            <td>
+                              <span class="badge" 
+                                [class.bg-warning]="ureq.status === 'pending'"
+                                [class.bg-success]="ureq.status === 'approved' || ureq.status === 'released'"
+                                [class.bg-danger]="ureq.status === 'disapproved'">
+                                {{ ureq.status }}
+                              </span>
+                            </td>
+                            <td>{{ ureq.created_at | date:'MMM d, y' }}</td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                } @else {
+                  <p class="text-muted small">No other requests found for this user.</p>
+                }
+              </div>
+            }
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </main>
