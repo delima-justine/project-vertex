@@ -1,255 +1,242 @@
-<main>
-  <!-- Header -->
-  <div class="header">
-    <!-- Edit RIS Title -->
-    <span>Edit RIS - Batch Request</span>
+@if (request(); as req) {
+  <main>
+    <!-- Header -->
+    <div class="header">
+      <!-- Edit RIS Title -->
+      <span>Edit RIS - Request #{{ req.id }}</span>
 
-    <button class="btn btn-primary">
-      <i class="bi bi-printer me-1"></i>
-      Print/Save RIS
-    </button>
-  </div>
-
-  <!-- Cards -->
-  <div class="cards">
-    <!-- Total Items -->
-    <div class="card">
-      <div class="card-body">
-        <i class="bi bi-boxes"></i>
-        <h5>Total Items</h5>
-        <p>10</p>
-      </div>
-    </div>
-    
-    <!-- Requests -->
-    <div class="card">
-      <div class="card-body">
-        <i class="bi bi-list-task"></i>
-        <h5>Requests</h5>
-        <p>5</p>
-      </div>
-    </div>
-
-    <!-- Processing Date -->
-    <div class="card">
-      <div class="card-body">
-        <i class="bi bi-calendar-event"></i>
-        <h5>Processing Date</h5>
-        <p>2024-06-15</p>
-      </div>
-    </div>
-
-    <!-- Processing Time -->
-    <div class="card">
-      <div class="card-body">
-        <i class="bi bi-clock"></i>
-        <h5>Processing Time</h5>
-        <p>10:30 AM</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Request Slip -->
-  <div class="request-slip card">
-    <div class="card-header">
-      <div class="ris-header">
-        <p>PUP-RISL-6-PSMO-010</p>
-        <p>Rev. 2</p>
-        <p>Effectivity Date: April 23, 2026</p>
-        <p>Appendix 63</p>
-      </div>
-    </div>
-
-    <div class="card-body">
-      <span class="slip-title">REQUISITION AND ISSUE SLIP</span>
-    
-      <div class="table-container">
-        <table class="table table-hover table-bordered">
-          <thead>
-            <tr>
-              <th colspan="4">Requisition</th>
-              <th colspan="2">Stock Available?</th>
-              <th colspan="2">Issue</th>
-            </tr>
-            <tr>
-              <th>Stock No.</th>
-              <th>Unit</th>
-              <th>Description</th>
-              <th>Quantity</th>
-              <th>Yes</th>
-              <th>No</th>
-              <th>Quantity</th>
-              <th>Remarks</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>12345</td>
-              <td>Box</td>
-              <td>Paper</td>
-              <td>10</td>
-              <td>
-                <!-- Input Radio -->
-                <input type="radio" name="stock1" id="stock1-yes">
-                <label for="stock1-yes"></label>
-              </td>
-              <td>
-                <!-- Input Radio -->
-                <input type="radio" name="stock1" id="stock1-no">
-                <label for="stock1-no"></label>
-              </td>
-              <td>10</td>
-              <td>
-                <input type="text" class="form-control">
-              </td>
-            </tr>
-
-            <tr>
-              <td>67890</td>
-              <td>Pack</td>
-              <td>Pens</td>
-              <td>5</td>
-              <td>
-                <!-- Input Radio -->
-                <input type="radio" name="stock2" id="stock2-yes">
-                <label for="stock2-yes"></label>
-              </td>
-              <td>
-                <!-- Input Radio -->
-                <input type="radio" name="stock2" id="stock2-no">
-                <label for="stock2-no"></label>
-              </td>
-              <td>0</td>
-              <td>
-                <input type="text" class="form-control">
-              </td>
-            </tr>
-
-            <!-- More rows as needed -->
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Purpose -->
-      <div class="purpose-container">
-        <span>Purpose</span>
-        <input 
-          class="form-control" 
-          type="text" 
-          value="For office use"
-          disabled>
-      </div>
-
-       <!-- Authority Signatures -->
-      <table class="auth-signatures">
-        <tbody>
-          <tr>
-            <td>
-              <p>Requested By:</p>
-              <input 
-                type="text" 
-                class="auth-input"
-                value="JOHN DOE"
-                disabled>
-
-              <div class="divider"></div>
-
-              <input 
-                type="text" 
-                class="auth-input"
-                value="USER ROLE"
-                disabled>
-            </td>
-
-            <td>
-              <p>Approved By:</p>
-              <input 
-                type="text" 
-                class="auth-input" 
-                value="DR. MARISSA B. FERRER"
-                disabled>
-
-              <div class="divider"></div>
-
-              <input 
-                type="text" 
-                class="auth-input" 
-                value="DIRECTOR"
-                disabled>
-            </td>
-
-            <td>
-              <p>Issued By:</p>
-              <input 
-                type="text" 
-                class="auth-input" 
-                value="GINA A. DELA CRUZ"
-                disabled>
-
-              <div class="divider"></div>
-
-              <input 
-                type="text" 
-                class="auth-input" 
-                value="PROPERTY CUSTODIAN"
-                disabled>
-            </td>
-
-            <td>
-              <p>Received By:</p>
-              <input 
-                type="text" 
-                class="auth-input"
-                placeholder="Name">
-
-              <div class="divider"></div>
-
-              <input 
-                type="text" 
-                class="auth-input"
-                placeholder="Position">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Warn Message -->
-  <div class="alert alert-warning mt-1" role="alert">
-    <i class="bi bi-exclamation-triangle-fill me-1"></i>
-    <strong>Required!</strong> 
-    You must print or save the RIS before you can complete this form.
-  </div>
-  
-  <!-- Print Status -->
-  <div class="alert alert-light debug">
-    <div class="print-status">
-      <span>
-        <i class="bi bi-info-circle-fill me-1"></i>
-        Not Printed/Saved
-      </span>
-    </div>
-
-    <div>
       <button class="btn btn-primary">
         <i class="bi bi-printer me-1"></i>
         Print/Save RIS
       </button>
     </div>
-  </div>
 
-  <!-- Save & Cancel button -->
-  <div class="func-buttons">
-    <button class="btn btn-success">
-      <i class="bi bi-save me-1"></i>
-      Save & Approve Batch
-    </button>
+    <!-- Cards -->
+    <div class="cards">
+      <!-- Total Items -->
+      <div class="card">
+        <div class="card-body">
+          <i class="bi bi-boxes"></i>
+          <h5>Total Items</h5>
+          <p>{{ req.quantity_req }}</p>
+        </div>
+      </div>
+      
+      <!-- Requests -->
+      <div class="card">
+        <div class="card-body">
+          <i class="bi bi-list-task"></i>
+          <h5>Requests</h5>
+          <p>1</p>
+        </div>
+      </div>
 
-    <button class="btn btn-secondary">
-      <i class="bi bi-x-circle me-1"></i>
-      Cancel
-    </button>
+      <!-- Processing Date -->
+      <div class="card">
+        <div class="card-body">
+          <i class="bi bi-calendar-event"></i>
+          <h5>Request Date</h5>
+          <p>{{ req.created_at | date:'yyyy-MM-dd' }}</p>
+        </div>
+      </div>
+
+      <!-- Processing Time -->
+      <div class="card">
+        <div class="card-body">
+          <i class="bi bi-clock"></i>
+          <h5>Request Time</h5>
+          <p>{{ req.created_at | date:'h:mm a' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Request Slip -->
+    <div class="request-slip card">
+      <div class="card-header">
+        <div class="ris-header">
+          <p>PUP-RISL-6-PSMO-010</p>
+          <p>Rev. 2</p>
+          <p>Effectivity Date: April 23, 2026</p>
+          <p>Appendix 63</p>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <span class="slip-title">REQUISITION AND ISSUE SLIP</span>
+      
+        <div class="table-container">
+          <table class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th colspan="4">Requisition</th>
+                <th colspan="2">Stock Available?</th>
+                <th colspan="2">Issue</th>
+              </tr>
+              <tr>
+                <th>Stock No.</th>
+                <th>Unit</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Yes</th>
+                <th>No</th>
+                <th>Quantity</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>{{ req.supply_id }}</td>
+                <td>{{ req.supply?.unit?.unit_name }}</td>
+                <td>{{ req.supply?.item_desc }}</td>
+                <td>{{ req.quantity_req }}</td>
+                <td>
+                  <!-- Input Radio -->
+                  <input type="radio" name="stock" id="stock-yes" [checked]="stockAvailable()" (change)="onStockAvailableChange(true)">
+                  <label for="stock-yes"></label>
+                </td>
+                <td>
+                  <!-- Input Radio -->
+                  <input type="radio" name="stock" id="stock-no" [checked]="!stockAvailable()" (change)="onStockAvailableChange(false)">
+                  <label for="stock-no"></label>
+                </td>
+                <td>
+                  <input type="number" class="form-control" [ngModel]="issueQty()" (ngModelChange)="issueQty.set($event)">
+                </td>
+                <td>
+                  <input type="text" class="form-control" [ngModel]="remarks()" (ngModelChange)="remarks.set($event)">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Purpose -->
+        <div class="purpose-container">
+          <span>Purpose</span>
+          <input 
+            class="form-control" 
+            type="text" 
+            [value]="req.purpose"
+            disabled>
+        </div>
+
+        <!-- Authority Signatures -->
+        <table class="auth-signatures">
+          <tbody>
+            <tr>
+              <td>
+                <p>Requested By:</p>
+                <input 
+                  type="text" 
+                  class="auth-input"
+                  [value]="((req.user?.first_name || '') + ' ' + (req.user?.last_name || '')).toUpperCase()"
+                  disabled>
+
+                <div class="divider"></div>
+
+                <input 
+                  type="text" 
+                  class="auth-input"
+                  [value]="(req.user?.office?.office_name || '').toUpperCase()"
+                  disabled>
+              </td>
+
+              <td>
+                <p>Approved By:</p>
+                <input 
+                  type="text" 
+                  class="auth-input" 
+                  value="DR. MARISSA B. FERRER"
+                  disabled>
+
+                <div class="divider"></div>
+
+                <input 
+                  type="text" 
+                  class="auth-input" 
+                  value="DIRECTOR"
+                  disabled>
+              </td>
+
+              <td>
+                <p>Issued By:</p>
+                <input 
+                  type="text" 
+                  class="auth-input" 
+                  value="GINA A. DELA CRUZ"
+                  disabled>
+
+                <div class="divider"></div>
+
+                <input 
+                  type="text" 
+                  class="auth-input" 
+                  value="PROPERTY CUSTODIAN"
+                  disabled>
+              </td>
+
+              <td>
+                <p>Received By:</p>
+                <input 
+                  type="text" 
+                  class="auth-input"
+                  placeholder="Name">
+
+                <div class="divider"></div>
+
+                <input 
+                  type="text" 
+                  class="auth-input"
+                  placeholder="Position">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Warn Message -->
+    <div class="alert alert-warning mt-1" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-1"></i>
+      <strong>Required!</strong> 
+      You must print or save the RIS before you can complete this form.
+    </div>
+    
+    <!-- Print Status -->
+    <div class="alert alert-light debug">
+      <div class="print-status">
+        <span>
+          <i class="bi bi-info-circle-fill me-1"></i>
+          Not Printed/Saved
+        </span>
+      </div>
+
+      <div>
+        <button class="btn btn-warning">
+          Check Status
+        </button>
+      </div>
+    </div>
+
+    <!-- Save & Cancel button -->
+    <div class="func-buttons">
+      <button class="btn btn-success" (click)="saveAndApprove()">
+        <i class="bi bi-save me-1"></i>
+        Save & Approve Batch
+      </button>
+
+      <button class="btn btn-secondary" (click)="cancel()">
+        <i class="bi bi-x-circle me-1"></i>
+        Cancel
+      </button>
+    </div>
+  </main>
+} @else {
+  <div class="p-5 text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading request data...</p>
   </div>
-</main>
+}
