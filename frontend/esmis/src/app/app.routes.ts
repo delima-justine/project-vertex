@@ -75,5 +75,12 @@ export const routes: Routes = [
       .then(m => m.HelpAndSupport),
     title: 'Help and Support',
     canActivate: [authGuard]
-  }
+  },
+  {
+    path: 'requests/edit-ris',
+    loadComponent: () => import('./edit-ris/edit-ris')
+      .then(m => m.EditRis),
+    title: 'Edit RIS',
+    canActivate: [authGuard]
+  },
 ];
