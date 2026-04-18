@@ -85,6 +85,12 @@ main {
   }
 }
 
+.action-buttons {
+  display: flex;
+  gap: 1px;
+  flex-direction: row;
+}
+
 @media(min-width: 768px) and (max-width: 1024px) {
   main {
     max-width: 774px;

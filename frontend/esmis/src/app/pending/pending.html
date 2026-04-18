@@ -65,7 +65,7 @@
             <td>{{ req.purpose }}</td>
             <td><span class="badge bg-warning text-dark">Pending</span></td>
             <td>{{ req.created_at | date:'MMM d, y, h:mm a' }}</td>
-            <td>
+            <td class="action-buttons">
               <button class="btn btn-sm btn-danger me-1" (click)="disapproveRequest(req)">
                 <i class="bi bi-x-circle-fill"></i>
               </button>
