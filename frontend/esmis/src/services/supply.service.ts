@@ -66,6 +66,10 @@ export class SupplyService {
     return this.http.get<SupplyRequest[]>(`${this.apiUrl}/supply-requests`, { params });
   }
 
+  getSupplyRequest(id: number): Observable<SupplyRequest> {
+    return this.http.get<SupplyRequest>(`${this.apiUrl}/supply-requests/${id}`);
+  }
+
   updateSupplyRequest(id: number, payload: Partial<SupplyRequest>): Observable<SupplyRequest> {
     return this.http.patch<SupplyRequest>(`${this.apiUrl}/supply-requests/${id}`, payload);
   }
