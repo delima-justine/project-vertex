@@ -1,0 +1,209 @@
+<main>
+  <!-- Header -->
+  <div class="header">
+    <!-- Edit RIS Title -->
+    <span>Edit RIS - Batch Request</span>
+
+    <button class="btn btn-primary">
+      <i class="bi bi-printer me-1"></i>
+      Print/Save RIS
+    </button>
+  </div>
+
+  <!-- Cards -->
+  <div class="cards">
+    <!-- Total Items -->
+    <div class="card">
+      <div class="card-body">
+        <i class="bi bi-boxes"></i>
+        <h5>Total Items</h5>
+        <p>10</p>
+      </div>
+    </div>
+    
+    <!-- Requests -->
+    <div class="card">
+      <div class="card-body">
+        <i class="bi bi-list-task"></i>
+        <h5>Requests</h5>
+        <p>5</p>
+      </div>
+    </div>
+
+    <!-- Processing Date -->
+    <div class="card">
+      <div class="card-body">
+        <i class="bi bi-calendar-event"></i>
+        <h5>Processing Date</h5>
+        <p>2024-06-15</p>
+      </div>
+    </div>
+
+    <!-- Processing Time -->
+    <div class="card">
+      <div class="card-body">
+        <i class="bi bi-clock"></i>
+        <h5>Processing Time</h5>
+        <p>10:30 AM</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Request Slip -->
+  <div class="request-slip card">
+    <div class="card-header">
+      <h5>REQUISITION AND ISSUE SLIP</h5>
+    </div>
+
+    <div class="card-body">
+      <span class="slip-title">REQUISITION AND ISSUE SLIP</span>
+    
+      <div class="table-container">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th colspan="4">Requisition</th>
+              <th colspan="2">Stock Available?</th>
+              <th colspan="2">Issue</th>
+            </tr>
+            <tr>
+              <th>Stock No.</th>
+              <th>Unit</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Yes</th>
+              <th>No</th>
+              <th>Quantity</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>12345</td>
+              <td>Box</td>
+              <td>Paper</td>
+              <td>10</td>
+              <td>
+                <!-- Input Radio -->
+                <input type="radio" name="stock1" id="stock1-yes">
+                <label for="stock1-yes"></label>
+              </td>
+              <td>
+                <!-- Input Radio -->
+                <input type="radio" name="stock1" id="stock1-no">
+                <label for="stock1-no"></label>
+              </td>
+              <td>10</td>
+              <td>Approved</td>
+            </tr>
+
+            <tr>
+              <td>67890</td>
+              <td>Pack</td>
+              <td>Pens</td>
+              <td>5</td>
+              <td>
+                <!-- Input Radio -->
+                <input type="radio" name="stock2" id="stock2-yes">
+                <label for="stock2-yes"></label>
+              </td>
+              <td>
+                <!-- Input Radio -->
+                <input type="radio" name="stock2" id="stock2-no">
+                <label for="stock2-no"></label>
+              </td>
+              <td>0</td>
+              <td>Out of Stock</td>
+            </tr>
+
+            <!-- More rows as needed -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Purpose -->
+      <div class="purpose-container">
+        <span>Purpose</span>
+        <input 
+          class="form-control" 
+          type="text" 
+          value="For office use"
+          disabled>
+      </div>
+
+       <!-- Authority Signatures -->
+      <table class="auth-signatures">
+        <tbody>
+          <tr>
+            <td>
+              <p>Requested By:</p>
+              <input 
+                type="text" 
+                class="auth-input"
+                value="JOHN DOE"
+                disabled>
+
+              <div class="divider"></div>
+
+              <input 
+                type="text" 
+                class="auth-input"
+                value="USER ROLE"
+                disabled>
+            </td>
+
+            <td>
+              <p>Approved By:</p>
+              <input 
+                type="text" 
+                class="auth-input" 
+                value="DR. MARISSA B. FERRER"
+                disabled>
+
+              <div class="divider"></div>
+
+              <input 
+                type="text" 
+                class="auth-input" 
+                value="DIRECTOR"
+                disabled>
+            </td>
+
+            <td>
+              <p>Issued By:</p>
+              <input 
+                type="text" 
+                class="auth-input" 
+                value="GINA A. DELA CRUZ"
+                disabled>
+
+              <div class="divider"></div>
+
+              <input 
+                type="text" 
+                class="auth-input" 
+                value="PROPERTY CUSTODIAN"
+                disabled>
+            </td>
+
+            <td>
+              <p>Received By:</p>
+              <input 
+                type="text" 
+                class="auth-input"
+                placeholder="Name">
+
+              <div class="divider"></div>
+
+              <input 
+                type="text" 
+                class="auth-input"
+                placeholder="Position">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
