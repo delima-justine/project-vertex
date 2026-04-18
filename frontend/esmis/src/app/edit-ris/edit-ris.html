@@ -221,7 +221,7 @@
     </div>
 
     <!-- Warn Message -->
-    <div class="alert alert-warning mt-1" role="alert">
+    <div *ngIf="!isPrinted()" class="alert alert-warning mt-1" role="alert">
       <i class="bi bi-exclamation-triangle-fill me-1"></i>
       <strong>Required!</strong> 
       You must print or save the RIS before you can complete this form.
@@ -230,22 +230,19 @@
     <!-- Print Status -->
     <div class="alert alert-light debug">
       <div class="print-status">
-        <span>
-          <i class="bi bi-info-circle-fill me-1"></i>
-          Not Printed/Saved
+        <span [class.text-success]="isPrinted()" [class.text-danger]="!isPrinted()">
+          <i [class.bi-check-circle-fill]="isPrinted()" [class.bi-info-circle-fill]="!isPrinted()" class="me-1"></i>
+          {{ isPrinted() ? 'RIS Printed/Saved' : 'Not Printed/Saved' }}
         </span>
-      </div>
-
-      <div>
-        <button class="btn btn-warning">
-          Check Status
-        </button>
       </div>
     </div>
 
     <!-- Save & Cancel button -->
     <div class="func-buttons">
-      <button class="btn btn-success" (click)="saveAndApprove()">
+      <button 
+        class="btn btn-success" 
+        (click)="saveAndApprove()"
+        [disabled]="!isPrinted()">
         <i class="bi bi-save me-1"></i>
         Save & Approve Batch
       </button>
