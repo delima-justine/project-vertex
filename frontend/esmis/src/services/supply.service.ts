@@ -58,10 +58,13 @@ export class SupplyService {
     return this.http.post<any>(`${this.apiUrl}/supply-requests`, payload);
   }
 
-  listSupplyRequests(status?: string): Observable<SupplyRequest[]> {
+  listSupplyRequests(status?: string, userId?: number): Observable<SupplyRequest[]> {
     let params = new HttpParams();
     if (status) {
       params = params.set('status', status);
+    }
+    if (userId) {
+      params = params.set('user_id', userId.toString());
     }
     return this.http.get<SupplyRequest[]>(`${this.apiUrl}/supply-requests`, { params });
   }
