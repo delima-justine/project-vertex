@@ -41,6 +41,8 @@ export class EditRis implements OnInit, OnDestroy {
   receivedByName = signal<string>('');
   receivedByOffice = signal<string>('');
 
+  isPrinted = signal<boolean>(false);
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -130,6 +132,8 @@ export class EditRis implements OnInit, OnDestroy {
       alert('Error: No request data found.');
       return;
     }
+
+    this.isPrinted.set(true);
 
     try {
       const h2p = await import('html2pdf.js');
