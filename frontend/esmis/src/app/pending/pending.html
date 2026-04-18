@@ -76,69 +76,70 @@
       </tbody>
     </table>
   </div>
+</main>
 
-  <!-- Request Details Modal -->
-  @if (isModalOpen()) {
-    <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);">
-      <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Batch Request Details</h5>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
-          </div>
-          <div class="modal-body">
-            @if (selectedBatch().length > 0) {
-              <div class="batch-header mb-4 p-3 bg-light rounded">
-                <div class="row">
-                  <div class="col-md-4">
-                    <strong>Requester:</strong> {{ selectedBatch()[0].user?.first_name }} {{ selectedBatch()[0].user?.last_name }}
-                  </div>
-                  <div class="col-md-4">
-                    <strong>Office:</strong> {{ selectedBatch()[0].user?.office?.office_name }}
-                  </div>
-                  <div class="col-md-4">
-                    <strong>Date:</strong> {{ selectedBatch()[0].created_at | date:'MMM d, y, h:mm a' }}
-                  </div>
-                </div>
+<!-- Request Details Modal (Placed outside <main> to avoid stacking context issues) -->
+<div class="modal fade" #batchModal tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Batch Request Details</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        @if (selectedBatch().length > 0) {
+          <div class="batch-header mb-4 p-3 bg-light rounded">
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Requester:</strong> {{ selectedBatch()[0].user?.first_name }} {{ selectedBatch()[0].user?.last_name }}
               </div>
-
-              <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                  <thead class="table-light">
-                    <tr>
-                      <th>Stk #</th>
-                      <th>Supply Name</th>
-                      <th>Qty</th>
-                      <th>Purpose</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (req of selectedBatch(); track req.id) {
-                      <tr>
-                        <td>{{ req.supply_id }}</td>
-                        <td>{{ req.supply?.item_desc }}</td>
-                        <td>{{ req.quantity_req }}</td>
-                        <td>{{ req.purpose }}</td>
-                      </tr>
-                    }
-                  </tbody>
-                </table>
+              <div class="col-md-4">
+                <strong>Office:</strong> {{ selectedBatch()[0].user?.office?.office_name }}
               </div>
-            }
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-            <div class="ms-auto">
-              <button type="button" class="btn btn-outline-danger me-2" (click)="disapproveBatch()">
-                <i class="bi bi-x-circle-fill me-1"></i>Disapprove Batch
-              </button>
-              <button type="button" class="btn btn-primary" (click)="editBatchRIS()">
-                <i class="bi bi-pencil-square me-1"></i>Edit Batch RIS
-              </button>
+              <div class="col-md-4">
+                <strong>Date:</strong> {{ selectedBatch()[0].created_at | date:'MMM d, y, h:mm a' }}
+              </div>
             </div>
           </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th class="modal-table-th">Stk #</th>
+                  <th class="modal-table-th">Supply Name</th>
+                  <th class="modal-table-th">Qty</th>
+                  <th class="modal-table-th">Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (req of selectedBatch(); track req.id) {
+                  <tr>
+                    <td>{{ req.supply_id }}</td>
+                    <td>{{ req.supply?.item_desc }}</td>
+                    <td>{{ req.quantity_req }}</td>
+                    <td>{{ req.purpose }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+        <div class="ms-auto">
+          @if(user()?.role?.role_name  === 'admin' || user()?.role?.role_name === 'superadmin') {
+          <button type="button" class="btn btn-outline-danger me-2" (click)="disapproveBatch()">
+            <i class="bi bi-x-circle-fill me-1"></i>Disapprove Batch
+          </button>
+          
+          <button type="button" class="btn btn-primary" (click)="editBatchRIS()">
+            <i class="bi bi-pencil-square me-1"></i>Edit Batch RIS
+          </button>
+        }
         </div>
       </div>
     </div>
-  }
-</main>
+  </div>
+</div>
