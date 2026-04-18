@@ -37,8 +37,10 @@
           <th>Purpose</th>
           <th>Status</th>
           <th>Date Requested</th>
-          <th>Approved By</th>
-          <th>Actions</th>
+          @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+            <th>Approved By</th>
+            <th>Actions</th>
+          }
         </tr>
       </thead>
 
@@ -55,9 +57,11 @@
             <td>{{ req.created_at | date:'MMM d, y, h:mm a' }}</td>
             <td>{{ req.approver?.first_name }} {{ req.approver?.last_name }}</td>
             <td>
-              <button class="btn btn-sm btn-info me-1" title="Release" (click)="releaseRequest(req)">
-                <i class="bi bi-truck"></i>
-              </button>
+              @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+                <button class="btn btn-sm btn-info me-1" title="Release" (click)="releaseRequest(req)">
+                  <i class="bi bi-truck"></i>
+                </button>
+              }
             </td>
           </tr>
         } @empty {
