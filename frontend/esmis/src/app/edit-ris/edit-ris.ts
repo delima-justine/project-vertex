@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupplyService } from '../../services/supply.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-ris',
@@ -13,7 +14,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './edit-ris.html',
   styleUrl: './edit-ris.scss',
 })
-export class EditRis implements OnInit {
+export class EditRis implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private supplyService = inject(SupplyService);
@@ -21,6 +22,13 @@ export class EditRis implements OnInit {
 
   request = signal<SupplyRequest | null>(null);
   approver = signal(this.authService.currentUser());
+
+  dateNow = new Date();
+  today = new Date(this.dateNow.getFullYear(), this.dateNow.getMonth(), this.dateNow.getDate());
+  
+  // Real-time processing counter
+  elapsedSeconds = signal(0);
+  private timerSubscription?: Subscription;
   
   // For "Issue" quantity and remarks
   issueQty = signal<number>(0);
@@ -32,6 +40,16 @@ export class EditRis implements OnInit {
     if (id) {
       this.loadRequest(Number(id));
     }
+
+    // Start counting from 0 when the component loads
+    this.timerSubscription = interval(1000).subscribe(() => {
+      this.elapsedSeconds.update(s => s + 1);
+    });
+  }
+
+  ngOnDestroy() {
+    // Stop the timer
+    this.timerSubscription?.unsubscribe();
   }
 
   loadRequest(id: number) {
@@ -82,5 +100,21 @@ export class EditRis implements OnInit {
     } else {
       this.issueQty.set(this.request()?.quantity_req || 0);
     }
+  }
+
+  getFormattedProcessingTime(): string {
+    const totalSeconds = this.elapsedSeconds();
+    const hrs = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+
+    const formattedSecs = secs < 10 ? `0${secs}` : secs;
+    
+    if (hrs > 0) {
+      const formattedMins = mins < 10 ? `0${mins}` : mins;
+      return `${hrs}:${formattedMins}:${formattedSecs}`;
+    }
+    
+    return `${mins}:${formattedSecs}`;
   }
 }
