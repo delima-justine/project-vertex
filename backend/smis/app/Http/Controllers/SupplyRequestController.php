@@ -10,14 +10,22 @@ class SupplyRequestController extends Controller
     // Returns request with related user and supply data
     public function index(Request $request)
     {
+        $user = $request->user();
         $query = SupplyRequest::with(['user.office', 'supply.category', 'supply.unit']);
+
+        // Check user role
+        $role = strtolower($user->role->role_name ?? '');
+
+        if ($role === 'user') {
+            // Regular users only see their own requests
+            $query->where('user_id', $user->id);
+        } elseif ($request->has('user_id')) {
+            // Admins/SuperAdmins can filter by user_id if provided
+            $query->where('user_id', $request->user_id);
+        }
 
         if ($request->has('status')) {
             $query->where('status', $request->status);
-        }
-
-        if ($request->has('user_id')) {
-            $query->where('user_id', $request->user_id);
         }
 
         return response()->json($query->get());
