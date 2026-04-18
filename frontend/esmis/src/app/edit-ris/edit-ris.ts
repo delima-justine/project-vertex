@@ -1,11 +1,11 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupplyService } from '../../services/supply.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subscription, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-edit-ris',
@@ -20,23 +20,31 @@ export class EditRis implements OnInit, OnDestroy {
   private supplyService = inject(SupplyService);
   private authService = inject(AuthService);
 
-  request = signal<SupplyRequest | null>(null);
+  requests = signal<SupplyRequest[]>([]);
   approver = signal(this.authService.currentUser());
+
+  combinedPurposes = computed(() => {
+    const purposes = this.requests()
+      .map(r => r.purpose?.trim())
+      .filter(p => !!p);
+    return [...new Set(purposes)].join(', ');
+  });
+
+  totalItems = computed(() => {
+    return this.requests().reduce((sum, r) => sum + r.quantity_req, 0);
+  });
 
   dateNow = new Date();
   today = new Date(this.dateNow.getFullYear(), this.dateNow.getMonth(), this.dateNow.getDate());
 
-  @ViewChild('risPdf', { static: false }) risPdf?: ElementRef<HTMLElement>;
   @ViewChild('confirmModal', { static: false }) confirmModalElement?: ElementRef<HTMLElement>;
   
   // Real-time processing counter
   elapsedSeconds = signal(0);
   private timerSubscription?: Subscription;
   
-  // For "Issue" quantity and remarks
-  issueQty = signal<number>(0);
-  remarks = signal<string>('');
-  stockAvailable = signal<boolean>(true);
+  // For each request, track its specific processing data
+  requestData = signal<Record<number, { issueQty: number; remarks: string; stockAvailable: boolean }>>({});
 
   // For "Received By"
   receivedByName = signal<string>('');
@@ -45,9 +53,10 @@ export class EditRis implements OnInit, OnDestroy {
   isPrinted = signal<boolean>(false);
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadRequest(Number(id));
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const ids = idParam.split(',').map(id => Number(id.trim()));
+      this.loadRequests(ids);
     }
 
     // Start counting from 0 when the component loads
@@ -57,18 +66,26 @@ export class EditRis implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Stop the timer
     this.timerSubscription?.unsubscribe();
   }
 
-  loadRequest(id: number) {
-    this.supplyService.getSupplyRequest(id).subscribe({
+  loadRequests(ids: number[]) {
+    const obs = ids.map(id => this.supplyService.getSupplyRequest(id));
+    forkJoin(obs).subscribe({
       next: (data) => {
-        this.request.set(data);
-        this.issueQty.set(data.quantity_req);
+        this.requests.set(data);
+        const initialData: Record<number, { issueQty: number; remarks: string; stockAvailable: boolean }> = {};
+        data.forEach(req => {
+          initialData[req.id] = {
+            issueQty: req.quantity_req,
+            remarks: '',
+            stockAvailable: true
+          };
+        });
+        this.requestData.set(initialData);
       },
       error: (err) => {
-        console.error('Error fetching request', err);
+        console.error('Error fetching requests', err);
         alert('Failed to load request data.');
         this.router.navigate(['/pending-requests']);
       }
@@ -80,35 +97,48 @@ export class EditRis implements OnInit, OnDestroy {
   }
 
   saveAndApprove() {
-    const req = this.request();
     const admin = this.approver();
-    if (!req || !admin) return;
+    const reqs = this.requests();
+    if (reqs.length === 0 || !admin) return;
 
-    if (confirm('Are you sure you want to approve this request?')) {
-      this.supplyService.updateSupplyRequest(req.id, {
-        status: 'approved',
-        approved_by: admin.id,
-        quantity_req: this.issueQty()
-      }).subscribe({
+    if (confirm(`Are you sure you want to approve these ${reqs.length} requests?`)) {
+      const updates = reqs.map(req => {
+        const data = this.requestData()[req.id];
+        return this.supplyService.updateSupplyRequest(req.id, {
+          status: 'approved',
+          approved_by: admin.id,
+          quantity_req: data.issueQty
+        });
+      });
+
+      forkJoin(updates).subscribe({
         next: () => {
-          alert('Request approved successfully!');
+          alert('Requests approved successfully!');
           this.router.navigate(['/pending-requests']);
         },
         error: (err) => {
-          console.error('Error approving request', err);
-          alert('Failed to approve request.');
+          console.error('Error approving requests', err);
+          alert('Failed to approve one or more requests.');
         }
       });
     }
   }
 
-  onStockAvailableChange(available: boolean) {
-    this.stockAvailable.set(available);
-    if (!available) {
-      this.issueQty.set(0);
-    } else {
-      this.issueQty.set(this.request()?.quantity_req || 0);
-    }
+  updateRequestData(id: number, field: string, value: any) {
+    this.requestData.update(current => {
+      const newData = { ...current };
+      newData[id] = { ...newData[id], [field]: value };
+      
+      // If stockAvailable changed to false, set issueQty to 0
+      if (field === 'stockAvailable' && value === false) {
+        newData[id].issueQty = 0;
+      } else if (field === 'stockAvailable' && value === true) {
+        const req = this.requests().find(r => r.id === id);
+        newData[id].issueQty = req?.quantity_req || 0;
+      }
+      
+      return newData;
+    });
   }
 
   getFormattedProcessingTime(): string {
@@ -116,20 +146,17 @@ export class EditRis implements OnInit, OnDestroy {
     const hrs = Math.floor(totalSeconds / 3600);
     const mins = Math.floor((totalSeconds % 3600) / 60);
     const secs = totalSeconds % 60;
-
     const formattedSecs = secs < 10 ? `0${secs}` : secs;
-    
     if (hrs > 0) {
       const formattedMins = mins < 10 ? `0${mins}` : mins;
       return `${hrs}:${formattedMins}:${formattedSecs}`;
     }
-    
     return `${mins}:${formattedSecs}`;
   }
 
   async printRIS() {
-    const req = this.request();
-    if (!req) {
+    const reqs = this.requests();
+    if (reqs.length === 0) {
       alert('Error: No request data found.');
       return;
     }
@@ -138,29 +165,40 @@ export class EditRis implements OnInit, OnDestroy {
       const h2p = await import('html2pdf.js');
       const html2pdf = (h2p as any).default || h2p;
 
-      // Extract data for the document
-      const fullName = ((req.user?.first_name || '') + ' ' + (req.user?.last_name || '')).toUpperCase();
-      const office = (req.user?.office?.office_name || '').toUpperCase();
-      const stockYes = this.stockAvailable() ? '&#9679;' : '&#9675;'; // Filled vs Empty circle
-      const stockNo = !this.stockAvailable() ? '&#9679;' : '&#9675;';
+      const firstReq = reqs[0];
+      const fullName = ((firstReq.user?.first_name || '') + ' ' + (firstReq.user?.last_name || '')).toUpperCase();
+      const office = (firstReq.user?.office?.office_name || '').toUpperCase();
+      const purpose = this.combinedPurposes();
 
-      // Build the document HTML strictly matching @ris-2026.pdf
+      const tableRows = reqs.map(req => {
+        const data = this.requestData()[req.id];
+        const stockYes = data.stockAvailable ? '&#9679;' : '&#9675;';
+        const stockNo = !data.stockAvailable ? '&#9679;' : '&#9675;';
+        return `
+          <tr>
+            <td style="border: 0.5pt solid #000; padding: 8px;">${req.supply_id || ''}</td>
+            <td style="border: 0.5pt solid #000; padding: 8px;">${req.supply?.unit?.unit_name || ''}</td>
+            <td style="border: 0.5pt solid #000; padding: 8px;">${req.supply?.item_desc || ''}</td>
+            <td style="border: 0.5pt solid #000; padding: 8px; text-align: center;">${req.quantity_req || 0}</td>
+            <td style="border: 0.5pt solid #000; padding: 8px; text-align: center; font-size: 14pt;">${stockYes}</td>
+            <td style="border: 0.5pt solid #000; padding: 8px; text-align: center; font-size: 14pt;">${stockNo}</td>
+            <td style="border: 0.5pt solid #000; padding: 8px; text-align: center;">${data.issueQty || ''}</td>
+            <td style="border: 0.5pt solid #000; padding: 8px;">${data.remarks || ''}</td>
+          </tr>
+        `;
+      }).join('');
+
       const pdfContent = `
         <div style="padding: 20px; font-family: Arial, sans-serif; color: #000; background: #fff; line-height: 1.2;">
-          <!-- Header -->
           <div style="text-align: right; font-size: 11pt; margin-bottom: 30px;">
             <p style="margin: 0;">PUP-RISL-6-PSMO-010</p>
             <p style="margin: 0;">Rev. 2</p>
             <p style="margin: 0;">Effectivity Date: April 23, 2026</p>
             <p style="margin: 0;">Appendix 63</p>
           </div>
-
-          <!-- Title -->
           <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 25px;">
             REQUISITION AND ISSUE SLIP
           </div>
-
-          <!-- Main Table -->
           <table style="width: 100%; border-collapse: collapse; border: 1pt solid #000; font-size: 10pt;">
             <thead>
               <tr>
@@ -180,31 +218,12 @@ export class EditRis implements OnInit, OnDestroy {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td style="border: 0.5pt solid #000; padding: 8px;">${req.supply_id || ''}</td>
-                <td style="border: 0.5pt solid #000; padding: 8px;">${req.supply?.unit?.unit_name || ''}</td>
-                <td style="border: 0.5pt solid #000; padding: 8px;">${req.supply?.item_desc || ''}</td>
-                <td style="border: 0.5pt solid #000; padding: 8px; text-align: center;">${req.quantity_req || 0}</td>
-                <td style="border: 0.5pt solid #000; padding: 8px; text-align: center; font-size: 14pt;">${stockYes}</td>
-                <td style="border: 0.5pt solid #000; padding: 8px; text-align: center; font-size: 14pt;">${stockNo}</td>
-                <td style="border: 0.5pt solid #000; padding: 8px; text-align: center;">${this.issueQty() || ''}</td>
-                <td style="border: 0.5pt solid #000; padding: 8px;">${this.remarks() || ''}</td>
-              </tr>
-              <!-- Empty row to match height if needed -->
-              <tr style="height: 20px;">
-                <td style="border: 0.5pt solid #000;"></td><td style="border: 0.5pt solid #000;"></td><td style="border: 0.5pt solid #000;"></td>
-                <td style="border: 0.5pt solid #000;"></td><td style="border: 0.5pt solid #000;"></td><td style="border: 0.5pt solid #000;"></td>
-                <td style="border: 0.5pt solid #000;"></td><td style="border: 0.5pt solid #000;"></td>
-              </tr>
+              ${tableRows}
             </tbody>
           </table>
-
-          <!-- Purpose -->
           <div style="margin-top: 15px; font-size: 11pt; border-bottom: 1px solid #000; padding-bottom: 5px;">
-            Purpose: ${req.purpose || ''}
+            Purpose: ${purpose}
           </div>
-
-          <!-- Signatures Table -->
           <table style="width: 100%; border-collapse: collapse; border: 1pt solid #000; margin-top: 40px; table-layout: fixed;">
             <tr>
               <td style="border: 0.5pt solid #000; padding: 12px 6px; text-align: center; width: 25%; vertical-align: top;">
@@ -214,7 +233,6 @@ export class EditRis implements OnInit, OnDestroy {
                 <div style="width: 70%; margin: 6px auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
                 <div style="font-size: 9pt; margin-top: 6px;">${office}</div>
               </td>
-
               <td style="border: 0.5pt solid #000; padding: 12px 6px; text-align: center; width: 25%; vertical-align: top;">
                 <div style="font-size: 10pt; margin-bottom: 8px;">Approved by:</div>
                 <div style="width: 70%; margin: 8px auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
@@ -222,7 +240,6 @@ export class EditRis implements OnInit, OnDestroy {
                 <div style="width: 70%; margin: 6px auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
                 <div style="font-size: 9pt; margin-top: 6px;">DIRECTOR</div>
               </td>
-
               <td style="border: 0.5pt solid #000; padding: 12px 6px; text-align: center; width: 25%; vertical-align: top;">
                 <div style="font-size: 10pt; margin-bottom: 8px;">Issued by:</div>
                 <div style="width: 70%; margin: 8px auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
@@ -230,7 +247,6 @@ export class EditRis implements OnInit, OnDestroy {
                 <div style="width: 70%; margin: 6px auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
                 <div style="font-size: 9pt; margin-top: 6px;">PROPERTY CUSTODIAN</div>
               </td>
-
               <td style="border: 0.5pt solid #000; padding: 12px 6px; text-align: center; width: 25%; vertical-align: top;">
                 <div style="font-size: 10pt; margin-bottom: 8px;">Received by:</div>
                 <div style="width: 70%; margin: 8px auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
@@ -243,7 +259,7 @@ export class EditRis implements OnInit, OnDestroy {
         </div>
       `;
 
-      const filename = `RIS-${req.id}-${new Date().toISOString().split('T')[0]}.pdf`;
+      const filename = `RIS-BATCH-${new Date().toISOString().split('T')[0]}.pdf`;
       const opt = {
         margin: 0,
         filename: filename,
@@ -252,9 +268,6 @@ export class EditRis implements OnInit, OnDestroy {
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      // Print using an off-screen iframe to show the browser print dialog
-      // (avoids opening a new tab). Write the prepared HTML into the iframe
-      // and call its print() method once loaded.
       const iframe = document.createElement('iframe');
       iframe.style.position = 'fixed';
       iframe.style.right = '0';
@@ -287,14 +300,9 @@ export class EditRis implements OnInit, OnDestroy {
         }
       };
 
-      // Some browsers fire onload on iframe when content is ready; fallback to a short timeout
       iframe.onload = () => printAndCleanup();
       setTimeout(() => printAndCleanup(), 1000);
-
-      // Show the confirmation modal after triggering the print dialog
-      setTimeout(() => {
-        this.openModal();
-      }, 1500);
+      setTimeout(() => { this.openModal(); }, 1500);
       
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -302,7 +310,6 @@ export class EditRis implements OnInit, OnDestroy {
     }
   }
 
-  // Modal Methods
   private getModalInstance() {
     if (!this.confirmModalElement) return null;
     const bootstrap = (window as any).bootstrap;

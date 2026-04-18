@@ -1,9 +1,9 @@
-@if (request(); as req) {
+@if (requests().length > 0) {
   <main>
     <!-- Header -->
     <div class="header">
       <!-- Edit RIS Title -->
-      <span>Edit RIS - Request #{{ req.id }}</span>
+      <span>Edit RIS - Batch Request ({{ requests().length }} items)</span>
 
       <button class="btn btn-primary print-btn" (click)="printRIS()">
         <i class="bi bi-printer me-1"></i>
@@ -21,12 +21,12 @@
           </div>
           
           <div>
-            <p>{{ req.quantity_req }}</p>
+            <p>{{ totalItems() }}</p>
             <p>Total Items</p>
           </div>
         </div>
       </div>
-      
+
       <!-- Requests -->
       <div class="card">
         <div class="card-body stat-card-body">
@@ -35,12 +35,12 @@
           </div>
 
           <div>
-            <p>{{ req.quantity_req }}</p>
+            <p>{{ requests().length }}</p>
             <p>Requests</p>
           </div>
         </div>
       </div>
-
+      
       <!-- Processing Date -->
       <div class="card">
         <div class="card-body stat-card-body">
@@ -105,28 +105,33 @@
             </thead>
 
             <tbody>
-              <tr>
-                <td>{{ req.supply_id }}</td>
-                <td>{{ req.supply?.unit?.unit_name }}</td>
-                <td>{{ req.supply?.item_desc }}</td>
-                <td>{{ req.quantity_req }}</td>
-                <td>
-                  <!-- Input Radio -->
-                  <input type="radio" name="stock" id="stock-yes" [checked]="stockAvailable()" (change)="onStockAvailableChange(true)">
-                  <label for="stock-yes"></label>
-                </td>
-                <td>
-                  <!-- Input Radio -->
-                  <input type="radio" name="stock" id="stock-no" [checked]="!stockAvailable()" (change)="onStockAvailableChange(false)">
-                  <label for="stock-no"></label>
-                </td>
-                <td>
-                  <input type="number" class="form-control" [ngModel]="issueQty()" (ngModelChange)="issueQty.set($event)">
-                </td>
-                <td>
-                  <input type="text" class="form-control" [ngModel]="remarks()" (ngModelChange)="remarks.set($event)">
-                </td>
-              </tr>
+              @for (req of requests(); track req.id) {
+                <tr>
+                  <td>{{ req.supply_id }}</td>
+                  <td>{{ req.supply?.unit?.unit_name }}</td>
+                  <td>{{ req.supply?.item_desc }}</td>
+                  <td class="text-center">{{ req.quantity_req }}</td>
+                  <td class="text-center">
+                    <input type="radio" [name]="'stock_' + req.id" [id]="'stock-yes-' + req.id" 
+                           [checked]="requestData()[req.id].stockAvailable" (change)="updateRequestData(req.id, 'stockAvailable', true)">
+                    <label [for]="'stock-yes-' + req.id"></label>
+                  </td>
+                  <td class="text-center">
+                    <input type="radio" [name]="'stock_' + req.id" [id]="'stock-no-' + req.id" 
+                           [checked]="!requestData()[req.id].stockAvailable" (change)="updateRequestData(req.id, 'stockAvailable', false)">
+                    <label [for]="'stock-no-' + req.id"></label>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control" [ngModel]="requestData()[req.id].issueQty" 
+                           (ngModelChange)="updateRequestData(req.id, 'issueQty', $event)"
+                           [disabled]="!requestData()[req.id].stockAvailable">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" [ngModel]="requestData()[req.id].remarks" 
+                           (ngModelChange)="updateRequestData(req.id, 'remarks', $event)">
+                  </td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
@@ -137,7 +142,7 @@
           <input 
             class="form-control" 
             type="text" 
-            [value]="req.purpose"
+            [value]="combinedPurposes()"
             disabled>
         </div>
 
@@ -150,7 +155,7 @@
                 <input 
                   type="text" 
                   class="auth-input"
-                  [value]="((req.user?.first_name || '') + ' ' + (req.user?.last_name || '')).toUpperCase()"
+                  [value]="((requests()[0]?.user?.first_name || '') + ' ' + (requests()[0]?.user?.last_name || '')).toUpperCase()"
                   disabled>
 
                 <div class="divider"></div>
@@ -158,7 +163,7 @@
                 <input 
                   type="text" 
                   class="auth-input"
-                  [value]="(req.user?.office?.office_name || '').toUpperCase()"
+                  [value]="(requests()[0]?.user?.office?.office_name || '').toUpperCase()"
                   disabled>
               </td>
 
@@ -279,6 +284,6 @@
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
-    <p class="mt-2">Loading request data...</p>
+    <p class="mt-2">Loading batch data...</p>
   </div>
 }
