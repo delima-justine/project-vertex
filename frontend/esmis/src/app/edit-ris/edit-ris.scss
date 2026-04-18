@@ -148,3 +148,28 @@ main {
     margin: 0;
   }
 }
+
+.print-status {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  span {
+    font-size: 16px;
+  }
+}
+
+.debug {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.func-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+}
