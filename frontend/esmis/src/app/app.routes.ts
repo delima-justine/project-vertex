@@ -77,7 +77,7 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'requests/edit-ris',
+    path: 'requests/edit-ris/:id',
     loadComponent: () => import('./edit-ris/edit-ris')
       .then(m => m.EditRis),
     title: 'Edit RIS',
