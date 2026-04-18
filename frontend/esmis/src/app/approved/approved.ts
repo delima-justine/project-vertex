@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
+import { AuthService } from '../../services/auth.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +15,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class Approved implements OnInit {
   private supplyService = inject(SupplyService);
+  private authService = inject(AuthService);
+
+  user = this.authService.currentUser;
 
   requests = signal<SupplyRequest[]>([]);
   searchTerm = signal('');
