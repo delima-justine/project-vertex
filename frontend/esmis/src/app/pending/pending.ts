@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pending',
@@ -20,6 +21,8 @@ export class Pending implements OnInit {
   requests = signal<SupplyRequest[]>([]);
   searchTerm = signal('');
   selectedOffice = signal('all');
+
+  router = inject(Router);
 
   filteredRequests = computed(() => {
     return this.requests().filter(req => {
@@ -88,5 +91,10 @@ export class Pending implements OnInit {
         }
       });
     }
+  }
+
+  editRIS() {
+    // Redirect to edit page
+    this.router.navigate(['/requests/edit-ris']);
   }
 }
