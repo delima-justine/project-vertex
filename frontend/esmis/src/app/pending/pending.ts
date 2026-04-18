@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
@@ -18,14 +18,30 @@ export class Pending implements OnInit {
   private supplyService = inject(SupplyService);
   private authService = inject(AuthService);
 
+  user = this.authService.currentUser;
+
   requests = signal<SupplyRequest[]>([]);
   searchTerm = signal('');
   selectedOffice = signal('all');
 
   selectedBatch = signal<SupplyRequest[]>([]);
-  isModalOpen = signal(false);
+  
+  @ViewChild('batchModal', { static: false }) batchModalElement?: ElementRef<HTMLElement>;
 
   router = inject(Router);
+
+  private getModalInstance() {
+    if (!this.batchModalElement) return null;
+    const bootstrap = (window as any).bootstrap;
+    if (bootstrap) {
+      return bootstrap.Modal.getOrCreateInstance(this.batchModalElement.nativeElement);
+    }
+    return null;
+  }
+
+  openModal() {
+    this.getModalInstance()?.show();
+  }
 
   batchedRequests = computed(() => {
     const groups: { [key: string]: SupplyRequest[] } = {};
@@ -130,16 +146,29 @@ export class Pending implements OnInit {
 
   editBatchRIS() {
     const ids = this.selectedBatch().map(r => r.id).join(',');
+    this.closeModal();
     this.router.navigate(['/requests/edit-ris', ids]);
   }
 
   viewRequest(batch: any) {
     this.selectedBatch.set(batch.requests);
-    this.isModalOpen.set(true);
+    this.openModal();
   }
 
   closeModal() {
-    this.isModalOpen.set(false);
+    const modal = this.getModalInstance();
+    if (modal) {
+      modal.hide();
+    }
     this.selectedBatch.set([]);
+    
+    // Manual cleanup to ensure backdrop is removed during navigation
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove();
+    }
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
   }
 }
