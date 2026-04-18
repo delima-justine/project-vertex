@@ -107,8 +107,20 @@
           </div>
 
           <div class="btn-container">
-            <button class="btn btn-primary" (click)="openAddModal()"><i class="bi bi-plus-lg"></i> Add Supply</button>
-            <button class="btn btn-success"><i class="bi bi-printer"></i> Print</button>
+            @if(user()?.role?.role_name  === 'admin' || user()?.role?.role_name === 'superadmin') {
+              <button 
+                class="btn btn-primary" 
+                (click)="openAddModal()">
+                <i class="bi bi-plus-lg"></i> 
+                  Add Supply
+              </button>
+              
+              <button 
+                class="btn btn-success">
+                <i class="bi bi-printer"></i> 
+                Print
+              </button>
+            }
           </div>
         </div>
 
