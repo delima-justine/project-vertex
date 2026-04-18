@@ -16,6 +16,10 @@ class SupplyRequestController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->has('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
         return response()->json($query->get());
     }
 
