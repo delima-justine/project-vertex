@@ -27,6 +27,7 @@ export class EditRis implements OnInit, OnDestroy {
   today = new Date(this.dateNow.getFullYear(), this.dateNow.getMonth(), this.dateNow.getDate());
 
   @ViewChild('risPdf', { static: false }) risPdf?: ElementRef<HTMLElement>;
+  @ViewChild('confirmModal', { static: false }) confirmModalElement?: ElementRef<HTMLElement>;
   
   // Real-time processing counter
   elapsedSeconds = signal(0);
@@ -132,8 +133,6 @@ export class EditRis implements OnInit, OnDestroy {
       alert('Error: No request data found.');
       return;
     }
-
-    this.isPrinted.set(true);
 
     try {
       const h2p = await import('html2pdf.js');
@@ -291,10 +290,38 @@ export class EditRis implements OnInit, OnDestroy {
       // Some browsers fire onload on iframe when content is ready; fallback to a short timeout
       iframe.onload = () => printAndCleanup();
       setTimeout(() => printAndCleanup(), 1000);
+
+      // Show the confirmation modal after triggering the print dialog
+      setTimeout(() => {
+        this.openModal();
+      }, 1500);
       
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('An error occurred while generating the PDF.');
     }
+  }
+
+  // Modal Methods
+  private getModalInstance() {
+    if (!this.confirmModalElement) return null;
+    const bootstrap = (window as any).bootstrap;
+    if (bootstrap) {
+      return bootstrap.Modal.getOrCreateInstance(this.confirmModalElement.nativeElement);
+    }
+    return null;
+  }
+
+  openModal() {
+    this.getModalInstance()?.show();
+  }
+
+  closeModal() {
+    this.getModalInstance()?.hide();
+  }
+
+  confirmPrinted() {
+    this.isPrinted.set(true);
+    this.closeModal();
   }
 }
