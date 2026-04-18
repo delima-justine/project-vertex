@@ -15,37 +15,57 @@
     <div class="cards">
       <!-- Total Items -->
       <div class="card">
-        <div class="card-body">
-          <i class="bi bi-boxes"></i>
-          <h5>Total Items</h5>
-          <p>{{ req.quantity_req }}</p>
+        <div class="card-body stat-card-body">
+          <div>
+            <i class="bi bi-boxes"></i>
+          </div>
+          
+          <div>
+            <p>{{ req.quantity_req }}</p>
+            <p>Total Items</p>
+          </div>
         </div>
       </div>
       
       <!-- Requests -->
       <div class="card">
-        <div class="card-body">
-          <i class="bi bi-list-task"></i>
-          <h5>Requests</h5>
-          <p>1</p>
+        <div class="card-body stat-card-body">
+          <div>
+            <i class="bi bi-list-task"></i>
+          </div>
+
+          <div>
+            <p>{{ req.quantity_req }}</p>
+            <p>Requests</p>
+          </div>
         </div>
       </div>
 
       <!-- Processing Date -->
       <div class="card">
-        <div class="card-body">
-          <i class="bi bi-calendar-event"></i>
-          <h5>Request Date</h5>
-          <p>{{ req.created_at | date:'yyyy-MM-dd' }}</p>
+        <div class="card-body stat-card-body">
+          <div>
+            <i class="bi bi-calendar-event"></i>
+          </div>
+
+          <div>
+            <p>{{ today | date:'MMM d, y' }}</p>
+            <p>Processing Date</p>
+          </div>
         </div>
       </div>
 
       <!-- Processing Time -->
       <div class="card">
-        <div class="card-body">
-          <i class="bi bi-clock"></i>
-          <h5>Request Time</h5>
-          <p>{{ req.created_at | date:'h:mm a' }}</p>
+        <div class="card-body stat-card-body">
+          <div>
+            <i class="bi bi-clock"></i>
+          </div>
+          
+          <div>
+            <p>{{ getFormattedProcessingTime() }}</p>
+            <p>Processing Time</p>
+          </div>
         </div>
       </div>
     </div>

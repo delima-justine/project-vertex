@@ -26,11 +26,19 @@ main {
 .cards {
   display: flex;
   flex-direction: row;
-  margin: 10px 0px;
-  justify-content: space-between;
+  gap: 1rem;
+  margin: 10px 0;
+  align-items: stretch;
+  flex-wrap: nowrap;
 
   .card {
-    width: 45rem;
+    flex: 1 1 14rem;
+    max-width: 18rem;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 6px 18px rgba(35,47,62,0.08);
+    border: 1px solid rgba(0,0,0,0.03);
   }
 }
 
@@ -49,6 +57,7 @@ main {
     border-collapse: separate;
     border-spacing: 0;
     margin-top: 20px;
+    box-shadow: 1px 2px 7px #8888888a;
 
     thead th {
       background-color: #800000 !important;
@@ -172,4 +181,44 @@ main {
   flex-direction: row;
   justify-content: center;
   gap: 10px;
+}
+
+.card, .card-body {
+  .stat-card-body {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .stat-card-body > div:first-child {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #e9f5ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stat-card-body i {
+    font-size: 1.6rem;
+    color: #0d6efd;
+  }
+
+  .stat-card-body p:nth-child(1) {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #343a40;
+    line-height: 1;
+  }
+
+  .stat-card-body p:nth-child(2) {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 400;
+  }
+
 }
