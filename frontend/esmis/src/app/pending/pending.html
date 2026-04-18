@@ -129,7 +129,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
         <div class="ms-auto">
-          @if(user()?.role?.role_name  === 'admin' || user()?.role?.role_name === 'superadmin') {
+          @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
           <button type="button" class="btn btn-outline-danger me-2" (click)="disapproveBatch()">
             <i class="bi bi-x-circle-fill me-1"></i>Disapprove Batch
           </button>

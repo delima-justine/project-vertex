@@ -5,9 +5,9 @@
   <div class="content-container">
     <!-- Main Panel -->
     <div class="main-panel">
-      @if(user()?.role?.role_name === 'admin') {
+      @if(user()?.role?.role_name?.toLowerCase() === 'admin') {
         <span>Welcome Admin, </span>
-      } @else if(user()?.role?.role_name === "superadmin") {
+      } @else if(user()?.role?.role_name?.toLowerCase() === "superadmin") {
         <span>Welcome Super Admin, </span>
       } @else {
         <span>Welcome User, </span>
@@ -107,7 +107,7 @@
           </div>
 
           <div class="btn-container">
-            @if(user()?.role?.role_name  === 'admin' || user()?.role?.role_name === 'superadmin') {
+            @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
               <button 
                 class="btn btn-primary" 
                 (click)="openAddModal()">
@@ -133,7 +133,7 @@
               <th>Category</th>
               <th>Unit</th>
               <th>Status</th>
-              @if(user()?.role?.role_name  === 'admin' || user()?.role?.role_name === 'superadmin') {
+              @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
                 <th>Quantity</th>
                 <th>Actions</th>
               }
@@ -154,7 +154,7 @@
                     'bg-danger': supply.status === 'Out of Stock'
                   }">{{ supply.status }}</span>
                 </td>
-                @if(user()?.role?.role_name  === 'admin' || user()?.role?.role_name === 'superadmin') {
+                @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
                   <td>{{ supply.quantity }}</td>
                   <td>
                     <button class="btn btn-sm btn-warning me-1" (click)="openEditModal(supply)"><i class="bi bi-pencil-square"></i></button>
