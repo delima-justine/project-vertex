@@ -93,8 +93,8 @@ export class Pending implements OnInit {
     }
   }
 
-  editRIS() {
+  editRIS(request: SupplyRequest) {
     // Redirect to edit page
-    this.router.navigate(['/requests/edit-ris']);
+    this.router.navigate(['/requests/edit-ris', request.id]);
   }
 }
