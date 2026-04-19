@@ -3,7 +3,17 @@
 
 <main>
   <div class="header-panel">
-    <i class="bi bi-clipboard2-data-fill me-1 text-white"></i>
-    <span>Reports</span>
+    <div>
+      <i class="bi bi-clipboard2-data-fill me-1 text-white"></i>
+      <span>Reports</span>
+    </div>
+
+    <div>
+      <!-- Export to Excel -->
+      <button class="btn btn-sm btn-success export-btn" (click)="exportToExcel()">
+        <i class="bi bi-file-earmark-spreadsheet me-1"></i>
+        Export to Excel
+      </button>
+    </div>
   </div>
 </main>
