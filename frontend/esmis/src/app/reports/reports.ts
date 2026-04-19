@@ -10,4 +10,7 @@ import { TopNav } from "../top-nav/top-nav";
 })
 export class Reports {
 
+  exportToExcel() {
+    console.log('Exporting to Excel...');
+  }
 }
