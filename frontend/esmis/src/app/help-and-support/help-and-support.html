@@ -1,9 +1,319 @@
-<!-- Sidebar Component -->
-<app-sidebar/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SMIS - Help & Support</title>
+  <link rel="stylesheet" href="help-and-support.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-star"></i></div>
+      <span class="logo-text">SMIS</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="fas fa-user"></i>
+        <span>User Management</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="fas fa-bell"></i>
+        <span>Notifications</span>
+        <span class="notif-badge">8</span>
+      </a>
+      <div class="nav-group">
+        <div class="nav-item has-submenu" id="ordersToggle">
+          <i class="fas fa-box"></i>
+          <span>Orders</span>
+          <i class="fas fa-chevron-down chevron" id="ordersChevron"></i>
+        </div>
+        <div class="submenu" id="ordersSubmenu">
+          <a href="#" class="submenu-item"><span class="dot"></span> Pending</a>
+          <a href="#" class="submenu-item"><span class="dot"></span> Approved</a>
+          <a href="#" class="submenu-item"><span class="dot"></span> Released</a>
+          <a href="#" class="submenu-item"><span class="dot"></span> Disapproved</a>
+        </div>
+      </div>
+      <a href="#" class="nav-item">
+        <i class="fas fa-chart-line"></i>
+        <span>Reports</span>
+      </a>
+      <a href="#" class="nav-item active">
+        <i class="fas fa-circle-question"></i>
+        <span>Help & Support</span>
+      </a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <div class="page-header">
+      <div class="page-header-icon">
+        <i class="fas fa-circle-question"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Help &amp; Support Center</h1>
+        <p class="page-subtitle">Get answers and find resources</p>
+      </div>
+    </div>
+    <div class="quick-cards">
+      <div class="quick-card">
+        <div class="quick-card-icon purple">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <div class="quick-card-info">
+          <h3>Get Started</h3>
+          <p>Learn the basics and start using SMIS effectively</p>
+        </div>
+      </div>
+      <div class="quick-card">
+        <div class="quick-card-icon lavender">
+          <i class="fas fa-bell"></i>
+        </div>
+        <div class="quick-card-info">
+          <h3>System Updates</h3>
+          <p>Stay informed about new features and improvements</p>
+        </div>
+      </div>
+      <div class="quick-card">
+        <div class="quick-card-icon teal">
+          <i class="fas fa-message"></i>
+        </div>
+        <div class="quick-card-info">
+          <h3>Contact Support</h3>
+          <p>Reach out to our team for personalized assistance</p>
+        </div>
+      </div>
+    </div>
+    <div class="faq-section">
+      <div class="faq-header">
+        <h2 class="faq-title">Frequently Asked Questions</h2>
+        <p class="faq-subtitle">Welcome to the Help and Support section of the Supply Management Information System (SMIS). Find answers to common questions.</p>
+      </div>
+      <div class="faq-search-wrap">
+        <i class="fas fa-magnifying-glass search-icon"></i>
+        <input type="text" class="faq-search" id="faqSearch" placeholder="Search for help topics..." />
+      </div>
+      <div class="faq-tabs">
+        <button class="faq-tab active" data-filter="all">
+          <i class="fas fa-border-all"></i> All Topics
+        </button>
+        <button class="faq-tab" data-filter="general">
+          <i class="fas fa-circle-info"></i> General
+        </button>
+        <button class="faq-tab" data-filter="system">
+          <i class="fas fa-desktop"></i> System Overview
+        </button>
+        <button class="faq-tab" data-filter="finance">
+          <i class="fas fa-file-invoice"></i> Finance &amp; Management
+        </button>
+        <button class="faq-tab" data-filter="technical">
+          <i class="fas fa-screwdriver-wrench"></i> Technical Issues
+        </button>
+      </div>
+      <div class="faq-list" id="faqList">
+        <div class="faq-item" data-category="general">
+          <button class="faq-question" aria-expanded="false">
+            <span>What is the Supply Management Information System (SMIS)?</span>
+            <i class="fas fa-chevron-down faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>The Supply Management Information System (SMIS) is a web-based platform designed to streamline supply requests, inventory management, and resource tracking across departments. It provides a centralized system for submitting, approving, and monitoring supply requests efficiently.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-category="general">
+          <button class="faq-question" aria-expanded="false">
+            <span>How do I submit a supply request?</span>
+            <i class="fas fa-chevron-down faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>To submit a supply request, navigate to the Orders section and click "New Request." Fill in the required details including item description, quantity, and purpose. Submit the form and your request will be reviewed by the appropriate approver.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-category="system">
+          <button class="faq-question" aria-expanded="false">
+            <span>Who can access the system requirements?</span>
+            <i class="fas fa-chevron-down faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>System requirements and configuration settings are accessible to Admin users only. Regular users can view their own requests and statuses, while Support Specialists can manage assigned tickets and requests.</p>
+          </div>
+        </div>
+        <div class="faq-item open" data-category="general">
+          <button class="faq-question" aria-expanded="true">
+            <span>How do I track my request status?</span>
+            <i class="fas fa-chevron-down faq-chevron"></i>
+          </button>
+          <div class="faq-answer" style="display:block;">
+            <p>You can track your requests by going to Orders &gt; Pending/Approved/Released/Disapproved sections. Each request shows its current status, approval history, and any comments from approvers.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-category="technical">
+          <button class="faq-question" aria-expanded="false">
+            <span>What should I do if I encounter a technical issue?</span>
+            <i class="fas fa-chevron-down faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>If you encounter a technical issue, first try refreshing the page or clearing your browser cache. If the problem persists, use the Contact Support section below to reach our support team via email or phone. Include a description of the issue and any error messages you see.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-category="finance">
+          <button class="faq-question" aria-expanded="false">
+            <span>How are supply requests approved?</span>
+            <i class="fas fa-chevron-down faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Supply requests go through a multi-step approval process. Once submitted, requests are reviewed by the designated approver for your department. You will receive notifications when your request status changes. Approved requests proceed to release, while disapproved requests include comments explaining the reason.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <div class="resource-card-header">
+          <div class="resource-icon orange">
+            <i class="fas fa-book-open"></i>
+          </div>
+          <h3 class="resource-title">Admin Guide</h3>
+        </div>
+        <p class="resource-desc">Learn how to manage your system effectively with our comprehensive guides:</p>
+        <ul class="resource-list">
+          <li><i class="fas fa-circle" style="font-size:6px;"></i> User management</li>
+          <li><i class="fas fa-circle" style="font-size:6px;"></i> Supply request processing</li>
+          <li><i class="fas fa-circle" style="font-size:6px;"></i> Inventory tracking and reports</li>
+          <li><i class="fas fa-circle" style="font-size:6px;"></i> System configuration</li>
+        </ul>
+        <button class="download-btn">
+          <i class="fas fa-file-arrow-down"></i> Download Full Guide
+        </button>
+      </div>
+      <div class="resource-card">
+        <div class="resource-card-header">
+          <div class="resource-icon red">
+            <i class="fas fa-play"></i>
+          </div>
+          <h3 class="resource-title">Video Tutorials</h3>
+        </div>
+        <p class="resource-desc">Watch step-by-step video guides to help you navigate and use the system:</p>
+        <div class="video-placeholder">
+          <div class="video-play-btn">
+            <i class="fas fa-play"></i>
+          </div>
+          <div class="video-info">
+            <p class="video-title">Getting Started with SMIS</p>
+            <p class="video-duration">Duration: 5:30</p>
+          </div>
+        </div>
+        <button class="youtube-btn">View All Tutorials on YouTube</button>
+      </div>
+    </div>
+    <div class="contact-section">
+      <div class="contact-header">
+        <div class="contact-icon">
+          <i class="fas fa-message"></i>
+        </div>
+        <div>
+          <h3 class="contact-title">Contact Support</h3>
+          <p class="contact-subtitle">Need additional help? Our support team is ready to assist you.</p>
+        </div>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="contact-item-icon blue">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div>
+            <p class="contact-label">Email</p>
+            <a href="mailto:smis-support@gmail.com" class="contact-value">smis-support@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon green">
+            <i class="fas fa-phone"></i>
+          </div>
+          <div>
+            <p class="contact-label">Phone</p>
+            <p class="contact-value">+63-123-4567</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon orange">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div>
+            <p class="contact-label">Office Hours</p>
+            <p class="contact-value">Mon-Fri, 9:00 AM – 5:00 PM</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon purple">
+            <i class="fas fa-location-dot"></i>
+          </div>
+          <div>
+            <p class="contact-label">Location</p>
+            <p class="contact-value">Bacolod City, Negros Occidental<br>Office, Building 4</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <button class="help-btn" title="Help"><i class="fas fa-question"></i></button>
+  <script>
+    document.getElementById('ordersToggle').addEventListener('click', function () {
+      const sub = document.getElementById('ordersSubmenu');
+      const chev = document.getElementById('ordersChevron');
+      sub.classList.toggle('open');
+      chev.classList.toggle('rotated');
+    });
 
-<main>
-  <div class="header-panel">
-    <i class="bi bi-question-circle-fill me-1 text-white"></i>
-    <span>Help and Support</span>
-  </div>
-</main>
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const item = this.closest('.faq-item');
+        const answer = item.querySelector('.faq-answer');
+        const isOpen = item.classList.contains('open');
+
+        document.querySelectorAll('.faq-item.open').forEach(openItem => {
+          openItem.classList.remove('open');
+          openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          openItem.querySelector('.faq-answer').style.display = 'none';
+        });
+
+        if (!isOpen) {
+          item.classList.add('open');
+          this.setAttribute('aria-expanded', 'true');
+          answer.style.display = 'block';
+        }
+      });
+    });
+
+    document.querySelectorAll('.faq-tab').forEach(tab => {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.faq-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.faq-item').forEach(item => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    document.getElementById('faqSearch').addEventListener('input', function () {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const text = item.querySelector('.faq-question span').textContent.toLowerCase();
+        item.style.display = text.includes(q) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
