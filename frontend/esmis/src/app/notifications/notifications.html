@@ -1,11 +1,181 @@
-<!-- Sidebar Component -->
-<app-sidebar/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SMIS - Notifications</title>
+  <link rel="stylesheet" href="notifications.scss"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="fas fa-star"></i></div>
+      <span class="logo-text">SMIS</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="fas fa-user"></i>
+        <span>User Management</span>
+      </a>
+      <a href="#" class="nav-item active">
+        <i class="fas fa-bell"></i>
+        <span>Notifications</span>
+        <span class="badge">8</span>
+      </a>
+      <div class="nav-group">
+        <div class="nav-item has-submenu" id="ordersToggle">
+          <i class="fas fa-box"></i>
+          <span>Orders</span>
+          <i class="fas fa-chevron-down chevron" id="ordersChevron"></i>
+        </div>
+        <div class="submenu" id="ordersSubmenu">
+          <a href="#" class="submenu-item">
+            <span class="dot"></span> Pending
+          </a>
+          <a href="#" class="submenu-item">
+            <span class="dot"></span> Approved
+          </a>
+          <a href="#" class="submenu-item">
+            <span class="dot"></span> Released
+          </a>
+          <a href="#" class="submenu-item">
+            <span class="dot"></span> Disapproved
+          </a>
+        </div>
+      </div>
+      <a href="#" class="nav-item">
+        <i class="fas fa-chart-line"></i>
+        <span>Reports</span>
+      </a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <div class="notif-header">
+      <div class="notif-header-left">
+        <i class="fas fa-bell notif-bell-icon"></i>
+        <div>
+          <h1 class="notif-title">
+            Notifications
+            <span class="notif-count-badge">2</span>
+          </h1>
+          <p class="notif-date" id="notifDate"></p>
+        </div>
+      </div>
+      <button class="mark-all-btn">Mark all as read</button>
+    </div>
+    <div class="notif-list">
+      <div class="notif-item unread">
+        <div class="notif-icon bg-orange">
+          <i class="fas fa-box"></i>
+        </div>
+        <div class="notif-body">
+          <p class="notif-name">New Request <span class="unread-dot"></span></p>
+          <p class="notif-desc">Dela Cruz submitted a new supply request for Property Custodian office</p>
+        </div>
+        <div class="notif-time"><i class="far fa-clock"></i> 5 minutes ago</div>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-icon bg-green">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="notif-body">
+          <p class="notif-name">Request Approved <span class="unread-dot"></span></p>
+          <p class="notif-desc">Request #01-001 has been approved</p>
+        </div>
+        <div class="notif-time"><i class="far fa-clock"></i> 1 hour ago</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon bg-blue">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <div class="notif-body">
+          <p class="notif-name">New User Added</p>
+          <p class="notif-desc">Sarah Johnson was added to the system as Admin</p>
+        </div>
+        <div class="notif-time"><i class="far fa-clock"></i> 2 hours ago</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon bg-orange">
+          <i class="fas fa-box"></i>
+        </div>
+        <div class="notif-body">
+          <p class="notif-name">New Request</p>
+          <p class="notif-desc">Navora submitted a new supply request for OSS office</p>
+        </div>
+        <div class="notif-time"><i class="far fa-clock"></i> 3 hours ago</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon bg-purple">
+          <i class="fas fa-database"></i>
+        </div>
+        <div class="notif-body">
+          <p class="notif-name">Database Backup</p>
+          <p class="notif-desc">Automated database backup completed successfully</p>
+        </div>
+        <div class="notif-time"><i class="far fa-clock"></i> 5 hours ago</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon bg-orange">
+          <i class="fas fa-box"></i>
+        </div>
+        <div class="notif-body">
+          <p class="notif-name">Request Disapproved</p>
+          <p class="notif-desc">Request #01-003 has been disapproved</p>
+        </div>
+        <div class="notif-time"><i class="far fa-clock"></i> 1 day ago</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon bg-green">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="notif-body">
+          <p class="notif-name">Request Released</p>
+          <p class="notif-desc">Request #01-002 supplies have been released</p>
+        </div>
+        <div class="notif-time"><i class="far fa-clock"></i> 1 day ago</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon bg-blue">
+          <i class="fas fa-user-shield"></i>
+        </div>
+        <div class="notif-body">
+          <p class="notif-name">User Role Updated</p>
+          <p class="notif-desc">Emily Williams role was changed to Admin</p>
+        </div>
+        <div class="notif-time"><i class="far fa-clock"></i> 2 days ago</div>
+      </div>
+    </div>
+  </main>
+  <button class="help-btn"><i class="fas fa-question"></i></button>
+  <script>
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById('notifDate').textContent =
+      now.toLocaleDateString('en-US', options) + ' at ' + timeStr;
 
-<main>
-  <div class="content-container">
-    <h1>Notifications</h1>
-    <p>
-      This is the notifications page. Here you can view and manage system notifications.
-    </p>
-  </div>
-</main>
+    document.getElementById('ordersToggle').addEventListener('click', function () {
+      const submenu = document.getElementById('ordersSubmenu');
+      const chevron = document.getElementById('ordersChevron');
+      submenu.classList.toggle('open');
+      chevron.classList.toggle('rotated');
+    });
+
+    document.querySelector('.mark-all-btn').addEventListener('click', function () {
+      document.querySelectorAll('.notif-item.unread').forEach(item => {
+        item.classList.remove('unread');
+        const dot = item.querySelector('.unread-dot');
+        if (dot) dot.remove();
+      });
+      document.querySelector('.notif-count-badge').textContent = '0';
+      document.querySelector('.badge').textContent = '0';
+    });
+  </script>
+</body>
+</html>
