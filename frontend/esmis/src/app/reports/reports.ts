@@ -12,4 +12,12 @@ export class Reports {
   exportToExcel() {
     console.log('Exporting to Excel...');
   }
+
+  openRequestLogs() {
+    console.log('Opening Request Logs...');
+  }
+
+  openAdminAudit() {
+    console.log('Opening Admin Audit...');
+  }
 }

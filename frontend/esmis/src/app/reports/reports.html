@@ -16,4 +16,66 @@
       </button>
     </div>
   </div>
+
+  <!-- Main Content -->
+  <div class="content-panel card">
+    <div class="card-body">
+      <span>Supply Actions Log</span>
+
+      <!-- Filter Reports -->
+      <div class="mt-2 mb-3 card">
+        <div class="card-body">
+          <div class="header">
+            <div class="filter-container">
+              <span>
+                <i class="bi bi-funnel-fill me-1 text-danger"></i>
+                Filter Reports
+              </span>
+
+              <div class="function-btns">
+                <!-- Request Logs -->
+                <button class="btn btn-sm btn-primary" (click)="openRequestLogs()">
+                  <i class="bi bi-journal-text me-1"></i>
+                  Request Logs
+                </button>
+
+                <!-- Admin Audit -->
+                <button class="btn btn-sm btn-secondary" (click)="openAdminAudit()">
+                  <i class="bi bi-shield-lock-fill me-1"></i>
+                  Admin Audit
+                </button>
+              </div>
+            </div>
+
+            <!-- Select Time Period -->
+            <div class="time-period-container">
+              <label for="timePeriod" class="form-label">Time Period:</label>
+              <select class="form-select" id="timePeriod">
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="custom">Custom Range</option>
+              </select>
+            </div>
+
+            <!-- Status & Office -->
+            <div class="status-offices">
+              <label for="statusSelect" class="form-label">Status:</label>
+              <select class="form-select" id="statusSelect">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+
+              <label for="officeSelect" class="form-label">Office:</label>
+              <select class="form-select" id="officeSelect">
+                <option value="">All Offices</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
