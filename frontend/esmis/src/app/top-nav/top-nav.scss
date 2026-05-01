@@ -71,3 +71,21 @@
     }
   }
 }
+
+/* Ensure invalid feedback works correctly with input-group */
+.input-group {
+  position: relative;
+  
+  .invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+  }
+
+  /* Show feedback when the sibling input is invalid */
+  input.is-invalid ~ .invalid-feedback {
+    display: block;
+  }
+}

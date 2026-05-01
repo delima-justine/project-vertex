@@ -21,6 +21,16 @@ export class TopNav {
   @ViewChild('accountSettingsModal') accountSettingsModalElement!: ElementRef;
   @ViewChild('logoutModal') logoutModalElement!: ElementRef;
 
+  showCurrentPassword = signal(false);
+  showNewPassword = signal(false);
+  showConfirmPassword = signal(false);
+
+  togglePasswordVisibility(field: 'current' | 'new' | 'confirm') {
+    if (field === 'current') this.showCurrentPassword.update(v => !v);
+    if (field === 'new') this.showNewPassword.update(v => !v);
+    if (field === 'confirm') this.showConfirmPassword.update(v => !v);
+  }
+
   toggleDropdown() {
     this.isOpen.set(!this.isOpen());
   }
