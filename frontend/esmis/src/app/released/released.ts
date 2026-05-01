@@ -4,11 +4,12 @@ import { SupplyService } from '../../services/supply.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TopNav } from "../top-nav/top-nav";
 
 @Component({
   selector: 'app-released',
   standalone: true,
-  imports: [Sidebar, CommonModule, FormsModule],
+  imports: [Sidebar, CommonModule, FormsModule, TopNav],
   templateUrl: './released.html',
   styleUrl: './released.scss',
 })
