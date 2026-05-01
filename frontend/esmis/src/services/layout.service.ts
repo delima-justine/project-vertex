@@ -1,18 +1,24 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, effect, WritableSignal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LayoutService {
-  private isSidebarOpen = signal(false);
+  isSidebarOpen: WritableSignal<boolean> = signal(localStorage.getItem('isSidebarOpen') !== 'false');
 
-  toggleSidebar() {
-    localStorage.setItem('isSidebarOpen', String(!this.isSidebarOpen()));
-    this.isSidebarOpen.set(!this.isSidebarOpen());
+  constructor() {
+    effect(() => {
+      if (this.isSidebarOpen()) {
+        document.body.classList.remove('sidebar-collapsed');
+      } else {
+        document.body.classList.add('sidebar-collapsed');
+      }
+    });
   }
 
-  getSidebarState() {
-    const storedState = localStorage.getItem('isSidebarOpen');
-    return storedState === 'true' ? true : false;
+  toggleSidebar() {
+    const newState = !this.isSidebarOpen();
+    localStorage.setItem('isSidebarOpen', String(newState));
+    this.isSidebarOpen.set(newState);
   }
 }
