@@ -5,10 +5,11 @@ import { Sidebar } from "../sidebar/sidebar";
 import { AuthService } from '../../services/auth.service';
 import { SupplyService } from '../../services/supply.service';
 import { Supply, Category, Unit } from '../../models/smis.model';
+import { TopNav } from "../top-nav/top-nav";
 
 @Component({
   selector: 'app-home',
-  imports: [Sidebar, CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [Sidebar, CommonModule, ReactiveFormsModule, FormsModule, TopNav],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

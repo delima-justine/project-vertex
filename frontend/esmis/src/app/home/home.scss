@@ -1,13 +1,15 @@
 main {
-  height: 100vh;
+  height: calc(100vh - 4rem);
   width: calc(100% - 250px);
   max-width: 1190px;
   position: fixed;
+  top: 4rem;
   left: 250px;
   right: 0;
   padding: 20px 74px;
   box-sizing: border-box;
   overflow-x: hidden;
+  overflow-y: auto;
   background-color: #f8f9fa;
 }
 
