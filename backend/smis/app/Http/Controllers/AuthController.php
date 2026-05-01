@@ -63,4 +63,28 @@ class AuthController extends Controller
             'message' => 'Logged out successfully'
         ], 200); // 200 = Success
     }
+
+    // Change Password
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response([
+                'message' => 'Current password does not match.'
+            ], 400);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response([
+            'message' => 'Password updated successfully.'
+        ], 200);
+    }
 }
