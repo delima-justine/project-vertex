@@ -39,36 +39,54 @@
         <form [formGroup]="accountSettingsForm">
           <div class="mb-3">
             <label class="form-label">Current Password</label>
-            <input type="password" class="form-control" formControlName="currentPassword" 
-              [class.is-invalid]="accountSettingsForm.get('currentPassword')?.touched && accountSettingsForm.get('currentPassword')?.invalid">
-            
-            @if(currentPassword?.hasError('required') && currentPassword?.touched) {
-              <div class="invalid-feedback">Current password is required.</div>
-            }
+            <div class="input-group">
+              <input [type]="showCurrentPassword() ? 'text' : 'password'" class="form-control" formControlName="currentPassword" 
+                [class.is-invalid]="currentPassword?.touched && currentPassword?.invalid">
+              <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility('current')">
+                <i [class]="showCurrentPassword() ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+              </button>
+              @if(currentPassword?.hasError('required') && currentPassword?.touched) {
+                <div class="invalid-feedback">Current password is required.</div>
+              }
+            </div>
           </div>
 
           <div class="mb-3">
             <label class="form-label">New Password</label>
-            <input type="password" class="form-control" formControlName="newPassword"
-              [class.is-invalid]="accountSettingsForm.get('newPassword')?.touched && accountSettingsForm.get('newPassword')?.invalid">
-            
-            @if(newPassword?.hasError('required') && newPassword?.touched) {
-              <div class="invalid-feedback">New password is required.</div>
-            }
-
-            @if(newPassword?.hasError('minlength') && newPassword?.touched) {
-              <div class="invalid-feedback">New password must be at least 8 characters long.</div>
-            }
+            <div class="input-group">
+              <input [type]="showNewPassword() ? 'text' : 'password'" class="form-control" formControlName="newPassword"
+                [class.is-invalid]="newPassword?.touched && newPassword?.invalid">
+              <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility('new')">
+                <i [class]="showNewPassword() ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+              </button>
+              @if(newPassword?.touched) {
+                @if(newPassword?.hasError('required')) {
+                  <div class="invalid-feedback">New password is required.</div>
+                }
+                @if(newPassword?.hasError('minlength')) {
+                  <div class="invalid-feedback">New password must be at least 8 characters long.</div>
+                }
+              }
+            </div>
           </div>
           
           <div class="mb-3">
             <label class="form-label">Confirm New Password</label>
-            <input type="password" class="form-control" formControlName="confirmNewPassword"
-              [class.is-invalid]="accountSettingsForm.get('confirmNewPassword')?.touched && accountSettingsForm.get('confirmNewPassword')?.invalid">
-            
-              @if(confirmNewPassword?.hasError('required') && confirmNewPassword?.touched) {
-              <div class="invalid-feedback">Please confirm your new password.</div>
-            }
+            <div class="input-group">
+              <input [type]="showConfirmPassword() ? 'text' : 'password'" class="form-control" formControlName="confirmNewPassword"
+                [class.is-invalid]="confirmNewPassword?.touched && confirmNewPassword?.invalid">
+              <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility('confirm')">
+                <i [class]="showConfirmPassword() ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+              </button>
+              @if(confirmNewPassword?.touched) {
+                @if(confirmNewPassword?.hasError('required')) {
+                  <div class="invalid-feedback">Please confirm your new password.</div>
+                }
+                @if(confirmNewPassword?.hasError('mismatch')) {
+                  <div class="invalid-feedback">Passwords do not match.</div>
+                }
+              }
+            </div>
           </div>
         </form>
       </div>
