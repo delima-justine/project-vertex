@@ -1,0 +1,17 @@
+<!-- Top Nav Container -->
+<nav class="top-nav-container">
+  <div class="dropdown-container">
+    <button class="dropdown-trigger" (click)="toggleDropdown()">
+      Gina Dela Cruz
+      <i class="bi bi-caret-down-fill"></i>
+    </button>
+
+    @if(isOpen()) {
+    <!-- Dropdown List -->
+    <ul class="dropdown-menu" [class.show]="isOpen()">
+      <li class="dropdown-item">Account Settings</li>
+      <li class="dropdown-item" (click)="logout()">Logout</li>
+    </ul>
+  }
+  </div>
+</nav>
