@@ -2,8 +2,19 @@
 <nav class="top-nav-container">
   <div class="dropdown-container">
     <button class="dropdown-trigger" (click)="toggleDropdown()">
-      Gina Dela Cruz
-      <i class="bi bi-caret-down-fill"></i>
+      @if(user()?.role?.role_name?.toLowerCase() === 'superadmin' || 
+        user()?.role?.role_name?.toLowerCase() === 'admin') 
+      {
+        <i class="bi bi-person-circle text-danger"></i>
+      } @else {
+        <i class="bi bi-person-circle text-primary"></i>
+      }
+      
+      <span class="user-name">
+        {{ user()?.first_name }} {{ user()?.last_name }}
+      </span>
+
+      <i [class]="isOpen() ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
     </button>
 
     @if(isOpen()) {
