@@ -1,4 +1,4 @@
-<div class="sidebar">
+<div class="sidebar" [class.collapsed]="!layoutService.isSidebarOpen()">
   <!-- Header -->
   <div class="header">
     <img src="assets/pup_logo.png" alt="PUP Logo"/>
@@ -34,13 +34,13 @@
     </div>
 
     <div class="orders-link" (click)="toggleDropdown()">
-      <div class="d-flex flex-row gap-2">
+      <div class="link-content">
         <i class="bi bi-cart-fill"></i>
         <span>Orders</span>
       </div>
       
       <!-- Dropdown Icon -->
-      <i [class]="isDropdownOpen() ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
+      <i [class]="isDropdownOpen() ? 'bi bi-caret-up-fill dropdown-arrow' : 'bi bi-caret-down-fill dropdown-arrow'"></i>
     </div>
 
     @if(isDropdownOpen()) {
@@ -92,3 +92,8 @@
     </div>
   </div>
 </div>
+
+<!-- Sidebar Toggle Button moved outside -->
+<button class="toggle-btn" (click)="toggleSidebar()">
+  <i [class]="layoutService.isSidebarOpen() ? 'bi bi-arrow-bar-left' : 'bi bi-arrow-bar-right'"></i>
+</button>
