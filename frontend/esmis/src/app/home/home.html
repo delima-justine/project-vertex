@@ -53,7 +53,11 @@
         </div>
         <div class="card-body">
           <div class="chart-placeholder">
-            <span>Chart goes here</span>
+            <canvas baseChart
+              [data]="barChartData" 
+              [options]="barChartOptions"
+              [type]="'bar'">
+            </canvas>
           </div>
         </div>
       </div>
