@@ -1,7 +1,5 @@
+@import '../mixins';
+
 main {
-  height: 100vh;
-  width: 100%;
-  position: fixed;
-  left: 250px;
-  padding: 20px;
+  @include page-layout(true);
 }
