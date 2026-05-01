@@ -70,6 +70,7 @@ export class TopNav {
 
   closeAccountSettings() {
     this.getModalInstance()?.hide();
+    this.accountSettingsForm.reset();
   }
 
   logout() {
