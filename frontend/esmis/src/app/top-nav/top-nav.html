@@ -36,6 +36,13 @@
         <button type="button" class="btn-close" (click)="closeAccountSettings()"></button>
       </div>
       <div class="modal-body">
+        @if(errorMessage()) {
+          <div class="alert alert-danger">{{ errorMessage() }}</div>
+        }
+        @if(successMessage()) {
+          <div class="alert alert-success">{{ successMessage() }}</div>
+        }
+
         <form [formGroup]="accountSettingsForm">
           <div class="mb-3">
             <label class="form-label">Current Password</label>
@@ -91,8 +98,15 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeAccountSettings()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="accountSettingsForm.invalid">Save changes</button>
+        <button type="button" class="btn btn-secondary" (click)="closeAccountSettings()" [disabled]="isLoading()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="accountSettingsForm.invalid || isLoading()" (click)="saveChanges()">
+          @if(isLoading()) {
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Saving...
+          } @else {
+            Save changes
+          }
+        </button>
       </div>
     </div>
   </div>
