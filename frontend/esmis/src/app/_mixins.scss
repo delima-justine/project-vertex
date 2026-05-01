@@ -1,11 +1,12 @@
 @mixin page-layout($has-top-nav: false) {
   position: fixed;
-  left: 250px;
+  left: var(--sidebar-width);
   right: 0;
   padding: 20px 74px;
   box-sizing: border-box;
   overflow-x: hidden;
   background-color: #f8f9fa;
+  transition: left 0.3s ease;
 
   @if $has-top-nav {
     top: 4rem;
@@ -18,13 +19,13 @@
 
   // Media queries
   @media(min-width: 768px) and (max-width: 1024px) {
-    max-width: 774px;
-    width: calc(100% - 250px);
+    max-width: calc(100% - var(--sidebar-width));
+    width: calc(100% - var(--sidebar-width));
   }
 
   @media (min-width: 1025px) and (max-width: 1440px) {
-    max-width: 1190px;
-    width: calc(100% - 250px);
+    max-width: calc(100% - var(--sidebar-width));
+    width: calc(100% - var(--sidebar-width));
   }
 
   @media (max-width: 767px) {
