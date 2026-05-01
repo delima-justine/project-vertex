@@ -2,6 +2,8 @@ import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core'
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ChangePasswordPayload, GeneralResponse } from '../../models/smis.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-top-nav',
@@ -24,6 +26,9 @@ export class TopNav {
   showCurrentPassword = signal(false);
   showNewPassword = signal(false);
   showConfirmPassword = signal(false);
+  isLoading = signal(false);
+  errorMessage = signal<string | null>(null);
+  successMessage = signal<string | null>(null);
 
   togglePasswordVisibility(field: 'current' | 'new' | 'confirm') {
     if (field === 'current') this.showCurrentPassword.update(v => !v);
@@ -81,6 +86,36 @@ export class TopNav {
   closeAccountSettings() {
     this.getModalInstance(this.accountSettingsModalElement)?.hide();
     this.accountSettingsForm.reset();
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
+  }
+
+  saveChanges() {
+    if (this.accountSettingsForm.invalid) return;
+
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
+
+    const payload: ChangePasswordPayload = {
+      current_password: this.accountSettingsForm.value.currentPassword,
+      new_password: this.accountSettingsForm.value.newPassword,
+      new_password_confirmation: this.accountSettingsForm.value.confirmNewPassword,
+    };
+
+    this.authService.changePassword(payload).subscribe({
+      next: (response: GeneralResponse) => {
+        this.isLoading.set(false);
+        this.successMessage.set(response.message || 'Password updated successfully.');
+        setTimeout(() => {
+          this.closeAccountSettings();
+        }, 2000);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(error.error?.message || 'An error occurred while updating the password.');
+      }
+    });
   }
 
   confirmLogout() {
