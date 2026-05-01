@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
-import { User } from '../models/smis.model';
+import { AuthResponse, ChangePasswordPayload, GeneralResponse, LoginCredentials, User } from '../models/smis.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +20,9 @@ export class AuthService {
     }
   }
 
-  login(credentials: any) {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
-      tap((response: any) => {
+  login(credentials: LoginCredentials) {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+      tap((response: AuthResponse) => {
         localStorage.setItem('auth_token', response.token);
         this.getUser().subscribe();
       })
@@ -39,12 +39,16 @@ export class AuthService {
   }
 
   logout() {
-    return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
+    return this.http.post<GeneralResponse>(`${this.apiUrl}/logout`, {}).pipe(
       tap(() => {
         localStorage.removeItem('auth_token');
         this.currentUser.set(null);
       })
     );
+  }
+
+  changePassword(data: ChangePasswordPayload) {
+    return this.http.post<GeneralResponse>(`${this.apiUrl}/user/change-password`, data);
   }
 
   getToken() {
