@@ -19,6 +19,7 @@ export class TopNav {
   accountSettingsForm: FormGroup;
 
   @ViewChild('accountSettingsModal') accountSettingsModalElement!: ElementRef;
+  @ViewChild('logoutModal') logoutModalElement!: ElementRef;
 
   toggleDropdown() {
     this.isOpen.set(!this.isOpen());
@@ -54,26 +55,26 @@ export class TopNav {
     }
   }
 
-  private getModalInstance() {
-    const modalElement = this.accountSettingsModalElement.nativeElement;
+  private getModalInstance(modalElement: ElementRef) {
     const bootstrap = (window as any).bootstrap;
-    if (bootstrap) {
-      return bootstrap.Modal.getOrCreateInstance(modalElement);
+    if (bootstrap && modalElement) {
+      return bootstrap.Modal.getOrCreateInstance(modalElement.nativeElement);
     }
     return null;
   }
 
   openAccountSettings() {
     this.isOpen.set(false); // Close dropdown
-    this.getModalInstance()?.show();
+    this.getModalInstance(this.accountSettingsModalElement)?.show();
   }
 
   closeAccountSettings() {
-    this.getModalInstance()?.hide();
+    this.getModalInstance(this.accountSettingsModalElement)?.hide();
     this.accountSettingsForm.reset();
   }
 
-  logout() {
+  confirmLogout() {
+    this.getModalInstance(this.logoutModalElement)?.hide();
     this.authService.logout().subscribe({
       next: () => {
         this.router.navigate(['/']);
@@ -84,6 +85,15 @@ export class TopNav {
         this.router.navigate(['/']);
       }
     });
+  }
+
+  openLogoutModal() {
+    this.isOpen.set(false); // Close dropdown
+    this.getModalInstance(this.logoutModalElement)?.show();
+  }
+
+  closeLogoutModal() {
+    this.getModalInstance(this.logoutModalElement)?.hide();
   }
 
   get currentPassword() {
