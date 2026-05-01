@@ -6,10 +6,19 @@ import { AuthService } from '../../services/auth.service';
 import { SupplyService } from '../../services/supply.service';
 import { Supply, Category, Unit } from '../../models/smis.model';
 import { TopNav } from "../top-nav/top-nav";
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartConfiguration, ChartData } from 'chart.js';
 
 @Component({
   selector: 'app-home',
-  imports: [Sidebar, CommonModule, ReactiveFormsModule, FormsModule, TopNav],
+  imports: [
+      Sidebar, 
+      CommonModule, 
+      ReactiveFormsModule, 
+      FormsModule, 
+      TopNav,
+      BaseChartDirective
+    ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -29,6 +38,28 @@ export class Home implements OnInit {
   selectedCategory = signal('all');
   newCategoryName = signal('');
   newUnitName = signal('');
+
+  public barChartData: ChartData<'bar'> = {
+    labels: ['Good Stock', 'Low Stock', 'Out of Stock'],
+    datasets: [
+      {
+        data: [12, 5, 2],
+        label: 'Inventory Status',
+        backgroundColor: ['#2ECC71', '#F1C40F', '#E74C3C'],
+        borderColor: ['#0f5132', '#997404', '#842029'],
+        borderWidth: 1,
+        borderRadius: 8,
+      }
+    ]
+  };
+
+  public barChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {  display: false }
+    }
+  };
 
   filteredSupplies = computed(() => {
     return this.supplies().filter(supply => {
