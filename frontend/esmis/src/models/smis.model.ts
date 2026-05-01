@@ -56,3 +56,23 @@ export type SupplyRequest = {
   supply?: Supply;
   approver?: User;
 };
+
+export type ChangePasswordPayload = {
+  current_password: string;
+  new_password: string;
+  new_password_confirmation: string;
+};
+
+export type GeneralResponse = {
+  message: string;
+};
+
+export type AuthResponse = {
+  user: User;
+  token: string;
+};
+
+export type LoginCredentials = {
+  email: string;
+  password: string;
+};
