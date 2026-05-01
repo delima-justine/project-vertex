@@ -5,11 +5,12 @@ import { AuthService } from '../../services/auth.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TopNav } from "../top-nav/top-nav";
 
 @Component({
   selector: 'app-approved',
   standalone: true,
-  imports: [Sidebar, CommonModule, FormsModule],
+  imports: [Sidebar, CommonModule, FormsModule, TopNav],
   templateUrl: './approved.html',
   styleUrl: './approved.scss',
 })
