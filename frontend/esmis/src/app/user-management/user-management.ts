@@ -4,10 +4,11 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { Sidebar } from '../sidebar/sidebar';
 import { User, Office, Role } from '../../models/smis.model';
 import { UserManagementService } from '../../services/user-management.service';
+import { TopNav } from "../top-nav/top-nav";
 
 @Component({
   selector: 'app-user-management',
-  imports: [CommonModule, ReactiveFormsModule, Sidebar],
+  imports: [CommonModule, ReactiveFormsModule, Sidebar, TopNav],
   templateUrl: './user-management.html',
   styleUrl: './user-management.scss',
 })
