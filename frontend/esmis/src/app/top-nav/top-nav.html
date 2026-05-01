@@ -21,7 +21,7 @@
     <!-- Dropdown List -->
     <ul class="dropdown-menu" [class.show]="isOpen()">
       <li class="dropdown-item" (click)="openAccountSettings()">Account Settings</li>
-      <li class="dropdown-item" (click)="logout()">Logout</li>
+      <li class="dropdown-item" (click)="openLogoutModal()">Logout</li>
     </ul>
   }
   </div>
@@ -75,6 +75,25 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeAccountSettings()">Close</button>
         <button type="button" class="btn btn-primary" [disabled]="accountSettingsForm.invalid">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" tabindex="-1" #logoutModal>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Logout</h5>
+        <button type="button" class="btn-close" (click)="closeLogoutModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to logout from the system?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeLogoutModal()">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="confirmLogout()">Logout</button>
       </div>
     </div>
   </div>
