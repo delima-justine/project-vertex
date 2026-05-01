@@ -20,9 +20,62 @@
     @if(isOpen()) {
     <!-- Dropdown List -->
     <ul class="dropdown-menu" [class.show]="isOpen()">
-      <li class="dropdown-item">Account Settings</li>
+      <li class="dropdown-item" (click)="openAccountSettings()">Account Settings</li>
       <li class="dropdown-item" (click)="logout()">Logout</li>
     </ul>
   }
   </div>
 </nav>
+
+<!-- Account Settings Modal -->
+<div class="modal fade" tabindex="-1" #accountSettingsModal>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Account Settings</h5>
+        <button type="button" class="btn-close" (click)="closeAccountSettings()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="accountSettingsForm">
+          <div class="mb-3">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-control" formControlName="currentPassword" 
+              [class.is-invalid]="accountSettingsForm.get('currentPassword')?.touched && accountSettingsForm.get('currentPassword')?.invalid">
+            
+            @if(currentPassword?.hasError('required') && currentPassword?.touched) {
+              <div class="invalid-feedback">Current password is required.</div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-control" formControlName="newPassword"
+              [class.is-invalid]="accountSettingsForm.get('newPassword')?.touched && accountSettingsForm.get('newPassword')?.invalid">
+            
+            @if(newPassword?.hasError('required') && newPassword?.touched) {
+              <div class="invalid-feedback">New password is required.</div>
+            }
+
+            @if(newPassword?.hasError('minlength') && newPassword?.touched) {
+              <div class="invalid-feedback">New password must be at least 8 characters long.</div>
+            }
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" class="form-control" formControlName="confirmNewPassword"
+              [class.is-invalid]="accountSettingsForm.get('confirmNewPassword')?.touched && accountSettingsForm.get('confirmNewPassword')?.invalid">
+            
+              @if(confirmNewPassword?.hasError('required') && confirmNewPassword?.touched) {
+              <div class="invalid-feedback">Please confirm your new password.</div>
+            }
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeAccountSettings()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="accountSettingsForm.invalid">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
