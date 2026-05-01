@@ -16,6 +16,7 @@ Route::get('/user/profile', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/user/change-password', [AuthController::class, 'changePassword']);
     Route::apiResource('supply-requests', SupplyRequestController::class)->parameters([
         'supply-requests' => 'supply_request'
     ]);
