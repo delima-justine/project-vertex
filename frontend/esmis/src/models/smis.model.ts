@@ -63,6 +63,17 @@ export type ChangePasswordPayload = {
   new_password_confirmation: string;
 };
 
+export type ForgotPasswordPayload = {
+  email: string;
+};
+
+export type ResetPasswordPayload = {
+  token: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
+
 export type GeneralResponse = {
   message: string;
 };
