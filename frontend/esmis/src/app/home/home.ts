@@ -76,26 +76,19 @@ export class Home implements OnInit {
     return Math.round((released / total) * 100);
   });
 
-  barChartData = computed<ChartData<'bar'>>(() => {
-    const supplies = this.supplies();
-    const goodStock = supplies.filter(s => s.status === 'Available').length;
-    const lowStock = supplies.filter(s => s.status === 'Low Stock').length;
-    const outOfStock = supplies.filter(s => s.status === 'Out of Stock').length;
-
-    return {
-      labels: ['Good Stock', 'Low Stock', 'Out of Stock'],
-      datasets: [
-        {
-          data: [goodStock, lowStock, outOfStock],
-          label: 'Inventory Status',
-          backgroundColor: ['#2ECC71', '#F1C40F', '#E74C3C'],
-          borderColor: ['#0f5132', '#997404', '#842029'],
-          borderWidth: 1,
-          borderRadius: 8,
-        }
-      ]
-    };
-  });
+  public barChartData: ChartData<'bar'> = {
+    labels: ['Good Stock', 'Low Stock', 'Out of Stock'],
+    datasets: [
+      {
+        data: [12, 5, 2],
+        label: 'Inventory Status',
+        backgroundColor: ['#2ECC71', '#F1C40F', '#E74C3C'],
+        borderColor: ['#0f5132', '#997404', '#842029'],
+        borderWidth: 1,
+        borderRadius: 8,
+      }
+    ]
+  };
 
   public barChartOptions: ChartConfiguration['options'] = {
     responsive: true,
