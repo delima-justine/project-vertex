@@ -21,9 +21,9 @@ export class UserManagement {
   currentPage = signal(1);
   lastPage = signal(1);
   totalUsers = signal(0);
-  formVisible = signal(false);
   editMode = signal(false);
   activeUser = signal<User | null>(null);
+  userToDelete = signal<User | null>(null);
   feedback = signal('');
 
   searchControl = new FormControl('');
@@ -45,6 +45,14 @@ export class UserManagement {
     this.loadUsers();
     this.loadOffices();
     this.loadRoles();
+  }
+
+  private getModal(id: string) {
+    const modalElement = document.getElementById(id);
+    if (modalElement) {
+      return (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+    }
+    return null;
   }
 
   loadOffices() {
@@ -89,7 +97,6 @@ export class UserManagement {
   }
 
   openAddUser() {
-    this.formVisible.set(true);
     this.editMode.set(false);
     this.activeUser.set(null);
     this.feedback.set('');
@@ -106,10 +113,11 @@ export class UserManagement {
 
     this.userForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     this.userForm.get('password')?.updateValueAndValidity();
+
+    this.getModal('userModal')?.show();
   }
 
   editUser(user: User) {
-    this.formVisible.set(true);
     this.editMode.set(true);
     this.activeUser.set(user);
     this.feedback.set('');
@@ -126,6 +134,8 @@ export class UserManagement {
 
     this.userForm.get('password')?.setValidators([Validators.minLength(8)]);
     this.userForm.get('password')?.updateValueAndValidity();
+
+    this.getModal('userModal')?.show();
   }
 
   saveUser() {
@@ -143,7 +153,7 @@ export class UserManagement {
       this.userService.updateUser(this.activeUser()!.id, payload).subscribe({
         next: () => {
           this.feedback.set('User updated successfully.');
-          this.formVisible.set(false);
+          this.getModal('userModal')?.hide();
           this.loadUsers(this.currentPage());
         },
         error: () => {
@@ -154,7 +164,7 @@ export class UserManagement {
       this.userService.createUser(payload).subscribe({
         next: () => {
           this.feedback.set('New user created successfully.');
-          this.formVisible.set(false);
+          this.getModal('userModal')?.hide();
           this.loadUsers(1);
         },
         error: () => {
@@ -165,23 +175,35 @@ export class UserManagement {
   }
 
   cancelForm() {
-    this.formVisible.set(false);
+    this.getModal('userModal')?.hide();
     this.activeUser.set(null);
     this.feedback.set('');
   }
 
-  deleteUser(user: User) {
-    if (!confirm(`Delete ${user.first_name} ${user.last_name}?`)) {
-      return;
-    }
+  confirmDelete(user: User) {
+    this.userToDelete.set(user);
+    this.getModal('deleteConfirmModal')?.show();
+  }
+
+  cancelDelete() {
+    this.getModal('deleteConfirmModal')?.hide();
+    this.userToDelete.set(null);
+  }
+
+  deleteUser() {
+    const user = this.userToDelete();
+    if (!user) return;
 
     this.userService.deleteUser(user.id).subscribe({
       next: () => {
         this.feedback.set('User deleted successfully.');
+        this.getModal('deleteConfirmModal')?.hide();
+        this.userToDelete.set(null);
         this.loadUsers(this.currentPage());
       },
       error: () => {
         this.feedback.set('Failed to delete user. You may not have permission.');
+        this.getModal('deleteConfirmModal')?.hide();
       },
     });
   }
