@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -58,10 +60,14 @@ class UserController extends Controller
             'office_id' => 'required|integer|exists:tbl_office,id',
         ]);
 
-        $password = $validated['password'] ?? 'password';
+        // Generate a random password if none is provided
+        $password = $validated['password'] ?? Str::random(12);
         $validated['password'] = Hash::make($password);
 
         $user = User::create($validated);
+
+        // Send reset password email so the user can set their own password
+        Password::broker()->sendResetLink(['email' => $user->email]);
 
         return response()->json($user->load('role'), 201);
     }
