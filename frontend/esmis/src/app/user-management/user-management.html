@@ -34,60 +34,6 @@
 
   <div *ngIf="feedback()" class="alert alert-info mt-3">{{ feedback() }}</div>
 
-  <section *ngIf="formVisible()" class="user-form card mb-4 p-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5>{{ editMode() ? 'Edit User' : 'Add User' }}</h5>
-      <button class="btn btn-sm btn-light" type="button" (click)="cancelForm()">Close</button>
-    </div>
-
-    <form [formGroup]="userForm" (ngSubmit)="saveUser()">
-      <div class="row g-3">
-        <div class="col-md-4">
-          <label class="form-label">First Name</label>
-          <input class="form-control" formControlName="first_name" />
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">M. Initial</label>
-          <input class="form-control" formControlName="middle_initial" maxlength="1" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Last Name</label>
-          <input class="form-control" formControlName="last_name" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Email</label>
-          <input class="form-control" formControlName="email" type="email" />
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Role</label>
-          <select class="form-select" formControlName="role_id">
-            <option [ngValue]="null">Select role</option>
-            <option *ngFor="let role of roleOptions" [value]="role.id">{{ role.role_name }}</option>
-          </select>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Office</label>
-          <select class="form-select" formControlName="office_id">
-            <option [ngValue]="null">Select office</option>
-            <option *ngFor="let office of officeOptions" [value]="office.id">{{ office.office_name }}</option>
-          </select>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Password</label>
-          <input class="form-control" formControlName="password" type="password" />
-          <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="form-text text-danger">
-            Password must be at least 8 characters.
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-4 d-flex gap-2">
-        <button class="btn btn-success" type="submit">{{ editMode() ? 'Save Changes' : 'Create User' }}</button>
-        <button class="btn btn-secondary" type="button" (click)="cancelForm()">Cancel</button>
-      </div>
-    </form>
-  </section>
-
   <div *ngIf="isLoading()" class="text-center py-4">Loading users...</div>
 
   <table *ngIf="!isLoading()" class="table table-striped table-hover">
@@ -116,7 +62,7 @@
           </button>
           
           @if(user.role?.role_name?.toLowerCase() !== 'superadmin') {
-            <button class="btn btn-sm btn-danger" type="button" (click)="deleteUser(user)">
+            <button class="btn btn-sm btn-danger" type="button" (click)="confirmDelete(user)">
               <i class="bi bi-trash-fill"></i>
             </button>
           }
@@ -151,3 +97,82 @@
     </div>
    </div>
 </main>
+
+<!-- User Form Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userModalLabel">{{ editMode() ? 'Edit User' : 'Add User' }}</h5>
+        <button type="button" class="btn-close" (click)="cancelForm()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userForm" (ngSubmit)="saveUser()">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">First Name</label>
+              <input class="form-control" formControlName="first_name" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">M. Initial</label>
+              <input class="form-control" formControlName="middle_initial" maxlength="1" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Last Name</label>
+              <input class="form-control" formControlName="last_name" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input class="form-control" formControlName="email" type="email" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Role</label>
+              <select class="form-select" formControlName="role_id">
+                <option [ngValue]="null">Select role</option>
+                <option *ngFor="let role of roleOptions" [value]="role.id">{{ role.role_name }}</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Office</label>
+              <select class="form-select" formControlName="office_id">
+                <option [ngValue]="null">Select office</option>
+                <option *ngFor="let office of officeOptions" [value]="office.id">{{ office.office_name }}</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Password</label>
+              <input class="form-control" formControlName="password" type="password" />
+              <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="form-text text-danger">
+                Password must be at least 8 characters.
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 d-flex gap-2 justify-content-end">
+            <button class="btn btn-secondary" type="button" (click)="cancelForm()">Cancel</button>
+            <button class="btn btn-success" type="submit">{{ editMode() ? 'Save Changes' : 'Create User' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+        <button type="button" class="btn-close" (click)="cancelDelete()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete user <strong>{{ userToDelete()?.first_name }} {{ userToDelete()?.last_name }}</strong>?</p>
+        <p class="text-muted small">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancelDelete()">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="deleteUser()">Delete User</button>
+      </div>
+    </div>
+  </div>
+</div>
