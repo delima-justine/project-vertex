@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,6 +18,8 @@ export class ForgotPassword {
   message = signal<string | null>(null);
   error = signal<string | null>(null);
   isLoading = signal<boolean>(false);
+
+  router = inject(Router);
 
   constructor() {
     this.forgotPasswordForm = this.formBuilder.group({
@@ -41,6 +44,10 @@ export class ForgotPassword {
         this.isLoading.set(false);
       }
     });
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['/']);
   }
 
   get email() {
