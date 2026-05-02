@@ -54,7 +54,11 @@ class UserController extends Controller
             'first_name' => 'required|string|max:50',
             'middle_initial' => 'nullable|string|size:1',
             'last_name' => 'required|string|max:50',
-            'email' => ['required', 'email', 'unique:tbl_user,email'],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('tbl_user')->whereNull('deleted_at')
+            ],
             'password' => 'nullable|string|min:8',
             'role_id' => 'required|integer|exists:tbl_roles,id',
             'office_id' => 'required|integer|exists:tbl_office,id',
@@ -64,7 +68,17 @@ class UserController extends Controller
         $password = $validated['password'] ?? Str::random(12);
         $validated['password'] = Hash::make($password);
 
-        $user = User::create($validated);
+        // Check if a soft-deleted user with this email already exists
+        $user = User::withTrashed()->where('email', $validated['email'])->first();
+
+        if ($user) {
+            // Restore and update the existing user
+            $user->restore();
+            $user->update($validated);
+        } else {
+            // Create a new user
+            $user = User::create($validated);
+        }
 
         // Send reset password email so the user can set their own password
         Password::broker()->sendResetLink(['email' => $user->email]);
