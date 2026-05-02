@@ -151,7 +151,7 @@ export class UserManagement {
     } else {
       this.userService.createUser(payload).subscribe({
         next: () => {
-          this.feedback.set('New user created successfully.');
+          this.feedback.set('New user created successfully. A password reset email has been sent to the user.');
           this.getModal('userModal')?.hide();
           this.loadUsers(1);
         },
