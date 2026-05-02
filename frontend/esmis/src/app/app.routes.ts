@@ -83,4 +83,10 @@ export const routes: Routes = [
     title: 'Edit RIS',
     canActivate: [authGuard]
   },
+  {
+    path: 'forgot-pass',
+    loadComponent: () => import('./forgot-password/forgot-password')
+      .then(m => m.ForgotPassword),
+    title: 'Forgot Password',
+  }
 ];
