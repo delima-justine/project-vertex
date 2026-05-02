@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
-import { AuthResponse, ChangePasswordPayload, GeneralResponse, LoginCredentials, User } from '../models/smis.model';
+import { AuthResponse, ChangePasswordPayload, ForgotPasswordPayload, GeneralResponse, LoginCredentials, ResetPasswordPayload, User } from '../models/smis.model';
 
 @Injectable({
   providedIn: 'root',
@@ -49,6 +49,14 @@ export class AuthService {
 
   changePassword(data: ChangePasswordPayload) {
     return this.http.post<GeneralResponse>(`${this.apiUrl}/user/change-password`, data);
+  }
+
+  forgotPassword(data: ForgotPasswordPayload) {
+    return this.http.post<GeneralResponse>(`${this.apiUrl}/forgot-password`, data);
+  }
+
+  resetPassword(data: ResetPasswordPayload) {
+    return this.http.post<GeneralResponse>(`${this.apiUrl}/reset-password`, data);
   }
 
   getToken() {
