@@ -40,5 +40,7 @@ class DatabaseSeeder extends Seeder
             'role_id' => $roles['SuperAdmin']->id,
             'office_id' => $offices['Registrar']->id,
         ]);
+
+        $this->call(PermissionSeeder::class);
     }
 }
