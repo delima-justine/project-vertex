@@ -47,4 +47,8 @@ export class Authentication {
       });
     }
   }
+
+  navigateToForgotPassword() {
+    this.router.navigate(['/forgot-pass']);
+  }
 }
