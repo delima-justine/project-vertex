@@ -351,11 +351,10 @@ export class Home implements OnInit {
       <div style="padding: 40px; font-family: 'Times New Roman', Times, serif; color: #000; background: #fff;">
         <!-- Header -->
         <div style="text-align: center; position: relative; margin-bottom: 40px;">
-          <img src="assets/pup_logo.png" alt="Logo" style="position: absolute; left: 0; top: 0; height: 80px;">
+          <img src="assets/pup_logo.png" alt="Logo" style="position: absolute; left: 0; top: 0; height: 65px;">
           <div style="display: inline-block;">
-            <h3 style="margin: 0; font-weight: bold; font-size: 14pt;">Republic of the Philippines</h3>
             <h2 style="margin: 0; font-weight: bold; font-size: 16pt;">POLYTECHNIC UNIVERSITY OF THE PHILIPPINES</h2>
-            <p style="margin: 0; font-size: 12pt;">Sta. Mesa, Manila</p>
+            <p style="margin: 0; font-size: 12pt;">Taguig Campus</p>
             <h3 style="margin: 20px 0 0 0; font-weight: bold; text-transform: uppercase; font-size: 14pt;">Supply Management Office</h3>
           </div>
           <hr style="border: 1pt solid #000; margin-top: 30px; opacity: 1;">
