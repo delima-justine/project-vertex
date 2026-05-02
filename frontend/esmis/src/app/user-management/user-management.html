@@ -139,14 +139,8 @@
                 <option *ngFor="let office of officeOptions" [value]="office.id">{{ office.office_name }}</option>
               </select>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Password</label>
-              <input class="form-control" formControlName="password" type="password" />
-              <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="form-text text-danger">
-                Password must be at least 8 characters.
-              </div>
-            </div>
           </div>
+
           <div class="mt-4 d-flex gap-2 justify-content-end">
             <button class="btn btn-secondary" type="button" (click)="cancelForm()">Cancel</button>
             <button class="btn btn-success" type="submit">{{ editMode() ? 'Save Changes' : 'Create User' }}</button>
