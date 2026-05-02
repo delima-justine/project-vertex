@@ -31,7 +31,7 @@
 
           @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
             <span class="text-danger mb-1 error-message">
-              Password must be at least 8 characters long.
+              Password is required.
             </span>
           }
 
@@ -50,8 +50,13 @@
         }
 
         <!-- Forgot Password -->
-        <div class="text-center mt-3">
-          <a routerLink="/forgot-pass">Forgot Password?</a>
+        <div class="text-center mt-1">
+          <button 
+            class="btn btn-link back-btn" 
+            (click)="navigateToForgotPassword()">
+              Forgot Password
+              <i class="bi bi-question-circle"></i>
+          </button>
         </div>
       </div>
     </div>

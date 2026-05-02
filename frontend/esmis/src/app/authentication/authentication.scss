@@ -65,6 +65,26 @@ img {
     max-width: 480px;
     width: 100%;
   }
+
+  .back-btn {
+    margin-top: 5px;
+    background-color: transparent;
+    color: #800000;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: rgba(128, 0, 0, 0.05);
+      transform: translateX(-5px);
+      color: #a00000;
+      text-decoration: none;
+    }
+  }
 }
 
 .login-container {
