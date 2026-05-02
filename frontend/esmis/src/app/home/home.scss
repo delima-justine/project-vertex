@@ -198,7 +198,7 @@ main {
 }
 
 .third-row-chart {
-  width: 550px;
+  width: 655px;
   
   .card-header {
     border-left: 4px solid #800000;
@@ -213,17 +213,58 @@ main {
 .third-row {
   display: flex;
   flex-direction: row;
-  gap: 20px;
-  justify-content: space-between;
+  gap: 24px;
+  justify-content: center;
+  align-items: stretch;
+
+  .chart-title {
+    margin-top: 10px;
+    i {
+      font-size: 1.3rem;
+    }
+
+    span {
+      font-weight: 600;
+      font-size: 1.3rem;
+    }
+  }
 
   .three-cards {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 260px;
+    width: 320px;
     
-    .span {
-      color: #ffffff !important;
+    .analytic-card {
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+      .analytic-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .label {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #6c757d;
+        }
+
+        .value {
+          font-size: 1rem;
+          font-weight: 700;
+          color: #212529;
+        }
+      }
+
+      .progress {
+        height: 8px;
+        border-radius: 4px;
+        background-color: #e9ecef;
+      }
     }
   }
 }
