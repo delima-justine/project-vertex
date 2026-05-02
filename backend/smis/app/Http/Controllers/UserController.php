@@ -53,12 +53,13 @@ class UserController extends Controller
             'middle_initial' => 'nullable|string|size:1',
             'last_name' => 'required|string|max:50',
             'email' => ['required', 'email', 'unique:tbl_user,email'],
-            'password' => 'required|string|min:8',
+            'password' => 'nullable|string|min:8',
             'role_id' => 'required|integer|exists:tbl_roles,id',
             'office_id' => 'required|integer|exists:tbl_office,id',
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        $password = $validated['password'] ?? 'password';
+        $validated['password'] = Hash::make($password);
 
         $user = User::create($validated);
 
