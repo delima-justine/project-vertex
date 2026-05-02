@@ -253,9 +253,25 @@
                 @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
                   <td>{{ supply.quantity }}</td>
                   <td>
-                    <button class="btn btn-sm btn-warning me-1" (click)="openEditModal(supply)"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm btn-danger me-1" (click)="onDelete(supply.stock_num)"><i class="bi bi-trash"></i></button>
-                    <button class="btn btn-sm btn-info"><i class="bi bi-clock-history"></i></button>
+                    <button 
+                      class="btn btn-sm btn-warning me-1" 
+                      (click)="openEditModal(supply)">
+                        <i class="bi bi-pencil-square"
+                        title="Edit Supply"></i>
+                    </button>
+
+                    <button 
+                      class="btn btn-sm btn-danger me-1" 
+                      (click)="onDelete(supply.stock_num)">
+                        <i class="bi bi-trash" 
+                        title="Delete Supply"></i>
+                    </button>
+
+                    <button 
+                      class="btn btn-sm btn-info"
+                      title="View Stock History">
+                        <i class="bi bi-clock-history"></i>
+                    </button>
                   </td>
                 }
               </tr>
