@@ -35,7 +35,6 @@ export class UserManagement {
     email: ['', [Validators.required, Validators.email]],
     role_id: [null, Validators.required],
     office_id: [null, Validators.required],
-    password: ['', [Validators.minLength(8)]],
   });
 
   roleOptions: Role[] = [];
@@ -108,11 +107,7 @@ export class UserManagement {
       email: '',
       role_id: null,
       office_id: null,
-      password: '',
     });
-
-    this.userForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
-    this.userForm.get('password')?.updateValueAndValidity();
 
     this.getModal('userModal')?.show();
   }
@@ -129,11 +124,7 @@ export class UserManagement {
       email: user.email,
       role_id: user.role_id,
       office_id: user.office_id,
-      password: '',
     });
-
-    this.userForm.get('password')?.setValidators([Validators.minLength(8)]);
-    this.userForm.get('password')?.updateValueAndValidity();
 
     this.getModal('userModal')?.show();
   }
@@ -144,10 +135,7 @@ export class UserManagement {
       return;
     }
 
-    const payload = { ...this.userForm.value } as any;
-    if (!payload.password) {
-      delete payload.password;
-    }
+    const payload = { ...this.userForm.value };
 
     if (this.editMode() && this.activeUser()) {
       this.userService.updateUser(this.activeUser()!.id, payload).subscribe({
