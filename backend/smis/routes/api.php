@@ -12,7 +12,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user/profile', function (Request $request) {
-    return $request->user()->load(['role', 'office']);
+    $user = $request->user();
+    return response([
+        'user' => $user->load(['role', 'office']),
+        'permissions' => $user->role->permissions->pluck('name'),
+    ]);
 })->middleware('auth:sanctum');
 
 Route::middleware(['auth:sanctum'])->group(function () {
