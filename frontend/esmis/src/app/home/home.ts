@@ -39,20 +39,6 @@ export class Home implements OnInit {
   newCategoryName = signal('');
   newUnitName = signal('');
 
-  // Total Active Items
-  totalActiveItems = computed(() => this.supplies().length);
-
-  // Sum of all quantities across all items
-  totalQuantity = computed(() => {
-    return this.supplies().reduce((sum, item) => sum + (item.quantity || 0), 0);
-  });
-
-  // Count of items that are low stock
-  needsRestockingCount = computed(() => {
-    return this.supplies().filter(item => 
-      item.status === 'Low Stock' || item.status === 'Out of Stock').length;
-  });
-
   public barChartData: ChartData<'bar'> = {
     labels: ['Good Stock', 'Low Stock', 'Out of Stock'],
     datasets: [

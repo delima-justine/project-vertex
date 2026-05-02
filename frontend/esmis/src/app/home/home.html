@@ -22,76 +22,20 @@
 
     <!-- Second Row -->
     <div class="second-row">
-      <div class="stat-card products-card">
-        <div class="card-content">
-          <div class="card-header-info">
-            <div class="title-with-icon">
-              <i class="bi bi-archive-fill"></i>
-              <span class="card-title">TOTAL<br>PRODUCTS</span>
-            </div>
-            <div class="underline"></div>
-          </div>
-          
-          <div class="card-value">
-            {{ totalActiveItems() }}
-          </div>
-
-          <div class="card-footer-info">
-            <div class="subtext-with-icon">
-              <i class="bi bi-arrow-up"></i>
-              <span>Active inventory items</span>
-            </div>
-          </div>
-        </div>
-        <i class="bi bi-boxes background-icon"></i>
+      <div class="first-card card bg-primary">
+        <div><span>Total Products</span></div>
+        <div><span>{{ supplies().length }}</span></div>
+        <div><span>Active Inventory Items</span></div>
       </div>
-
-      <div class="stat-card stock-card">
-        <div class="card-content">
-          <div class="card-header-info">
-            <div class="title-with-icon">
-              <i class="bi bi-house-door-fill"></i>
-              <span class="card-title">TOTAL<br>STOCK</span>
-            </div>
-            <div class="underline"></div>
-          </div>
-          
-          <div class="card-value">
-            {{ totalQuantity() }}
-          </div>
-
-          <div class="card-footer-info">
-            <div class="subtext-with-icon">
-              <i class="bi bi-box-seam"></i>
-              <span>Available units</span>
-            </div>
-          </div>
-        </div>
-        <i class="bi bi-layers-fill background-icon"></i>
+      <div class="second-card card bg-success">
+        <div><span>Total Stock</span></div>
+        <div><span>{{ supplies().length }}</span></div>
+        <div><span>Available Units</span></div>
       </div>
-
-      <div class="stat-card low-stock-card">
-        <div class="card-content">
-          <div class="card-header-info">
-            <div class="title-with-icon">
-              <i class="bi bi-exclamation-triangle-fill"></i>
-              <span class="card-title">OUT OF<br>STOCK</span>
-            </div>
-            <div class="underline"></div>
-          </div>
-          
-          <div class="card-value">
-            {{ needsRestockingCount() }}
-          </div>
-
-          <div class="card-footer-info">
-            <div class="subtext-with-icon">
-              <i class="bi bi-question-circle"></i>
-              <span>Needs restocking</span>
-            </div>
-          </div>
-        </div>
-        <i class="bi bi-exclamation-circle-fill background-icon"></i>
+      <div class="third-card card bg-danger">
+        <div><span>Low Stock Items</span></div>
+        <div><span>0</span></div>
+        <div><span>Needs restocking</span></div>
       </div>
     </div>
 
