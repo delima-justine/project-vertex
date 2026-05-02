@@ -100,11 +100,11 @@
       <div class="card third-row-chart">
         <div class="card-header">
           <div class="d-flex flex-column gap-1">
-            <div class="d-flex flex-row gap-2">
+            <div class="d-flex flex-row gap-2 chart-title">
               <i class="bi bi-graph-up text-primary"></i>
-              <span class="text-primary fw-medium">Inventory Status Overview</span>
+              <span class="text-primary">Inventory Status Overview</span>
             </div>
-            <p>Quick view of your current stock levels</p>
+            <p class="text-secondary ">Quick view of your current stock levels</p>
           </div>
         </div>
         <div class="card-body">
@@ -119,9 +119,41 @@
       </div>
 
       <div class="three-cards">
-        <div class="card"><div class="card-body"><span>Stock Availability</span></div></div>
-        <div class="card"><div class="card-body"><span>Items Need Restocking</span></div></div>
-        <div class="card bg"><div class="card-body"><span>Recently Released</span></div></div>
+        <div class="card analytic-card">
+          <div class="card-body">
+            <div class="analytic-header">
+              <span class="label">Stock Availability</span>
+              <span class="value">{{ stockAvailabilityPercentage() }}%</span>
+            </div>
+            <div class="progress" role="progressbar" [attr.aria-valuenow]="stockAvailabilityPercentage()" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-success" [style.width]="stockAvailabilityPercentage() + '%'"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card analytic-card">
+          <div class="card-body">
+            <div class="analytic-header">
+              <span class="label">Items Need Restocking</span>
+              <span class="value">{{ restockingNeedPercentage() }}%</span>
+            </div>
+            <div class="progress" role="progressbar" [attr.aria-valuenow]="restockingNeedPercentage()" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-danger" [style.width]="restockingNeedPercentage() + '%'"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card analytic-card">
+          <div class="card-body">
+            <div class="analytic-header">
+              <span class="label">Recently Released</span>
+              <span class="value">{{ recentlyReleasedPercentage() }}%</span>
+            </div>
+            <div class="progress" role="progressbar" [attr.aria-valuenow]="recentlyReleasedPercentage()" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-primary" [style.width]="recentlyReleasedPercentage() + '%'"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
