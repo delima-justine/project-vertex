@@ -78,4 +78,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Office::class, 'office_id');
     }
+
+    public function hasPermission($permissionName)
+    {
+        return $this->role->permissions->contains('name', $permissionName);
+    }
 }

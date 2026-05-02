@@ -15,4 +15,9 @@ class Roles extends Model
 
     // Disable timestamps if not using created_at and updated_at columns
     public $timestamps = false;
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'tbl_role_permission', 'role_id', 'permission_id');
+    }
 }
