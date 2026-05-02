@@ -32,6 +32,7 @@ export class Home implements OnInit {
   categories = signal<Category[]>([]);
   units = signal<Unit[]>([]);
   requests = signal<SupplyRequest[]>([]);
+  currentDate = signal(new Date());
 
   // Filter signals
   searchTerm = signal('');
@@ -323,5 +324,129 @@ export class Home implements OnInit {
       const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
       modal.hide();
     }
+  }
+
+  // Report Generation
+  printInventoryReport() {
+    const supplies = this.filteredSupplies();
+    const user = this.user();
+    const dateStr = new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    
+    const tableRows = supplies.map(s => `
+      <tr>
+        <td style="border: 1pt solid #000; padding: 8px; text-align: center;">${s.stock_num}</td>
+        <td style="border: 1pt solid #000; padding: 8px;">${s.item_desc}</td>
+        <td style="border: 1pt solid #000; padding: 8px;">${s.category?.category_name || ''}</td>
+        <td style="border: 1pt solid #000; padding: 8px; text-align: center;">${s.unit?.unit_name || ''}</td>
+        <td style="border: 1pt solid #000; padding: 8px; text-align: center;">${s.status}</td>
+        <td style="border: 1pt solid #000; padding: 8px; text-align: center; font-family: monospace;">${s.quantity}</td>
+      </tr>
+    `).join('');
+
+    const htmlContent = `
+      <div style="padding: 40px; font-family: 'Times New Roman', Times, serif; color: #000; background: #fff;">
+        <!-- Header -->
+        <div style="text-align: center; position: relative; margin-bottom: 40px;">
+          <img src="assets/pup_logo.png" alt="Logo" style="position: absolute; left: 0; top: 0; height: 80px;">
+          <div style="display: inline-block;">
+            <h3 style="margin: 0; font-weight: bold; font-size: 14pt;">Republic of the Philippines</h3>
+            <h2 style="margin: 0; font-weight: bold; font-size: 16pt;">POLYTECHNIC UNIVERSITY OF THE PHILIPPINES</h2>
+            <p style="margin: 0; font-size: 12pt;">Sta. Mesa, Manila</p>
+            <h3 style="margin: 20px 0 0 0; font-weight: bold; text-transform: uppercase; font-size: 14pt;">Supply Management Office</h3>
+          </div>
+          <hr style="border: 1pt solid #000; margin-top: 30px; opacity: 1;">
+          <h2 style="font-weight: bold; margin-top: 30px; font-size: 18pt;">SUPPLY INVENTORY REPORT</h2>
+          <p style="margin: 0; font-size: 12pt;">As of ${dateStr}</p>
+        </div>
+
+        <!-- Table -->
+        <table style="width: 100%; border-collapse: collapse; border: 1pt solid #000; font-size: 11pt;">
+          <thead>
+            <tr style="background-color: #f2f2f2;">
+              <th style="border: 1pt solid #000; padding: 10px; width: 15%;">Stock Number</th>
+              <th style="border: 1pt solid #000; padding: 10px; width: 35%;">Item Description</th>
+              <th style="border: 1pt solid #000; padding: 10px; width: 15%;">Category</th>
+              <th style="border: 1pt solid #000; padding: 10px; width: 10%;">Unit</th>
+              <th style="border: 1pt solid #000; padding: 10px; width: 15%;">Status</th>
+              <th style="border: 1pt solid #000; padding: 10px; width: 10%;">Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRows || '<tr><td colspan="6" style="text-align: center; padding: 20px;">No supplies found.</td></tr>'}
+          </tbody>
+          <tfoot>
+            <tr style="font-weight: bold; background-color: #f2f2f2;">
+              <td colspan="5" style="border: 1pt solid #000; padding: 10px; text-align: right;">TOTAL ITEMS:</td>
+              <td style="border: 1pt solid #000; padding: 10px; text-align: center;">${this.totalQuantity()}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Signatories -->
+        <div style="margin-top: 60px; padding: 0 40px; display: flex; justify-content: flex-end;">
+          <div style="width: 250px;">
+            <p style="margin-bottom: 50px;">Prepared by:</p>
+            <div style="border-bottom: 1pt solid #000; text-align: center;">
+              <strong style="text-transform: uppercase; font-size: 12pt;">${user?.first_name || ''} ${user?.last_name || ''}</strong>
+            </div>
+            <p style="text-align: center; margin-top: 5px;">${user?.office?.office_name || ''}</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 50px; text-align: center; color: #666; font-size: 9pt;">
+          <p>Generated on ${new Date().toLocaleString()}</p>
+        </div>
+      </div>
+    `;
+
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+
+    const idoc = iframe.contentWindow?.document;
+    if (!idoc) return;
+
+    idoc.open();
+    idoc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Supply Inventory Report</title>
+          <style>
+            @page { size: portrait; margin: 10mm; }
+            body { margin: 0; padding: 0; }
+            * { box-sizing: border-box; }
+          </style>
+        </head>
+        <body>${htmlContent}</body>
+      </html>
+    `);
+    idoc.close();
+
+    let printed = false;
+    const triggerPrint = () => {
+      if (printed) return;
+      printed = true;
+      setTimeout(() => {
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 1000);
+      }, 500);
+    };
+
+    iframe.onload = triggerPrint;
+    // Fallback if onload doesn't trigger
+    setTimeout(triggerPrint, 2000);
   }
 }
