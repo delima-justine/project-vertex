@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Sidebar } from "../sidebar/sidebar";
 import { AuthService } from '../../services/auth.service';
 import { SupplyService } from '../../services/supply.service';
-import { Supply, Category, Unit, SupplyRequest } from '../../models/smis.model';
+import { Supply, Category, Unit } from '../../models/smis.model';
 import { TopNav } from "../top-nav/top-nav";
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
@@ -31,7 +31,6 @@ export class Home implements OnInit {
   supplies = signal<Supply[]>([]);
   categories = signal<Category[]>([]);
   units = signal<Unit[]>([]);
-  requests = signal<SupplyRequest[]>([]);
 
   // Filter signals
   searchTerm = signal('');
@@ -52,28 +51,6 @@ export class Home implements OnInit {
   needsRestockingCount = computed(() => {
     return this.supplies().filter(item => 
       item.status === 'Low Stock' || item.status === 'Out of Stock').length;
-  });
-
-  // Analytics Computation
-  stockAvailabilityPercentage = computed(() => {
-    const total = this.supplies().length;
-    if (total === 0) return 0;
-    const available = this.supplies().filter(s => s.status === 'Available').length;
-    return Math.round((available / total) * 100);
-  });
-
-  restockingNeedPercentage = computed(() => {
-    const total = this.supplies().length;
-    if (total === 0) return 0;
-    const low = this.supplies().filter(s => s.status === 'Low Stock' || s.status === 'Out of Stock').length;
-    return Math.round((low / total) * 100);
-  });
-
-  recentlyReleasedPercentage = computed(() => {
-    const total = this.requests().length;
-    if (total === 0) return 0;
-    const released = this.requests().filter(r => r.status === 'released').length;
-    return Math.round((released / total) * 100);
   });
 
   public barChartData: ChartData<'bar'> = {
@@ -136,7 +113,6 @@ export class Home implements OnInit {
     this.supplyService.listSupplies().subscribe((data) => this.supplies.set(data));
     this.supplyService.listCategories().subscribe((data) => this.categories.set(data));
     this.supplyService.listUnits().subscribe((data) => this.units.set(data));
-    this.supplyService.listSupplyRequests().subscribe((data) => this.requests.set(data));
   }
 
   openAddModal() {
