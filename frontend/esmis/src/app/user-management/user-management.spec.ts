@@ -19,6 +19,6 @@ describe('UserManagement', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });\
+  });
   
 });
