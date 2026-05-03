@@ -62,4 +62,16 @@ export class Notifications implements OnInit {
       this.notifications.forEach(n => n.read_at = new Date().toISOString());
     });
   }
+
+  deleteNotification(event: Event, notification: Notification) {
+    event.stopPropagation(); // Prevent triggering markAsRead from parent div
+    this.notifApiService.deleteNotification(notification.id).subscribe(() => {
+      // If the deleted notification was unread, decrement the global unread count
+      if (!notification.read_at) {
+        this.notifApiService.unreadCount.update(c => Math.max(0, c - 1));
+      }
+      this.notifications = this.notifications.filter(n => n.id !== notification.id);
+      this.cdr.detectChanges();
+    });
+  }
 }

@@ -72,4 +72,13 @@ export class NotificationApiService {
       tap(() => this.unreadCount.set(0))
     );
   }
+
+  deleteNotification(notificationId: number) {
+    return this.http.delete(`${this.apiUrl}/notifications/${notificationId}`).pipe(
+      tap(() => {
+        // We might want to refresh unread count if we deleted an unread notification
+        // But for simplicity, we'll let the component handle the list update
+      })
+    );
+  }
 }

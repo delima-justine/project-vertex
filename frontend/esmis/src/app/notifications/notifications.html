@@ -65,8 +65,20 @@
                   <span *ngIf="!notif.read_at" class="badge bg-primary rounded-pill">New</span>
                 </div>
               </div>
-              <div class="actions">
-                <i class="bi bi-chevron-right text-muted"></i>
+              <div class="actions d-flex gap-2">
+                <button 
+                  class="btn btn-link btn-sm p-0 text-decoration-none" 
+                  (click)="markAsRead(notif); $event.stopPropagation()" 
+                  *ngIf="!notif.read_at"
+                  title="Mark as read">
+                  <i class="bi bi-check-lg text-success fs-5"></i>
+                </button>
+                <button 
+                  class="btn btn-link btn-sm p-0 text-decoration-none" 
+                  (click)="deleteNotification($event, notif)"
+                  title="Delete notification">
+                  <i class="bi bi-trash text-danger fs-5"></i>
+                </button>
               </div>
             </div>
           </div>
