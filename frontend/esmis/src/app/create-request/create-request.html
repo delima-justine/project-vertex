@@ -22,9 +22,9 @@
           <i class="bi bi-list-ul me-1"></i>
           <span>Request List</span>
 
-          <button class="btn btn-primary" (click)="openModal()">
+          <button class="btn btn-primary btn-add-items" (click)="openModal()">
             <i class="bi bi-plus-circle-fill me-1"></i>
-            <span>Add Items</span>
+            Add Items
           </button>
         </div>
 
@@ -79,7 +79,7 @@
             placeholder="Enter the purpose of this request..."></textarea>
         </div>
 
-        <button class="btn btn-primary" (click)="submitRequest()" [disabled]="requestList.length === 0 || !purpose">
+        <button class="btn btn-primary btn-submit" (click)="submitRequest()" [disabled]="requestList.length === 0 || !purpose">
           <i class="bi bi-send-fill me-1"></i>Submit
         </button>
       </div>
@@ -89,21 +89,24 @@
 
 <!-- Modal -->
 <div class="modal fade" id="supplyInventoryModal" tabindex="-1" aria-labelledby="supplyInventoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="supplyInventoryModalLabel">Select Supplies</h5>
-        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content custom-modal">
+      <div class="modal-header custom-modal-header">
+        <h5 class="modal-title" id="supplyInventoryModalLabel">
+          <i class="bi bi-box-seam-fill me-2"></i>
+          Select Supplies
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModal()" aria-label="Close"></button>
       </div>
-      <div class="modal-body overflow-auto" style="max-height: 400px;">
-        <table class="table table-hover">
-          <thead>
+      <div class="modal-body custom-modal-body overflow-auto" style="max-height: 500px;">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
             <tr>
               <th>Stock Num</th>
               <th>Item Desc</th>
               <th>Category</th>
               <th>Unit</th>
-              <th>Availability</th>
+              <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -122,8 +125,8 @@
                   }">{{ supply.status }}</span>
                 </td>
                 <td>
-                  <button class="btn btn-success btn-sm" (click)="addItem(supply)" [disabled]="supply.status === 'Out of Stock'">
-                    <i class="bi bi-plus-circle"></i> Add
+                  <button class="btn btn-primary btn-sm modal-add-btn" (click)="addItem(supply)" [disabled]="supply.status === 'Out of Stock'">
+                    <i class="bi bi-plus-lg"></i> Add
                   </button>
                 </td>
               </tr>
@@ -131,10 +134,9 @@
           </tbody>
         </table>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+      <div class="modal-footer-custom px-4 pb-4 d-flex justify-content-end">
+        <button type="button" class="btn btn-cancel" (click)="closeModal()">CLOSE</button>
       </div>
     </div>
   </div>
 </div>
-
