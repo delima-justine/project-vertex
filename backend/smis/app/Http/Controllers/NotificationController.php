@@ -10,12 +10,25 @@ class NotificationController extends Controller
     // List all notifications for the authenticated user
     public function index(Request $request) 
     {
-        $notifications = Notification::with(['user', 'office', 'supplyRequest'])
-            ->where('user_id', $request->user()->id)
-            ->orderBy('created_at', 'desc')
+        $query = Notification::with(['user', 'office', 'supplyRequest'])
+            ->where('user_id', $request->user()->id);
+
+        if ($request->has('office_id') && $request->office_id != '') {
+            $query->where('office_id', $request->office_id);
+        }
+
+        if ($request->has('from_date') && $request->from_date != '') {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->has('to_date') && $request->to_date != '') {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $notifications = $query->orderBy('created_at', 'desc')
             ->paginate(5);
 
-            return response()->json($notifications);
+        return response()->json($notifications);
     }
 
     // Mark a notification as read
