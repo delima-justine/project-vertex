@@ -1,14 +1,77 @@
-<!-- Sidebar Component -->
 <app-sidebar/>
-
-<!-- Top Navigation -->
 <app-top-nav/>
 
 <main>
   <div class="content-container">
-    <h1>Notifications</h1>
-    <p>
-      This is the notifications page. Here you can view and manage system notifications.
-    </p>
+    <!-- Header Panel -->
+    <div class="header-panel">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-bell-fill"></i>
+        <span>Notifications</span>
+      </div>
+      <p class="m-0 text-white opacity-75">Stay updated with your supply requests and inventory status</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="notifications-card card mt-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="title-with-icon">
+          <i class="bi bi-list-ul text-primary"></i>
+          <span>Recent Activity</span>
+        </div>
+        <button 
+          class="btn btn-outline-primary btn-sm" 
+          (click)="markAllAsRead()"
+          *ngIf="notifications.length > 0">
+          <i class="bi bi-check2-all me-1"></i>
+          Mark all as read
+        </button>
+      </div>
+      
+      <div class="card-body">
+        <div *ngIf="isLoading()" class="text-center p-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoading() && notifications.length === 0" class="empty-state text-center p-5">
+          <i class="bi bi-bell-slash fs-1 text-muted mb-3"></i>
+          <p class="text-muted">No notifications yet.</p>
+        </div>
+
+        <div class="notification-list" *ngIf="!isLoading() && notifications.length > 0">
+          <div 
+            *ngFor="let notif of notifications" 
+            class="notification-item"
+            [class.unread]="!notif.read_at"
+            (click)="markAsRead(notif)">
+            <div class="d-flex align-items-start">
+              <div class="icon-wrapper me-3">
+                <i class="bi" [ngClass]="{
+                  'bi-check-circle-fill text-success': notif.action === 'approved' || notif.action === 'released',
+                  'bi-x-circle-fill text-danger': notif.action === 'disapproved',
+                  'bi-info-circle-fill text-primary': notif.action === 'status_update' || notif.action === 'pending',
+                  'bi-bell-fill text-warning': !notif.action
+                }"></i>
+              </div>
+              <div class="flex-grow-1">
+                <p class="mb-1 message">{{ notif.message }}</p>
+                <div class="d-flex align-items-center gap-2">
+                  <small class="text-muted">
+                    <i class="bi bi-clock me-1"></i>
+                    {{ notif.created_at | date:'medium' }}
+                  </small>
+                  <span *ngIf="!notif.read_at" class="badge bg-primary rounded-pill">New</span>
+                </div>
+              </div>
+              <div class="actions">
+                <i class="bi bi-chevron-right text-muted"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
