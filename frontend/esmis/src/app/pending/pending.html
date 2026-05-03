@@ -132,15 +132,17 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
         <div class="ms-auto">
-          @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+          @if(authService.hasPermission('deny_request')) {
           <button type="button" class="btn btn-outline-danger me-2" (click)="disapproveBatch()">
             <i class="bi bi-x-circle-fill me-1"></i>Disapprove Batch
           </button>
-          
-          <button type="button" class="btn btn-primary" (click)="editBatchRIS()">
-            <i class="bi bi-pencil-square me-1"></i>Edit Batch RIS
-          </button>
-        }
+          }
+
+          @if(authService.hasPermission('edit_ris')) {
+            <button type="button" class="btn btn-primary" (click)="editBatchRIS()">
+              <i class="bi bi-pencil-square me-1"></i>Edit Batch RIS
+            </button>
+          }
         </div>
       </div>
     </div>

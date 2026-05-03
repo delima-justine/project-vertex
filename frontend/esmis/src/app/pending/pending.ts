@@ -16,8 +16,8 @@ import { TopNav } from "../top-nav/top-nav";
   styleUrl: './pending.scss',
 })
 export class Pending implements OnInit {
-  private supplyService = inject(SupplyService);
-  private authService = inject(AuthService);
+  supplyService = inject(SupplyService);
+  authService = inject(AuthService);
 
   user = this.authService.currentUser;
 
