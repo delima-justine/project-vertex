@@ -23,9 +23,9 @@ import { ChartConfiguration, ChartData } from 'chart.js';
   styleUrl: './home.scss',
 })
 export class Home implements OnInit {
-  authService = inject(AuthService);
-  supplyService = inject(SupplyService);
-  fb = inject(FormBuilder);
+  authService: AuthService = inject(AuthService);
+  supplyService: SupplyService = inject(SupplyService);
+  fb: FormBuilder = inject(FormBuilder);
 
   user = this.authService.currentUser;
   supplies = signal<Supply[]>([]);
