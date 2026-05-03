@@ -1,8 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Sidebar } from '../sidebar/sidebar';
-import { User, Office, Role } from '../../models/smis.model';
+import { User, Office, Role, Permission } from '../../models/smis.model';
 import { UserManagementService } from '../../services/user-management.service';
 import { TopNav } from "../top-nav/top-nav";
 
@@ -35,15 +35,70 @@ export class UserManagement {
     email: ['', [Validators.required, Validators.email]],
     role_id: [null, Validators.required],
     office_id: [null, Validators.required],
+    permission_ids: [[]],
   });
 
   roleOptions: Role[] = [];
   officeOptions: Office[] = [];
+  allPermissions: Permission[] = [];
+  
+  permissionGroups: { label: string, permissions: { name: string, label: string }[] }[] = [
+    {
+      label: 'Requests',
+      permissions: [
+        { name: 'view_pending_requests', label: 'View Pending' },
+        { name: 'view_approved_requests', label: 'View Approved' },
+        { name: 'view_released_requests', label: 'View Released' },
+        { name: 'view_disapproved_requests', label: 'View Disapproved' },
+        { name: 'edit_ris', label: 'Edit RIS' },
+        { name: 'deny_request', label: 'Deny' },
+      ]
+    },
+    {
+      label: 'Users',
+      permissions: [
+        { name: 'add_user', label: 'Add User' },
+        { name: 'edit_user', label: 'Edit User' },
+        { name: 'delete_user', label: 'Delete User' },
+      ]
+    },
+    {
+      label: 'Supply',
+      permissions: [
+        { name: 'add_supply', label: 'Add Supply' },
+        { name: 'edit_supply', label: 'Edit Supply' },
+        { name: 'delete_supply', label: 'Delete Supply' },
+      ]
+    },
+    {
+      label: 'Categories',
+      permissions: [
+        { name: 'add_category', label: 'Add Category' },
+      ]
+    },
+    {
+      label: 'Units',
+      permissions: [
+        { name: 'add_unit', label: 'Add Unit' },
+        { name: 'delete_unit', label: 'Delete Unit' },
+      ]
+    }
+  ];
 
   constructor() {
     this.loadUsers();
     this.loadOffices();
     this.loadRoles();
+    this.loadPermissions();
+
+    // Reset permissions when role changes
+    this.userForm.get('role_id')?.valueChanges.subscribe(roleId => {
+      if (roleId) {
+        this.updatePermissionsByRole(roleId);
+      } else {
+        this.userForm.patchValue({ permission_ids: [] });
+      }
+    });
   }
 
   private getModal(id: string) {
@@ -52,6 +107,10 @@ export class UserManagement {
       return (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
     }
     return null;
+  }
+
+  hasVisiblePermissions(group: { label: string, permissions: { name: string, label: string }[] }): boolean {
+    return group.permissions.some(p => this.isPermissionVisible(group.label, p.name));
   }
 
   loadOffices() {
@@ -74,6 +133,82 @@ export class UserManagement {
         console.error('Failed to load roles');
       }
     });
+  }
+
+  loadPermissions() {
+    this.userService.listPermissions().subscribe({
+      next: (perms) => {
+        this.allPermissions = perms;
+      },
+      error: () => {
+        console.error('Failed to load permissions');
+      }
+    });
+  }
+
+  updatePermissionsByRole(roleId: number) {
+    this.userService.getRolePermissions(roleId).subscribe({
+      next: (perms) => {
+        const permIds = perms.map(p => p.id);
+        // Only patch if role_id currently matches the one we fetched for
+        // and we aren't in a state that should ignore defaults
+        if (this.userForm.get('role_id')?.value == roleId) {
+          this.userForm.patchValue({ permission_ids: permIds }, { emitEvent: false });
+        }
+      }
+    });
+  }
+
+  isPermissionVisible(groupLabel: string, permissionName: string): boolean {
+    const roleId = this.userForm.get('role_id')?.value;
+    if (!roleId) return false;
+
+    const role = this.roleOptions.find(r => r.id == roleId);
+    if (!role) return false;
+
+    const roleName = role.role_name.toLowerCase();
+
+    if (roleName === 'admin' || roleName === 'superadmin') {
+      return true;
+    }
+
+    if (roleName === 'user') {
+      // Only show first 4 of Requests group
+      if (groupLabel !== 'Requests') return false;
+      const userAllowedRequests = [
+        'view_pending_requests',
+        'view_approved_requests',
+        'view_released_requests',
+        'view_disapproved_requests'
+      ];
+      return userAllowedRequests.includes(permissionName);
+    }
+
+    return false;
+  }
+
+  onPermissionChange(event: any, permissionId: number) {
+    const permissionIds = this.userForm.get('permission_ids')?.value as number[];
+    if (event.target.checked) {
+      if (!permissionIds.includes(permissionId)) {
+        this.userForm.patchValue({ permission_ids: [...permissionIds, permissionId] }, { emitEvent: false });
+      }
+    } else {
+      this.userForm.patchValue({ 
+        permission_ids: permissionIds.filter(id => id !== permissionId) 
+      }, { emitEvent: false });
+    }
+  }
+
+  isPermissionChecked(permissionName: string): boolean {
+    const permission = this.allPermissions.find(p => p.name === permissionName);
+    if (!permission) return false;
+    const permissionIds = this.userForm.get('permission_ids')?.value as number[] || [];
+    return permissionIds.includes(permission.id);
+  }
+
+  getPermissionId(name: string): number {
+    return this.allPermissions.find(p => p.name === name)?.id || 0;
   }
 
   loadUsers(page = 1) {
@@ -107,7 +242,8 @@ export class UserManagement {
       email: '',
       role_id: null,
       office_id: null,
-    });
+      permission_ids: [],
+    }, { emitEvent: false });
 
     this.getModal('userModal')?.show();
   }
@@ -117,6 +253,13 @@ export class UserManagement {
     this.activeUser.set(user);
     this.feedback.set('');
 
+    // Use direct user permissions if they exist, otherwise fall back to role defaults
+    const userPermIds = user.permissions?.map(p => p.id) || [];
+    const rolePermIds = user.role?.permissions?.map(p => p.id) || [];
+    const initialPermIds = userPermIds.length > 0 ? userPermIds : rolePermIds;
+
+    // Use emitEvent: false to prevent the role_id change from triggering updatePermissionsByRole
+    // which would overwrite our merged permissions with role defaults.
     this.userForm.patchValue({
       first_name: user.first_name,
       middle_initial: user.middle_initial ?? '',
@@ -124,7 +267,8 @@ export class UserManagement {
       email: user.email,
       role_id: user.role_id,
       office_id: user.office_id,
-    });
+      permission_ids: initialPermIds,
+    }, { emitEvent: false });
 
     this.getModal('userModal')?.show();
   }

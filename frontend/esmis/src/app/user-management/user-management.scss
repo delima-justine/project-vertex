@@ -23,3 +23,33 @@ main {
 }
 
 @include standard-table;
+
+.permissions-section {
+  border-top: 1px solid #dee2e6;
+  padding-top: 1rem;
+}
+
+.permission-group {
+  margin-bottom: 1.5rem;
+}
+
+.permission-group-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px dashed #dee2e6;
+  padding-bottom: 0.25rem;
+}
+
+.form-check {
+  margin-right: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-check-label {
+  font-size: 0.9rem;
+  cursor: pointer;
+}
