@@ -202,15 +202,17 @@
           </div>
 
           <div class="btn-container">
-            @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+            @if(authService.hasPermission('add_supply')) {
               <button 
                 class="btn btn-primary" 
                 (click)="openAddModal()">
                 <i class="bi bi-plus-lg"></i> 
                   Add Supply
               </button>
-              
-              <button 
+            }
+
+            @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+            <button 
                 class="btn btn-success"
                 (click)="printInventoryReport()">
                 <i class="bi bi-printer"></i> 
@@ -253,19 +255,23 @@
                 @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
                   <td>{{ supply.quantity }}</td>
                   <td>
-                    <button 
-                      class="btn btn-sm btn-warning me-1" 
-                      (click)="openEditModal(supply)">
-                        <i class="bi bi-pencil-square"
-                        title="Edit Supply"></i>
-                    </button>
+                    @if(authService.hasPermission('edit_supply')) {
+                      <button 
+                        class="btn btn-sm btn-warning me-1" 
+                        (click)="openEditModal(supply)">
+                          <i class="bi bi-pencil-square"
+                          title="Edit Supply"></i>
+                      </button>
+                    }
 
-                    <button 
-                      class="btn btn-sm btn-danger me-1" 
-                      (click)="onDelete(supply.stock_num)">
-                        <i class="bi bi-trash" 
-                        title="Delete Supply"></i>
-                    </button>
+                    @if(authService.hasPermission('delete_supply')) {
+                      <button 
+                        class="btn btn-sm btn-danger me-1" 
+                        (click)="onDelete(supply.stock_num)">
+                          <i class="bi bi-trash" 
+                          title="Delete Supply"></i>
+                      </button>
+                    }
 
                     <button 
                       class="btn btn-sm btn-info"
