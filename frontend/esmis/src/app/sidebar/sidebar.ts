@@ -24,10 +24,9 @@ export class Sidebar implements OnInit {
   public connectionState = signal<'connected' | 'disconnected' | 'error'>('disconnected');
 
   ngOnInit() {
-    // Initial count fetch and real-time initialization
+    // Initial count fetch 
     if (this.authService.isLoggedIn()) {
       this.notifApiService.getUnreadCount().subscribe();
-      this.notifApiService.initRealTime();
     }
 
     // Listen for connection status with a small delay to prevent NG0100
