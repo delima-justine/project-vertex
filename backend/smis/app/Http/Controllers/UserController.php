@@ -61,10 +61,14 @@ class UserController extends Controller
             ],
             'password' => 'nullable|string|min:8',
             'role_id' => 'required|integer|exists:tbl_roles,id',
-            'office_id' => 'required|integer|exists:tbl_office,id',
+            'office_name' => 'required|string|max:100',
             'permission_ids' => 'sometimes|array',
             'permission_ids.*' => 'integer|exists:tbl_permissions,id',
         ]);
+
+        // Find or create office
+        $office = \App\Models\Office::firstOrCreate(['office_name' => $validated['office_name']]);
+        $validated['office_id'] = $office->id;
 
         // Generate a random password if none is provided
         $password = $validated['password'] ?? Str::random(12);
@@ -126,10 +130,15 @@ class UserController extends Controller
             ],
             'password' => 'sometimes|required|string|min:8',
             'role_id' => 'sometimes|required|integer|exists:tbl_roles,id',
-            'office_id' => 'sometimes|required|integer|exists:tbl_office,id',
+            'office_name' => 'sometimes|required|string|max:100',
             'permission_ids' => 'sometimes|array',
             'permission_ids.*' => 'integer|exists:tbl_permissions,id',
         ]);
+
+        if (isset($validated['office_name'])) {
+            $office = \App\Models\Office::firstOrCreate(['office_name' => $validated['office_name']]);
+            $validated['office_id'] = $office->id;
+        }
 
         if (isset($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
