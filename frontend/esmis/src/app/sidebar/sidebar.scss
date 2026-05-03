@@ -120,26 +120,6 @@
       transition: opacity 0.3s ease;
     }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-      
-      &.connected {
-        background-color: #28a745;
-        box-shadow: 0 0 5px #28a745;
-      }
-      
-      &.disconnected {
-        background-color: #dc3545;
-      }
-      
-      &.error {
-        background-color: #ffc107;
-      }
-    }
-
     &:hover {
       background-color: #ecf0f11a;
       border-left: 4px solid #ecf0f1;

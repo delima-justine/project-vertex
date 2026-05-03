@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { AuthService } from '../../services/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -18,24 +18,14 @@ export class Sidebar implements OnInit {
   public layoutService: LayoutService = inject(LayoutService);
   public notifApiService = inject(NotificationApiService);
   public notifService = inject(NotificationService);
-  private cdr = inject(ChangeDetectorRef);
 
   public isDropdownOpen = signal(localStorage.getItem('isDropdownOpen') === 'true');
-  public connectionState = signal<'connected' | 'disconnected' | 'error'>('disconnected');
 
   ngOnInit() {
     // Initial count fetch 
     if (this.authService.isLoggedIn()) {
       this.notifApiService.getUnreadCount().subscribe();
     }
-
-    // Listen for connection status with a small delay to prevent NG0100
-    setTimeout(() => {
-      this.notifService.connectionStatus$.subscribe(state => {
-        this.connectionState.set(state);
-        this.cdr.detectChanges();
-      });
-    });
   }
 
   toggleDropdown() {
