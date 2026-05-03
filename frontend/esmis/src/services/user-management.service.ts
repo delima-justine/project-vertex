@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User, Office, Role } from '../models/smis.model';
+import { User, Office, Role, Permission } from '../models/smis.model';
 
 export type PaginatedUsers = {
   data: User[];
@@ -19,6 +19,7 @@ export type UserPayload = {
   password?: string;
   role_id: number;
   office_id: number;
+  permission_ids?: number[];
 };
 
 @Injectable({
@@ -34,6 +35,14 @@ export class UserManagementService {
 
   listRoles(): Observable<Role[]> {
     return this.http.get<Role[]>(`${this.apiUrl}/roles`);
+  }
+
+  listPermissions(): Observable<Permission[]> {
+    return this.http.get<Permission[]>(`${this.apiUrl}/permissions`);
+  }
+
+  getRolePermissions(roleId: number): Observable<Permission[]> {
+    return this.http.get<Permission[]>(`${this.apiUrl}/roles/${roleId}/permissions`);
   }
 
   listUsers(page = 1, search = ''): Observable<PaginatedUsers> {
