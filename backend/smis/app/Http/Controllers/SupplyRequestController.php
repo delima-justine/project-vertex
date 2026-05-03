@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\SupplyRequest;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class SupplyRequestController extends Controller
@@ -68,6 +70,16 @@ class SupplyRequestController extends Controller
         ]);
 
         $supply_request->update($validated);
+
+        $notif = Notification::create([
+            'user_id' => $supply_request->user_id,
+            'request_id' => $supply_request->id,
+            'message' => "Your request for {$supply_request->supply_id} has been {$supply_request->status}.",
+            'action' => $supply_request->status,
+        ]);
+
+        broadcast(new NotificationSent($notif))->toOthers();
+
         return response()->json($supply_request);
     }
 

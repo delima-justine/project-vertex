@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    // List all notifications
+    // List all notifications for the authenticated user
     public function index(Request $request) 
     {
         $notifications = Notification::with(['user', 'office', 'supplyRequest'])
+            ->where('user_id', $request->user()->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -24,11 +25,10 @@ class NotificationController extends Controller
         return response()->json(['message' => 'Notification marked as read']);
     }
 
-    // Mark all notifications as read for a user
+    // Mark all notifications as read for the authenticated user
     public function markAllAsRead(Request $request)
     {
-        $user_id = $request->user_id;
-        Notification::where('user_id', $user_id)
+        Notification::where('user_id', $request->user()->id)
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 
