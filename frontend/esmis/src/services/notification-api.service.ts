@@ -51,8 +51,13 @@ export class NotificationApiService {
     });
   }
 
-  getNotifications(page: number = 1) {
+  getNotifications(page: number = 1, filters: any = {}) {
     let params = new HttpParams().set('page', page.toString());
+    
+    if (filters.office_id) params = params.set('office_id', filters.office_id);
+    if (filters.from_date) params = params.set('from_date', filters.from_date);
+    if (filters.to_date) params = params.set('to_date', filters.to_date);
+
     return this.http.get<PaginatedResponse<Notification>>(`${this.apiUrl}/notifications`, { params });
   }
 
