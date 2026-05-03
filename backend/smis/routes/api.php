@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\SupplyRequestController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,17 @@ Route::get('/user/profile', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/unread-count', function (Request $request) {
+        return response()->json([
+            'count' => \App\Models\Notification::where('user_id', $request->user()->id)
+                ->whereNull('read_at')
+                ->count()
+        ]);
+    });
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+    
     Route::post('/user/change-password', [AuthController::class, 'changePassword']);
     Route::apiResource('supply-requests', SupplyRequestController::class)->parameters([
         'supply-requests' => 'supply_request'
