@@ -2,31 +2,43 @@ import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/c
 import { Sidebar } from "../sidebar/sidebar";
 import { TopNav } from "../top-nav/top-nav";
 import { NotificationApiService } from '../../services/notification-api.service';
-import { Notification } from '../../models/smis.model';
+import { UserManagementService } from '../../services/user-management.service';
+import { Notification, Office } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-notifications',
-  imports: [Sidebar, TopNav, CommonModule],
+  imports: [Sidebar, TopNav, CommonModule, FormsModule],
   templateUrl: './notifications.html',
   styleUrl: './notifications.scss',
 })
 export class Notifications implements OnInit {
   notifApiService = inject(NotificationApiService);
   notifService = inject(NotificationService);
+  userManagementService = inject(UserManagementService);
   private cdr = inject(ChangeDetectorRef);
   
   notifications: Notification[] = [];
+  offices: Office[] = [];
   isLoading = signal(true);
   currentPage = 1;
   lastPage = 1;
+
+  // Filter properties
+  filters = {
+    office_id: '',
+    from_date: '',
+    to_date: ''
+  };
 
   ngOnInit() {
     // Small delay ensures Angular's initial check completes before we start loading
     setTimeout(() => {
       this.loadNotifications();
+      this.loadOffices();
     });
 
     // Listen for real-time updates to the list
@@ -43,7 +55,7 @@ export class Notifications implements OnInit {
   loadNotifications(page: number = 1) {
     this.isLoading.set(true);
     this.currentPage = page;
-    this.notifApiService.getNotifications(page).subscribe({
+    this.notifApiService.getNotifications(page, this.filters).subscribe({
       next: (response) => {
         this.notifications = response.data;
         this.lastPage = response.last_page;
@@ -55,6 +67,26 @@ export class Notifications implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  loadOffices() {
+    this.userManagementService.listOffices().subscribe(data => {
+      this.offices = data;
+      this.cdr.detectChanges();
+    });
+  }
+
+  applyFilters() {
+    this.loadNotifications(1);
+  }
+
+  clearFilters() {
+    this.filters = {
+      office_id: '',
+      from_date: '',
+      to_date: ''
+    };
+    this.loadNotifications(1);
   }
 
   changePage(page: number) {
