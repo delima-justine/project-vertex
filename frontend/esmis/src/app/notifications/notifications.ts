@@ -20,6 +20,8 @@ export class Notifications implements OnInit {
   
   notifications: Notification[] = [];
   isLoading = signal(true);
+  currentPage = 1;
+  lastPage = 1;
 
   ngOnInit() {
     // Small delay ensures Angular's initial check completes before we start loading
@@ -30,15 +32,21 @@ export class Notifications implements OnInit {
     // Listen for real-time updates to the list
     this.notifService.notifications$.subscribe((newNotif: Notification) => {
       this.notifications.unshift(newNotif);
+      // Remove last if we exceed 5 (optional, but consistent with pagination)
+      if (this.notifications.length > 5) {
+        this.notifications.pop();
+      }
       this.cdr.detectChanges();
     });
   }
 
-  loadNotifications() {
+  loadNotifications(page: number = 1) {
     this.isLoading.set(true);
-    this.notifApiService.getNotifications().subscribe({
-      next: (data) => {
-        this.notifications = data;
+    this.currentPage = page;
+    this.notifApiService.getNotifications(page).subscribe({
+      next: (response) => {
+        this.notifications = response.data;
+        this.lastPage = response.last_page;
         this.isLoading.set(false);
         this.cdr.detectChanges();
       },
@@ -47,6 +55,11 @@ export class Notifications implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.lastPage) return;
+    this.loadNotifications(page);
   }
 
   markAsRead(notification: Notification) {
