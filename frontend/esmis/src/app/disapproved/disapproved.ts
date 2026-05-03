@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
@@ -17,6 +17,8 @@ import { TopNav } from "../top-nav/top-nav";
 export class Disapproved implements OnInit {
   private supplyService = inject(SupplyService);
   private authService = inject(AuthService);
+
+  @ViewChild('requestDetailsModal') modalElement?: ElementRef;
 
   user = this.authService.currentUser;
 
@@ -88,9 +90,8 @@ export class Disapproved implements OnInit {
   viewBatch(batch: SupplyRequest[]) {
     this.selectedBatch.set(batch);
     this.activeTabIndex.set(0);
-    const modalElement = document.getElementById('requestDetailsModal');
-    if (modalElement) {
-      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+    if (this.modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(this.modalElement.nativeElement);
       modal.show();
     }
   }
