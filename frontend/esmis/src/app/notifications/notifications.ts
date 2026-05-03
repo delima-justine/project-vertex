@@ -3,7 +3,7 @@ import { Sidebar } from "../sidebar/sidebar";
 import { TopNav } from "../top-nav/top-nav";
 import { NotificationApiService } from '../../services/notification-api.service';
 import { UserManagementService } from '../../services/user-management.service';
-import { Notification, Office } from '../../models/smis.model';
+import { Notification, Office, NotificationFilters } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -26,9 +26,10 @@ export class Notifications implements OnInit {
   isLoading = signal(true);
   currentPage = 1;
   lastPage = 1;
+  activeTab = 'all';
 
   // Filter properties
-  filters = {
+  filters: NotificationFilters = {
     office_id: '',
     from_date: '',
     to_date: ''
@@ -55,7 +56,7 @@ export class Notifications implements OnInit {
   loadNotifications(page: number = 1) {
     this.isLoading.set(true);
     this.currentPage = page;
-    this.notifApiService.getNotifications(page, this.filters).subscribe({
+    this.notifApiService.getNotifications(page, this.filters, this.activeTab).subscribe({
       next: (response) => {
         this.notifications = response.data;
         this.lastPage = response.last_page;
@@ -86,6 +87,11 @@ export class Notifications implements OnInit {
       from_date: '',
       to_date: ''
     };
+    this.loadNotifications(1);
+  }
+
+  setTab(tab: string) {
+    this.activeTab = tab;
     this.loadNotifications(1);
   }
 
