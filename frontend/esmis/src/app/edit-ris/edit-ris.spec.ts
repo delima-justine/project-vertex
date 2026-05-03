@@ -1,3 +1,4 @@
+import 'zone.js/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditRis } from './edit-ris';
