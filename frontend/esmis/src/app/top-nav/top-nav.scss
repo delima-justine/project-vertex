@@ -37,11 +37,10 @@
   background: none;
   border: none;
   display: flex;
-  gap: 5px;
+  gap: 10px;
   align-items: center;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  font-weight: 500;
   color: #333;
   transition: background-color 0.2s ease;
   border-radius: 4px;
@@ -50,12 +49,23 @@
     background: #f8f9fa;
   }
 
-  i:nth-child(1) {
-    font-size: 1.2rem;
+  .user-info {
+    line-height: 1.2;
+    
+    .user-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: #6c757d;
+      text-transform: capitalize;
+    }
   }
 
-  i:nth-child(2) {
-    font-size: 0.8rem;
+  i:nth-child(1) {
+    font-size: 1.5rem;
   }
 }
 
@@ -93,9 +103,4 @@
   input.is-invalid ~ .invalid-feedback {
     display: block;
   }
-}
-
-.user-role {
-  font-size: 0.75rem; 
-  line-height: 1;
 }
