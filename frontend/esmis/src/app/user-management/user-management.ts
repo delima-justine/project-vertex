@@ -250,6 +250,7 @@ export class UserManagement {
       permission_ids: [],
     }, { emitEvent: false });
 
+    this.userForm.get('role_id')?.enable();
     this.getModal('userModal')?.show();
   }
 
@@ -274,6 +275,12 @@ export class UserManagement {
       office_name: user.office?.office_name || '',
       permission_ids: initialPermIds,
     }, { emitEvent: false });
+
+    if (user.role?.role_name?.toLowerCase() === 'superadmin') {
+      this.userForm.get('role_id')?.disable();
+    } else {
+      this.userForm.get('role_id')?.enable();
+    }
 
     this.getModal('userModal')?.show();
   }

@@ -179,7 +179,13 @@
                 <span class="input-group-text"><i class="bi bi-person-badge-fill"></i></span>
                 <select class="form-select" formControlName="role_id">
                   <option [ngValue]="null" disabled>Select role</option>
-                  <option *ngFor="let role of roleOptions" [value]="role.id">{{ role.role_name | titlecase }}</option>
+                  <ng-container *ngFor="let role of roleOptions">
+                    <option 
+                      *ngIf="role.role_name.toLowerCase() !== 'superadmin' || activeUser()?.role_id === role.id" 
+                      [value]="role.id">
+                      {{ role.role_name | titlecase }}
+                    </option>
+                  </ng-container>
                 </select>
               </div>
               <small class="text-muted help-text">A temporary password will be generated and sent to the user via email.</small>
