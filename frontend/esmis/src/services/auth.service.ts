@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
-import { AuthResponse, ChangePasswordPayload, ForgotPasswordPayload, GeneralResponse, LoginCredentials, ResetPasswordPayload, User } from '../models/smis.model';
+import { AuthResponse, ChangePasswordPayload, ForgotPasswordPayload, GeneralResponse, LoginCredentials, ProfileResponse, ResetPasswordPayload, User } from '../models/smis.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +12,7 @@ export class AuthService {
 
   // Use a signal to track auth state
   currentUser = signal<User | null>(null);
+  userPermissions = signal<string[]>([]);
 
   constructor() {
     // If we have a token, fetch the user data on initialization
@@ -24,18 +25,30 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: AuthResponse) => {
         localStorage.setItem('auth_token', response.token);
-        this.getUser().subscribe();
+        this.currentUser.set(response.user);
+        this.userPermissions.set(response.permissions || []);
+        console.log('AuthService: User permissions loaded:', response.permissions);
       })
     );
   }
 
   // New method to fetch user profile with role
   getUser() {
-    return this.http.get<User>(`${this.apiUrl}/user/profile`).pipe(
-      tap((user: User) => {
-        this.currentUser.set(user);
+    return this.http.get<ProfileResponse>(`${this.apiUrl}/user/profile`).pipe(
+      tap((response: ProfileResponse) => {
+        this.currentUser.set(response.user);
+        this.userPermissions.set(response.permissions || []);
+        console.log('AuthService: User permissions loaded:', response.permissions);
       })
     );
+  }
+
+  hasPermission(permissionName: string): boolean {
+    return this.userPermissions().includes(permissionName);
+  }
+
+  hasAnyPermission(permissionNames: string[]): boolean {
+    return permissionNames.some(p => this.userPermissions().includes(p));
   }
 
   logout() {
