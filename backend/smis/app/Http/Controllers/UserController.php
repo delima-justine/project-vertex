@@ -21,7 +21,7 @@ class UserController extends Controller
 
         $search = $request->query('search');
 
-        $users = User::with('role')
+        $users = User::with(['role.permissions', 'permissions'])
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('first_name', 'like', "%{$search}%")
@@ -62,6 +62,8 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8',
             'role_id' => 'required|integer|exists:tbl_roles,id',
             'office_id' => 'required|integer|exists:tbl_office,id',
+            'permission_ids' => 'sometimes|array',
+            'permission_ids.*' => 'integer|exists:tbl_permissions,id',
         ]);
 
         // Generate a random password if none is provided
@@ -80,10 +82,15 @@ class UserController extends Controller
             $user = User::create($validated);
         }
 
+        // Sync permissions
+        if (isset($validated['permission_ids'])) {
+            $user->permissions()->sync($validated['permission_ids']);
+        }
+
         // Send reset password email so the user can set their own password
         Password::broker()->sendResetLink(['email' => $user->email]);
 
-        return response()->json($user->load('role'), 201);
+        return response()->json($user->load(['role.permissions', 'permissions']), 201);
     }
 
     /**
@@ -91,7 +98,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json($user->load('role'));
+        return response()->json($user->load(['role.permissions', 'permissions']));
     }
 
     /**
@@ -120,6 +127,8 @@ class UserController extends Controller
             'password' => 'sometimes|required|string|min:8',
             'role_id' => 'sometimes|required|integer|exists:tbl_roles,id',
             'office_id' => 'sometimes|required|integer|exists:tbl_office,id',
+            'permission_ids' => 'sometimes|array',
+            'permission_ids.*' => 'integer|exists:tbl_permissions,id',
         ]);
 
         if (isset($validated['password'])) {
@@ -128,7 +137,12 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return response()->json($user->load('role'));
+        // Sync permissions
+        if (isset($validated['permission_ids'])) {
+            $user->permissions()->sync($validated['permission_ids']);
+        }
+
+        return response()->json($user->load(['role.permissions', 'permissions']));
     }
 
     /**
