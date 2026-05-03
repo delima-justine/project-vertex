@@ -37,3 +37,106 @@ main {
 .table-container {
   @include standard-table;
 }
+
+/* Custom Modal Styles */
+.custom-modal {
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.custom-modal-header {
+  background-color: #800000;
+  color: white;
+  border-bottom: none;
+  padding: 1rem 1.5rem;
+
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.custom-modal-body {
+  padding: 1.5rem;
+  background-color: #fff;
+}
+
+.custom-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 0.4rem;
+}
+
+.custom-input-group {
+  .input-group-text {
+    background-color: #800000;
+    color: white;
+    border: 1px solid #800000;
+    width: 45px;
+    justify-content: center;
+    border-radius: 4px 0 0 4px;
+  }
+
+  .form-control {
+    border: 1px solid #ced4da;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.95rem;
+    background-color: #f8f9fa;
+
+    &:focus {
+      box-shadow: none;
+      border-color: #ced4da;
+    }
+  }
+}
+
+.modal-footer-custom {
+  border-top: none;
+  padding-top: 1rem;
+
+  .btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+
+    &:hover {
+      background-color: #5a6268;
+    }
+  }
+}
+
+/* Custom Tabs Styles */
+.nav-tabs {
+  border-bottom: 2px solid #f2e6e4;
+  
+  .nav-link {
+    color: #666;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s;
+
+    &:hover {
+      color: #800000;
+      background-color: #fdfaf9;
+      border-color: transparent;
+    }
+
+    &.active {
+      color: #800000;
+      background-color: transparent;
+      border-bottom-color: #800000;
+    }
+  }
+}
