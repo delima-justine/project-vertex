@@ -79,8 +79,28 @@ class User extends Authenticatable
         return $this->belongsTo(Office::class, 'office_id');
     }
 
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'tbl_user_permission', 'user_id', 'permission_id');
+    }
+
     public function hasPermission($permissionName)
     {
+        // Load permissions and role.permissions if not loaded to avoid N+1 and ensure we have data
+        if (!$this->relationLoaded('permissions')) {
+            $this->load('permissions');
+        }
+        
+        if (!$this->role->relationLoaded('permissions')) {
+            $this->role->load('permissions');
+        }
+
+        // If the user has customized permissions, use those as the source of truth
+        if ($this->permissions->isNotEmpty()) {
+            return $this->permissions->contains('name', $permissionName);
+        }
+
+        // Fallback to role permissions if no direct permissions are assigned
         return $this->role->permissions->contains('name', $permissionName);
     }
 }
