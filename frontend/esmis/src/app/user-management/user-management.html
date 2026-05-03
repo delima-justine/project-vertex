@@ -11,10 +11,13 @@
 
   <div class="functionalities-container">
     <div class="b-r-function">
-      <button class="btn btn-primary" type="button" (click)="openAddUser()">
-        <i class="bi bi-person-plus-fill me-1"></i>
-        <span>Add User</span>
-      </button>
+      @if(authService.hasPermission('add_user')) {
+        <button class="btn btn-primary" type="button" (click)="openAddUser()">
+          <i class="bi bi-person-plus-fill me-1"></i>
+          <span>Add User</span>
+        </button>
+      }
+      
       <button class="btn btn-outline-secondary" type="button" (click)="loadUsers(currentPage())">
         <i class="bi bi-arrow-clockwise me-1"></i>
         <span>Refresh</span>
@@ -57,11 +60,13 @@
         <td>{{ user.email }}</td>
         <td>{{ user.role?.role_name || 'N/A' }}</td>
         <td>
-          <button class="btn btn-sm btn-warning me-1" type="button" (click)="editUser(user)">
-            <i class="bi bi-pencil-fill"></i>
-          </button>
+          @if(authService.hasPermission('edit_user')) {
+            <button class="btn btn-sm btn-warning me-1" type="button" (click)="editUser(user)">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          }
           
-          @if(user.role?.role_name?.toLowerCase() !== 'superadmin') {
+          @if(authService.hasPermission('delete_user')) {
             <button class="btn btn-sm btn-danger" type="button" (click)="confirmDelete(user)">
               <i class="bi bi-trash-fill"></i>
             </button>

@@ -5,6 +5,7 @@ import { Sidebar } from '../sidebar/sidebar';
 import { User, Office, Role, Permission } from '../../models/smis.model';
 import { UserManagementService } from '../../services/user-management.service';
 import { TopNav } from "../top-nav/top-nav";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-management',
@@ -15,6 +16,7 @@ import { TopNav } from "../top-nav/top-nav";
 export class UserManagement {
   userService = inject(UserManagementService);
   formBuilder = inject(FormBuilder);
+  authService = inject(AuthService);
 
   users = signal<User[]>([]);
   isLoading = signal(false);
