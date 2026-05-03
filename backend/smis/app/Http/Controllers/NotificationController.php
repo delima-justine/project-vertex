@@ -13,6 +13,20 @@ class NotificationController extends Controller
         $query = Notification::with(['user', 'office', 'supplyRequest'])
             ->where('user_id', $request->user()->id);
 
+        if ($request->has('tab') && $request->tab != 'all') {
+            switch ($request->tab) {
+                case 'unread':
+                    $query->whereNull('read_at');
+                    break;
+                case 'approved':
+                    $query->whereIn('action', ['approved', 'released']);
+                    break;
+                case 'denied':
+                    $query->where('action', 'disapproved');
+                    break;
+            }
+        }
+
         if ($request->has('office_id') && $request->office_id != '') {
             $query->where('office_id', $request->office_id);
         }
