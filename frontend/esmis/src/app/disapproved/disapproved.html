@@ -24,6 +24,21 @@
           [ngModel]="searchTerm()"
           (ngModelChange)="searchTerm.set($event)">
       </div>
+
+      @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+        <select class="form-select" [ngModel]="selectedOffice()" (ngModelChange)="selectedOffice.set($event)" style="width: 250px;">
+          <option value="all">All Offices</option>
+          @for (office of offices(); track office) {
+            <option [value]="office">{{ office }}</option>
+          }
+        </select>
+      }
+
+      <div class="btn-container">
+        <button class="btn btn-primary refresh-btn" (click)="loadDisapprovedRequests()">
+          <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+        </button>
+      </div>
     </div>
   </div>
 
@@ -38,7 +53,6 @@
           <th>Total Qty</th>
           <th>Status</th>
           <th>Date Requested</th>
-          <th>Disapproved By</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -52,7 +66,6 @@
             <td>{{ batch.totalQty }}</td>
             <td><span class="badge bg-danger">Disapproved</span></td>
             <td>{{ batch.date | date:'MMM d, y, h:mm a' }}</td>
-            <td>{{ batch.requests[0].approver?.first_name }} {{ batch.requests[0].approver?.last_name }}</td>
             <td>
               <button class="btn btn-sm btn-warning" title="View Details" (click)="viewBatch(batch.requests)">
                 <i class="bi bi-eye-fill text-white"></i>
