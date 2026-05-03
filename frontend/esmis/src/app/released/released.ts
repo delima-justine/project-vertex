@@ -22,6 +22,7 @@ export class Released implements OnInit {
 
   requests = signal<SupplyRequest[]>([]);
   searchTerm = signal('');
+  selectedOffice = signal('all');
   selectedBatch = signal<SupplyRequest[]>([]);
   activeTabIndex = signal(0);
 
@@ -54,14 +55,23 @@ export class Released implements OnInit {
   filteredRequests = computed(() => {
     return this.batchedRequests().filter(batch => {
       const search = this.searchTerm().toLowerCase();
-      return !search || 
+      const matchesSearch = !search || 
              batch.user?.first_name.toLowerCase().includes(search) ||
              batch.user?.last_name.toLowerCase().includes(search) ||
              batch.requests.some(r => 
                r.supply?.item_desc.toLowerCase().includes(search) || 
                r.supply_id.toLowerCase().includes(search)
              );
+
+      const matchesOffice = this.selectedOffice() === 'all' || batch.office === this.selectedOffice();
+
+      return matchesSearch && matchesOffice;
     });
+  });
+
+  offices = computed(() => {
+    const allOffices = this.requests().map(r => r.user?.office?.office_name).filter(Boolean) as string[];
+    return [...new Set(allOffices)];
   });
 
   ngOnInit() {
