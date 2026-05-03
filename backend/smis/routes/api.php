@@ -36,6 +36,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
     
     Route::post('/user/change-password', [AuthController::class, 'changePassword']);
     Route::apiResource('supply-requests', SupplyRequestController::class)->parameters([
