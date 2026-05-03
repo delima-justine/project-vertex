@@ -25,12 +25,14 @@
           (ngModelChange)="searchTerm.set($event)">
       </div>
       
-      <select class="form-select" [ngModel]="selectedOffice()" (ngModelChange)="selectedOffice.set($event)">
-        <option value="all">All Offices</option>
-        @for (office of offices(); track office) {
-          <option [value]="office">{{ office }}</option>
-        }
-      </select>
+      @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+        <select class="form-select" [ngModel]="selectedOffice()" (ngModelChange)="selectedOffice.set($event)">
+          <option value="all">All Offices</option>
+          @for (office of offices(); track office) {
+            <option [value]="office">{{ office }}</option>
+          }
+        </select>
+      }
 
       <div class="btn-container">
         <button class="btn btn-primary refresh-btn" (click)="loadPendingRequests()">
@@ -190,7 +192,7 @@
             }
 
             @if(authService.hasPermission('edit_ris')) {
-              <button type="button" class="btn btn-primary" style="background-color: #800000; border-color: #800000;" (click)="editBatchRIS()">
+              <button type="button" class="btn btn-primary btn-edit-ris" (click)="editBatchRIS()">
                 <i class="bi bi-pencil-square me-1"></i>EDIT BATCH RIS
               </button>
             }

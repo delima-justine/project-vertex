@@ -40,3 +40,15 @@ main {
 
 @include custom-modal;
 @include custom-tabs;
+
+.btn-edit-ris {
+  background-color: #800000;
+  border-color: #800000;
+  font-weight: 600;
+  font-size: 0.9rem;
+
+  &:hover {
+    background-color: #660000;
+    border-color: #660000;
+  }
+}
