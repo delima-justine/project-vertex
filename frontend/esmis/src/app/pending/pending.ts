@@ -26,7 +26,8 @@ export class Pending implements OnInit {
   selectedOffice = signal('all');
 
   selectedBatch = signal<SupplyRequest[]>([]);
-  
+  activeTabIndex = signal(0);
+
   @ViewChild('batchModal', { static: false }) batchModalElement?: ElementRef<HTMLElement>;
 
   router = inject(Router);
@@ -42,6 +43,10 @@ export class Pending implements OnInit {
 
   openModal() {
     this.getModalInstance()?.show();
+  }
+
+  closeModal() {
+    this.getModalInstance()?.hide();
   }
 
   batchedRequests = computed(() => {
@@ -100,45 +105,28 @@ export class Pending implements OnInit {
     });
   }
 
-  disapproveRequest(request: SupplyRequest) {
-    if (confirm(`Are you sure you want to disapprove request for ${request.supply?.item_desc}?`)) {
-      this.supplyService.updateSupplyRequest(request.id, {
-        status: 'disapproved'
-      }).subscribe({
-        next: () => {
-          alert('Request disapproved.');
-          this.loadPendingRequests();
-          const remaining = this.selectedBatch().filter(r => r.id !== request.id);
-          if (remaining.length === 0) {
-            this.closeModal();
-          } else {
-            this.selectedBatch.set(remaining);
-          }
-        },
-        error: (err) => {
-          console.error('Error disapproving request', err);
-          alert('Failed to disapprove request.');
-        }
-      });
-    }
+  viewRequest(batch: any) {
+    this.selectedBatch.set(batch.requests);
+    this.activeTabIndex.set(0);
+    this.openModal();
   }
 
   disapproveBatch() {
-    if (confirm(`Are you sure you want to disapprove all ${this.selectedBatch().length} requests in this batch?`)) {
-      const updates = this.selectedBatch().map(req => 
-        this.supplyService.updateSupplyRequest(req.id, { status: 'disapproved' })
-      );
-
-      import('rxjs').then(({ forkJoin }) => {
-        forkJoin(updates).subscribe({
+    if (confirm('Are you sure you want to disapprove this entire batch?')) {
+      const batch = this.selectedBatch();
+      const requests = batch.map(r => this.supplyService.updateSupplyRequest(r.id, { status: 'disapproved' }));
+      
+      // Simple loop subscribe for now
+      let completed = 0;
+      requests.forEach(obs => {
+        obs.subscribe({
           next: () => {
-            alert('All requests in batch disapproved.');
-            this.loadPendingRequests();
-            this.closeModal();
-          },
-          error: (err) => {
-            console.error('Error disapproving batch', err);
-            alert('Failed to disapprove some requests.');
+            completed++;
+            if (completed === batch.length) {
+              this.closeModal();
+              this.loadPendingRequests();
+              alert('Batch disapproved.');
+            }
           }
         });
       });
@@ -146,30 +134,10 @@ export class Pending implements OnInit {
   }
 
   editBatchRIS() {
-    const ids = this.selectedBatch().map(r => r.id).join(',');
-    this.closeModal();
-    this.router.navigate(['/requests/edit-ris', ids]);
-  }
-
-  viewRequest(batch: any) {
-    this.selectedBatch.set(batch.requests);
-    this.openModal();
-  }
-
-  closeModal() {
-    const modal = this.getModalInstance();
-    if (modal) {
-      modal.hide();
+    const batch = this.selectedBatch();
+    if (batch.length > 0) {
+      this.closeModal();
+      this.router.navigate(['/requests/edit-ris', batch[0].id]);
     }
-    this.selectedBatch.set([]);
-    
-    // Manual cleanup to ensure backdrop is removed during navigation
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) {
-      backdrop.remove();
-    }
-    document.body.classList.remove('modal-open');
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
   }
 }

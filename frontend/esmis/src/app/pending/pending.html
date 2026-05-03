@@ -64,10 +64,10 @@
             <td>{{ batch.totalQty }}</td>
             <td><span class="badge bg-warning text-dark">Pending</span></td>
             <td>{{ batch.date | date:'MMM d, y' }}</td>
-            <td class="action-buttons">
+            <td>
               <!-- View Batch -->
-              <button class="btn btn-sm btn-info me-1" (click)="viewRequest(batch)">
-                <i class="bi bi-eye-fill"></i> View Batch
+              <button class="btn btn-sm btn-warning" (click)="viewRequest(batch)">
+                <i class="bi bi-eye-fill text-white"></i>
               </button>
             </td>
           </tr>
@@ -81,68 +81,120 @@
   </div>
 </main>
 
-<!-- Request Details Modal (Placed outside <main> to avoid stacking context issues) -->
-<div class="modal fade" #batchModal tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Batch Request Details</h5>
-        <button type="button" class="btn-close" (click)="closeModal()"></button>
+<!-- Request Details Modal -->
+<div class="modal fade" #batchModal id="requestDetailsModal" tabindex="-1" aria-labelledby="requestDetailsModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content custom-modal">
+      <div class="modal-header custom-modal-header">
+        <h5 class="modal-title" id="requestDetailsModalLabel">
+          <i class="bi bi-clipboard-pulse me-2"></i>
+          Pending Request Details
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModal()" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body custom-modal-body">
+        <!-- Tabs for multiple requests -->
+        @if (selectedBatch().length > 1) {
+          <ul class="nav nav-tabs mb-3">
+            @for (req of selectedBatch(); track req.id; let i = $index) {
+              <li class="nav-item">
+                <button 
+                  class="nav-link" 
+                  [class.active]="activeTabIndex() === i"
+                  (click)="activeTabIndex.set(i)"
+                  type="button">
+                  {{ i === 0 ? 'Primary Request' : 'Request #' + (i + 1) }}
+                </button>
+              </li>
+            }
+          </ul>
+        }
+
+        <!-- Details for the selected tab -->
         @if (selectedBatch().length > 0) {
-          <div class="batch-header mb-4 p-3 bg-light rounded">
-            <div class="row">
-              <div class="col-md-4">
-                <strong>Requester:</strong> {{ selectedBatch()[0].user?.first_name }} {{ selectedBatch()[0].user?.last_name }}
+          @let currentReq = selectedBatch()[activeTabIndex()];
+          <div class="row g-3">
+            <!-- Stock Number -->
+            <div class="col-md-6">
+              <label class="form-label custom-label">Stock Number</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                <input class="form-control" [value]="currentReq.supply_id" readonly />
               </div>
-              <div class="col-md-4">
-                <strong>Office:</strong> {{ selectedBatch()[0].user?.office?.office_name }}
+            </div>
+
+            <!-- Supply Name -->
+            <div class="col-md-6">
+              <label class="form-label custom-label">Supply Name</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
+                <input class="form-control" [value]="currentReq.supply?.item_desc" readonly />
               </div>
-              <div class="col-md-4">
-                <strong>Date:</strong> {{ selectedBatch()[0].created_at | date:'MMM d, y, h:mm a' }}
+            </div>
+
+            <!-- Requester -->
+            <div class="col-md-6">
+              <label class="form-label custom-label">Requester</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                <input class="form-control" [value]="currentReq.user?.first_name + ' ' + currentReq.user?.last_name" readonly />
+              </div>
+            </div>
+
+            <!-- Office -->
+            <div class="col-md-6">
+              <label class="form-label custom-label">Office</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-building"></i></span>
+                <input class="form-control" [value]="currentReq.user?.office?.office_name" readonly />
+              </div>
+            </div>
+
+            <!-- Quantity -->
+            <div class="col-md-6">
+              <label class="form-label custom-label">Quantity Requested</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-bag-check-fill"></i></span>
+                <input class="form-control" [value]="currentReq.quantity_req" readonly />
+              </div>
+            </div>
+
+            <!-- Date Requested -->
+            <div class="col-md-6">
+              <label class="form-label custom-label">Date Requested</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                <input class="form-control" [value]="currentReq.created_at | date:'MMM d, y, h:mm a'" readonly />
+              </div>
+            </div>
+
+            <!-- Purpose -->
+            <div class="col-md-12">
+              <label class="form-label custom-label">Purpose</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-chat-left-text-fill"></i></span>
+                <textarea class="form-control" rows="2" readonly>{{ currentReq.purpose }}</textarea>
               </div>
             </div>
           </div>
-
-          <div class="table-responsive">
-            <table class="table table-hover align-middle">
-              <thead class="table-light">
-                <tr>
-                  <th class="modal-table-th">Stk #</th>
-                  <th class="modal-table-th">Supply Name</th>
-                  <th class="modal-table-th">Qty</th>
-                  <th class="modal-table-th">Purpose</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (req of selectedBatch(); track req.id) {
-                  <tr>
-                    <td>{{ req.supply_id }}</td>
-                    <td>{{ req.supply?.item_desc }}</td>
-                    <td>{{ req.quantity_req }}</td>
-                    <td>{{ req.purpose }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
         }
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-        <div class="ms-auto">
-          @if(authService.hasPermission('deny_request')) {
-          <button type="button" class="btn btn-outline-danger me-2" (click)="disapproveBatch()">
-            <i class="bi bi-x-circle-fill me-1"></i>Disapprove Batch
-          </button>
-          }
 
-          @if(authService.hasPermission('edit_ris')) {
-            <button type="button" class="btn btn-primary" (click)="editBatchRIS()">
-              <i class="bi bi-pencil-square me-1"></i>Edit Batch RIS
-            </button>
-          }
+        <div class="modal-footer-custom mt-4 d-flex gap-2 justify-content-end">
+          <button class="btn btn-cancel" type="button" (click)="closeModal()">CLOSE</button>
+          
+          <div class="d-flex gap-2">
+            @if(authService.hasPermission('deny_request')) {
+              <button type="button" class="btn btn-outline-danger" (click)="disapproveBatch()">
+                <i class="bi bi-x-circle-fill me-1"></i>DISAPPROVE BATCH
+              </button>
+            }
+
+            @if(authService.hasPermission('edit_ris')) {
+              <button type="button" class="btn btn-primary" style="background-color: #800000; border-color: #800000;" (click)="editBatchRIS()">
+                <i class="bi bi-pencil-square me-1"></i>EDIT BATCH RIS
+              </button>
+            }
+          </div>
         </div>
       </div>
     </div>
