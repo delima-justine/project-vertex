@@ -1,8 +1,12 @@
 name: Laravel Backend Tests
 
 on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'backend/smis/**'
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
     paths:
       - 'backend/smis/**'
 
