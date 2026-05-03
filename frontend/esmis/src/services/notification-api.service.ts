@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { Notification } from '../models/smis.model';
+import { Notification, PaginatedResponse } from '../models/smis.model';
 import { tap } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { AuthService } from './auth.service';
@@ -51,8 +51,9 @@ export class NotificationApiService {
     });
   }
 
-  getNotifications() {
-    return this.http.get<Notification[]>(`${this.apiUrl}/notifications`);
+  getNotifications(page: number = 1) {
+    let params = new HttpParams().set('page', page.toString());
+    return this.http.get<PaginatedResponse<Notification>>(`${this.apiUrl}/notifications`, { params });
   }
 
   getUnreadCount() {
