@@ -21,7 +21,7 @@ class UserController extends Controller
 
         $search = $request->query('search');
 
-        $users = User::with(['role.permissions', 'permissions'])
+        $users = User::with(['role.permissions', 'permissions', 'office'])
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('first_name', 'like', "%{$search}%")
@@ -94,7 +94,7 @@ class UserController extends Controller
         // Send reset password email so the user can set their own password
         Password::broker()->sendResetLink(['email' => $user->email]);
 
-        return response()->json($user->load(['role.permissions', 'permissions']), 201);
+        return response()->json($user->load(['role.permissions', 'permissions', 'office']), 201);
     }
 
     /**
@@ -102,7 +102,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json($user->load(['role.permissions', 'permissions']));
+        return response()->json($user->load(['role.permissions', 'permissions', 'office']));
     }
 
     /**
@@ -151,7 +151,7 @@ class UserController extends Controller
             $user->permissions()->sync($validated['permission_ids']);
         }
 
-        return response()->json($user->load(['role.permissions', 'permissions']));
+        return response()->json($user->load(['role.permissions', 'permissions', 'office']));
     }
 
     /**
