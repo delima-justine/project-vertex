@@ -76,6 +76,7 @@ export class UserManagement {
       label: 'Categories',
       permissions: [
         { name: 'add_category', label: 'Add Category' },
+        { name: 'delete_category', label: 'Delete Category' },
       ]
     },
     {
