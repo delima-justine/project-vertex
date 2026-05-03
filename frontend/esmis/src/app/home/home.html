@@ -321,7 +321,16 @@
                     <option [value]="cat.id">{{ cat.category_name }}</option>
                   }
                 </select>
-                <button class="btn btn-outline-primary" type="button" (click)="openCategoryModal()"><i class="bi bi-plus-lg"></i></button>
+
+                @if(authService.hasPermission('add_category')) {
+                  <button 
+                    class="btn btn-outline-primary" 
+                    type="button" 
+                    (click)="openCategoryModal()">
+                      <i class="bi bi-plus-lg"></i>
+                  </button>
+                }
+                
               </div>
             </div>
             <div class="col">
@@ -333,7 +342,15 @@
                     <option [value]="u.id">{{ u.unit_name }}</option>
                   }
                 </select>
-                <button class="btn btn-outline-primary" type="button" (click)="openUnitModal()"><i class="bi bi-plus-lg"></i></button>
+
+                @if(authService.hasPermission('add_unit')) {
+                  <button 
+                    class="btn btn-outline-primary" 
+                    type="button" 
+                    (click)="openUnitModal()">
+                      <i class="bi bi-plus-lg"></i>
+                  </button>
+                }
               </div>
             </div>
           </div>
@@ -376,14 +393,28 @@
       <div class="modal-body">
         <div class="input-group mb-4">
           <input type="text" class="form-control" placeholder="New Category Name" [ngModel]="newCategoryName()" (ngModelChange)="newCategoryName.set($event)">
-          <button class="btn btn-primary" type="button" (click)="addCategory()"><i class="bi bi-plus-lg"></i> Add</button>
+          @if(authService.hasPermission('add_category')) {
+            <button 
+              class="btn btn-primary" 
+              type="button" 
+              (click)="addCategory()">
+                <i class="bi bi-plus-lg"></i> 
+                Add
+            </button>
+          }
         </div>
         <h6 class="mb-3">Existing Categories</h6>
         <div class="list-group">
           @for(cat of categories(); track cat.id) {
             <div class="list-group-item d-flex justify-content-between align-items-center">
               {{ cat.category_name }}
-              <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(cat.id)"><i class="bi bi-trash"></i></button>
+              @if(authService.hasPermission('delete_category')) {
+                <button 
+                  class="btn btn-sm btn-outline-danger" 
+                  (click)="deleteCategory(cat.id)">
+                    <i class="bi bi-trash"></i>
+                </button>
+              }
             </div>
           } @empty {
             <div class="list-group-item text-center text-muted">No categories found.</div>
@@ -408,14 +439,28 @@
       <div class="modal-body">
         <div class="input-group mb-4">
           <input type="text" class="form-control" placeholder="New Unit Name" [ngModel]="newUnitName()" (ngModelChange)="newUnitName.set($event)">
-          <button class="btn btn-primary" type="button" (click)="addUnit()"><i class="bi bi-plus-lg"></i> Add</button>
+          @if(authService.hasPermission('add_unit')) {
+            <button 
+              class="btn btn-primary" 
+              type="button" 
+              (click)="addUnit()">
+                <i class="bi bi-plus-lg"></i> 
+                Add
+            </button>
+          }
         </div>
         <h6 class="mb-3">Existing Units</h6>
         <div class="list-group">
           @for(u of units(); track u.id) {
             <div class="list-group-item d-flex justify-content-between align-items-center">
               {{ u.unit_name }}
-              <button class="btn btn-sm btn-outline-danger" (click)="deleteUnit(u.id)"><i class="bi bi-trash"></i></button>
+              @if(authService.hasPermission('delete_unit')) {
+                <button 
+                  class="btn btn-sm btn-outline-danger" 
+                  (click)="deleteUnit(u.id)">
+                    <i class="bi bi-trash"></i>
+                </button>
+              }
             </div>
           } @empty {
             <div class="list-group-item text-center text-muted">No units found.</div>
