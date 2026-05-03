@@ -27,10 +27,58 @@ main {
   overflow: hidden;
 
   .card-header {
-    background-color: #ffffff;
-    border-bottom: 1px solid #f0f0f0;
-    padding: 15px 20px;
-    border-left: 4px solid #800000;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 15px 20px;
+  border-left: 4px solid #800000;
+
+  &.p-0 {
+    padding: 0 !important;
+    border-left: none;
+    background-color: #f8f9fa;
+  }
+
+  .nav-tabs {
+    .nav-link {
+      border: none;
+      color: #666;
+      font-weight: 500;
+      padding: 12px 20px;
+      transition: all 0.2s ease;
+      border-bottom: 3px solid transparent;
+
+      &:hover {
+        color: #0d6efd;
+        background-color: rgba(13, 110, 253, 0.05);
+      }
+
+      &.active {
+        color: #0d6efd;
+        background-color: transparent;
+        border-bottom: 3px solid #0d6efd;
+
+        &.tab-approved {
+          color: #198754;
+          border-bottom-color: #198754;
+        }
+
+        &.tab-denied {
+          color: #800020;
+          border-bottom-color: #800020;
+        }
+      }
+
+      &.tab-approved:hover {
+        color: #198754;
+        background-color: rgba(25, 135, 84, 0.05);
+      }
+
+      &.tab-denied:hover {
+        color: #800020;
+        background-color: rgba(128, 0, 32, 0.05);
+      }
+      }
+      }
 
     .title-with-icon {
       display: flex;

@@ -46,7 +46,48 @@
 
     <!-- Main Content -->
     <div class="notifications-card card mt-4">
-      <div class="card-header d-flex justify-content-between align-items-center">
+      <div class="card-header p-0">
+        <!-- Tabs -->
+        <ul class="nav nav-tabs border-0 px-3 pt-2">
+          <li class="nav-item">
+            <button 
+              class="nav-link" 
+              [class.active]="activeTab === 'all'" 
+              (click)="setTab('all')">
+              All
+            </button>
+          </li>
+          <li class="nav-item">
+            <button 
+              class="nav-link" 
+              [class.active]="activeTab === 'unread'" 
+              (click)="setTab('unread')">
+              Unread
+              <span *ngIf="notifApiService.unreadCount() > 0" class="badge bg-danger ms-1">
+                {{ notifApiService.unreadCount() }}
+              </span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button 
+              class="nav-link tab-approved" 
+              [class.active]="activeTab === 'approved'" 
+              (click)="setTab('approved')">
+              Approved
+            </button>
+          </li>
+          <li class="nav-item">
+            <button 
+              class="nav-link tab-denied" 
+              [class.active]="activeTab === 'denied'" 
+              (click)="setTab('denied')">
+              Denied
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card-header d-flex justify-content-between align-items-center bg-white border-top-0">
         <div class="title-with-icon">
           <i class="bi bi-list-ul text-primary"></i>
           <span>Recent Activity</span>
