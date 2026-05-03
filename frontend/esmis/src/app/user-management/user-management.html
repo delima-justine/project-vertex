@@ -116,19 +116,33 @@
           <div class="row g-3">
             <div class="col-md-4">
               <label class="form-label">First Name</label>
-              <input class="form-control" formControlName="first_name" />
+              <input 
+                class="form-control" 
+                formControlName="first_name" 
+                placeholder="John"/>
             </div>
             <div class="col-md-2">
               <label class="form-label">M. Initial</label>
-              <input class="form-control" formControlName="middle_initial" maxlength="1" />
+              <input 
+                class="form-control" 
+                formControlName="middle_initial"
+                maxlength="1" 
+                placeholder="D"/>
             </div>
             <div class="col-md-4">
               <label class="form-label">Last Name</label>
-              <input class="form-control" formControlName="last_name" />
+              <input 
+                class="form-control" 
+                formControlName="last_name" 
+                placeholder="Doe"/>
             </div>
             <div class="col-md-6">
               <label class="form-label">Email</label>
-              <input class="form-control" formControlName="email" type="email" />
+              <input 
+                class="form-control" 
+                formControlName="email" 
+                type="email" 
+                placeholder="john.doe@example.com"/>
             </div>
             <div class="col-md-3">
               <label class="form-label">Role</label>
@@ -139,10 +153,15 @@
             </div>
             <div class="col-md-3">
               <label class="form-label">Office</label>
-              <select class="form-select" formControlName="office_id">
-                <option [ngValue]="null">Select office</option>
-                <option *ngFor="let office of officeOptions" [value]="office.id">{{ office.office_name }}</option>
-              </select>
+              <input 
+                class="form-control" 
+                formControlName="office_name" 
+                list="officeOptionsList"
+                placeholder="Office Name"
+              />
+              <datalist id="officeOptionsList">
+                <option *ngFor="let office of officeOptions" [value]="office.office_name"></option>
+              </datalist>
             </div>
           </div>
 
