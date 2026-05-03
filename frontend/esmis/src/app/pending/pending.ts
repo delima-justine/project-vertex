@@ -114,7 +114,11 @@ export class Pending implements OnInit {
   disapproveBatch() {
     if (confirm('Are you sure you want to disapprove this entire batch?')) {
       const batch = this.selectedBatch();
-      const requests = batch.map(r => this.supplyService.updateSupplyRequest(r.id, { status: 'disapproved' }));
+      const adminId = this.user()?.id;
+      const requests = batch.map(r => this.supplyService.updateSupplyRequest(r.id, { 
+        status: 'disapproved',
+        approved_by: adminId
+      }));
       
       // Simple loop subscribe for now
       let completed = 0;
