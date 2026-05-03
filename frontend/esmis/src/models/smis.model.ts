@@ -1,6 +1,13 @@
+export type Permission = {
+  id: number;
+  name: string;
+  description: string;
+};
+
 export type Role = {
   id: number;
   role_name: string;
+  permissions?: Permission[];
 };
 
 export type Office = {
@@ -40,6 +47,7 @@ export type User = {
   office_id: number;
   role?: Role;
   office?: Office;
+  permissions?: Permission[];
 };
 
 export type SupplyRequest = {
@@ -80,7 +88,13 @@ export type GeneralResponse = {
 
 export type AuthResponse = {
   user: User;
+  permissions: string[];
   token: string;
+};
+
+export type ProfileResponse = {
+  user: User;
+  permissions: string[];
 };
 
 export type LoginCredentials = {
