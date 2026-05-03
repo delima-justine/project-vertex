@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { Notification, PaginatedResponse } from '../models/smis.model';
+import { Notification, PaginatedResponse, NotificationFilters } from '../models/smis.model';
 import { tap } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { AuthService } from './auth.service';
@@ -51,10 +51,12 @@ export class NotificationApiService {
     });
   }
 
-  getNotifications(page: number = 1, filters: any = {}) {
-    let params = new HttpParams().set('page', page.toString());
+  getNotifications(page: number = 1, filters: NotificationFilters = {}, tab: string = 'all') {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('tab', tab);
     
-    if (filters.office_id) params = params.set('office_id', filters.office_id);
+    if (filters.office_id) params = params.set('office_id', filters.office_id.toString());
     if (filters.from_date) params = params.set('from_date', filters.from_date);
     if (filters.to_date) params = params.set('to_date', filters.to_date);
 
