@@ -132,3 +132,9 @@ export type PaginatedResponse<T> = {
   to: number;
   total: number;
 };
+
+export type NotificationFilters = {
+  office_id?: string | number;
+  from_date?: string;
+  to_date?: string;
+};
