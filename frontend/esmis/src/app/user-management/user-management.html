@@ -58,7 +58,7 @@
         <td>{{ user.middle_initial || '-' }}</td>
         <td>{{ user.last_name }}</td>
         <td>{{ user.email }}</td>
-        <td>{{ user.role?.role_name || 'N/A' }}</td>
+        <td>{{ (user.role?.role_name || 'N/A') | titlecase }}</td>
         <td>
           @if(authService.hasPermission('edit_user')) {
             <button class="btn btn-sm btn-warning me-1" type="button" (click)="editUser(user)">
@@ -106,75 +106,96 @@
 <!-- User Form Modal -->
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="userModalLabel">{{ editMode() ? 'Edit User' : 'Add User' }}</h5>
-        <button type="button" class="btn-close" (click)="cancelForm()" aria-label="Close"></button>
+    <div class="modal-content custom-modal">
+      <div class="modal-header custom-modal-header">
+        <h5 class="modal-title" id="userModalLabel">
+          <i class="bi bi-person-plus-fill me-2"></i>
+          {{ editMode() ? 'Edit User' : 'Add New User' }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cancelForm()" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body custom-modal-body">
         <form [formGroup]="userForm" (ngSubmit)="saveUser()">
           <div class="row g-3">
-            <div class="col-md-4">
-              <label class="form-label">First Name</label>
-              <input 
-                class="form-control" 
-                formControlName="first_name" 
-                placeholder="John"/>
-            </div>
-            <div class="col-md-2">
-              <label class="form-label">M. Initial</label>
-              <input 
-                class="form-control" 
-                formControlName="middle_initial"
-                maxlength="1" 
-                placeholder="D"/>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Last Name</label>
-              <input 
-                class="form-control" 
-                formControlName="last_name" 
-                placeholder="Doe"/>
-            </div>
+            <!-- Office -->
             <div class="col-md-6">
-              <label class="form-label">Email</label>
-              <input 
-                class="form-control" 
-                formControlName="email" 
-                type="email" 
-                placeholder="john.doe@example.com"/>
+              <label class="form-label custom-label">Office</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-building"></i></span>
+                <input 
+                  class="form-control" 
+                  formControlName="office_name" 
+                  list="officeOptionsList"
+                  placeholder="Type or select office"
+                />
+                <datalist id="officeOptionsList">
+                  <option *ngFor="let office of officeOptions" [value]="office.office_name"></option>
+                </datalist>
+              </div>
             </div>
-            <div class="col-md-3">
-              <label class="form-label">Role</label>
-              <select class="form-select" formControlName="role_id">
-                <option [ngValue]="null">Select role</option>
-                <option *ngFor="let role of roleOptions" [value]="role.id">{{ role.role_name }}</option>
-              </select>
+
+            <!-- Email -->
+            <div class="col-md-6">
+              <label class="form-label custom-label">Email</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                <input class="form-control" formControlName="email" type="email" placeholder="example@gmail.com" />
+              </div>
+              <small class="text-muted help-text">Only Gmail accounts are accepted</small>
             </div>
-            <div class="col-md-3">
-              <label class="form-label">Office</label>
-              <input 
-                class="form-control" 
-                formControlName="office_name" 
-                list="officeOptionsList"
-                placeholder="Office Name"
-              />
-              <datalist id="officeOptionsList">
-                <option *ngFor="let office of officeOptions" [value]="office.office_name"></option>
-              </datalist>
+
+            <!-- First Name -->
+            <div class="col-md-4">
+              <label class="form-label custom-label">First Name</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                <input class="form-control" formControlName="first_name" />
+              </div>
+            </div>
+
+            <!-- Middle Initial -->
+            <div class="col-md-4">
+              <label class="form-label custom-label">Middle Initial</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+                <input class="form-control" formControlName="middle_initial" maxlength="2" />
+              </div>
+              <small class="text-muted help-text">Use 1-2 letters; period optional (e.g., L or L.)</small>
+            </div>
+
+            <!-- Last Name -->
+            <div class="col-md-4">
+              <label class="form-label custom-label">Last Name</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-person-fill-add"></i></span>
+                <input class="form-control" formControlName="last_name" />
+              </div>
+            </div>
+
+            <!-- Role -->
+            <div class="col-md-12">
+              <label class="form-label custom-label">Role</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-person-badge-fill"></i></span>
+                <select class="form-select" formControlName="role_id">
+                  <option [ngValue]="null" disabled>Select role</option>
+                  <option *ngFor="let role of roleOptions" [value]="role.id">{{ role.role_name | titlecase }}</option>
+                </select>
+              </div>
+              <small class="text-muted help-text">A temporary password will be generated and sent to the user via email.</small>
             </div>
           </div>
 
           <!-- Permissions Section -->
-          <div class="permissions-section mt-4" *ngIf="userForm.get('role_id')?.value">
-            <h6 class="border-bottom pb-2">Permissions</h6>
-            <div class="row">
-              <div class="col-md-12" *ngFor="let group of permissionGroups">
-                <div class="permission-group mt-3" *ngIf="hasVisiblePermissions(group)">
-                  <span class="permission-group-label d-block">{{ group.label }}</span>
-                  <div class="d-flex flex-wrap gap-1">
+          <div class="permissions-container mt-4" *ngIf="userForm.get('role_id')?.value">
+            <h6 class="permissions-title">Permissions</h6>
+            <div class="permission-cards-grid">
+              <div class="permission-card" *ngFor="let group of permissionGroups">
+                <div *ngIf="hasVisiblePermissions(group)">
+                  <span class="permission-group-header">{{ group.label }}</span>
+                  <div class="permission-list">
                     <ng-container *ngFor="let perm of group.permissions">
-                      <div class="form-check" *ngIf="isPermissionVisible(group.label, perm.name)">
+                      <div class="form-check permission-check" *ngIf="isPermissionVisible(group.label, perm.name)">
                         <input 
                           class="form-check-input" 
                           type="checkbox" 
@@ -193,9 +214,12 @@
             </div>
           </div>
 
-          <div class="mt-4 d-flex gap-2 justify-content-end">
-            <button class="btn btn-secondary" type="button" (click)="cancelForm()">Cancel</button>
-            <button class="btn btn-success" type="submit">{{ editMode() ? 'Save Changes' : 'Create User' }}</button>
+          <div class="modal-footer-custom mt-4 d-flex gap-2 justify-content-end">
+            <button class="btn btn-cancel" type="button" (click)="cancelForm()">CANCEL</button>
+            <button class="btn btn-save" type="submit">
+              <i class="bi bi-floppy-fill me-1"></i>
+              {{ editMode() ? 'UPDATE USER' : 'SAVE USER' }}
+            </button>
           </div>
         </form>
       </div>
