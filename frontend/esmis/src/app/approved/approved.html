@@ -24,6 +24,21 @@
           [ngModel]="searchTerm()"
           (ngModelChange)="searchTerm.set($event)">
       </div>
+
+      @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+        <select class="form-select" [ngModel]="selectedOffice()" (ngModelChange)="selectedOffice.set($event)" style="width: 250px;">
+          <option value="all">All Offices</option>
+          @for (office of offices(); track office) {
+            <option [value]="office">{{ office }}</option>
+          }
+        </select>
+      }
+
+      <div class="btn-container">
+        <button class="btn btn-primary refresh-btn" (click)="loadApprovedRequests()">
+          <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+        </button>
+      </div>
     </div>
   </div>
 
