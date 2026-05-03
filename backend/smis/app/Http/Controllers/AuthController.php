@@ -88,10 +88,14 @@ class AuthController extends Controller
         // auth_token is just a label for the token
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $allPermissions = $user->permissions->isNotEmpty() 
+            ? $user->permissions->pluck('name') 
+            : $user->role->permissions->pluck('name');
+
         // Return the user data and token in the response
         return response([
             'user' => $user->load('role', 'office'),
-            'permissions' => $user->role->permissions->pluck('name'),
+            'permissions' => $allPermissions,
             'token' => $token
         ], 200); // 200 = Success
     }
