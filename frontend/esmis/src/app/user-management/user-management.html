@@ -141,6 +141,34 @@
             </div>
           </div>
 
+          <!-- Permissions Section -->
+          <div class="permissions-section mt-4" *ngIf="userForm.get('role_id')?.value">
+            <h6 class="border-bottom pb-2">Permissions</h6>
+            <div class="row">
+              <div class="col-md-12" *ngFor="let group of permissionGroups">
+                <div class="permission-group mt-3" *ngIf="hasVisiblePermissions(group)">
+                  <span class="permission-group-label d-block">{{ group.label }}</span>
+                  <div class="d-flex flex-wrap gap-1">
+                    <ng-container *ngFor="let perm of group.permissions">
+                      <div class="form-check" *ngIf="isPermissionVisible(group.label, perm.name)">
+                        <input 
+                          class="form-check-input" 
+                          type="checkbox" 
+                          [id]="'perm_' + perm.name"
+                          [checked]="isPermissionChecked(perm.name)"
+                          (change)="onPermissionChange($event, getPermissionId(perm.name))"
+                        >
+                        <label class="form-check-label" [for]="'perm_' + perm.name">
+                          {{ perm.label }}
+                        </label>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-4 d-flex gap-2 justify-content-end">
             <button class="btn btn-secondary" type="button" (click)="cancelForm()">Cancel</button>
             <button class="btn btn-success" type="submit">{{ editMode() ? 'Save Changes' : 'Create User' }}</button>
