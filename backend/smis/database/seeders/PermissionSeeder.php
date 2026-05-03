@@ -34,6 +34,7 @@ class PermissionSeeder extends Seeder
 
             // Categories
             ['name' => 'add_category', 'description' => 'Add Category'],
+            ['name' => 'delete_category', 'description' => 'Delete Category'],
 
             // Units
             ['name' => 'add_unit', 'description' => 'Add Unit'],
