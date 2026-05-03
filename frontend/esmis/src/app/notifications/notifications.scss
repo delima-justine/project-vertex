@@ -1,5 +1,118 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 main {
   @include page-layout(true);
+}
+
+.header-panel {
+  @include header-panel;
+  
+  p {
+    font-size: 0.9rem;
+    margin-top: 5px !important;
+  }
+}
+
+.notifications-card {
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+
+  .card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px 20px;
+    border-left: 4px solid #800000;
+
+    .title-with-icon {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      i {
+        font-size: 1.2rem;
+      }
+
+      span {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #333;
+      }
+    }
+  }
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #fcfcfc;
+    
+    .actions {
+      transform: translateX(3px);
+      opacity: 1;
+    }
+  }
+
+  &.unread {
+    background-color: #f0f7ff;
+    
+    .message {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background-color: #0d6efd;
+    }
+  }
+
+  .icon-wrapper {
+    font-size: 1.5rem;
+    min-width: 32px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .message {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.4;
+  }
+
+  .actions {
+    opacity: 0.5;
+    transition: all 0.2s ease;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  i {
+    opacity: 0.3;
+  }
 }
