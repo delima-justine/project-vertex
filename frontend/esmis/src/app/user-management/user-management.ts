@@ -36,7 +36,7 @@ export class UserManagement {
     last_name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     role_id: [null, Validators.required],
-    office_id: [null, Validators.required],
+    office_name: ['', Validators.required],
     permission_ids: [[]],
   });
 
@@ -245,7 +245,7 @@ export class UserManagement {
       last_name: '',
       email: '',
       role_id: null,
-      office_id: null,
+      office_name: '',
       permission_ids: [],
     }, { emitEvent: false });
 
@@ -270,7 +270,7 @@ export class UserManagement {
       last_name: user.last_name,
       email: user.email,
       role_id: user.role_id,
-      office_id: user.office_id,
+      office_name: user.office?.office_name || '',
       permission_ids: initialPermIds,
     }, { emitEvent: false });
 
