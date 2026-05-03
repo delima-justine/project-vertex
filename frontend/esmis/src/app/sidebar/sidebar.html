@@ -32,15 +32,8 @@
       routerLink="/notifications"
       routerLinkActive="active"
       [title]="layoutService.isSidebarOpen() ? '' : 'Notifications'">
-      <div class="d-flex align-items-center gap-2">
-        <i class="bi bi-bell-fill"></i>
-        <span>Notifications</span>
-        <!-- Connection Status Indicator -->
-        <span 
-          class="status-dot" 
-          [ngClass]="connectionState()" 
-          [title]="'WebSocket: ' + connectionState()"></span>
-      </div>
+      <i class="bi bi-bell-fill"></i>
+      <span>Notifications</span>
 
       @if(notifApiService.unreadCount() > 0) {
         <span class="badge rounded-pill bg-danger ms-auto">
