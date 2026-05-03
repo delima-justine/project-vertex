@@ -93,7 +93,7 @@ export class UserManagement {
 
     // Reset permissions when role changes
     this.userForm.get('role_id')?.valueChanges.subscribe(roleId => {
-      if (roleId) {
+      if (roleId && this.editMode()) {
         this.updatePermissionsByRole(roleId);
       } else {
         this.userForm.patchValue({ permission_ids: [] });
@@ -153,7 +153,9 @@ export class UserManagement {
         // Only patch if role_id currently matches the one we fetched for
         // and we aren't in a state that should ignore defaults
         if (this.userForm.get('role_id')?.value == roleId) {
-          this.userForm.patchValue({ permission_ids: permIds }, { emitEvent: false });
+          setTimeout(() => {
+            this.userForm.patchValue({ permission_ids: permIds }, { emitEvent: false });
+          });
         }
       }
     });
