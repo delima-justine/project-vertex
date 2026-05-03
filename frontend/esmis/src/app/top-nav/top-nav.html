@@ -10,9 +10,20 @@
         <i class="bi bi-person-circle text-primary"></i>
       }
       
-      <span class="user-name">
-        {{ user()?.first_name }} {{ user()?.last_name }}
-      </span>
+      <div class="user-info text-start">
+        <span class="user-name d-block">
+          {{ user()?.first_name }} {{ user()?.last_name }}
+        </span>
+        <small class="user-role text-muted d-block">
+          @if(user()?.role?.role_name === 'superadmin') {
+            Super Admin
+          } @else if (user()?.role?.role_name === 'admin') {
+              Admin
+          } @else {
+             User
+          }
+        </small>
+      </div>
 
       <i [class]="isOpen() ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
     </button>
