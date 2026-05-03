@@ -65,6 +65,21 @@ export type SupplyRequest = {
   approver?: User;
 };
 
+export type Notification = {
+  id: number;
+  user_id: number;
+  office_id?: number;
+  request_id?: number;
+  action: string;
+  message: string;
+  read_at: string | null;
+  created_at: string;
+  updated_at: string;
+  user?: User;
+  office?: Office;
+  supply_request?: SupplyRequest;
+};
+
 export type ChangePasswordPayload = {
   current_password: string;
   new_password: string;
