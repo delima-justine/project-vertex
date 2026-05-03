@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { Notification } from '../models/smis.model';
 import { tap } from 'rxjs';
 import { NotificationService } from './notification.service';
@@ -16,6 +16,7 @@ export class NotificationApiService {
 
   unreadCount = signal(0);
   private isListening = false;
+  private currentUserId: number | null = null;
 
   constructor() {
     // Listen for real-time notifications once
@@ -23,20 +24,31 @@ export class NotificationApiService {
       this.unreadCount.update(c => c + 1);
     });
 
-    // Handle connection status changes if needed
-    this.notifService.connectionStatus$.subscribe(status => {
-      if (status === 'connected' && !this.isListening) {
-        this.initRealTime();
+    // Automatically manage real-time connection based on auth state
+    effect(() => {
+      const user = this.authService.currentUser();
+      
+      if (user) {
+        // If user is different or we aren't listening yet
+        if (this.currentUserId !== user.id) {
+          console.log('[NotificationApiService] User detected, initializing real-time...');
+          if (this.currentUserId) {
+            this.notifService.disconnect();
+          }
+          this.notifService.listenToNotifications(user.id);
+          this.currentUserId = user.id;
+          this.isListening = true;
+        }
+      } else {
+        // User logged out
+        if (this.isListening) {
+          console.log('[NotificationApiService] User logged out, disconnecting real-time...');
+          this.notifService.disconnect();
+          this.currentUserId = null;
+          this.isListening = false;
+        }
       }
     });
-  }
-
-  initRealTime() {
-    const user = this.authService.currentUser();
-    if (user && !this.isListening) {
-      this.notifService.listenToNotifications(user.id);
-      this.isListening = true;
-    }
   }
 
   getNotifications() {
