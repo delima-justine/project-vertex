@@ -8,14 +8,19 @@ use App\Http\Controllers\SupplyController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\SupplyRequestController;
+use App\Http\Controllers\PermissionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user/profile', function (Request $request) {
     $user = $request->user();
+    $allPermissions = $user->permissions->isNotEmpty() 
+        ? $user->permissions->pluck('name') 
+        : $user->role->permissions->pluck('name');
+
     return response([
         'user' => $user->load(['role', 'office']),
-        'permissions' => $user->role->permissions->pluck('name'),
+        'permissions' => $allPermissions,
     ]);
 })->middleware('auth:sanctum');
 
@@ -32,6 +37,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::middleware(['auth:sanctum', 'role:admin,superadmin'])->group(function () {
     Route::get('/roles', [RolesController::class, 'index']);
     Route::get('/offices', [OfficeController::class, 'index']);
+    Route::get('/permissions', [PermissionController::class, 'index']);
+    Route::get('/roles/{role}/permissions', [PermissionController::class, 'getByRole']);
     Route::get('/user', [UserController::class, 'index']);
     Route::post('/user', [UserController::class, 'store']);
     Route::get('/user/{user}', [UserController::class, 'show']);
