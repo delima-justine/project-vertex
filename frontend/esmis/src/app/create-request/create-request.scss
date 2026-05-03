@@ -21,9 +21,14 @@ main {
     align-items: center;
     margin-bottom: 10px;
 
-    i {
+    i:nth-child(2) {
       font-size: 0.85rem;
       color: #ffffff;
+    }
+
+    i:nth-child(3) {
+      font-size: 0.85rem;
+      color: #000000;
     }
 
     span {
