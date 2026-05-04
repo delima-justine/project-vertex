@@ -5,14 +5,12 @@
 <app-top-nav/>
 
 <main>
-  <div class="header-panel">
+  <div class="header-panel d-flex align-items-center justify-content-between">
     <div>
       <i class="bi bi-clipboard2-data-fill me-1 text-white"></i>
       <span>Reports</span>
     </div>
-
     <div>
-      <!-- Export to Excel -->
       <button class="btn btn-sm btn-success export-btn" (click)="exportToExcel()">
         <i class="bi bi-file-earmark-spreadsheet me-1"></i>
         Export to Excel
@@ -20,61 +18,158 @@
     </div>
   </div>
 
-  <!-- Main Content -->
+  <div class="alert alert-info mt-3 mb-3 py-2">
+    Backups exclude Audit and Request logs. Restores preserve existing Audit/Request logs (including SuperAdmin logs).
+  </div>
+
   <div class="content-panel card">
     <div class="card-body">
-      <span>Supply Actions Log</span>
+      <span class="section-title">Supply Actions Log</span>
 
-      <!-- Filter Reports -->
-      <div class="mt-2 mb-3 card">
+      <div class="section-card mt-3 mb-4">
         <div class="card-body">
-          <div class="header">
-            <div class="filter-container">
-              <span>
-                <i class="bi bi-funnel-fill me-1 text-danger"></i>
-                Filter Reports
-              </span>
-
-              <div class="function-btns">
-                <!-- Request Logs -->
-                <button class="btn btn-sm btn-primary" (click)="openRequestLogs()">
-                  <i class="bi bi-journal-text me-1"></i>
-                  Request Logs
-                </button>
-
-                <!-- Admin Audit -->
-                <button class="btn btn-sm btn-secondary" (click)="openAdminAudit()">
-                  <i class="bi bi-shield-lock-fill me-1"></i>
-                  Admin Audit
-                </button>
-              </div>
+          <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-funnel-fill text-danger"></i>
+              <strong>Filter Reports</strong>
             </div>
-
-            <!-- Select Time Period -->
-            <div class="time-period-container">
-              <label for="timePeriod" class="form-label">Time Period:</label>
-              <select class="form-select" id="timePeriod">
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="custom">Custom Range</option>
-              </select>
+            <div class="btn-group">
+              <button class="btn toggle-btn" [ngClass]="{'active': activeView() === 'request_logs'}" (click)="openRequestLogs()">
+                <i class="bi bi-journal-text me-1"></i>
+                Request Logs
+              </button>
+              <button class="btn toggle-btn" [ngClass]="{'active': activeView() === 'admin_audit'}" (click)="openAdminAudit()">
+                <i class="bi bi-shield-lock-fill me-1"></i>
+                Admin Audit
+              </button>
             </div>
+          </div>
 
-            <!-- Status & Office -->
-            <div class="status-offices">
-              <label for="statusSelect" class="form-label">Status:</label>
-              <select class="form-select" id="statusSelect">
+          <div class="time-period-grid mb-3">
+            <button type="button" class="time-period-btn" [ngClass]="{'active': timePeriod() === 'today'}" (click)="setTimePeriod('today')">Today</button>
+            <button type="button" class="time-period-btn" [ngClass]="{'active': timePeriod() === 'week'}" (click)="setTimePeriod('week')">This Week</button>
+            <button type="button" class="time-period-btn" [ngClass]="{'active': timePeriod() === 'month'}" (click)="setTimePeriod('month')">This Month</button>
+            <button type="button" class="time-period-btn" [ngClass]="{'active': timePeriod() === 'custom'}" (click)="setTimePeriod('custom')">Custom Range</button>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="statusSelect" class="form-label">Status</label>
+              <select id="statusSelect" class="form-select" [(ngModel)]="selectedStatus">
                 <option value="">All Statuses</option>
                 <option value="pending">Pending</option>
                 <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
+                <option value="released">Released</option>
+                <option value="disapproved">Disapproved</option>
               </select>
-
-              <label for="officeSelect" class="form-label">Office:</label>
-              <select class="form-select" id="officeSelect">
+            </div>
+            <div class="col-md-6">
+              <label for="officeSelect" class="form-label">Office</label>
+              <select id="officeSelect" class="form-select" [(ngModel)]="selectedOffice">
                 <option value="">All Offices</option>
               </select>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3" *ngIf="showCustomRange()">
+            <div class="col-md-6">
+              <label for="startDate" class="form-label">Start Date</label>
+              <input id="startDate" type="date" class="form-control" [(ngModel)]="startDate" />
+            </div>
+            <div class="col-md-6">
+              <label for="endDate" class="form-label">End Date</label>
+              <input id="endDate" type="date" class="form-control" [(ngModel)]="endDate" />
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2">
+            <button class="btn filter-btn-apply" (click)="applyFilters()">Apply Filters</button>
+            <button class="btn filter-btn-reset" (click)="resetFilters()">Reset All</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Archive Management Section -->
+      <div class="section-card archive-management mt-4">
+        <div class="card-body">
+          <div class="archive-header">
+            <i class="bi bi-box-archive me-2"></i>
+            <span>Archive Management</span>
+          </div>
+
+          <div class="archive-cards-grid mt-3">
+            <!-- View Archived Records Card -->
+            <div class="archive-card">
+              <div class="card-icon-container icon-purple">
+                <i class="bi bi-eye"></i>
+              </div>
+              <h5 class="card-title">View Archived Records</h5>
+              <p class="card-subtitle">See all archived items and restore them if needed</p>
+              <button class="btn btn-archive btn-archive-purple" (click)="openArchive()">
+                <i class="bi bi-eye me-1"></i>
+                Open Archive
+              </button>
+            </div>
+
+            <!-- Archive Current Results Card -->
+            <div class="archive-card">
+              <div class="card-icon-container icon-orange">
+                <i class="bi bi-archive"></i>
+              </div>
+              <h5 class="card-title">Archive Current Results</h5>
+              <p class="card-subtitle">Move filtered records to archive for safe storage</p>
+              <button class="btn btn-archive btn-archive-orange" (click)="archiveNow()">
+                <i class="bi bi-archive me-1"></i>
+                Archive Now
+              </button>
+            </div>
+          </div>
+
+          <div class="archive-info-banner mt-3">
+            <i class="bi bi-info-circle me-2"></i>
+            <span><strong>Quick Tip:</strong> Use filters above to select specific records, then archive them. You can restore archived items anytime.</span>
+          </div>
+
+          <div *ngIf="activeView() === 'request_logs'" class="request-logs-table-section mt-4">
+            <div class="table-responsive">
+              <table class="table report-table">
+                <thead>
+                  <tr>
+                    <th>Stock #</th>
+                    <th>Requester</th>
+                    <th>Office</th>
+                    <th>Supply Name</th>
+                    <th>Requested Qty</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="filteredRequests().length === 0">
+                    <td colspan="8" class="empty-state">No records found for the selected filters.</td>
+                  </tr>
+                  <tr *ngFor="let req of filteredRequests(); trackBy: trackByRequestId">
+                    <td>{{ req.supply_id }}</td>
+                    <td>{{ req.user?.first_name }} {{ req.user?.last_name }}</td>
+                    <td>{{ req.user?.office?.office_name }}</td>
+                    <td>{{ req.supply?.item_desc }}</td>
+                    <td>{{ req.quantity_req }}</td>
+                    <td>
+                      <span class="status-badge" [ngClass]="{
+                        'status-pending': req.status === 'pending',
+                        'status-approved': req.status === 'approved',
+                        'status-released': req.status === 'released',
+                        'status-disapproved': req.status === 'disapproved'
+                      }">{{ req.status }}</span>
+                    </td>
+                    <td>{{ req.created_at | date:'MMM d, y' }}</td>
+                    <td>
+                      <button *ngIf="req.status === 'released'" class="btn btn-sm table-archive-btn" (click)="archiveRequest(req)">Archive</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

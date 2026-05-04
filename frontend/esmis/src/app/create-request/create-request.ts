@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
@@ -22,6 +22,7 @@ export class CreateRequest implements OnInit {
   availableSupplies: Supply[] = [];
   requestList: (Supply & { quantity_req: number })[] = [];
   purpose = '';
+  purposeError = signal(false);
 
   ngOnInit() {
     this.loadSupplies();
@@ -63,7 +64,18 @@ export class CreateRequest implements OnInit {
     this.requestList.splice(index, 1);
   }
 
+  onPurposeInput() {
+    if (this.purposeError()) {
+      this.purposeError.set(false);
+    }
+  }
+
   submitRequest() {
+    if (!this.purpose || !this.purpose.trim()) {
+      this.purposeError.set(true);
+      return;
+    }
+
     const user = this.authService.currentUser();
     if (!user) {
       alert('You must be logged in to submit a request.');
