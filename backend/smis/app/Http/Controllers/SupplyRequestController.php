@@ -65,9 +65,17 @@ class SupplyRequestController extends Controller
     {
         $validated = $request->validate([
             'status' => 'sometimes|in:pending,approved,released,disapproved',
-            'approved_by' => 'required_if:status,approved|exists:tbl_user,id',
+            'approved_by' => 'nullable|exists:tbl_user,id',
             'quantity_req' => 'sometimes|integer|min:1',
         ]);
+
+        if (isset($validated['status']) && $validated['status'] === 'approved' && !isset($validated['approved_by'])) {
+            return response()->json(['message' => 'The approved_by field is required when status is approved.'], 422);
+        }
+
+        if (isset($validated['status']) && $validated['status'] === 'disapproved') {
+            $validated['approved_by'] = null;
+        }
 
         $supply_request->update($validated);
 
@@ -78,7 +86,7 @@ class SupplyRequestController extends Controller
             'action' => $supply_request->status,
         ]);
 
-        broadcast(new NotificationSent($notif))->toOthers();
+        broadcast(new NotificationSent($notif));
 
         return response()->json($supply_request);
     }
