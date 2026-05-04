@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Supply, Category, Unit, SupplyRequest } from '../models/smis.model';
 import { environment } from '../environments/environment';
+import { Supply, Category, Unit, SupplyRequest, Archive } from '../models/smis.model';
 
 @Injectable({
   providedIn: 'root',
@@ -70,13 +70,18 @@ export class SupplyService {
     return this.http.get<SupplyRequest[]>(`${this.apiUrl}/supply-requests`, { params });
   }
 
-  createArchive(requestId: number): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/archives`, {
-      table_name: 'supply_requests',
-      original_id: requestId,
-      data: null,
-      archived_by: null
+  listArchives(): Observable<Archive[]> {
+    return this.http.get<Archive[]>(`${this.apiUrl}/archives`);
+  }
+
+  createArchive(requestId: number): Observable<Archive> {
+    return this.http.post<Archive>(`${this.apiUrl}/archives`, {
+      request_id: requestId,
     });
+  }
+
+  restoreArchive(id: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/archives/${id}/restore`, {});
   }
 
   getSupplyRequest(id: number): Observable<SupplyRequest> {

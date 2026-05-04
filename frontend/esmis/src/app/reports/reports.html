@@ -105,7 +105,7 @@
               </div>
               <h5 class="card-title">View Archived Records</h5>
               <p class="card-subtitle">See all archived items and restore them if needed</p>
-              <button class="btn btn-archive btn-archive-purple" (click)="openArchive()">
+              <button class="btn btn-archive btn-archive-purple" (click)="openArchiveModal()">
                 <i class="bi bi-eye me-1"></i>
                 Open Archive
               </button>
@@ -118,7 +118,7 @@
               </div>
               <h5 class="card-title">Archive Current Results</h5>
               <p class="card-subtitle">Move filtered records to archive for safe storage</p>
-              <button class="btn btn-archive btn-archive-orange" (click)="archiveNow()">
+              <button class="btn btn-archive btn-archive-orange" (click)="archiveFilteredResults()">
                 <i class="bi bi-archive me-1"></i>
                 Archive Now
               </button>
@@ -165,11 +165,110 @@
                     </td>
                     <td>{{ req.created_at | date:'MMM d, y' }}</td>
                     <td>
-                      <button *ngIf="req.status === 'released'" class="btn btn-sm table-archive-btn" (click)="archiveRequest(req)">Archive</button>
+                      <button *ngIf="req.status === 'released'" class="btn btn-sm table-archive-btn" (click)="archiveSingle(req)">Archive</button>
                     </td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="archiveModalOpen()" class="modal fade show d-block archive-modal" tabindex="-1" role="dialog">
+        <div class="modal-backdrop fade show"></div>
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+              <h5 class="modal-title">Archived Records History</h5>
+              <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeArchiveModal()"></button>
+            </div>
+            <div class="modal-body">
+              <div class="archive-modal-toolbar mb-3">
+                <div class="d-flex flex-wrap align-items-center gap-2 archive-select-controls">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="selectAllArchives" [checked]="allArchivedSelected()" (change)="toggleArchiveSelectAll()" />
+                    <label class="form-check-label" for="selectAllArchives">Select All</label>
+                  </div>
+
+                  <div class="archive-selection-group btn-group" role="group" aria-label="Archive page scope">
+                    <button type="button" class="btn btn-sm" [class.btn-primary]="archiveSelectMode() === 'current'" [class.btn-outline-secondary]="archiveSelectMode() !== 'current'" (click)="setArchiveSelectMode('current')">Current Page</button>
+                    <button type="button" class="btn btn-sm" [class.btn-primary]="archiveSelectMode() === 'all'" [class.btn-outline-secondary]="archiveSelectMode() !== 'all'" (click)="setArchiveSelectMode('all')">All Pages</button>
+                  </div>
+
+                  <button class="btn btn-sm btn-success" [disabled]="selectedArchiveCount() === 0" (click)="restoreSelectedArchives()">
+                    Restore Selected ({{ selectedArchiveCount() }})
+                  </button>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-2 archive-toolbar-right">
+                  <span class="archive-total-label">Total Archived: {{ totalArchivedCount() }}</span>
+                  <button class="btn btn-sm btn-danger" type="button">Export PDF</button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table archive-table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Type</th>
+                      <th>Reference</th>
+                      <th>Description</th>
+                      <th>Archived Date</th>
+                      <th>Archived By</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="paginatedArchives().length === 0">
+                      <td colspan="7" class="empty-state">No archived records found.</td>
+                    </tr>
+                    <tr *ngFor="let archive of paginatedArchives()">
+                      <td>
+                        <input class="form-check-input" type="checkbox" [checked]="selectedArchiveIds().includes(archive.id)" (change)="toggleArchiveSelection(archive.id)" />
+                      </td>
+                      <td>
+                        <span class="badge badge-teal">requests</span>
+                      </td>
+                      <td>{{ archive.original_id }}</td>
+                      <td>
+                        Request for {{ archive.data.supply?.item_desc || 'item' }} (Qty: {{ archive.data.quantity_req }}) - Status: {{ archive.data.status }}
+                      </td>
+                      <td>{{ archive.archived_at | date:'MMM d, y' }}</td>
+                      <td>{{ archive.archiver?.first_name }} {{ archive.archiver?.last_name }}</td>
+                      <td>
+                        <button class="btn btn-sm restore-archive-btn" type="button" (click)="restoreArchive(archive)">
+                          <i class="bi bi-arrow-counterclockwise me-1"></i>
+                          Restore
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="archive-summary-row">
+                <div>
+                  Showing {{ archivePageStart() }} to {{ archivePageEnd() }} of {{ totalArchivedCount() }} results
+                </div>
+                <nav aria-label="Archive pagination">
+                  <ul class="pagination mb-0">
+                    <li class="page-item" [class.disabled]="archivePage() === 1">
+                      <button class="page-link" type="button" (click)="setArchivePage(archivePage() - 1)">Prev</button>
+                    </li>
+                    <li class="page-item" *ngFor="let page of archivePageNumbers()" [class.active]="archivePage() === page">
+                      <button class="page-link" type="button" (click)="setArchivePage(page)">{{ page }}</button>
+                    </li>
+                    <li class="page-item" [class.disabled]="archivePage() === archivePageCount()">
+                      <button class="page-link" type="button" (click)="setArchivePage(archivePage() + 1)">Next</button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeArchiveModal()">Close</button>
             </div>
           </div>
         </div>

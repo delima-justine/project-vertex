@@ -65,6 +65,16 @@ export type SupplyRequest = {
   approver?: User;
 };
 
+export type Archive = {
+  id: number;
+  table_name: string;
+  original_id: number;
+  data: SupplyRequest;
+  archived_by: number;
+  archived_at: string;
+  archiver?: User;
+};
+
 export type Notification = {
   id: number;
   user_id: number;
