@@ -297,21 +297,8 @@ main {
       font-weight: 700;
       text-align: left;
       border: 1px solid #dee2e6;
-    }
-  }
-
-  tbody {
-    tr {
-      background-color: #ffffff;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f8f9fa;
-    }
-
-    td {
-      padding: 12px 14px;
-      border: 1px solid #dee2e6;
+        background-color: #800000;
+        color: #ffffff;
       vertical-align: middle;
       color: #343a40;
       font-size: 14px;
@@ -369,3 +356,162 @@ main {
     background-color: rgba(128, 0, 0, 0.08);
   }
 }
+  .archive-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1055;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .archive-modal .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 1;
+  }
+
+  .archive-modal .modal-dialog {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+    width: min(94%, 900px);
+    max-height: 80vh;
+  }
+
+  .archive-modal .modal-content {
+    border-radius: 14px;
+    overflow: hidden;
+    height: 100%;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .archive-modal .modal-body {
+    padding: 1.25rem;
+    overflow: auto;
+    max-height: calc(80vh - 170px);
+  }
+
+  .archive-modal .modal-header-custom {
+    background-color: #800000;
+    color: #ffffff;
+    border-bottom: none;
+  }
+
+  .archive-modal .btn-close-white {
+    filter: invert(1);
+    opacity: 0.9;
+  }
+
+  .archive-modal .modal-body {
+    padding: 1.5rem;
+    overflow: auto;
+  }
+
+    .archive-modal-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .archive-select-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .archive-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .archive-total-label {
+      font-weight: 600;
+      color: #495057;
+    }
+
+    .archive-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .archive-table th,
+    .archive-table td {
+      padding: 12px 14px;
+      border: 1px solid #dee2e6;
+      vertical-align: middle;
+      color: #343a40;
+      font-size: 14px;
+    }
+
+    .archive-table thead {
+      background-color: #800000;
+      color: #ffffff;
+    }
+
+    .badge-teal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background-color: #14b8a6;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .restore-archive-btn {
+      border: 1px solid #0f766e;
+      background-color: #14b8a6;
+      color: #ffffff;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .restore-archive-btn:hover {
+      background-color: #0f766e;
+      border-color: #0f766e;
+    }
+
+    .archive-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+      color: #495057;
+      font-size: 0.95rem;
+    }
+
+    .pagination .page-link {
+      cursor: pointer;
+    }
+
+    .page-item.active .page-link {
+      background-color: #800000;
+      border-color: #800000;
+      color: #ffffff;
+    }
+
+    .page-item.disabled .page-link {
+      pointer-events: none;
+      opacity: 0.6;
+    }
