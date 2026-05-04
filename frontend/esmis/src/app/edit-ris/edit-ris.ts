@@ -273,7 +273,12 @@ export class EditRis implements OnInit, OnDestroy {
               </td>
             </tr>
           </table>
-          <div style="text-align: right; font-size: 8pt; margin-top: 12px;">PUP-RISL-6-PSMO-010 / Rev. 2 / Effectivity Date: April 23, 2026 / Appendix 63</div>
+          <div style="text-align: right; font-size: 8pt; margin-top: 18px; line-height: 1.6;">
+            <div>PUP-RISL-6-PSMO-010</div>
+            <div>Rev. 2</div>
+            <div>Effectivity Date: April 23, 2026</div>
+            <div>Appendix 63</div>
+          </div>
         </div>
       `;
 
