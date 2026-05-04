@@ -69,6 +69,15 @@ export class SupplyService {
     return this.http.get<SupplyRequest[]>(`${this.apiUrl}/supply-requests`, { params });
   }
 
+  createArchive(requestId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/archives`, {
+      table_name: 'supply_requests',
+      original_id: requestId,
+      data: null,
+      archived_by: null
+    });
+  }
+
   getSupplyRequest(id: number): Observable<SupplyRequest> {
     return this.http.get<SupplyRequest>(`${this.apiUrl}/supply-requests/${id}`);
   }
