@@ -4,6 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property string $table_name
+ * @property int $original_id
+ * @property array $data
+ * @property int $archived_by
+ * @property \Illuminate\Support\Carbon $archived_at
+ */
 class Archive extends Model
 {
     protected $table = 'tbl_archive';
@@ -13,6 +21,7 @@ class Archive extends Model
         'original_id',
         'data',
         'archived_by',
+        'archived_at',
     ];
 
     // Disable timestamps for this model

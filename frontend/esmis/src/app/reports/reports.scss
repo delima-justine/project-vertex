@@ -7,29 +7,6 @@ main {
 .header-panel {
   @include header-panel;
 }
-
-// Section Title
-.section-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  display: block;
-}
-
-// Section Card
-.section-card {
-  background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1.5rem;
-
-  .card-body {
-    padding: 1.5rem;
-  }
-}
-
-// Toggle Buttons
 .toggle-btn {
   padding: 8px 16px;
   border: 1px solid #dee2e6;
@@ -63,7 +40,6 @@ main {
   }
 }
 
-// Time Period Buttons Grid
 .time-period-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -105,7 +81,6 @@ main {
   }
 }
 
-// Filter Buttons
 .filter-btn-apply {
   background-color: #800000;
   color: #ffffff;
@@ -141,7 +116,6 @@ main {
   }
 }
 
-// Archive Management Section
 .archive-management {
   .archive-header {
     display: flex;
@@ -254,55 +228,47 @@ main {
     }
   }
 
-  .archive-info-banner {
-    background-color: #d1ecf1;
-    border: 1px solid #b8daff;
-    border-radius: 4px;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #0c5460;
-    font-size: 14px;
-
-    i {
-      font-size: 16px;
-      color: #0c5460;
-      flex-shrink: 0;
-    }
-
-    span {
-      line-height: 1.5;
-    }
-  }
 }
 
 .request-logs-table-section {
-  .table-responsive {
-    overflow-x: auto;
-  }
-
   .report-table {
+    margin-top: 1rem;
     width: 100%;
     border-collapse: collapse;
-    margin-top: 16px;
   }
 
-  thead {
+  .report-table th,
+  .report-table td,
+  .archive-table th,
+  .archive-table td {
+    padding: 12px 14px;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+    font-size: 14px;
+  }
+
+  .report-table thead th,
+  .archive-table thead th {
+    font-weight: 700;
+    text-align: left;
     background-color: #800000;
     color: #ffffff;
+  }
 
-    th {
-      padding: 12px 14px;
-      font-weight: 700;
-      text-align: left;
-      border: 1px solid #dee2e6;
-        background-color: #800000;
-        color: #ffffff;
-      vertical-align: middle;
-      color: #343a40;
-      font-size: 14px;
-    }
+  .report-table tbody tr:nth-child(even),
+  .archive-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  .report-table tbody tr:hover,
+  .archive-table tbody tr:hover {
+    background-color: #f1f3f5;
+  }
+
+  .archive-table .form-check-input {
+    accent-color: #800000;
+    background-color: #ffffff;
+    border-color: #adb5bd;
   }
 
   .empty-state {
@@ -341,22 +307,23 @@ main {
     background-color: #dc2626;
   }
 
+  .table-archive-btn,
+  .restore-archive-btn {
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-weight: 600;
+  }
+
   .table-archive-btn {
     border: 1px solid #800000;
     background-color: transparent;
     color: #800000;
     padding: 6px 10px;
     font-size: 12px;
-    font-weight: 600;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-  }
-
-  .table-archive-btn:hover {
-    background-color: rgba(128, 0, 0, 0.08);
   }
 }
-  .archive-modal {
+
+.archive-modal {
     position: fixed;
     inset: 0;
     z-index: 1055;
@@ -392,9 +359,18 @@ main {
   }
 
   .archive-modal .modal-body {
-    padding: 1.25rem;
-    overflow: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: hidden;
     max-height: calc(80vh - 170px);
+  }
+
+  .archive-modal .table-responsive {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
   }
 
   .archive-modal .modal-header-custom {
@@ -408,56 +384,12 @@ main {
     opacity: 0.9;
   }
 
-  .archive-modal .modal-body {
-    padding: 1.5rem;
-    overflow: auto;
-  }
-
-    .archive-modal-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .archive-select-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
+    .archive-select-controls,
     .archive-toolbar-right {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       flex-wrap: wrap;
-    }
-
-    .archive-total-label {
-      font-weight: 600;
-      color: #495057;
-    }
-
-    .archive-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .archive-table th,
-    .archive-table td {
-      padding: 12px 14px;
-      border: 1px solid #dee2e6;
-      vertical-align: middle;
-      color: #343a40;
-      font-size: 14px;
-    }
-
-    .archive-table thead {
-      background-color: #800000;
-      color: #ffffff;
     }
 
     .badge-teal {
@@ -480,9 +412,6 @@ main {
       color: #ffffff;
       padding: 6px 12px;
       font-size: 13px;
-      font-weight: 600;
-      border-radius: 4px;
-      transition: all 0.2s ease;
     }
 
     .restore-archive-btn:hover {
@@ -494,24 +423,15 @@ main {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
       gap: 1rem;
+      flex-wrap: wrap;
       margin-top: 1rem;
       color: #495057;
       font-size: 0.95rem;
-    }
-
-    .pagination .page-link {
-      cursor: pointer;
     }
 
     .page-item.active .page-link {
       background-color: #800000;
       border-color: #800000;
       color: #ffffff;
-    }
-
-    .page-item.disabled .page-link {
-      pointer-events: none;
-      opacity: 0.6;
     }
