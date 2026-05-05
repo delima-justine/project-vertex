@@ -125,7 +125,7 @@
             </div>
           </div>
 
-          <div class="archive-info-banner mt-3">
+          <div class="alert alert-info d-flex align-items-center gap-2 mt-3">
             <i class="bi bi-info-circle me-2"></i>
             <span><strong>Quick Tip:</strong> Use filters above to select specific records, then archive them. You can restore archived items anytime.</span>
           </div>
@@ -184,7 +184,7 @@
               <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeArchiveModal()"></button>
             </div>
             <div class="modal-body">
-              <div class="archive-modal-toolbar mb-3">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
                 <div class="d-flex flex-wrap align-items-center gap-2 archive-select-controls">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="selectAllArchives" [checked]="allArchivedSelected()" (change)="toggleArchiveSelectAll()" />
@@ -202,8 +202,8 @@
                 </div>
 
                 <div class="d-flex flex-wrap align-items-center gap-2 archive-toolbar-right">
-                  <span class="archive-total-label">Total Archived: {{ totalArchivedCount() }}</span>
-                  <button class="btn btn-sm btn-danger" type="button">Export PDF</button>
+                  <span class="fw-semibold text-secondary">Total Archived: {{ totalArchivedCount() }}</span>
+                  <button class="btn btn-sm btn-danger" type="button" (click)="exportArchivePdf()">Export PDF</button>
                 </div>
               </div>
 
@@ -215,6 +215,7 @@
                       <th>Type</th>
                       <th>Reference</th>
                       <th>Description</th>
+                      <th>Status</th>
                       <th>Archived Date</th>
                       <th>Archived By</th>
                       <th>Actions</th>
@@ -233,7 +234,15 @@
                       </td>
                       <td>{{ archive.original_id }}</td>
                       <td>
-                        Request for {{ archive.data.supply?.item_desc || 'item' }} (Qty: {{ archive.data.quantity_req }}) - Status: {{ archive.data.status }}
+                        Request for {{ archive.data.supply?.item_desc || 'item' }} (Qty: {{ archive.data.quantity_req }})
+                      </td>
+                      <td>
+                        <span class="status-badge" [ngClass]="{
+                          'status-pending': archive.data.status === 'pending',
+                          'status-approved': archive.data.status === 'approved',
+                          'status-released': archive.data.status === 'released',
+                          'status-disapproved': archive.data.status === 'disapproved'
+                        }">{{ archive.data.status }}</span>
                       </td>
                       <td>{{ archive.archived_at | date:'MMM d, y' }}</td>
                       <td>{{ archive.archiver?.first_name }} {{ archive.archiver?.last_name }}</td>
@@ -249,10 +258,10 @@
               </div>
 
               <div class="archive-summary-row">
-                <div>
+                <div class="archive-summary-text">
                   Showing {{ archivePageStart() }} to {{ archivePageEnd() }} of {{ totalArchivedCount() }} results
                 </div>
-                <nav aria-label="Archive pagination">
+                <nav aria-label="Archive pagination" class="archive-pagination">
                   <ul class="pagination mb-0">
                     <li class="page-item" [class.disabled]="archivePage() === 1">
                       <button class="page-link" type="button" (click)="setArchivePage(archivePage() - 1)">Prev</button>
@@ -265,10 +274,8 @@
                     </li>
                   </ul>
                 </nav>
+                <button type="button" class="btn btn-secondary archive-close-btn" (click)="closeArchiveModal()">Close</button>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="closeArchiveModal()">Close</button>
             </div>
           </div>
         </div>

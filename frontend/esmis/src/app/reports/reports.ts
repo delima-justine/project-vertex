@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import * as ExcelJS from 'exceljs';
 import { Sidebar } from "../sidebar/sidebar";
 import { TopNav } from "../top-nav/top-nav";
 import { SupplyService } from '../../services/supply.service';
@@ -127,7 +128,274 @@ export class Reports {
   }
 
   exportToExcel() {
-    console.log('Exporting to Excel...');
+    this.generateExcelReport();
+  }
+
+  exportArchivePdf() {
+    this.generateArchivePdf();
+  }
+
+  private async generateArchivePdf() {
+    const selectedIds = this.selectedArchiveIds();
+    const archives = selectedIds.length > 0
+      ? this.archivedRecords().filter((archive) => selectedIds.includes(archive.id))
+      : this.archiveSelectMode() === 'current'
+        ? this.paginatedArchives()
+        : this.archivedRecords();
+
+    if (archives.length === 0) {
+      alert('No archive records available to export.');
+      return;
+    }
+
+    try {
+      let logoBase64 = '';
+      try {
+        const logoResponse = await fetch('assets/pup_logo.png');
+        const logoBlob = await logoResponse.blob();
+        logoBase64 = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(logoBlob);
+        });
+      } catch {}
+
+      const h2p = await import('html2pdf.js');
+      const html2pdf = (h2p as any).default || h2p;
+
+      const rowsHtml = archives
+        .map((archive, index) => {
+          const archivedBy = archive.archiver
+            ? `${archive.archiver.first_name} ${archive.archiver.last_name}`.trim()
+            : '';
+          const archivedDate = archive.archived_at
+            ? new Date(archive.archived_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+            : '';
+          const typeLabel = archive.table_name === 'tbl_request' ? 'REQUESTS' : archive.table_name.toUpperCase();
+          const description = archive.data?.supply
+            ? `Request for ${archive.data.supply.item_desc} (Qty: ${archive.data.quantity_req || 0})`
+            : `Request ${archive.original_id}`;
+          return `
+            <tr style="background-color: ${index % 2 === 0 ? '#ffffff' : '#f8f9fa'};">
+              <td style="border:1px solid #ccc; padding:6px; text-align:center; font-size:10pt;">${typeLabel}</td>
+              <td style="border:1px solid #ccc; padding:6px; text-align:center; font-size:10pt;">${archive.original_id}</td>
+              <td style="border:1px solid #ccc; padding:6px; text-align:left; font-size:10pt;">${description}</td>
+              <td style="border:1px solid #ccc; padding:6px; text-align:center; font-size:10pt;">${archive.data?.status || ''}</td>
+              <td style="border:1px solid #ccc; padding:6px; text-align:left; font-size:10pt;">${archivedDate}</td>
+              <td style="border:1px solid #ccc; padding:6px; text-align:left; font-size:10pt;">${archivedBy}</td>
+            </tr>
+          `;
+        })
+        .join('');
+
+      const html = `
+        <div style="font-family: Arial, sans-serif; padding: 16px;">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px;">
+            ${logoBase64 ? `<img src="${logoBase64}" style="width: 64px; height: auto; object-fit: contain;" />` : ''}
+            <div style="text-align: left;">
+              <div style="font-size: 14pt; font-weight: 700;">Polytechnic University of the Philippines</div>
+              <div style="font-size: 12pt; margin-top: 4px;">Taguig Campus</div>
+            </div>
+          </div>
+          <div style="border-top: 1px solid #333; margin: 0 0 10px 0;"></div>
+          <div style="text-align: center; margin-bottom: 14px; font-size: 12pt; font-weight: 700;">Archived Records - Supply Management Information System</div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
+            <thead>
+              <tr style="background-color: #800000; color: #ffffff;">
+                <th style="border:1px solid #ccc; padding:10px 8px; text-align:center; width:90px;">Type</th>
+                <th style="border:1px solid #ccc; padding:10px 8px; text-align:center; width:90px;">Reference</th>
+                <th style="border:1px solid #ccc; padding:10px 8px; text-align:left;">Description</th>
+                <th style="border:1px solid #ccc; padding:10px 8px; text-align:center; width:90px;">Status</th>
+                <th style="border:1px solid #ccc; padding:10px 8px; text-align:left; width:150px;">Archived Date</th>
+                <th style="border:1px solid #ccc; padding:10px 8px; text-align:left; width:150px;">Archived By</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = html;
+
+      await html2pdf()
+        .set({
+          margin: [10, 10, 10, 10],
+          filename: `Archived_Records_${new Date().toISOString().slice(0, 10)}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' },
+        })
+        .from(wrapper)
+        .save();
+    } catch (error) {
+      console.error('Error exporting archive PDF:', error);
+      alert('Failed to export archive PDF.');
+    }
+  }
+
+  private async generateExcelReport() {
+    try {
+      const requests = this.filteredRequests();
+      if (requests.length === 0) {
+        alert('No data available to export.');
+        return;
+      }
+
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Request Logs');
+
+      let logoBase64 = '';
+      try {
+        const logoResponse = await fetch('assets/pup_logo.png');
+        const logoBlob = await logoResponse.blob();
+        logoBase64 = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(logoBlob);
+        });
+      } catch {}
+
+      if (logoBase64) {
+        const imageId = workbook.addImage({
+          base64: logoBase64,
+          extension: 'png',
+        });
+        worksheet.addImage(imageId, {
+          tl: { col: 0, row: 0 },
+          ext: { width: 80, height: 80 }
+        });
+      }
+
+      worksheet.mergeCells('B1:G1');
+      worksheet.mergeCells('B2:G2');
+      worksheet.mergeCells('B3:G3');
+      worksheet.mergeCells('B4:G4');
+
+      const row1 = worksheet.getCell('B1');
+      row1.value = 'Republic of the Philippines';
+      row1.font = { size: 10, bold: false };
+      row1.alignment = { horizontal: 'center', vertical: 'middle' };
+
+      const row2 = worksheet.getCell('B2');
+      row2.value = 'Polytechnic University of the Philippines';
+      row2.font = { size: 13, bold: true };
+      row2.alignment = { horizontal: 'center', vertical: 'middle' };
+
+      const row3 = worksheet.getCell('B3');
+      row3.value = 'Office of the Vice President for Campuses';
+      row3.font = { size: 10, bold: false };
+      row3.alignment = { horizontal: 'center', vertical: 'middle' };
+
+      const row4 = worksheet.getCell('B4');
+      row4.value = 'Taguig Campus';
+      row4.font = { size: 11, bold: true };
+      row4.alignment = { horizontal: 'center', vertical: 'middle' };
+
+      worksheet.mergeCells('A6:G6');
+      const titleCell = worksheet.getCell('A6');
+      titleCell.value = 'Supply Management Information System — Request Logs Report';
+      titleCell.font = { size: 13, bold: true };
+      titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
+
+      worksheet.mergeCells('A7:G7');
+      const dateRangeCell = worksheet.getCell('A7');
+      const startDateStr = this.startDate() || 'All';
+      const endDateStr = this.endDate() || 'All';
+      dateRangeCell.value = `Date Range: ${startDateStr} to ${endDateStr}`;
+      dateRangeCell.alignment = { horizontal: 'center', vertical: 'middle' };
+
+      worksheet.mergeCells('A8:G8');
+      const generatedCell = worksheet.getCell('A8');
+      const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      generatedCell.value = `Report Generated On: ${today}`;
+      generatedCell.alignment = { horizontal: 'center', vertical: 'middle' };
+
+      const headerRow = worksheet.getRow(11);
+      headerRow.values = ['STOCK #', 'OFFICE', 'SUPPLY NAME', 'REQUESTED QTY', 'STATUS', 'CREATED AT', 'UPDATED AT'];
+      headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+      headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF9B1C1C' } };
+      headerRow.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+
+      headerRow.eachCell((cell) => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+      });
+
+      const statusColorMap: { [key: string]: string } = {
+        'approved': 'FF217346',
+        'disapproved': 'FF9B1C1C',
+        'released': 'FF1F4E79',
+        'pending': 'FFC55A11'
+      };
+
+      requests.forEach((req, index) => {
+        const rowNum = 12 + index;
+        const row = worksheet.getRow(rowNum);
+
+        row.values = [
+          req.supply_id,
+          req.user?.office?.office_name || '',
+          req.supply?.item_desc || '',
+          req.quantity_req,
+          req.status,
+          req.created_at ? new Date(req.created_at).toLocaleDateString('en-US') : '',
+          req.updated_at ? new Date(req.updated_at).toLocaleDateString('en-US') : ''
+        ];
+
+        const isEvenRow = (index + 1) % 2 === 0;
+        const bgColor = isEvenRow ? 'FFE2EFDA' : 'FFFFFFFF';
+
+        row.eachCell((cell, colNum) => {
+          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgColor } };
+          cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+          };
+          cell.alignment = { horizontal: 'left', vertical: 'middle' };
+
+          if (colNum === 5) {
+            const statusColor = statusColorMap[req.status.toLowerCase()];
+            if (statusColor) {
+              cell.font = { color: { argb: statusColor }, bold: true };
+            }
+            cell.alignment = { horizontal: 'center', vertical: 'middle' };
+          }
+        });
+      });
+
+      worksheet.columns = [
+        { width: 12 },
+        { width: 22 },
+        { width: 30 },
+        { width: 15 },
+        { width: 14 },
+        { width: 22 },
+        { width: 22 }
+      ];
+
+      const fileName = this.startDate() && this.endDate()
+        ? `Request_Logs_${this.startDate()}_to_${this.endDate()}.xlsx`
+        : 'Request_Logs_All.xlsx';
+
+      await workbook.xlsx.writeFile(fileName);
+      console.log(`Excel file exported: ${fileName}`);
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      alert('Failed to export to Excel.');
+    }
   }
 
   setTimePeriod(period: 'today' | 'week' | 'month' | 'custom') {
