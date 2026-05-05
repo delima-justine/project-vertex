@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User, Office, Role, Permission } from '../models/smis.model';
+import { environment } from '../environments/environment';
 
 export type PaginatedUsers = {
   data: User[];
@@ -27,7 +28,7 @@ export type UserPayload = {
 })
 export class UserManagementService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.apiUrl;
 
   listOffices(): Observable<Office[]> {
     return this.http.get<Office[]>(`${this.apiUrl}/offices`);

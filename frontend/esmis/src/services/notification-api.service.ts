@@ -4,6 +4,7 @@ import { Notification, PaginatedResponse, NotificationFilters } from '../models/
 import { tap } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { AuthService } from './auth.service';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class NotificationApiService {
   private http = inject(HttpClient);
   private notifService = inject(NotificationService);
   private authService = inject(AuthService);
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.apiUrl;
 
   unreadCount = signal(0);
   private isListening = false;
