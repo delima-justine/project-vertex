@@ -23,6 +23,11 @@ export class Reports {
   selectedOffice = signal('');
   startDate = signal('');
   endDate = signal('');
+  appliedStatus = signal('');
+  appliedOffice = signal('');
+  appliedStartDate = signal('');
+  appliedEndDate = signal('');
+  appliedTimePeriod = signal<'today' | 'week' | 'month' | 'custom'>('today');
   activeView = signal<'request_logs' | 'admin_audit'>('request_logs');
   allRequests = signal<SupplyRequest[]>([]);
   archivedRecords = signal<Archive[]>([]);
@@ -39,7 +44,7 @@ export class Reports {
       const created = new Date(req.created_at);
       let matchesTime = true;
 
-      switch (this.timePeriod()) {
+      switch (this.appliedTimePeriod()) {
         case 'today':
           matchesTime = created.toDateString() === now.toDateString();
           break;
@@ -55,7 +60,7 @@ export class Reports {
           break;
         case 'custom': {
           const start = this.startDate() ? new Date(this.startDate()) : null;
-          const end = this.endDate() ? new Date(this.endDate()) : null;
+          const end = this.appliedEndDate() ? new Date(this.appliedEndDate()) : null;
           if (start) {
             start.setHours(0, 0, 0, 0);
           }
@@ -72,8 +77,8 @@ export class Reports {
         }
       }
 
-      const matchesStatus = !this.selectedStatus() || req.status === this.selectedStatus();
-      const matchesOffice = !this.selectedOffice() || req.user?.office?.office_name === this.selectedOffice();
+      const matchesStatus = !this.appliedStatus() || req.status === this.appliedStatus();
+      const matchesOffice = !this.appliedOffice() || req.user?.office?.office_name === this.appliedOffice();
 
       return matchesTime && matchesStatus && matchesOffice;
     });
@@ -298,6 +303,7 @@ export class Reports {
       row4.font = { size: 11, bold: true };
       row4.alignment = { horizontal: 'center', vertical: 'middle' };
 
+      worksheet.mergeCells('A5:G5');
       worksheet.mergeCells('A6:G6');
       const titleCell = worksheet.getCell('A6');
       titleCell.value = 'Supply Management Information System — Request Logs Report';
@@ -390,7 +396,17 @@ export class Reports {
         ? `Request_Logs_${this.startDate()}_to_${this.endDate()}.xlsx`
         : 'Request_Logs_All.xlsx';
 
-      await workbook.xlsx.writeFile(fileName);
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
       console.log(`Excel file exported: ${fileName}`);
     } catch (error) {
       console.error('Error exporting to Excel:', error);
@@ -400,16 +416,26 @@ export class Reports {
 
   setTimePeriod(period: 'today' | 'week' | 'month' | 'custom') {
     this.timePeriod.set(period);
+    this.appliedTimePeriod.set(period);
+
+    if (period !== 'custom') {
+      this.appliedStartDate.set('');
+      this.appliedEndDate.set('');
+    }
   }
 
   applyFilters() {
-    console.log('Applying filters', {
-      timePeriod: this.timePeriod(),
-      status: this.selectedStatus(),
-      office: this.selectedOffice(),
-      startDate: this.startDate(),
-      endDate: this.endDate()
-    });
+    this.appliedStatus.set(this.selectedStatus());
+    this.appliedOffice.set(this.selectedOffice());
+    this.appliedTimePeriod.set(this.timePeriod());
+
+    if (this.timePeriod() === 'custom') {
+      this.appliedStartDate.set(this.startDate());
+      this.appliedEndDate.set(this.endDate());
+    } else {
+      this.appliedStartDate.set('');
+      this.appliedEndDate.set('');
+    }
   }
 
   resetFilters() {
