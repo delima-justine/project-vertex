@@ -32,4 +32,9 @@ class SupplyRequest extends Model
     {
         return $this->belongsTo(User::class, 'approved_by');
     }
+
+    public function archive()
+    {
+        return $this->hasOne(Archive::class, 'original_id')->where('table_name', 'tbl_request');
+    }
 }

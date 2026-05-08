@@ -13,7 +13,8 @@ class SupplyRequestController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $query = SupplyRequest::with(['user.office', 'supply.category', 'supply.unit', 'approver']);
+        $query = SupplyRequest::with(['user.office', 'supply.category', 'supply.unit', 'approver'])
+            ->whereDoesntHave('archive');
 
         // Check user role
         $role = strtolower($user->role->role_name ?? '');

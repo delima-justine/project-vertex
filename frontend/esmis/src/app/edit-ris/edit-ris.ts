@@ -25,13 +25,13 @@ export class EditRis implements OnInit, OnDestroy {
 
   combinedPurposes = computed(() => {
     const purposes = this.requests()
-      .map(r => r.purpose?.trim())
-      .filter(p => !!p);
+      .map((r: SupplyRequest) => r.purpose?.trim())
+      .filter((p: string | undefined): p is string => !!p);
     return [...new Set(purposes)].join(', ');
   });
 
   totalItems = computed(() => {
-    return this.requests().reduce((sum, r) => sum + r.quantity_req, 0);
+    return this.requests().reduce((sum: number, r: SupplyRequest) => sum + r.quantity_req, 0);
   });
 
   dateNow = new Date();
@@ -70,12 +70,12 @@ export class EditRis implements OnInit, OnDestroy {
   }
 
   loadRequests(ids: number[]) {
-    const obs = ids.map(id => this.supplyService.getSupplyRequest(id));
+    const obs = ids.map((id: number) => this.supplyService.getSupplyRequest(id));
     forkJoin(obs).subscribe({
-      next: (data) => {
+      next: (data: SupplyRequest[]) => {
         this.requests.set(data);
         const initialData: Record<number, { issueQty: number; remarks: string; stockAvailable: boolean }> = {};
-        data.forEach(req => {
+        data.forEach((req: SupplyRequest) => {
           initialData[req.id] = {
             issueQty: req.quantity_req,
             remarks: '',
@@ -84,7 +84,7 @@ export class EditRis implements OnInit, OnDestroy {
         });
         this.requestData.set(initialData);
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('Error fetching requests', err);
         alert('Failed to load request data.');
         this.router.navigate(['/pending-requests']);
@@ -102,7 +102,7 @@ export class EditRis implements OnInit, OnDestroy {
     if (reqs.length === 0 || !admin) return;
 
     if (confirm(`Are you sure you want to approve these ${reqs.length} requests?`)) {
-      const updates = reqs.map(req => {
+      const updates = reqs.map((req: SupplyRequest) => {
         const data = this.requestData()[req.id];
         return this.supplyService.updateSupplyRequest(req.id, {
           status: 'approved',
@@ -116,7 +116,7 @@ export class EditRis implements OnInit, OnDestroy {
           alert('Requests approved successfully!');
           this.router.navigate(['/pending-requests']);
         },
-        error: (err) => {
+        error: (err: unknown) => {
           console.error('Error approving requests', err);
           alert('Failed to approve one or more requests.');
         }
@@ -124,8 +124,8 @@ export class EditRis implements OnInit, OnDestroy {
     }
   }
 
-  updateRequestData(id: number, field: string, value: any) {
-    this.requestData.update(current => {
+  updateRequestData(id: number, field: string, value: unknown) {
+    this.requestData.update((current: Record<number, { issueQty: number; remarks: string; stockAvailable: boolean }>) => {
       const newData = { ...current };
       newData[id] = { ...newData[id], [field]: value };
       
@@ -133,7 +133,7 @@ export class EditRis implements OnInit, OnDestroy {
       if (field === 'stockAvailable' && value === false) {
         newData[id].issueQty = 0;
       } else if (field === 'stockAvailable' && value === true) {
-        const req = this.requests().find(r => r.id === id);
+        const req = this.requests().find((r: SupplyRequest) => r.id === id);
         newData[id].issueQty = req?.quantity_req || 0;
       }
       
@@ -161,101 +161,124 @@ export class EditRis implements OnInit, OnDestroy {
       return;
     }
 
+    let logoBase64 = '';
+    try {
+      const logoResponse = await fetch('assets/pup_logo.png');
+      const logoBlob = await logoResponse.blob();
+      logoBase64 = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(logoBlob);
+      });
+    } catch {}
+
     try {
       const h2p = await import('html2pdf.js');
       const html2pdf = (h2p as any).default || h2p;
 
       const firstReq = reqs[0];
-      const fullName = ((firstReq.user?.first_name || '') + ' ' + (firstReq.user?.last_name || '')).toUpperCase();
-      const office = (firstReq.user?.office?.office_name || '').toUpperCase();
+      const fullName = ((firstReq.user?.first_name || '') + ' ' + (firstReq.user?.last_name || '')).trim();
+      const office = (firstReq.user?.office?.office_name || '').trim();
       const purpose = this.combinedPurposes();
 
-      const tableRows = reqs.map(req => {
+      const tableRows = reqs.map((req: SupplyRequest) => {
         const data = this.requestData()[req.id];
         const stockYes = data.stockAvailable ? '&#9679;' : '&#9675;';
         const stockNo = !data.stockAvailable ? '&#9679;' : '&#9675;';
         return `
           <tr>
-            <td style="border: 0.5pt solid #000; padding: 8px;">${req.supply_id || ''}</td>
-            <td style="border: 0.5pt solid #000; padding: 8px;">${req.supply?.unit?.unit_name || ''}</td>
-            <td style="border: 0.5pt solid #000; padding: 8px;">${req.supply?.item_desc || ''}</td>
-            <td style="border: 0.5pt solid #000; padding: 8px; text-align: center;">${req.quantity_req || 0}</td>
-            <td style="border: 0.5pt solid #000; padding: 8px; text-align: center; font-size: 14pt;">${stockYes}</td>
-            <td style="border: 0.5pt solid #000; padding: 8px; text-align: center; font-size: 14pt;">${stockNo}</td>
-            <td style="border: 0.5pt solid #000; padding: 8px; text-align: center;">${data.issueQty || ''}</td>
-            <td style="border: 0.5pt solid #000; padding: 8px;">${data.remarks || ''}</td>
+            <td style="border: 0.5pt solid #000; padding: 4px 6px;">${req.supply_id || ''}</td>
+            <td style="border: 0.5pt solid #000; padding: 4px 6px;">${req.supply?.unit?.unit_name || ''}</td>
+            <td style="border: 0.5pt solid #000; padding: 4px 6px;">${req.supply?.item_desc || ''}</td>
+            <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center;">${req.quantity_req || 0}</td>
+            <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; font-size: 11pt;">${stockYes}</td>
+            <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; font-size: 11pt;">${stockNo}</td>
+            <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center;">${data.issueQty || ''}</td>
+            <td style="border: 0.5pt solid #000; padding: 4px 6px;">${data.remarks || ''}</td>
           </tr>
         `;
       }).join('');
 
       const pdfContent = `
         <div style="padding: 20px; font-family: Arial, sans-serif; color: #000; background: #fff; line-height: 1.2;">
-          <div style="text-align: right; font-size: 11pt; margin-bottom: 30px;">
-            <p style="margin: 0;">PUP-RISL-6-PSMO-010</p>
-            <p style="margin: 0;">Rev. 2</p>
-            <p style="margin: 0;">Effectivity Date: April 23, 2026</p>
-            <p style="margin: 0;">Appendix 63</p>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+            <div style="flex: 0 0 auto; max-width: 90px;">
+              ${logoBase64 ? `<img src="${logoBase64}" style="width: 90px; height: auto; display: block;" />` : ''}
+            </div>
+            <div style="flex: 1 1 auto; text-align: left; font-size: 9pt; line-height: 1.2;">
+              <div style="margin-bottom: 4px;">Republic of the Philippines</div>
+              <div style="font-weight: bold; font-size: 12pt; margin-bottom: 4px;">Polytechnic University of the Philippines</div>
+              <div style="margin-bottom: 4px;">Office of the Vice President for Campuses</div>
+              <div style="font-weight: bold;">Taguig Campus</div>
+            </div>
           </div>
-          <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 25px;">
-            REQUISITION AND ISSUE SLIP
-          </div>
-          <table style="width: 100%; border-collapse: collapse; border: 1pt solid #000; font-size: 10pt;">
+          <hr style="border: none; border-top: 1px solid #000; margin: 0 0 14px 0;" />
+          <div style="text-align: center; font-size: 12pt; margin-bottom: 25px;">REQUISITION AND ISSUE SLIP</div>
+          <table style="width: 100%; border-collapse: collapse; border: 1pt solid #000; font-size: 8.5pt;">
             <thead>
               <tr>
-                <th colspan="4" style="border: 0.5pt solid #000; padding: 8px; text-align: left;">Requisition</th>
-                <th colspan="2" style="border: 0.5pt solid #000; padding: 8px; text-align: left;">Stock Available?</th>
-                <th colspan="2" style="border: 0.5pt solid #000; padding: 8px; text-align: left;">Issue</th>
+                <th colspan="4" style="border: 0.5pt solid #000; padding: 4px 6px; text-align: left;">Requisition</th>
+                <th colspan="2" style="border: 0.5pt solid #000; padding: 4px 6px; text-align: left;">Stock Available?</th>
+                <th colspan="2" style="border: 0.5pt solid #000; padding: 4px 6px; text-align: left;">Issue</th>
               </tr>
               <tr>
-                <th style="border: 0.5pt solid #000; padding: 5px; width: 12%;">Stock No.</th>
-                <th style="border: 0.5pt solid #000; padding: 5px; width: 8%;">Unit</th>
-                <th style="border: 0.5pt solid #000; padding: 5px; width: 40%;">Description</th>
-                <th style="border: 0.5pt solid #000; padding: 5px; width: 10%;">Quantity</th>
-                <th style="border: 0.5pt solid #000; padding: 5px; width: 7%; text-align: center;">Yes</th>
-                <th style="border: 0.5pt solid #000; padding: 5px; width: 7%; text-align: center;">No</th>
-                <th style="border: 0.5pt solid #000; padding: 5px; width: 8%; text-align: center;">Quantity</th>
-                <th style="border: 0.5pt solid #000; padding: 5px;">Remarks</th>
+                <th style="border: 0.5pt solid #000; padding: 4px 6px; width: 12%;">Stock No.</th>
+                <th style="border: 0.5pt solid #000; padding: 4px 6px; width: 8%;">Unit</th>
+                <th style="border: 0.5pt solid #000; padding: 4px 6px; width: 40%;">Description</th>
+                <th style="border: 0.5pt solid #000; padding: 4px 6px; width: 10%;">Quantity</th>
+                <th style="border: 0.5pt solid #000; padding: 4px 6px; width: 7%; text-align: center;">Yes</th>
+                <th style="border: 0.5pt solid #000; padding: 4px 6px; width: 7%; text-align: center;">No</th>
+                <th style="border: 0.5pt solid #000; padding: 4px 6px; width: 8%; text-align: center;">Quantity</th>
+                <th style="border: 0.5pt solid #000; padding: 4px 6px;">Remarks</th>
               </tr>
             </thead>
             <tbody>
               ${tableRows}
             </tbody>
           </table>
-          <div style="margin-top: 15px; font-size: 11pt; border-bottom: 1px solid #000; padding-bottom: 5px;">
-            Purpose: ${purpose}
-          </div>
+          <div style="margin-top: 15px; font-size: 11pt; border-bottom: 1px solid #000; padding-bottom: 5px;">Purpose: ${purpose}</div>
           <table style="width: 100%; border-collapse: collapse; border: 1pt solid #000; margin-top: 40px; table-layout: fixed;">
             <tr>
-              <td style="border: 0.5pt solid #000; padding: 12px 6px; text-align: center; width: 25%; vertical-align: top;">
-                <div style="font-size: 10pt; margin-bottom: 8px;">Requested by:</div>
-                <div style="width: 70%; margin: 8px auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-weight: bold; font-size: 11pt; margin: 6px 0;">${fullName}</div>
-                <div style="width: 70%; margin: 6px auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 9pt; margin-top: 6px;">${office}</div>
+              <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; width: 25%; vertical-align: top;">
+                <div style="font-size: 8pt; margin-bottom: 6px;">Requested by:</div>
+                <div style="height: 32px;"></div>
+                <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
+                <div style="font-size: 10pt; margin: 6px 0;">${fullName}</div>
+                <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
+                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${office}</div>
               </td>
-              <td style="border: 0.5pt solid #000; padding: 12px 6px; text-align: center; width: 25%; vertical-align: top;">
-                <div style="font-size: 10pt; margin-bottom: 8px;">Approved by:</div>
-                <div style="width: 70%; margin: 8px auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-weight: bold; font-size: 11pt; margin: 6px 0;">DR. MARISSA B. FERRER</div>
-                <div style="width: 70%; margin: 6px auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 9pt; margin-top: 6px;">DIRECTOR</div>
+              <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; width: 25%; vertical-align: top;">
+                <div style="font-size: 8pt; margin-bottom: 6px;">Approved by:</div>
+                <div style="height: 32px;"></div>
+                <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
+                <div style="font-size: 10pt; margin: 6px 0;">Dr. Marissa B. Ferrer</div>
+                <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
+                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">Director</div>
               </td>
-              <td style="border: 0.5pt solid #000; padding: 12px 6px; text-align: center; width: 25%; vertical-align: top;">
-                <div style="font-size: 10pt; margin-bottom: 8px;">Issued by:</div>
-                <div style="width: 70%; margin: 8px auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-weight: bold; font-size: 11pt; margin: 6px 0;">GINA A. DELA CRUZ</div>
-                <div style="width: 70%; margin: 6px auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 9pt; margin-top: 6px;">PROPERTY CUSTODIAN</div>
+              <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; width: 25%; vertical-align: top;">
+                <div style="font-size: 8pt; margin-bottom: 6px;">Issued by:</div>
+                <div style="height: 32px;"></div>
+                <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
+                <div style="font-size: 10pt; margin: 6px 0;">Gina A. Dela Cruz</div>
+                <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
+                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">Property Custodian</div>
               </td>
-              <td style="border: 0.5pt solid #000; padding: 12px 6px; text-align: center; width: 25%; vertical-align: top;">
-                <div style="font-size: 10pt; margin-bottom: 8px;">Received by:</div>
-                <div style="width: 70%; margin: 8px auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-weight: bold; font-size: 11pt; margin: 6px 0;">${this.receivedByName().toUpperCase()}</div>
-                <div style="width: 70%; margin: 6px auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 9pt; margin-top: 6px;">${this.receivedByOffice().toUpperCase()}</div>
+              <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; width: 25%; vertical-align: top;">
+                <div style="font-size: 8pt; margin-bottom: 6px;">Received by:</div>
+                <div style="height: 32px;"></div>
+                <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
+                <div style="font-size: 10pt; margin: 6px 0;">${this.receivedByName()}</div>
+                <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
+                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.receivedByOffice()}</div>
               </td>
             </tr>
           </table>
+          <div style="text-align: right; font-size: 8pt; margin-top: 18px; line-height: 1.6;">
+            <div>PUP-RISL-6-PSMO-010</div>
+            <div>Rev. 2</div>
+            <div>Effectivity Date: April 23, 2026</div>
+            <div>Appendix 63</div>
+          </div>
         </div>
       `;
 

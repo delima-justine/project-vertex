@@ -10,6 +10,7 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\SupplyRequestController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ArchiveController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/supplies', [SupplyController::class, 'index']);
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/units', [UnitController::class, 'index']);
+    Route::get('/archives', [ArchiveController::class, 'index']);
+    Route::post('/archives', [ArchiveController::class, 'store']);
+    Route::post('/archives/{archive}/restore', [ArchiveController::class, 'restore']);
 });
 
 Route::middleware(['auth:sanctum', 'role:admin,superadmin'])->group(function () {
