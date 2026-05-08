@@ -11,6 +11,7 @@ use App\Http\Controllers\SupplyRequestController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ArchiveController;
+use App\Http\Controllers\AdminAuditController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -57,10 +58,14 @@ Route::middleware(['auth:sanctum', 'role:admin,superadmin'])->group(function () 
     Route::get('/permissions', [PermissionController::class, 'index']);
     Route::get('/roles/{role}/permissions', [PermissionController::class, 'getByRole']);
     Route::get('/user', [UserController::class, 'index']);
+    Route::get('/admins', [UserController::class, 'listAdmins']);
     Route::post('/user', [UserController::class, 'store']);
     Route::get('/user/{user}', [UserController::class, 'show']);
     Route::patch('/user/{user}', [UserController::class, 'update']);
     Route::delete('/user/{user}', [UserController::class, 'destroy']);
+
+    Route::get('/admin-audits', [AdminAuditController::class, 'index']);
+    Route::get('/admin-audits/{admin_audit}', [AdminAuditController::class, 'show']);
 
     Route::apiResource('supplies', SupplyController::class)->except(['index'])->parameters([
         'supplies' => 'supply'
