@@ -148,3 +148,31 @@ export type NotificationFilters = {
   from_date?: string;
   to_date?: string;
 };
+
+export type AdminAudit = {
+  id: number;
+  admin_id: number | null;
+  admin_name: string | null;
+  admin_role: string | null;
+  action_type: string;
+  target_id: string | null;
+  target_type: string | null;
+  target_name: string | null;
+  old_values: any | null;
+  new_values: any | null;
+  description: string | null;
+  ip_address: string | null;
+  user_agent: string | null;
+  performed_at: string;
+  created_at: string;
+  updated_at: string;
+  admin?: User;
+};
+
+export type AuditFilters = {
+  search?: string;
+  action_type?: string;
+  admin_id?: number;
+  page?: number;
+  limit?: number;
+};
