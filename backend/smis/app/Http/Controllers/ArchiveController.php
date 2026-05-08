@@ -33,10 +33,6 @@ class ArchiveController extends Controller
             return response()->json(['message' => 'Supply request not found.'], 404);
         }
 
-        if ($supplyRequest->status !== 'released') {
-            return response()->json(['message' => 'Only released requests may be archived.'], 422);
-        }
-
         $alreadyArchived = Archive::where('table_name', 'tbl_request')
             ->where('original_id', $requestId)
             ->exists();
@@ -64,7 +60,9 @@ class ArchiveController extends Controller
             return response()->json(['message' => 'Original request not found.'], 404);
         }
 
-        $supplyRequest->status = 'released';
+        // Restore status from archived data
+        $originalData = $archive->data;
+        $supplyRequest->status = $originalData['status'] ?? 'pending';
         $supplyRequest->save();
 
         $archive->delete();
