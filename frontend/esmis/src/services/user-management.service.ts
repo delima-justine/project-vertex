@@ -56,6 +56,10 @@ export class UserManagementService {
     return this.http.get<PaginatedUsers>(`${this.apiUrl}/user`, { params });
   }
 
+  listAdmins(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/admins`);
+  }
+
   getUser(id: number) {
     return this.http.get<User>(`${this.apiUrl}/user/${id}`);
   }
