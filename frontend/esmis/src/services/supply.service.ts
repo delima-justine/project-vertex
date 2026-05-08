@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { Supply, Category, Unit, SupplyRequest, Archive } from '../models/smis.model';
+import { Supply, Category, Unit, SupplyRequest, Archive, Office } from '../models/smis.model';
 
 @Injectable({
   providedIn: 'root',
@@ -68,6 +68,10 @@ export class SupplyService {
       params = params.set('user_id', userId.toString());
     }
     return this.http.get<SupplyRequest[]>(`${this.apiUrl}/supply-requests`, { params });
+  }
+
+  listOffices(): Observable<Office[]> {
+    return this.http.get<Office[]>(`${this.apiUrl}/offices`);
   }
 
   listArchives(): Observable<Archive[]> {
