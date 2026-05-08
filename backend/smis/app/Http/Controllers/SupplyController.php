@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supply;
+use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -29,6 +30,8 @@ class SupplyController extends Controller
 
         $supply = Supply::create($validated);
         
+        AuditService::log('CREATE', $supply, "Created new supply: {$supply->item_desc}", null, $supply->toArray());
+
         return response()->json($supply, 201);
     }
 
@@ -55,14 +58,22 @@ class SupplyController extends Controller
             'remarks' => 'nullable|string',
         ]);
 
+        $oldValues = $supply->toArray();
         $supply->update($validated);
+
+        AuditService::log('UPDATE', $supply, "Updated supply: {$supply->item_desc}", $oldValues, $supply->fresh()->toArray());
+
         return response()->json($supply);
     }
 
     // Delete a supply
     public function destroy(Supply $supply)
     {
+        $oldValues = $supply->toArray();
         $supply->delete();
+
+        AuditService::log('DELETE', $supply, "Deleted supply: {$supply->item_desc}", $oldValues);
+
         return response()->json(['message' => 'Supply deleted successfully']);
     }
 }
