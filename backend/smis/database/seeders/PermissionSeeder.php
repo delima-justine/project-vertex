@@ -39,6 +39,9 @@ class PermissionSeeder extends Seeder
             // Units
             ['name' => 'add_unit', 'description' => 'Add Unit'],
             ['name' => 'delete_unit', 'description' => 'Delete Unit'],
+
+            // Audit
+            ['name' => 'view_audit_logs', 'description' => 'View Audit Logs'],
         ];
 
         foreach ($permissions as $perm) {
