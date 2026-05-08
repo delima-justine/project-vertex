@@ -1,9 +1,13 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /api/
-    
+
+    # FIX: Pass Authorization Header to PHP (Crucial for Hostinger)
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
     # Redirect all requests to the public/ folder
-    # We prepend /api/ to the path so that it matches Laravel's 'api' prefix routes
+    # We prepend /api/ so it matches Laravel's routing
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ public/index.php/api/$1 [L]
