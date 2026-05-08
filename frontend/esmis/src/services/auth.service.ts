@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
 import { AuthResponse, ChangePasswordPayload, ForgotPasswordPayload, GeneralResponse, LoginCredentials, ProfileResponse, ResetPasswordPayload, User } from '../models/smis.model';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.production ? environment.apiUrl : 'http://localhost:8000/api';
 
   // Use a signal to track auth state
   currentUser = signal<User | null>(null);

@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 import { Supply, Category, Unit, SupplyRequest, Archive } from '../models/smis.model';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { Supply, Category, Unit, SupplyRequest, Archive } from '../models/smis.m
 })
 export class SupplyService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.apiUrl;
 
   listSupplies(): Observable<Supply[]> {
     return this.http.get<Supply[]>(`${this.apiUrl}/supplies`);

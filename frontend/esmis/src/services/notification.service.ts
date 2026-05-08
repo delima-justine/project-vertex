@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { environment } from '../environments/environment';
 
 (window as any).Pusher = Pusher;
 
@@ -22,17 +23,15 @@ export class NotificationService {
     if (!this.echo) {
       console.log('[NotificationService] Initializing Echo...');
       this.echo = new Echo({
-        broadcaster: 'reverb',
-        key: 'lrnkakrjwftuk59siimw',
-        wsHost: window.location.hostname,
-        wsPort: 8080,
-        wssPort: 8080,
-        forceTLS: false,
-        enabledTransports: ['ws', 'wss'],
-        authEndpoint: 'http://localhost:8000/broadcasting/auth',
+        broadcaster: 'pusher',
+        key: environment.pusherKey,
+        cluster: environment.pusherCluster,
+        forceTLS: true, // Use true for secure 'wss' connection to hosted Pusher
+        authEndpoint: `${environment.apiUrl}/broadcasting/auth`,
         auth: {
           headers: {
             Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
           },
         },
       });
