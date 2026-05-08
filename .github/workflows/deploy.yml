@@ -1,55 +1,92 @@
-name: Deploy to Hostinger
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  # 1. Run Angular Tests
+  test-frontend:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      # --- Frontend Build (Angular) ---
-      - name: Setup Node.js (Frontend)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: frontend/esmis/package-lock.json
-
-      - name: Install Frontend Dependencies
+      - name: Install & Test
         working-directory: frontend/esmis
-        run: npm ci
+        run: |
+          npm ci
+          npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
 
-      - name: Build Frontend
-        working-directory: frontend/esmis
-        run: npm run build -- --configuration production
-
-      # --- Backend Build (Laravel) ---
-      - name: Setup PHP (Backend)
+  # 2. Run Laravel Tests
+  test-backend:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306:3306
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, mysql, pdo_mysql
+          extensions: mbstring, xml, mysql, pdo_mysql, dom, curl
           tools: composer
-
-      - name: Install Backend Composer Dependencies
-        working-directory: backend/smis
-        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-
-      - name: Build Backend Assets (Vite)
+      - name: Install & Test
         working-directory: backend/smis
         run: |
+          composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
+          php artisan key:generate
+          php artisan test
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: testing
+          DB_USERNAME: root
+          DB_PASSWORD: password
+
+  # 3. Deploy to Hostinger (ONLY if tests pass AND we are on main branch)
+  deploy:
+    needs: [test-frontend, test-backend]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      # Build Frontend
+      - name: Build Frontend
+        working-directory: frontend/esmis
+        run: |
+          npm ci
+          npm run build -- --configuration production
+      
+      # Build Backend
+      - name: Build Backend
+        working-directory: backend/smis
+        run: |
+          composer install --no-dev --optimize-autoloader
           npm ci
           npm run build
-
-      # --- Deployment ---
       
-      # Deploy Frontend to /public_html
+      # Sync to Hostinger
       - name: Deploy Frontend
         uses: easingthemes/ssh-deploy@main
         env:
@@ -57,12 +94,10 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_PORT: ${{ secrets.REMOTE_PORT || '65002' }}
-          ARGS: "-rlgoDzvc -i --delete"
           SOURCE: "frontend/esmis/dist/esmis/browser/"
-          TARGET: ${{ secrets.REMOTE_TARGET_FRONTEND || 'public_html/' }}
-          EXCLUDE: "/dist/, /node_modules/, /api/"
+          TARGET: ${{ secrets.REMOTE_TARGET_FRONTEND }}
+          EXCLUDE: "/api/"
 
-      # Deploy Backend to /public_html/api
       - name: Deploy Backend
         uses: easingthemes/ssh-deploy@main
         env:
@@ -70,13 +105,12 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_PORT: ${{ secrets.REMOTE_PORT || '65002' }}
-          ARGS: "-rlgoDzvc -i --delete"
           SOURCE: "backend/smis/"
-          TARGET: ${{ secrets.REMOTE_TARGET_BACKEND || 'public_html/api/' }}
-          EXCLUDE: "/node_modules/, /tests/, /storage/logs/, .env, .git/, /frontend/"
+          TARGET: ${{ secrets.REMOTE_TARGET_BACKEND }}
+          EXCLUDE: "/node_modules/, .env, .git/"
 
-      # Run Remote Post-Deployment Commands
-      - name: Run Remote Post-Deployment Commands
+      # Post-Deploy
+      - name: Remote Commands
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}
@@ -84,14 +118,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.REMOTE_PORT || '65002' }}
           script: |
-            # Navigate to backend directory
-            cd ${{ secrets.REMOTE_TARGET_BACKEND || 'public_html/api' }}
-            
-            # Run Laravel commands
+            cd ${{ secrets.REMOTE_TARGET_BACKEND }}
             php artisan migrate --force
             php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-            
-            # Ensure storage permissions
-            chmod -R 775 storage bootstrap/cache
