@@ -53,7 +53,7 @@
           </div>
 
           <div class="row g-3 mb-3">
-            <div class="col-md-6">
+            <div class="col-md-6" *ngIf="activeView() === 'request_logs'">
               <label for="statusSelect" class="form-label">Status</label>
               <select id="statusSelect" class="form-select" [(ngModel)]="selectedStatus">
                 <option value="">All Statuses</option>
@@ -63,11 +63,30 @@
                 <option value="disapproved">Disapproved</option>
               </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" *ngIf="activeView() === 'admin_audit'">
+              <label for="actionTypeSelect" class="form-label">Action Type</label>
+              <select id="actionTypeSelect" class="form-select" [(ngModel)]="selectedActionType">
+                <option value="">All Actions</option>
+                <option value="CREATE">Create</option>
+                <option value="UPDATE">Update</option>
+                <option value="DELETE">Delete</option>
+                <option value="RESTORE">Restore</option>
+                <option value="LOGIN">Login</option>
+                <option value="LOGOUT">Logout</option>
+              </select>
+            </div>
+            <div class="col-md-6" *ngIf="activeView() === 'request_logs'">
               <label for="officeSelect" class="form-label">Office</label>
               <select id="officeSelect" class="form-select" [(ngModel)]="selectedOffice">
                 <option value="">All Offices</option>
                 <option *ngFor="let office of allOffices()" [value]="office.office_name">{{ office.office_name }}</option>
+              </select>
+            </div>
+            <div class="col-md-6" *ngIf="activeView() === 'admin_audit'">
+              <label for="adminSelect" class="form-label">Admin</label>
+              <select id="adminSelect" class="form-select" [(ngModel)]="selectedAdminId">
+                <option [ngValue]="null">All Admins</option>
+                <option *ngFor="let admin of allAdmins()" [ngValue]="admin.id">{{ admin.first_name }} {{ admin.last_name }}</option>
               </select>
             </div>
           </div>
@@ -174,11 +193,71 @@
             </div>
           </div>
 
-          <div *ngIf="activeView() === 'admin_audit'" class="admin-audit-section mt-4">
-            <div class="alert alert-warning text-center py-5">
-              <i class="bi bi-shield-lock-fill d-block mb-3" style="font-size: 3rem; color: #ffc107;"></i>
-              <h4 class="fw-bold">Admin Audit Logs Coming Soon</h4>
-              <p class="text-muted">The system is being updated to include comprehensive audit logging for all administrative actions.</p>
+          <div *ngIf="activeView() === 'admin_audit'" class="request-logs-table-section admin-audit-section mt-4">
+            <div class="table-responsive">
+              <table class="table report-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Date/Time</th>
+                    <th>Admin</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="isAuditLoading()">
+                    <td colspan="5" class="text-center py-4">
+                      <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="!isAuditLoading() && adminAudits().length === 0">
+                    <td colspan="5" class="empty-state">No audit logs found for the selected filters.</td>
+                  </tr>
+                  <tr *ngFor="let audit of adminAudits()">
+                    <td>
+                      <div class="fw-bold" *ngIf="audit.target_type">{{ audit.target_type.split('\\').pop() }}</div>
+                      <div class="text-muted" *ngIf="!audit.target_type">System</div>
+                    </td>
+                    <td>{{ audit.performed_at | date:'MMM d, y h:mm a' }}</td>
+                    <td>
+                      <div class="fw-bold">{{ audit.admin_name }}</div>
+                      <small class="text-muted">{{ audit.admin_role }}</small>
+                    </td>
+                    <td>
+                      <span class="status-badge" [ngClass]="{
+                        'status-approved': audit.action_type === 'CREATE' || audit.action_type === 'RESTORE' || audit.action_type === 'LOGIN',
+                        'status-released': audit.action_type === 'UPDATE',
+                        'status-disapproved': audit.action_type === 'DELETE' || audit.action_type === 'LOGOUT',
+                        'status-pending': audit.action_type === 'CHANGE_PASSWORD'
+                      }">{{ audit.action_type }}</span>
+                    </td>
+                    <td>
+                      <div>{{ audit.description }}</div>
+                      <small class="text-muted" *ngIf="audit.target_name">Target: {{ audit.target_name }}</small>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination for Audits -->
+            <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="auditTotal() > 0">
+              <div class="text-muted">
+                Showing {{ (auditPage() - 1) * auditLimit + 1 }} to {{ auditPage() * auditLimit > auditTotal() ? auditTotal() : auditPage() * auditLimit }} of {{ auditTotal() }} results
+              </div>
+              <nav aria-label="Audit pagination">
+                <ul class="pagination mb-0">
+                  <li class="page-item" [class.disabled]="auditPage() === 1">
+                    <button class="page-link" (click)="auditPrevPage()">Previous</button>
+                  </li>
+                  <li class="page-item" [class.disabled]="auditPage() === auditLastPage()">
+                    <button class="page-link" (click)="auditNextPage()">Next</button>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
