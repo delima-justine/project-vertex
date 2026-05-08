@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NotificationSent;
 use App\Models\SupplyRequest;
 use App\Models\Notification;
+use App\Services\AuditService;
 use Illuminate\Http\Request;
 
 class SupplyRequestController extends Controller
@@ -78,7 +79,10 @@ class SupplyRequestController extends Controller
             $validated['approved_by'] = null;
         }
 
+        $oldValues = $supply_request->toArray();
         $supply_request->update($validated);
+
+        AuditService::log('UPDATE', $supply_request, "Updated supply request status to: {$supply_request->status}", $oldValues, $supply_request->fresh()->toArray());
 
         $notif = Notification::create([
             'user_id' => $supply_request->user_id,
@@ -95,7 +99,11 @@ class SupplyRequestController extends Controller
     // Delete a supply request
     public function destroy(SupplyRequest $supply_request)
     {
+        $oldValues = $supply_request->toArray();
         $supply_request->delete();
+
+        AuditService::log('DELETE', $supply_request, "Deleted supply request for: {$supply_request->supply_id}", $oldValues);
+
         return response()->json(['message' => 'Supply request deleted successfully']);
     }
 }

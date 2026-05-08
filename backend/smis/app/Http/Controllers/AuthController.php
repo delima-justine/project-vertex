@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -88,6 +89,8 @@ class AuthController extends Controller
         // auth_token is just a label for the token
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        AuditService::log('LOGIN', $user, "User logged in: {$user->email}", null, null, $user);
+
         $allPermissions = $user->permissions->isNotEmpty() 
             ? $user->permissions->pluck('name') 
             : $user->role->permissions->pluck('name');
@@ -103,6 +106,9 @@ class AuthController extends Controller
     // Logout
     public function logout(Request $request)
     {
+        $user = $request->user();
+        AuditService::log('LOGOUT', $user, "User logged out: {$user->email}");
+
         // Revoke (delete) the current token that was used for this request
         $request->user()->currentAccessToken()->delete();
 
@@ -129,6 +135,8 @@ class AuthController extends Controller
 
         $user->password = Hash::make($request->new_password);
         $user->save();
+
+        AuditService::log('CHANGE_PASSWORD', $user, "User changed their password: {$user->email}");
 
         return response([
             'message' => 'Password updated successfully.'

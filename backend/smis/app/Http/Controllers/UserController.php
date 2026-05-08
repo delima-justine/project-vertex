@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -78,12 +79,15 @@ class UserController extends Controller
         $user = User::withTrashed()->where('email', $validated['email'])->first();
 
         if ($user) {
+            $oldValues = $user->toArray();
             // Restore and update the existing user
             $user->restore();
             $user->update($validated);
+            AuditService::log('RESTORE', $user, "Restored and updated user: {$user->email}", $oldValues, $user->fresh()->toArray());
         } else {
             // Create a new user
             $user = User::create($validated);
+            AuditService::log('CREATE', $user, "Created new user: {$user->email}", null, $user->toArray());
         }
 
         // Sync permissions
@@ -144,12 +148,16 @@ class UserController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
 
+        $oldValues = $user->toArray();
         $user->update($validated);
 
         // Sync permissions
         if (isset($validated['permission_ids'])) {
             $user->permissions()->sync($validated['permission_ids']);
         }
+
+        $newValues = $user->fresh(['role', 'permissions', 'office'])->toArray();
+        AuditService::log('UPDATE', $user, "Updated user: {$user->email}", $oldValues, $newValues);
 
         return response()->json($user->load(['role.permissions', 'permissions', 'office']));
     }
@@ -165,10 +173,25 @@ class UserController extends Controller
             ], 403);
         }
 
+        $oldValues = $user->toArray();
         $user->delete();
+
+        AuditService::log('DELETE', $user, "Deleted user: {$user->email}", $oldValues);
 
         return response()->json([
             'message' => 'User deleted successfully',
         ]);
+    }
+
+    /**
+     * List all administrative users (Admin and SuperAdmin).
+     */
+    public function listAdmins()
+    {
+        $admins = User::whereHas('role', function ($query) {
+            $query->whereIn('role_name', ['Admin', 'SuperAdmin']);
+        })->get();
+
+        return response()->json($admins);
     }
 }
