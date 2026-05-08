@@ -1,11 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as ExcelJS from 'exceljs';
 import { Sidebar } from "../sidebar/sidebar";
 import { TopNav } from "../top-nav/top-nav";
 import { SupplyService } from '../../services/supply.service';
-import { Archive, SupplyRequest } from '../../models/smis.model';
+import { Archive, Office, SupplyRequest } from '../../models/smis.model';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -30,12 +30,23 @@ export class Reports {
   appliedTimePeriod = signal<'today' | 'week' | 'month' | 'custom'>('today');
   activeView = signal<'request_logs' | 'admin_audit'>('request_logs');
   allRequests = signal<SupplyRequest[]>([]);
+  allOffices = signal<Office[]>([]);
   archivedRecords = signal<Archive[]>([]);
-  archiveModalOpen = signal(false);
   selectedArchiveIds = signal<number[]>([]);
   archiveSelectMode = signal<'current' | 'all'>('current');
   archivePage = signal(1);
   readonly archivePageSize = 10;
+
+  @ViewChild('archiveModal', { static: false }) archiveModalElement?: ElementRef<HTMLElement>;
+
+  private getModalInstance() {
+    if (!this.archiveModalElement) return null;
+    const bootstrap = (window as any).bootstrap;
+    if (bootstrap) {
+      return bootstrap.Modal.getOrCreateInstance(this.archiveModalElement.nativeElement);
+    }
+    return null;
+  }
 
   filteredRequests = computed(() => {
     const now = new Date();
@@ -130,6 +141,14 @@ export class Reports {
 
   constructor() {
     this.loadSupplyRequests();
+    this.loadOffices();
+  }
+
+  loadOffices() {
+    this.supplyService.listOffices().subscribe({
+      next: (data) => this.allOffices.set(data),
+      error: (err) => console.error('Error loading offices', err)
+    });
   }
 
   exportToExcel() {
@@ -477,11 +496,11 @@ export class Reports {
 
   openArchiveModal() {
     this.loadArchives();
-    this.archiveModalOpen.set(true);
+    this.getModalInstance()?.show();
   }
 
   closeArchiveModal() {
-    this.archiveModalOpen.set(false);
+    this.getModalInstance()?.hide();
   }
 
   setArchiveSelectMode(mode: 'current' | 'all') {
@@ -526,18 +545,22 @@ export class Reports {
   }
 
   archiveFilteredResults() {
-    const releasedRequests = this.filteredRequests().filter((req) => req.status === 'released');
+    const requestsToArchive = this.filteredRequests();
 
-    if (releasedRequests.length === 0) {
-      alert('No released records are available in the current filtered results.');
+    if (requestsToArchive.length === 0) {
+      alert('No records are available in the current filtered results.');
       return;
     }
 
-    forkJoin(releasedRequests.map((req) => this.supplyService.createArchive(req.id))).subscribe({
+    if (!confirm(`Are you sure you want to archive ${requestsToArchive.length} record(s)?`)) {
+      return;
+    }
+
+    forkJoin(requestsToArchive.map((req) => this.supplyService.createArchive(req.id))).subscribe({
       next: () => {
         this.loadSupplyRequests();
         this.loadArchives();
-        alert(`${releasedRequests.length} released request(s) archived successfully.`);
+        alert(`${requestsToArchive.length} request(s) archived successfully.`);
       },
       error: (err) => {
         console.error('Error archiving filtered results', err);
