@@ -5,7 +5,9 @@ import * as ExcelJS from 'exceljs';
 import { Sidebar } from "../sidebar/sidebar";
 import { TopNav } from "../top-nav/top-nav";
 import { SupplyService } from '../../services/supply.service';
-import { Archive, Office, SupplyRequest } from '../../models/smis.model';
+import { AuditService } from '../../services/audit.service';
+import { UserManagementService } from '../../services/user-management.service';
+import { AdminAudit, Archive, Office, SupplyRequest, User } from '../../models/smis.model';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -17,6 +19,8 @@ import { forkJoin } from 'rxjs';
 })
 export class Reports {
   private supplyService = inject(SupplyService);
+  private auditService = inject(AuditService);
+  private userService = inject(UserManagementService);
 
   timePeriod = signal<'today' | 'week' | 'month' | 'custom'>('today');
   selectedStatus = signal('');
@@ -31,11 +35,24 @@ export class Reports {
   activeView = signal<'request_logs' | 'admin_audit'>('request_logs');
   allRequests = signal<SupplyRequest[]>([]);
   allOffices = signal<Office[]>([]);
+  allAdmins = signal<User[]>([]);
   archivedRecords = signal<Archive[]>([]);
   selectedArchiveIds = signal<number[]>([]);
   archiveSelectMode = signal<'current' | 'all'>('current');
   archivePage = signal(1);
   readonly archivePageSize = 10;
+
+  // Admin Audit signals
+  adminAudits = signal<AdminAudit[]>([]);
+  auditPage = signal(1);
+  auditLastPage = signal(1);
+  auditTotal = signal(0);
+  auditLimit = 15;
+  isAuditLoading = signal(false);
+  selectedActionType = signal('');
+  appliedActionType = signal('');
+  selectedAdminId = signal<number | null>(null);
+  appliedAdminId = signal<number | null>(null);
 
   @ViewChild('archiveModal', { static: false }) archiveModalElement?: ElementRef<HTMLElement>;
 
@@ -142,12 +159,20 @@ export class Reports {
   constructor() {
     this.loadSupplyRequests();
     this.loadOffices();
+    this.loadAdmins();
   }
 
   loadOffices() {
     this.supplyService.listOffices().subscribe({
       next: (data) => this.allOffices.set(data),
       error: (err) => console.error('Error loading offices', err)
+    });
+  }
+
+  loadAdmins() {
+    this.userService.listAdmins().subscribe({
+      next: (data) => this.allAdmins.set(data),
+      error: (err) => console.error('Error loading admins', err)
     });
   }
 
@@ -446,6 +471,8 @@ export class Reports {
   applyFilters() {
     this.appliedStatus.set(this.selectedStatus());
     this.appliedOffice.set(this.selectedOffice());
+    this.appliedActionType.set(this.selectedActionType());
+    this.appliedAdminId.set(this.selectedAdminId());
     this.appliedTimePeriod.set(this.timePeriod());
 
     if (this.timePeriod() === 'custom') {
@@ -455,14 +482,24 @@ export class Reports {
       this.appliedStartDate.set('');
       this.appliedEndDate.set('');
     }
+
+    if (this.activeView() === 'admin_audit') {
+      this.loadAudits(1);
+    }
   }
 
   resetFilters() {
     this.timePeriod.set('today');
     this.selectedStatus.set('');
     this.selectedOffice.set('');
+    this.selectedActionType.set('');
+    this.selectedAdminId.set(null);
     this.startDate.set('');
     this.endDate.set('');
+    
+    if (this.activeView() === 'admin_audit') {
+      this.loadAudits(1);
+    }
   }
 
   openRequestLogs() {
@@ -472,7 +509,44 @@ export class Reports {
 
   openAdminAudit() {
     this.activeView.set('admin_audit');
-    console.log('Opening Admin Audit...');
+    this.loadAudits(1);
+  }
+
+  loadAudits(page = 1) {
+    this.isAuditLoading.set(true);
+    
+    const filters = {
+      page,
+      limit: this.auditLimit,
+      action_type: this.appliedActionType(),
+      admin_id: this.appliedAdminId() || undefined
+    };
+
+    this.auditService.listAudits(filters).subscribe({
+      next: (response) => {
+        this.adminAudits.set(response.data);
+        this.auditPage.set(response.current_page);
+        this.auditLastPage.set(response.last_page);
+        this.auditTotal.set(response.total);
+        this.isAuditLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading audits', err);
+        this.isAuditLoading.set(false);
+      }
+    });
+  }
+
+  auditNextPage() {
+    if (this.auditPage() < this.auditLastPage()) {
+      this.loadAudits(this.auditPage() + 1);
+    }
+  }
+
+  auditPrevPage() {
+    if (this.auditPage() > 1) {
+      this.loadAudits(this.auditPage() - 1);
+    }
   }
 
   loadSupplyRequests() {
