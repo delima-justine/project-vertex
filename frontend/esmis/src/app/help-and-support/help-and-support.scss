@@ -150,6 +150,28 @@ main {
     }
   }
 
+  /* Navigation Selection Buttons */
+  .nav-selection-buttons {
+    .btn-outline-maroon {
+      border: 1.5px solid #800000;
+      color: #800000;
+      font-weight: 600;
+      background-color: #fff;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: #800000;
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(128, 0, 0, 0.2);
+      }
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
   /* FAQ Custom Tabs */
   .custom-faq-tabs {
     border-bottom: 2px solid #dee2e6;

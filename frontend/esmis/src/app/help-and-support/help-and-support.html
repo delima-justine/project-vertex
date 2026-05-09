@@ -11,9 +11,22 @@
   </div>
 
   <div class="content-container mt-4 px-4 pb-4">
-    <div class="row g-4">
+    <!-- Navigation Selection Buttons -->
+    <div class="nav-selection-buttons mb-4 d-flex">
+      <button class="btn btn-outline-maroon me-3 px-4 py-2" (click)="scrollToSection('faq')">
+        <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
+      </button>
+      <button *ngIf="isAdmin" class="btn btn-outline-maroon me-3 px-4 py-2" (click)="scrollToSection('admin')">
+        <i class="bi bi-journal-richtext me-2"></i>Admin Guide
+      </button>
+      <button class="btn btn-outline-maroon px-4 py-2" (click)="scrollToSection('contact')">
+        <i class="bi bi-envelope-at-fill me-2"></i>Contact Support
+      </button>
+    </div>
+
+    <div class="row g-5">
       <!-- Frequently Asked Questions -->
-      <div class="col-12">
+      <div class="col-12" #faqSection>
         <div class="card shadow-sm border-0">
           <div class="card-header bg-white border-bottom-0 pt-4">
             <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
@@ -215,8 +228,56 @@
                   </div>
                 </div>
               </div>
-              <div *ngSwitchCase="'technical'" class="py-3 text-center text-muted">
-                <p>Frequently asked questions about Technical Issues will appear here.</p>
+              <!-- Technical Issues Tab -->
+              <div *ngSwitchCase="'technical'" class="faq-accordion">
+                <div class="accordion-item shadow-sm border rounded mb-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq9">
+                      Common Issues & Solutions
+                    </button>
+                  </h2>
+                  <div id="faq9" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                      <p class="fw-bold">Login Issues:</p>
+                      <ul class="ps-3">
+                        <li>Verify your username and password</li>
+                        <li>Clear browser cache and cookies</li>
+                        <li>Use the "Forgot Password" feature to reset</li>
+                        <li>Ensure Caps Lock is off</li>
+                        <li>Contact system administrator if issues persist</li>
+                      </ul>
+
+                      <p class="fw-bold mt-3">System Performance:</p>
+                      <ul class="ps-3">
+                        <li>Check your internet connection</li>
+                        <li>Clear browser cache (press Ctrl+F5)</li>
+                        <li>Use recommended browsers (Chrome, Firefox)</li>
+                        <li>Close unnecessary browser tabs</li>
+                        <li>Try disabling browser extensions temporarily</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item shadow-sm border rounded mb-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq10">
+                      Browser Compatibility
+                    </button>
+                  </h2>
+                  <div id="faq10" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                      <p><strong>SMIS works best with the following browsers:</strong></p>
+                      <ul class="ps-3">
+                        <li>Google Chrome (Version 90+)</li>
+                        <li>Mozilla Firefox (Version 88+)</li>
+                        <li>Microsoft Edge (Version 90+)</li>
+                        <li>Safari (Version 14+)</li>
+                      </ul>
+                      <p class="mt-3 mb-0"><strong>If you're experiencing issues, try updating your browser to the latest version.</strong></p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -224,7 +285,7 @@
       </div>
 
       <!-- Admin Guide -->
-      <div class="col-12" *ngIf="isAdmin">
+      <div class="col-12" *ngIf="isAdmin" #adminGuideSection>
         <div class="card shadow-sm border-0">
           <div class="card-header bg-white border-bottom-0 pt-4">
             <h5 class="card-title fw-bold mb-0 text-maroon">
@@ -288,15 +349,16 @@
       </div>
 
       <!-- Contact Support -->
-      <div class="col-12">
+      <div class="col-12" #contactSection>
         <div class="card shadow-sm border-0">
           <div class="card-header bg-white border-bottom-0 pt-4">
-            <h5 class="card-title fw-bold mb-0">
-              <i class="bi bi-envelope-at-fill text-success me-2"></i>Contact Support
+            <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
+              <i class="bi bi-envelope-at-fill me-2"></i>Contact Support
             </h5>
+            <hr class="header-divider mt-2 mb-0" />
           </div>
-          <div class="card-body">
-            <p class="text-muted">Need further assistance? Our technical support team is here to help you.</p>
+          <div class="card-body pt-0">
+            <p class="description mb-4 mt-3">Need further assistance? Our technical support team is here to help you.</p>
             <div class="alert alert-info border-0 shadow-sm">
               <div class="d-flex">
                 <i class="bi bi-headset fs-3 me-3"></i>
