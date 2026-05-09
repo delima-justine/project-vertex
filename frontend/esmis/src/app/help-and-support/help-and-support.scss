@@ -7,3 +7,163 @@ main {
 .header-panel {
   @include header-panel;
 }
+
+.text-maroon {
+  color: #800000;
+}
+
+.content-container {
+  .card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card-header {
+      i {
+        font-size: 1.25rem;
+      }
+    }
+
+    .card-body {
+      ul {
+        padding-left: 1.25rem;
+        li {
+          margin-bottom: 0.5rem;
+          color: #495057;
+        }
+      }
+    }
+  }
+
+  .alert-info {
+    background-color: #f0f7ff;
+    color: #055160;
+    
+    i {
+      color: #0d6efd;
+    }
+  }
+
+  /* Admin Guide Specific Styles from Image */
+  .admin-guide-header {
+    h2 {
+      font-weight: 600;
+      font-size: 1.75rem;
+    }
+
+    .header-divider {
+      border: 0;
+      height: 1.5px;
+      background-color: #800000;
+      opacity: 1;
+      margin-top: 0.5rem;
+    }
+  }
+
+  .description {
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  .guide-card {
+    display: flex;
+    background: #fff;
+    min-height: 140px;
+    border: 1px solid rgba(0,0,0,0.05);
+
+    .guide-icon-side {
+      width: 100px;
+      background: #800000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .guide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      h6 {
+        font-weight: 700;
+        font-size: 1rem;
+      }
+    }
+
+  }
+
+  .video-tutorial-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.05);
+
+    .video-icon-side {
+      width: 240px;
+      background: #800000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6rem;
+    }
+
+    .video-content {
+      flex: 1;
+      
+      h3 {
+        font-weight: 700;
+        font-size: 1.75rem;
+      }
+    }
+  }
+
+  /* Buttons */
+  .btn-outline-maroon {
+    border: 1.5px solid #800000;
+    color: #800000;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #800000;
+      color: #fff;
+    }
+  }
+
+  .btn-pill-maroon {
+    background-color: #d93025; /* A slightly brighter red for the YouTube pill button as per image */
+    color: #fff;
+    border-radius: 50px;
+    font-weight: 600;
+    border: none;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #b3261e;
+      color: #fff;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .video-tutorial-card {
+      flex-direction: column;
+      .video-icon-side {
+        width: 100%;
+        height: 180px;
+      }
+    }
+    
+    .guide-card {
+      .guide-icon-side {
+        width: 80px;
+        font-size: 1.75rem;
+      }
+    }
+  }
+}
