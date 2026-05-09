@@ -49,10 +49,6 @@
     </div>
   </div>
 
-  @if (feedback()) {
-    <div class="alert alert-info mt-3">{{ feedback() }}</div>
-  }
-
   @if (isLoading()) {
     <div class="text-center py-4">Loading users...</div>
   }
@@ -332,22 +328,3 @@
   </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-danger" id="deleteConfirmModalLabel">Confirm Deletion</h5>
-        <button type="button" class="btn-close" (click)="cancelDelete()" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to delete user <strong>{{ userToDelete()?.first_name }} {{ userToDelete()?.last_name }}</strong>?</p>
-        <p class="text-muted small">This action cannot be undone.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="cancelDelete()">Cancel</button>
-        <button type="button" class="btn btn-danger" (click)="deleteUser()">Delete User</button>
-      </div>
-    </div>
-  </div>
-</div>

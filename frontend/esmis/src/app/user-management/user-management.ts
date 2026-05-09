@@ -6,6 +6,8 @@ import { User, Office, Role, Permission } from '../../models/smis.model';
 import { UserManagementService } from '../../services/user-management.service';
 import { TopNav } from "../top-nav/top-nav";
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
+import { ConfirmService } from '../../services/confirm.service';
 
 @Component({
   selector: 'app-user-management',
@@ -17,6 +19,8 @@ export class UserManagement {
   userService = inject(UserManagementService);
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
+  toastService = inject(ToastService);
+  confirmService = inject(ConfirmService);
 
   users = signal<User[]>([]);
   isLoading = signal(false);
@@ -25,8 +29,6 @@ export class UserManagement {
   totalUsers = signal(0);
   editMode = signal(false);
   activeUser = signal<User | null>(null);
-  userToDelete = signal<User | null>(null);
-  feedback = signal('');
   isProcessingBackup = signal(false);
   isProcessingRestore = signal(false);
   restoreFile: File | null = null;
@@ -97,11 +99,9 @@ export class UserManagement {
     this.loadRoles();
     this.loadPermissions();
 
-    // Reset permissions when role changes
+    // Only reset permissions to empty when role is cleared
     this.userForm.get('role_id')?.valueChanges.subscribe(roleId => {
-      if (roleId) {
-        this.updatePermissionsByRole(roleId);
-      } else {
+      if (!roleId) {
         this.userForm.patchValue({ permission_ids: [] });
       }
     });
@@ -197,26 +197,38 @@ export class UserManagement {
     });
   }
 
+  private loadingPermissionsForRoleId: number | null = null;
+
   updatePermissionsByRole(roleId: number) {
-    this.userService.getRolePermissions(roleId).subscribe({
+    const numericRoleId = Number(roleId);
+    if (!numericRoleId) return;
+
+    this.loadingPermissionsForRoleId = numericRoleId;
+    this.userService.getRolePermissions(numericRoleId).subscribe({
       next: (perms) => {
-        const permIds = perms.map(p => p.id);
-        // Only patch if role_id currently matches the one we fetched for
-        // and we aren't in a state that should ignore defaults
-        if (this.userForm.get('role_id')?.value == roleId) {
-          setTimeout(() => {
-            this.userForm.patchValue({ permission_ids: permIds }, { emitEvent: false });
-          });
+        // Only apply if this is still the selected role
+        const currentRoleIdValue = this.userForm.get('role_id')?.value;
+        const currentRoleId = currentRoleIdValue ? Number(currentRoleIdValue) : null;
+        
+        if (this.loadingPermissionsForRoleId === numericRoleId && currentRoleId === numericRoleId) {
+          const permIds = perms.map(p => Number(p.id));
+          this.userForm.patchValue({ permission_ids: permIds }, { emitEvent: false });
         }
+        this.loadingPermissionsForRoleId = null;
+      },
+      error: (err) => {
+        console.error('Error fetching role permissions:', err);
+        this.loadingPermissionsForRoleId = null;
       }
     });
   }
 
   isPermissionVisible(groupLabel: string, permissionName: string): boolean {
-    const roleId = this.userForm.get('role_id')?.value;
-    if (!roleId) return false;
+    const roleIdValue = this.userForm.get('role_id')?.value;
+    if (!roleIdValue) return false;
 
-    const role = this.roleOptions.find(r => r.id == roleId);
+    const roleId = Number(roleIdValue);
+    const role = this.roleOptions.find(r => Number(r.id) === roleId);
     if (!role) return false;
 
     const roleName = role.role_name.toLowerCase();
@@ -241,23 +253,29 @@ export class UserManagement {
   }
 
   onPermissionChange(event: any, permissionId: number) {
-    const permissionIds = this.userForm.get('permission_ids')?.value as number[];
+    const currentIds = (this.userForm.get('permission_ids')?.value as any[] || []).map(id => Number(id));
+    const targetId = Number(permissionId);
+    let newIds: number[];
+    
     if (event.target.checked) {
-      if (!permissionIds.includes(permissionId)) {
-        this.userForm.patchValue({ permission_ids: [...permissionIds, permissionId] }, { emitEvent: false });
+      if (!currentIds.includes(targetId)) {
+        newIds = [...currentIds, targetId];
+      } else {
+        newIds = currentIds;
       }
     } else {
-      this.userForm.patchValue({ 
-        permission_ids: permissionIds.filter(id => id !== permissionId) 
-      }, { emitEvent: false });
+      newIds = currentIds.filter(id => id !== targetId);
     }
+    
+    this.userForm.patchValue({ permission_ids: newIds }, { emitEvent: false });
   }
 
   isPermissionChecked(permissionName: string): boolean {
     const permission = this.allPermissions.find(p => p.name === permissionName);
     if (!permission) return false;
-    const permissionIds = this.userForm.get('permission_ids')?.value as number[] || [];
-    return permissionIds.includes(permission.id);
+    const permissionIds = this.userForm.get('permission_ids')?.value as any[] || [];
+    const targetId = Number(permission.id);
+    return permissionIds.some(id => Number(id) === targetId);
   }
 
   getPermissionId(name: string): number {
@@ -266,7 +284,6 @@ export class UserManagement {
 
   loadUsers(page = 1) {
     this.isLoading.set(true);
-    this.feedback.set('');
 
     this.userService.listUsers(page, this.searchControl.value || '').subscribe({
       next: (result) => {
@@ -277,7 +294,7 @@ export class UserManagement {
         this.isLoading.set(false);
       },
       error: () => {
-        this.feedback.set('Unable to load users. Please check your network or login status.');
+        this.toastService.error('Unable to load users. Please check your network or login status.');
         this.isLoading.set(false);
       },
     });
@@ -286,7 +303,6 @@ export class UserManagement {
   openAddUser() {
     this.editMode.set(false);
     this.activeUser.set(null);
-    this.feedback.set('');
 
     this.userForm.reset({
       first_name: '',
@@ -305,11 +321,10 @@ export class UserManagement {
   editUser(user: User) {
     this.editMode.set(true);
     this.activeUser.set(user);
-    this.feedback.set('');
 
     // Use direct user permissions if they exist, otherwise fall back to role defaults
-    const userPermIds = user.permissions?.map(p => p.id) || [];
-    const rolePermIds = user.role?.permissions?.map(p => p.id) || [];
+    const userPermIds = user.permissions?.map(p => Number(p.id)) || [];
+    const rolePermIds = user.role?.permissions?.map(p => Number(p.id)) || [];
     const initialPermIds = userPermIds.length > 0 ? userPermIds : rolePermIds;
 
     // Use emitEvent: false to prevent the role_id change from triggering updatePermissionsByRole
@@ -324,7 +339,8 @@ export class UserManagement {
       permission_ids: initialPermIds,
     }, { emitEvent: false });
 
-    if (user.role?.role_name?.toLowerCase() === 'superadmin') {
+    const roleName = user.role?.role_name?.toLowerCase();
+    if (roleName === 'superadmin') {
       this.userForm.get('role_id')?.disable();
     } else {
       this.userForm.get('role_id')?.enable();
@@ -335,7 +351,7 @@ export class UserManagement {
 
   saveUser() {
     if (this.userForm.invalid) {
-      this.feedback.set('Please fill in all required fields before saving.');
+      this.toastService.warning('Please fill in all required fields before saving.');
       return;
     }
 
@@ -344,23 +360,23 @@ export class UserManagement {
     if (this.editMode() && this.activeUser()) {
       this.userService.updateUser(this.activeUser()!.id, payload).subscribe({
         next: () => {
-          this.feedback.set('User updated successfully.');
+          this.toastService.success('User updated successfully.');
           this.getModal('userModal')?.hide();
           this.loadUsers(this.currentPage());
         },
         error: () => {
-          this.feedback.set('Failed to update user. Make sure role and office IDs are valid.');
+          this.toastService.error('Failed to update user. Make sure role and office IDs are valid.');
         },
       });
     } else {
       this.userService.createUser(payload).subscribe({
         next: () => {
-          this.feedback.set('New user created successfully. A password reset email has been sent to the user.');
+          this.toastService.success('New user created successfully. A password reset email has been sent to the user.');
           this.getModal('userModal')?.hide();
           this.loadUsers(1);
         },
         error: () => {
-          this.feedback.set('Failed to create user. Check required fields and permission.');
+          this.toastService.error('Failed to create user. Check required fields and permission.');
         },
       });
     }
@@ -369,35 +385,26 @@ export class UserManagement {
   cancelForm() {
     this.getModal('userModal')?.hide();
     this.activeUser.set(null);
-    this.feedback.set('');
   }
 
-  confirmDelete(user: User) {
-    this.userToDelete.set(user);
-    this.getModal('deleteConfirmModal')?.show();
-  }
-
-  cancelDelete() {
-    this.getModal('deleteConfirmModal')?.hide();
-    this.userToDelete.set(null);
-  }
-
-  deleteUser() {
-    const user = this.userToDelete();
-    if (!user) return;
-
-    this.userService.deleteUser(user.id).subscribe({
-      next: () => {
-        this.feedback.set('User deleted successfully.');
-        this.getModal('deleteConfirmModal')?.hide();
-        this.userToDelete.set(null);
-        this.loadUsers(this.currentPage());
-      },
-      error: () => {
-        this.feedback.set('Failed to delete user. You may not have permission.');
-        this.getModal('deleteConfirmModal')?.hide();
-      },
+  async confirmDelete(user: User) {
+    const confirmed = await this.confirmService.confirm(`Are you sure you want to delete user "${user.first_name} ${user.last_name}"?`, {
+      title: 'Delete User',
+      confirmText: 'Delete',
+      danger: true
     });
+
+    if (confirmed) {
+      this.userService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.toastService.success('User deleted successfully.');
+          this.loadUsers(this.currentPage());
+        },
+        error: () => {
+          this.toastService.error('Failed to delete user. You may not have permission.');
+        },
+      });
+    }
   }
 
   previousPage() {
@@ -431,12 +438,12 @@ export class UserManagement {
         a.click();
         window.URL.revokeObjectURL(url);
         this.isProcessingBackup.set(false);
-        this.feedback.set('Backup downloaded successfully.');
+        this.toastService.success('Backup downloaded successfully.');
         this.getModal('backupModal')?.hide();
       },
       error: () => {
         this.isProcessingBackup.set(false);
-        this.feedback.set('Failed to generate backup.');
+        this.toastService.error('Failed to generate backup.');
       }
     });
   }
@@ -455,7 +462,7 @@ export class UserManagement {
 
   performRestore() {
     if (!this.restoreFile) {
-      this.feedback.set('Please select a SQL file to restore.');
+      this.toastService.warning('Please select a SQL file to restore.');
       return;
     }
 
@@ -463,13 +470,13 @@ export class UserManagement {
     this.userService.restoreDatabase(this.restoreFile).subscribe({
       next: () => {
         this.isProcessingRestore.set(false);
-        this.feedback.set('Database restored successfully.');
+        this.toastService.success('Database restored successfully.');
         this.getModal('restoreModal')?.hide();
         this.loadUsers(1);
       },
       error: (err) => {
         this.isProcessingRestore.set(false);
-        this.feedback.set(err.error?.message || 'Failed to restore database.');
+        this.toastService.error(err.error?.message || 'Failed to restore database.');
       }
     });
   }
