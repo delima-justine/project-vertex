@@ -149,7 +149,7 @@ export class Home implements OnInit {
     this.supplyService.listSupplies().subscribe((data) => this.supplies.set(data));
     this.supplyService.listCategories().subscribe((data) => this.categories.set(data));
     this.supplyService.listUnits().subscribe((data) => this.units.set(data));
-    this.supplyService.listSupplyRequests().subscribe((data) => this.requests.set(data));
+    this.supplyService.listSupplyRequests(undefined, undefined, 1, 1000).subscribe((response) => this.requests.set(response.data));
   }
 
   openAddModal() {
