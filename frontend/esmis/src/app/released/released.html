@@ -216,13 +216,15 @@
             </div>
 
             <!-- Approved By -->
-            <div class="col-md-12" *ngIf="currentReq.approver">
-              <label class="form-label custom-label">Approved By</label>
-              <div class="input-group custom-input-group">
-                <span class="input-group-text"><i class="bi bi-person-check-fill"></i></span>
-                <input class="form-control" [value]="currentReq.approver.first_name + ' ' + currentReq.approver.last_name" readonly />
+            @if (currentReq.approver) {
+              <div class="col-md-12">
+                <label class="form-label custom-label">Approved By</label>
+                <div class="input-group custom-input-group">
+                  <span class="input-group-text"><i class="bi bi-person-check-fill"></i></span>
+                  <input class="form-control" [value]="currentReq.approver.first_name + ' ' + currentReq.approver.last_name" readonly />
+                </div>
               </div>
-            </div>
+            }
 
             <!-- Released At -->
             <div class="col-md-12">
