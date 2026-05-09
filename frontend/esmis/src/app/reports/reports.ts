@@ -550,8 +550,8 @@ export class Reports {
   }
 
   loadSupplyRequests() {
-    this.supplyService.listSupplyRequests().subscribe({
-      next: (data) => this.allRequests.set(data),
+    this.supplyService.listSupplyRequests(undefined, undefined, 1, 1000).subscribe({
+      next: (response) => this.allRequests.set(response.data),
       error: (err) => console.error('Error loading supply requests', err)
     });
   }
