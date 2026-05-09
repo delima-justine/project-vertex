@@ -12,6 +12,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\AdminAuditController;
+use App\Http\Controllers\DatabaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -66,6 +67,9 @@ Route::middleware(['auth:sanctum', 'role:admin,superadmin'])->group(function () 
 
     Route::get('/admin-audits', [AdminAuditController::class, 'index']);
     Route::get('/admin-audits/{admin_audit}', [AdminAuditController::class, 'show']);
+
+    Route::post('/database/backup', [DatabaseController::class, 'backup']);
+    Route::middleware(['role:superadmin'])->post('/database/restore', [DatabaseController::class, 'restore']);
 
     Route::get('/supplies/{supply}/history', [SupplyController::class, 'history']);
     Route::apiResource('supplies', SupplyController::class)->except(['index'])->parameters([
