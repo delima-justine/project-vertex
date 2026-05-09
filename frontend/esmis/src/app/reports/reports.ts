@@ -42,6 +42,38 @@ export class Reports {
   archivePage = signal(1);
   readonly archivePageSize = 10;
 
+  // Request Logs pagination
+  requestsPage = signal(1);
+  readonly requestsPageSize = 15;
+
+  paginatedRequests = computed(() => {
+    const requests = this.filteredRequests();
+    const start = (this.requestsPage() - 1) * this.requestsPageSize;
+    return requests.slice(start, start + this.requestsPageSize);
+  });
+
+  requestsPageCount = computed(() => {
+    return Math.max(1, Math.ceil(this.filteredRequests().length / this.requestsPageSize));
+  });
+
+  requestsPageNumbers = computed(() => {
+    return Array.from({ length: this.requestsPageCount() }, (_, index) => index + 1);
+  });
+
+  requestsPageStart = computed(() => {
+    if (this.filteredRequests().length === 0) return 0;
+    return (this.requestsPage() - 1) * this.requestsPageSize + 1;
+  });
+
+  requestsPageEnd = computed(() => {
+    return Math.min(this.requestsPage() * this.requestsPageSize, this.filteredRequests().length);
+  });
+
+  setRequestsPage(page: number) {
+    if (page < 1 || page > this.requestsPageCount()) return;
+    this.requestsPage.set(page);
+  }
+
   // Admin Audit signals
   adminAudits = signal<AdminAudit[]>([]);
   auditPage = signal(1);
@@ -483,6 +515,8 @@ export class Reports {
       this.appliedEndDate.set('');
     }
 
+    this.requestsPage.set(1);
+
     if (this.activeView() === 'admin_audit') {
       this.loadAudits(1);
     }
@@ -497,6 +531,8 @@ export class Reports {
     this.startDate.set('');
     this.endDate.set('');
     
+    this.requestsPage.set(1);
+
     if (this.activeView() === 'admin_audit') {
       this.loadAudits(1);
     }
