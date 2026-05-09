@@ -202,3 +202,43 @@
     </div>
   </div>
 </div>
+
+<!-- Confirm Action Modal -->
+<div class="modal fade" id="confirmModal-pending" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header confirm-modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Confirm Action</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeConfirmModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ confirmMessage() }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary confirm-modal-btn-cancel" (click)="closeConfirmModal()">Cancel</button>
+        <button type="button" class="btn confirm-modal-btn" (click)="runConfirmAction()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Modal -->
+<div class="modal fade" id="notifModal-pending" tabindex="-1" aria-labelledby="notifModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header notif-modal-header" [ngClass]="'notif-modal-header-' + notifType()">
+        <h5 class="modal-title" id="notifModalLabel">
+          <i class="bi" [ngClass]="notifIcon()"></i>
+          {{ notifTitle() }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ notifMessage() }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn notif-modal-btn" [ngClass]="'notif-modal-btn-' + notifType()" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

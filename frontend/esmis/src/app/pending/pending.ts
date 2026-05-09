@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
@@ -18,6 +18,7 @@ import { TopNav } from "../top-nav/top-nav";
 export class Pending implements OnInit {
   supplyService = inject(SupplyService);
   authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
   user = this.authService.currentUser;
 
@@ -27,6 +28,21 @@ export class Pending implements OnInit {
 
   selectedBatch = signal<SupplyRequest[]>([]);
   activeTabIndex = signal(0);
+
+  notifMessage = signal('');
+  notifType = signal<'success' | 'error' | 'warning'>('success');
+  notifTitle = signal('');
+  notifIcon = computed(() => {
+    switch (this.notifType()) {
+      case 'success': return 'bi-check-circle-fill';
+      case 'error': return 'bi-exclamation-triangle-fill';
+      case 'warning': return 'bi-exclamation-triangle-fill';
+      default: return 'bi-info-circle-fill';
+    }
+  });
+
+  confirmMessage = signal('');
+  confirmAction = signal<() => void>(() => {});
 
   @ViewChild('batchModal', { static: false }) batchModalElement?: ElementRef<HTMLElement>;
 
@@ -47,6 +63,29 @@ export class Pending implements OnInit {
 
   closeModal() {
     this.getModalInstance()?.hide();
+  }
+
+  openConfirmModal(message: string, action: () => void) {
+    this.confirmMessage.set(message);
+    this.confirmAction.set(action);
+    const modalElement = document.getElementById('confirmModal-pending');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.show();
+    }
+  }
+
+  closeConfirmModal() {
+    const modalElement = document.getElementById('confirmModal-pending');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.hide();
+    }
+  }
+
+  runConfirmAction() {
+    this.confirmAction()();
+    this.closeConfirmModal();
   }
 
   batchedRequests = computed(() => {
@@ -105,6 +144,20 @@ export class Pending implements OnInit {
     });
   }
 
+  showNotification(message: string, type: 'success' | 'error' | 'warning') {
+    this.notifMessage.set(message);
+    this.notifType.set(type);
+    this.notifTitle.set(type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Warning');
+    this.cdr.detectChanges();
+    const modalElement = document.getElementById('notifModal-pending');
+    if (modalElement) {
+      setTimeout(() => {
+        const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+      }, 0);
+    }
+  }
+
   viewRequest(batch: any) {
     this.selectedBatch.set(batch.requests);
     this.activeTabIndex.set(0);
@@ -112,7 +165,7 @@ export class Pending implements OnInit {
   }
 
   disapproveBatch() {
-    if (confirm('Are you sure you want to disapprove this entire batch?')) {
+    this.openConfirmModal('Are you sure you want to disapprove this entire batch?', () => {
       const batch = this.selectedBatch();
       const adminId = this.user()?.id;
       const requests = batch.map(r => this.supplyService.updateSupplyRequest(r.id, { 
@@ -129,12 +182,12 @@ export class Pending implements OnInit {
             if (completed === batch.length) {
               this.closeModal();
               this.loadPendingRequests();
-              alert('Batch disapproved.');
+              this.showNotification('Batch disapproved.', 'success');
             }
           }
         });
       });
-    }
+    });
   }
 
   editBatchRIS() {

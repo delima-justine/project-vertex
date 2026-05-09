@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild, computed } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild, computed, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupplyService } from '../../services/supply.service';
 import { SupplyRequest } from '../../models/smis.model';
@@ -19,9 +19,10 @@ export class EditRis implements OnInit, OnDestroy {
   private router = inject(Router);
   private supplyService = inject(SupplyService);
   private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
   requests = signal<SupplyRequest[]>([]);
-  approver = signal(this.authService.currentUser());
+  approver = this.authService.currentUser;
 
   combinedPurposes = computed(() => {
     const purposes = this.requests()
@@ -48,7 +49,22 @@ export class EditRis implements OnInit, OnDestroy {
 
   // For "Received By"
   receivedByName = signal<string>('');
+
+  notifMessage = signal('');
+  notifType = signal<'success' | 'error' | 'warning'>('success');
+  notifTitle = signal('');
+  notifIcon = computed(() => {
+    switch (this.notifType()) {
+      case 'success': return 'bi-check-circle-fill';
+      case 'error': return 'bi-exclamation-triangle-fill';
+      case 'warning': return 'bi-exclamation-triangle-fill';
+      default: return 'bi-info-circle-fill';
+    }
+  });
   receivedByOffice = signal<string>('');
+
+  confirmMessage = signal('');
+  confirmAction = signal<() => void>(() => {});
 
   isPrinted = signal<boolean>(false);
 
@@ -69,6 +85,43 @@ export class EditRis implements OnInit, OnDestroy {
     this.timerSubscription?.unsubscribe();
   }
 
+  showNotification(message: string, type: 'success' | 'error' | 'warning') {
+    this.notifMessage.set(message);
+    this.notifType.set(type);
+    this.notifTitle.set(type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Warning');
+    this.cdr.detectChanges();
+    const modalElement = document.getElementById('notifModal-edit-ris');
+    if (modalElement) {
+      setTimeout(() => {
+        const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+      }, 0);
+    }
+  }
+
+  openConfirmModal(message: string, action: () => void) {
+    this.confirmMessage.set(message);
+    this.confirmAction.set(action);
+    const modalElement = document.getElementById('confirmModal-edit-ris-action');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.show();
+    }
+  }
+
+  closeConfirmModal() {
+    const modalElement = document.getElementById('confirmModal-edit-ris-action');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.hide();
+    }
+  }
+
+  runConfirmAction() {
+    this.confirmAction()();
+    this.closeConfirmModal();
+  }
+
   loadRequests(ids: number[]) {
     const obs = ids.map((id: number) => this.supplyService.getSupplyRequest(id));
     forkJoin(obs).subscribe({
@@ -86,7 +139,7 @@ export class EditRis implements OnInit, OnDestroy {
       },
       error: (err: unknown) => {
         console.error('Error fetching requests', err);
-        alert('Failed to load request data.');
+        this.showNotification('Failed to load request data.', 'error');
         this.router.navigate(['/pending-requests']);
       }
     });
@@ -99,29 +152,46 @@ export class EditRis implements OnInit, OnDestroy {
   saveAndApprove() {
     const admin = this.approver();
     const reqs = this.requests();
-    if (reqs.length === 0 || !admin) return;
+    if (reqs.length === 0) return;
+    if (!admin) {
+      this.showNotification('Unable to approve request: approver data is not available.', 'error');
+      return;
+    }
 
-    if (confirm(`Are you sure you want to approve these ${reqs.length} requests?`)) {
-      const updates = reqs.map((req: SupplyRequest) => {
+    this.openConfirmModal(`Are you sure you want to approve these ${reqs.length} requests?`, () => {
+      const invalidRequest = reqs.some((req: SupplyRequest) => {
         const data = this.requestData()[req.id];
+        return !data || data.issueQty < 1;
+      });
+
+      if (invalidRequest) {
+        this.closeConfirmModal();
+        this.showNotification('Please ensure every request has a valid quantity before approving.', 'error');
+        return;
+      }
+
+      const updates = reqs.map((req: SupplyRequest) => {
+        const data = this.requestData()[req.id] ?? { issueQty: req.quantity_req, remarks: '', stockAvailable: true };
+        const quantityReq = typeof data.issueQty === 'number' ? data.issueQty : Number(data.issueQty) || req.quantity_req;
+
         return this.supplyService.updateSupplyRequest(req.id, {
           status: 'approved',
           approved_by: admin.id,
-          quantity_req: data.issueQty
+          quantity_req: quantityReq,
         });
       });
 
       forkJoin(updates).subscribe({
         next: () => {
-          alert('Requests approved successfully!');
+          this.showNotification('Requests approved successfully!', 'success');
           this.router.navigate(['/pending-requests']);
         },
         error: (err: unknown) => {
           console.error('Error approving requests', err);
-          alert('Failed to approve one or more requests.');
+          this.showNotification('Failed to approve one or more requests.', 'error');
         }
       });
-    }
+    });
   }
 
   updateRequestData(id: number, field: string, value: unknown) {
@@ -157,7 +227,7 @@ export class EditRis implements OnInit, OnDestroy {
   async printRIS() {
     const reqs = this.requests();
     if (reqs.length === 0) {
-      alert('Error: No request data found.');
+      this.showNotification('Error: No request data found.', 'error');
       return;
     }
 
@@ -329,7 +399,7 @@ export class EditRis implements OnInit, OnDestroy {
       
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('An error occurred while generating the PDF.');
+      this.showNotification('An error occurred while generating the PDF.', 'error');
     }
   }
 

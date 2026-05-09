@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
@@ -18,6 +18,7 @@ import { forkJoin } from 'rxjs';
 export class Approved implements OnInit {
   private supplyService = inject(SupplyService);
   private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
   @ViewChild('requestDetailsModal') modalElement?: ElementRef;
 
@@ -28,6 +29,21 @@ export class Approved implements OnInit {
   selectedOffice = signal('all');
   selectedBatch = signal<SupplyRequest[]>([]);
   activeTabIndex = signal(0);
+
+  notifMessage = signal('');
+  notifType = signal<'success' | 'error' | 'warning'>('success');
+  notifTitle = signal('');
+  notifIcon = computed(() => {
+    switch (this.notifType()) {
+      case 'success': return 'bi-check-circle-fill';
+      case 'error': return 'bi-exclamation-triangle-fill';
+      case 'warning': return 'bi-exclamation-triangle-fill';
+      default: return 'bi-info-circle-fill';
+    }
+  });
+
+  confirmMessage = signal('');
+  confirmAction = signal<() => void>(() => {});
 
   batchedRequests = computed(() => {
     const groups: { [key: string]: SupplyRequest[] } = {};
@@ -88,6 +104,43 @@ export class Approved implements OnInit {
     });
   }
 
+  showNotification(message: string, type: 'success' | 'error' | 'warning') {
+    this.notifMessage.set(message);
+    this.notifType.set(type);
+    this.notifTitle.set(type === 'success' ? 'Success' : type === 'error' ? 'Warning' : 'Error');
+    this.cdr.detectChanges();
+    const modalElement = document.getElementById('notifModal-approved');
+    if (modalElement) {
+      setTimeout(() => {
+        const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+      }, 0);
+    }
+  }
+
+  openConfirmModal(message: string, action: () => void) {
+    this.confirmMessage.set(message);
+    this.confirmAction.set(action);
+    const modalElement = document.getElementById('confirmModal-approved');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.show();
+    }
+  }
+
+  closeConfirmModal() {
+    const modalElement = document.getElementById('confirmModal-approved');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.hide();
+    }
+  }
+
+  runConfirmAction() {
+    this.confirmAction()();
+    this.closeConfirmModal();
+  }
+
   viewBatch(batch: SupplyRequest[]) {
     this.selectedBatch.set(batch);
     this.activeTabIndex.set(0);
@@ -99,22 +152,22 @@ export class Approved implements OnInit {
 
   releaseBatch(batch: SupplyRequest[]) {
     const itemNames = batch.map(r => r.supply?.item_desc).join(', ');
-    if (confirm(`Are you sure you want to release the following items: ${itemNames}?`)) {
+    this.openConfirmModal(`Are you sure you want to release the following items: ${itemNames}?`, () => {
       const observables = batch.map(req => 
         this.supplyService.updateSupplyRequest(req.id, { status: 'released' })
       );
 
       forkJoin(observables).subscribe({
         next: () => {
-          alert('Batch requests released!');
+          this.showNotification('Batch requests released!', 'success');
           this.loadApprovedRequests();
         },
         error: (err) => {
           console.error('Error releasing request batch', err);
-          alert('Failed to release some requests in the batch.');
+          this.showNotification('Failed to release some requests in the batch.', 'error');
           this.loadApprovedRequests();
         }
       });
-    }
+    });
   }
 }

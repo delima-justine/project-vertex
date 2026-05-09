@@ -67,4 +67,23 @@
     <p class="fw-bold">SMIS Website</p>
     <p>| Developed by Astral Angels 2025. All Rights Reserved</p>
   </div> -->
+
+  <!-- Notification Modal -->
+  <div class="modal fade" id="notifModal-auth" tabindex="-1" aria-labelledby="notifModalLabel-auth" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" [ngClass]="'notif-modal-header-' + notifType()">
+          <i class="bi" [ngClass]="'bi-' + notifIcon()" style="margin-right: 8px;"></i>
+          <h5 class="modal-title" id="notifModalLabel-auth">{{notifTitle()}}</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p>{{notifMessage()}}</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn" [ngClass]="'notif-modal-btn-' + notifType()" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -16,10 +16,14 @@ export class ResetPassword implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
   message = signal<string | null>(null);
   error = signal<string | null>(null);
   isLoading = signal<boolean>(false);
+
+  confirmMessage = signal('');
+  confirmAction = signal<() => void>(() => {});
 
   token: string | null = null;
   email: string | null = null;
@@ -50,7 +54,7 @@ export class ResetPassword implements OnInit {
   resetPassword() {
     if (this.resetPasswordForm.invalid || !this.token || !this.email) return;
 
-    if (confirm('Are you sure you want to reset your password?')) {
+    this.openConfirmModal('Are you sure you want to reset your password?', () => {
       this.isLoading.set(true);
       this.message.set(null);
       this.error.set(null);
@@ -72,11 +76,34 @@ export class ResetPassword implements OnInit {
           this.isLoading.set(false);
         }
       });
-    }
+    });
   }
 
   get password() {
     return this.resetPasswordForm.get('password');
+  }
+
+  openConfirmModal(message: string, action: () => void) {
+    this.confirmMessage.set(message);
+    this.confirmAction.set(action);
+    const modalElement = document.getElementById('confirmModal-reset-password');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.show();
+    }
+  }
+
+  closeConfirmModal() {
+    const modalElement = document.getElementById('confirmModal-reset-password');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.hide();
+    }
+  }
+
+  runConfirmAction() {
+    this.confirmAction()();
+    this.closeConfirmModal();
   }
 
   get password_confirmation() {

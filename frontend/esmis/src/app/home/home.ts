@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Sidebar } from "../sidebar/sidebar";
@@ -26,6 +26,7 @@ export class Home implements OnInit {
   authService: AuthService = inject(AuthService);
   supplyService: SupplyService = inject(SupplyService);
   fb: FormBuilder = inject(FormBuilder);
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   user = this.authService.currentUser;
   supplies = signal<Supply[]>([]);
@@ -40,6 +41,21 @@ export class Home implements OnInit {
   selectedCategory = signal('all');
   newCategoryName = signal('');
   newUnitName = signal('');
+
+  notifMessage = signal('');
+  notifType = signal<'success' | 'error' | 'warning'>('success');
+  notifTitle = signal('');
+  notifIcon = computed(() => {
+    switch (this.notifType()) {
+      case 'success': return 'bi-check-circle-fill';
+      case 'error': return 'bi-exclamation-triangle-fill';
+      case 'warning': return 'bi-exclamation-triangle-fill';
+      default: return 'bi-info-circle-fill';
+    }
+  });
+
+  confirmMessage = signal('');
+  confirmAction = signal<() => void>(() => {});
 
   // Total Active Items
   totalActiveItems = computed(() => this.supplies().length);
@@ -147,6 +163,43 @@ export class Home implements OnInit {
     this.supplyService.listSupplyRequests().subscribe((data) => this.requests.set(data));
   }
 
+  showNotification(message: string, type: 'success' | 'error' | 'warning') {
+    this.notifMessage.set(message);
+    this.notifType.set(type);
+    this.notifTitle.set(type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Warning');
+    this.cdr.detectChanges();
+    const modalElement = document.getElementById('notifModal-home');
+    if (modalElement) {
+      setTimeout(() => {
+        const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+      }, 0);
+    }
+  }
+
+  openConfirmModal(message: string, action: () => void) {
+    this.confirmMessage.set(message);
+    this.confirmAction.set(action);
+    const modalElement = document.getElementById('confirmModal-home');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.show();
+    }
+  }
+
+  closeConfirmModal() {
+    const modalElement = document.getElementById('confirmModal-home');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.hide();
+    }
+  }
+
+  runConfirmAction() {
+    this.confirmAction()();
+    this.closeConfirmModal();
+  }
+
   openAddModal() {
     this.isEditMode = false;
     this.currentStockNum = null;
@@ -189,7 +242,7 @@ export class Home implements OnInit {
         },
         error: (err) => {
           console.error('Error updating supply:', err);
-          alert('Failed to update supply. Please check the console for details.');
+          this.showNotification('Failed to update supply. Please check the console for details.', 'error');
         }
       });
     } else {
@@ -200,24 +253,24 @@ export class Home implements OnInit {
         },
         error: (err) => {
           console.error('Error creating supply:', err);
-          alert('Failed to create supply. Stock number might already exist.');
+          this.showNotification('Failed to create supply. Stock number might already exist.', 'error');
         }
       });
     }
   }
 
   onDelete(stockNum: string) {
-    if (confirm('Are you sure you want to delete this supply?')) {
+    this.openConfirmModal('Are you sure you want to delete this supply?', () => {
       this.supplyService.deleteSupply(stockNum).subscribe({
         next: () => {
           this.loadData();
         },
         error: (err) => {
           console.error('Error deleting supply:', err);
-          alert('Failed to delete supply.');
+          this.showNotification('Failed to delete supply.', 'error');
         }
       });
-    }
+    });
   }
 
   closeModal() {
@@ -250,23 +303,23 @@ export class Home implements OnInit {
       },
       error: (err) => {
         console.error('Error adding category:', err);
-        alert('Failed to add category. It might already exist.');
+        this.showNotification('Failed to add category. It might already exist.', 'error');
       }
     });
   }
 
   deleteCategory(id: number) {
-    if (confirm('Are you sure you want to delete this category? This might fail if supplies are using it.')) {
+    this.openConfirmModal('Are you sure you want to delete this category? This might fail if supplies are using it.', () => {
       this.supplyService.deleteCategory(id).subscribe({
         next: () => {
           this.loadData();
         },
         error: (err) => {
           console.error('Error deleting category:', err);
-          alert('Failed to delete category. Ensure no supplies are linked to it.');
+          this.showNotification('Failed to delete category. Ensure no supplies are linked to it.', 'error');
         }
       });
-    }
+    });
   }
 
   closeCategoryModal() {
@@ -299,23 +352,23 @@ export class Home implements OnInit {
       },
       error: (err) => {
         console.error('Error adding unit:', err);
-        alert('Failed to add unit. It might already exist.');
+        this.showNotification('Failed to add unit. It might already exist.', 'error');
       }
     });
   }
 
   deleteUnit(id: number) {
-    if (confirm('Are you sure you want to delete this unit? This might fail if supplies are using it.')) {
+    this.openConfirmModal('Are you sure you want to delete this unit? This might fail if supplies are using it.', () => {
       this.supplyService.deleteUnit(id).subscribe({
         next: () => {
           this.loadData();
         },
         error: (err) => {
           console.error('Error deleting unit:', err);
-          alert('Failed to delete unit. Ensure no supplies are linked to it.');
+          this.showNotification('Failed to delete unit. Ensure no supplies are linked to it.', 'error');
         }
       });
-    }
+    });
   }
 
   closeUnitModal() {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
@@ -23,6 +23,10 @@ export class CreateRequest implements OnInit {
   requestList: (Supply & { quantity_req: number })[] = [];
   purpose = '';
   purposeError = signal(false);
+  notifMessage = signal('');
+  notifType = signal<'success' | 'error' | 'warning'>('success');
+  notifTitle = signal('');
+  notifIcon = computed(() => this.notifType() === 'success' ? 'check-circle' : this.notifType() === 'error' ? 'x-circle' : 'exclamation-triangle');
 
   ngOnInit() {
     this.loadSupplies();
@@ -39,6 +43,17 @@ export class CreateRequest implements OnInit {
 
   openModal() {
     const modalElement = document.getElementById('supplyInventoryModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.show();
+    }
+  }
+
+  showNotification(message: string, type: 'success' | 'error' | 'warning') {
+    this.notifMessage.set(message);
+    this.notifType.set(type);
+    this.notifTitle.set(type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Warning');
+    const modalElement = document.getElementById('notifModal-create-request');
     if (modalElement) {
       const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
       modal.show();
@@ -78,7 +93,7 @@ export class CreateRequest implements OnInit {
 
     const user = this.authService.currentUser();
     if (!user) {
-      alert('You must be logged in to submit a request.');
+      this.showNotification('You must be logged in to submit a request.', 'warning');
       return;
     }
 
@@ -93,13 +108,13 @@ export class CreateRequest implements OnInit {
 
     forkJoin(requests).subscribe({
       next: (responses) => {
-        alert('Request submitted successfully!');
+        this.showNotification('Request submitted successfully!', 'success');
         this.requestList = [];
         this.purpose = '';
       },
       error: (err) => {
         console.error('Error submitting requests', err);
-        alert('There was an error submitting your request. Please check the console.');
+        this.showNotification('There was an error submitting your request. Please check the console.', 'error');
       }
     });
   }

@@ -7,6 +7,7 @@ use App\Models\SupplyRequest;
 use App\Models\Notification;
 use App\Services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SupplyRequestController extends Controller
 {
@@ -82,18 +83,34 @@ class SupplyRequestController extends Controller
         $oldValues = $supply_request->toArray();
         $supply_request->update($validated);
 
-        AuditService::log('UPDATE', $supply_request, "Updated supply request status to: {$supply_request->status}", $oldValues, $supply_request->fresh()->toArray());
+        try {
+            AuditService::log('UPDATE', $supply_request, "Updated supply request status to: {$supply_request->status}", $oldValues, $supply_request->fresh()->toArray());
+        } catch (\Throwable $e) {
+            Log::error('Audit logging failed for supply request update', [
+                'request_id' => $supply_request->id,
+                'status' => $supply_request->status,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
-        $notif = Notification::create([
-            'user_id' => $supply_request->user_id,
-            'request_id' => $supply_request->id,
-            'message' => "Your request for {$supply_request->supply_id} has been {$supply_request->status}.",
-            'action' => $supply_request->status,
-        ]);
+        try {
+            $notif = Notification::create([
+                'user_id' => $supply_request->user_id,
+                'request_id' => $supply_request->id,
+                'message' => "Your request for {$supply_request->supply_id} has been {$supply_request->status}.",
+                'action' => $supply_request->status,
+            ]);
 
-        broadcast(new NotificationSent($notif));
+            broadcast(new NotificationSent($notif));
+        } catch (\Throwable $e) {
+            Log::error('Notification creation or broadcast failed for supply request update', [
+                'request_id' => $supply_request->id,
+                'status' => $supply_request->status,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
-        return response()->json($supply_request);
+        return response()->json($supply_request->fresh());
     }
 
     // Delete a supply request

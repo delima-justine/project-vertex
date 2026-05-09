@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, ViewChild, ElementRef } from '@angular/core';
+import { Component, computed, inject, signal, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as ExcelJS from 'exceljs';
@@ -54,7 +54,20 @@ export class Reports {
   selectedAdminId = signal<number | null>(null);
   appliedAdminId = signal<number | null>(null);
 
+  notifMessage = signal('');
+  notifType = signal<'success' | 'error' | 'warning'>('success');
+  notifTitle = signal('');
+  notifIcon = computed(() => {
+    switch (this.notifType()) {
+      case 'success': return 'bi-check-circle-fill';
+      case 'error': return 'bi-exclamation-triangle-fill';
+      case 'warning': return 'bi-exclamation-triangle-fill';
+      default: return 'bi-info-circle-fill';
+    }
+  });
+
   @ViewChild('archiveModal', { static: false }) archiveModalElement?: ElementRef<HTMLElement>;
+  private cdr = inject(ChangeDetectorRef);
 
   private getModalInstance() {
     if (!this.archiveModalElement) return null;
@@ -113,6 +126,20 @@ export class Reports {
   });
 
   showCustomRange = computed(() => this.timePeriod() === 'custom');
+
+  showNotification(message: string, type: 'success' | 'error' | 'warning') {
+    this.notifMessage.set(message);
+    this.notifType.set(type);
+    this.notifTitle.set(type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Warning');
+    this.cdr.detectChanges();
+    const modalElement = document.getElementById('notifModal-reports');
+    if (modalElement) {
+      setTimeout(() => {
+        const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+      }, 0);
+    }
+  }
 
   archivePageCount = computed(() => {
     return Math.max(1, Math.ceil(this.archivedRecords().length / this.archivePageSize));
@@ -193,7 +220,7 @@ export class Reports {
         : this.archivedRecords();
 
     if (archives.length === 0) {
-      alert('No archive records available to export.');
+      this.showNotification('No archive records available to export.', 'warning');
       return;
     }
 
@@ -285,7 +312,7 @@ export class Reports {
         .save();
     } catch (error) {
       console.error('Error exporting archive PDF:', error);
-      alert('Failed to export archive PDF.');
+      this.showNotification('Failed to export archive PDF.', 'error');
     }
   }
 
@@ -293,7 +320,7 @@ export class Reports {
     try {
       const requests = this.filteredRequests();
       if (requests.length === 0) {
-        alert('No data available to export.');
+        this.showNotification('No data available to export.', 'warning');
         return;
       }
 
@@ -454,7 +481,7 @@ export class Reports {
       console.log(`Excel file exported: ${fileName}`);
     } catch (error) {
       console.error('Error exporting to Excel:', error);
-      alert('Failed to export to Excel.');
+      this.showNotification('Failed to export to Excel.', 'error');
     }
   }
 
@@ -634,11 +661,11 @@ export class Reports {
       next: () => {
         this.loadSupplyRequests();
         this.loadArchives();
-        alert(`${requestsToArchive.length} request(s) archived successfully.`);
+        this.showNotification(`${requestsToArchive.length} request(s) archived successfully.`, 'success');
       },
       error: (err) => {
         console.error('Error archiving filtered results', err);
-        alert('Failed to archive one or more records.');
+        this.showNotification('Failed to archive one or more records.', 'error');
       }
     });
   }
@@ -648,11 +675,11 @@ export class Reports {
       next: () => {
         this.allRequests.set(this.allRequests().filter((item) => item.id !== req.id));
         this.loadArchives();
-        alert('Request archived successfully.');
+        this.showNotification('Request archived successfully.', 'success');
       },
       error: (err) => {
         console.error('Error archiving request', err);
-        alert('Failed to archive the request.');
+        this.showNotification('Failed to archive the request.', 'error');
       }
     });
   }
@@ -663,11 +690,11 @@ export class Reports {
         this.archivedRecords.set(this.archivedRecords().filter((item) => item.id !== archive.id));
         this.loadSupplyRequests();
         this.selectedArchiveIds.set(this.selectedArchiveIds().filter((id) => id !== archive.id));
-        alert('Archive restored successfully.');
+        this.showNotification('Archive restored successfully.', 'success');
       },
       error: (err) => {
         console.error('Error restoring archive', err);
-        alert('Failed to restore the archive.');
+        this.showNotification('Failed to restore the archive.', 'error');
       }
     });
   }
@@ -683,11 +710,11 @@ export class Reports {
         this.loadArchives();
         this.loadSupplyRequests();
         this.selectedArchiveIds.set([]);
-        alert(`${selectedIds.length} archived record(s) restored successfully.`);
+        this.showNotification(`${selectedIds.length} archived record(s) restored successfully.`, 'success');
       },
       error: (err) => {
         console.error('Error restoring selected archives', err);
-        alert('Failed to restore selected archived records.');
+        this.showNotification('Failed to restore selected archived records.', 'error');
       }
     });
   }

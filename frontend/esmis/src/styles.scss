@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+﻿/* You can add global styles to this file, and also import other style files */
 
 :root {
   --sidebar-width: 250px;
@@ -14,4 +14,54 @@ html, body {
   height: 100vh;
   width: 100vw;
   background-color: #f8f9fa;
+}
+
+/* Notification Modal Styles */
+.notif-modal-header-success {
+  background-color: #198754;
+  color: #ffffff;
+}
+
+.notif-modal-header-error {
+  background-color: #800000;
+  color: #ffffff;
+}
+
+.notif-modal-header-warning {
+  background-color: #fd7e14;
+  color: #ffffff;
+}
+
+.notif-modal-btn-success {
+  background-color: #198754;
+  color: #ffffff;
+  border-color: #198754;
+}
+
+.notif-modal-btn-error {
+  background-color: #800000;
+  color: #ffffff;
+  border-color: #800000;
+}
+
+.notif-modal-btn-warning {
+  background-color: #fd7e14;
+  color: #ffffff;
+  border-color: #fd7e14;
+}
+
+.confirm-modal-header {
+  background-color: #800000;
+  color: #ffffff;
+}
+
+.confirm-modal-btn {
+  background-color: #800000;
+  color: #ffffff;
+  border-color: #800000;
+}
+
+.confirm-modal-btn-cancel {
+  border-color: #6c757d;
+  color: #6c757d;
 }
