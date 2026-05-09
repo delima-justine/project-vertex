@@ -75,4 +75,14 @@ export class UserManagementService {
   deleteUser(id: number) {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/user/${id}`);
   }
+
+  backupDatabase(): Observable<Blob> {
+    return this.http.post(`${this.apiUrl}/database/backup`, {}, { responseType: 'blob' });
+  }
+
+  restoreDatabase(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/database/restore`, formData);
+  }
 }
