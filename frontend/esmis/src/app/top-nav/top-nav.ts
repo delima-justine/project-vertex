@@ -1,5 +1,6 @@
 import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { ThemeService } from '../../services/theme';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ChangePasswordPayload, GeneralResponse } from '../../models/smis.model';
@@ -14,6 +15,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class TopNav {
   isOpen = signal(false);
   authService = inject(AuthService);
+  themeService = inject(ThemeService);
   user = this.authService.currentUser;
   router = inject(Router);
   

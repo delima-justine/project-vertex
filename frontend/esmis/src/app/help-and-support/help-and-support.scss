@@ -1,5 +1,13 @@
 @use '../mixins' as *;
 
+:root {
+  --header-maroon: #800000;
+}
+
+[data-bs-theme="dark"] {
+  --header-maroon: #ffffff;
+}
+
 main {
   @include page-layout(true);
 }
@@ -9,70 +17,73 @@ main {
 }
 
 .text-maroon {
-  color: #800000;
+  color: var(--header-maroon) !important;
+}
+
+.header-divider {
+  border-top: 2px solid var(--header-maroon);
+  opacity: 1;
 }
 
 .content-container {
+  .card-title {
+    color: var(--header-maroon) !important;
+    
+    i {
+      color: var(--header-maroon) !important;
+    }
+  }
+
   .card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
     
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
     }
 
     .card-header {
+      background-color: var(--bs-tertiary-bg);
+      border-bottom: 1px solid var(--bs-border-color);
       i {
         font-size: 1.25rem;
       }
     }
 
     .card-body {
+      color: var(--bs-body-color);
       ul {
         padding-left: 1.25rem;
         li {
           margin-bottom: 0.5rem;
-          color: #495057;
+          color: var(--bs-body-color);
         }
       }
     }
   }
 
   .alert-info {
-    background-color: #f0f7ff;
-    color: #055160;
+    background-color: var(--bs-info-bg-subtle);
+    color: var(--bs-info-text-emphasis);
+    border-color: var(--bs-info-border-subtle);
     
     i {
-      color: #0d6efd;
-    }
-  }
-
-  /* Admin Guide Specific Styles from Image */
-  .admin-guide-header {
-    h2 {
-      font-weight: 600;
-      font-size: 1.75rem;
-    }
-
-    .header-divider {
-      border: 0;
-      height: 1.5px;
-      background-color: #800000;
-      opacity: 1;
-      margin-top: 0.5rem;
+      color: var(--bs-info);
     }
   }
 
   .description {
     font-size: 1.1rem;
-    color: #333;
+    color: var(--bs-body-color);
   }
 
   .guide-card {
     display: flex;
-    background: #fff;
+    background: var(--bs-body-bg);
     min-height: 140px;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid var(--bs-border-color);
 
     .guide-icon-side {
       width: 100px;
@@ -93,14 +104,18 @@ main {
       h6 {
         font-weight: 700;
         font-size: 1rem;
+        color: var(--bs-body-color);
       }
     }
+  }
 
+  .video-tutorials-section h4 {
+    color: var(--bs-body-color);
   }
 
   .video-tutorial-card {
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.05);
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
 
     .video-icon-side {
       width: 240px;
@@ -118,6 +133,10 @@ main {
       h3 {
         font-weight: 700;
         font-size: 1.75rem;
+        color: var(--bs-body-color);
+      }
+      p {
+        color: var(--bs-secondary-color);
       }
     }
   }
@@ -137,7 +156,7 @@ main {
   }
 
   .btn-pill-maroon {
-    background-color: #d93025; /* A slightly brighter red for the YouTube pill button as per image */
+    background-color: #d93025;
     color: #fff;
     border-radius: 50px;
     font-weight: 600;
@@ -155,23 +174,30 @@ main {
     width: 350px;
 
     .input-group {
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       border-radius: 8px;
       overflow: hidden;
 
       .input-group-text {
-        border-color: #dee2e6;
+        background-color: var(--bs-body-bg);
+        border-color: var(--bs-border-color);
         padding-left: 1rem;
       }
 
       .form-control {
-        border-color: #dee2e6;
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
+        border-color: var(--bs-border-color);
         padding: 0.6rem 1rem 0.6rem 0;
         font-size: 0.95rem;
 
         &:focus {
           box-shadow: none;
-          border-color: #dee2e6;
+          border-color: var(--bs-primary);
+        }
+
+        &::placeholder {
+          color: var(--bs-secondary-color);
         }
       }
     }
@@ -183,7 +209,7 @@ main {
       border: 1.5px solid #800000;
       color: #800000;
       font-weight: 600;
-      background-color: #fff;
+      background-color: var(--bs-body-bg);
       transition: all 0.3s ease;
       
       &:hover {
@@ -192,20 +218,16 @@ main {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(128, 0, 0, 0.2);
       }
-
-      i {
-        font-size: 1.1rem;
-      }
     }
   }
 
   /* FAQ Custom Tabs */
   .custom-faq-tabs {
-    border-bottom: 2px solid #dee2e6;
+    border-bottom: 2px solid var(--bs-border-color);
     
     .nav-item {
       .nav-link {
-        color: #6c757d;
+        color: var(--bs-secondary-color);
         border: none;
         border-bottom: 3px solid transparent;
         font-weight: 500;
@@ -215,7 +237,7 @@ main {
 
         &:hover {
           color: #800000;
-          background-color: #f8f9fa;
+          background-color: var(--bs-tertiary-bg);
         }
 
         &.active {
@@ -230,7 +252,8 @@ main {
   /* FAQ Accordion Styles */
   .faq-accordion {
     .accordion-item {
-      border: 1px solid rgba(0,0,0,0.1) !important;
+      border: 1px solid var(--bs-border-color) !important;
+      background-color: var(--bs-body-bg);
       position: relative;
       overflow: hidden;
 
@@ -246,9 +269,9 @@ main {
       }
 
       .accordion-button {
-        background-color: #fff;
-        color: #800000;
-        font-weight: 500;
+        background-color: var(--bs-body-bg);
+        color: var(--header-maroon);
+        font-weight: 600;
         box-shadow: none;
         padding: 1.25rem 1.5rem 1.25rem 2rem;
         display: flex;
@@ -259,12 +282,8 @@ main {
         text-align: left;
 
         &:not(.collapsed) {
-          background-color: #fcfcfc;
-          color: #800000;
-
-          &::after {
-            transform: rotate(-180deg);
-          }
+          background-color: var(--bs-tertiary-bg);
+          color: var(--header-maroon);
         }
 
         &::after {
@@ -276,6 +295,10 @@ main {
           background-repeat: no-repeat;
           background-size: 1.25rem;
           transition: transform 0.2s ease-in-out;
+
+          [data-bs-theme="dark"] & {
+            filter: brightness(0) invert(1);
+          }
         }
       }
 
@@ -292,18 +315,19 @@ main {
         }
 
         .accordion-body {
+          background-color: var(--bs-body-bg);
+          color: var(--bs-body-color);
           min-height: 0;
-          padding: 0 2rem;
+          padding: 0 2.5rem;
           transition: padding 0.4s ease;
-          color: #444;
           
-          ul li {
-            margin-bottom: 0.5rem;
+          ul li, ol li {
+            margin-bottom: 0.75rem;
           }
         }
 
         &.show .accordion-body {
-          padding: 1.5rem 2rem;
+          padding: 2rem 2.5rem 2.5rem 2.5rem;
         }
       }
     }
@@ -312,37 +336,40 @@ main {
   /* Contact Support Section */
   .contact-details-grid {
     .contact-item {
-      background-color: #fcfcfc;
-      border: 1px solid rgba(0,0,0,0.05);
+      background-color: var(--bs-tertiary-bg);
+      border: 1px solid var(--bs-border-color);
       transition: all 0.3s ease;
+      color: var(--bs-body-color);
       
       &:hover {
-        background-color: #fff;
+        background-color: var(--bs-body-bg);
         border-color: #800000;
-        box-shadow: 0 4px 12px rgba(128, 0, 0, 0.08);
-      }
-
-      .text-maroon {
-        color: #800000;
+        box-shadow: 0 4px 12px rgba(128, 0, 0, 0.1);
       }
     }
   }
 
   /* Contributors Section */
   .contributor-card {
-    background-color: #fcfcfc;
+    background-color: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
     transition: all 0.3s ease;
+    color: var(--bs-body-color);
     
     &:hover {
-      background-color: #fff;
+      background-color: var(--bs-body-bg);
       border-color: #800000 !important;
-      box-shadow: 0 8px 20px rgba(128, 0, 0, 0.1);
+      box-shadow: 0 8px 20px rgba(128, 0, 0, 0.15);
       transform: translateY(-5px);
+    }
+    
+    .text-maroon {
+      color: #800000;
     }
   }
 
   .bg-maroon-soft {
-    background-color: rgba(128, 0, 0, 0.08);
+    background-color: rgba(128, 0, 0, 0.15);
   }
 
   @media (max-width: 767px) {

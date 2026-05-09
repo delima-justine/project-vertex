@@ -146,6 +146,7 @@ main {
   font-size: 20px;
   font-weight: 600;
   margin-top: 10px;
+  color: var(--bs-body-color);
 }
 
 .functionalities-container {
@@ -165,8 +166,14 @@ main {
     input {
       width: 300px;
       padding: 6px 12px;
-      border: 1px solid #cccccc;
+      border: 1px solid var(--bs-border-color);
       border-radius: 4px;
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+
+      &::placeholder {
+        color: var(--bs-secondary-color);
+      }
     }
   }
 
@@ -176,24 +183,27 @@ main {
     align-items: center;
     gap: 5px;
   }
-}
 
-.functionalities-container > .filters {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
+  .filters {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
 
-  select {
-    width: 200px;
-    padding: 6px 12px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-  }
+    select {
+      width: 200px;
+      padding: 6px 12px;
+      border: 1px solid var(--bs-border-color);
+      border-radius: 4px;
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+    }
 
-  span {
-    font-size: 16px;
-    font-weight: 500;
+    span {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--bs-body-color);
+    }
   }
 }
 
@@ -206,6 +216,7 @@ main {
     .span {
       font-size: 20px;
       font-weight: 600;
+      color: var(--bs-body-color);
     }
   }
 }
@@ -219,6 +230,7 @@ main {
 
   .chart-title {
     margin-top: 10px;
+    color: var(--bs-body-color);
     i {
       font-size: 1.3rem;
     }
@@ -238,7 +250,7 @@ main {
     .analytic-card {
       padding: 15px;
       border-radius: 8px;
-      background-color: #ffffff;
+      background-color: var(--bs-tertiary-bg);
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 
       .analytic-header {
@@ -250,20 +262,20 @@ main {
         .label {
           font-size: 0.85rem;
           font-weight: 600;
-          color: #6c757d;
+          color: var(--bs-secondary-color);
         }
 
         .value {
           font-size: 1rem;
           font-weight: 700;
-          color: #212529;
+          color: var(--bs-body-color);
         }
       }
 
       .progress {
         height: 8px;
         border-radius: 4px;
-        background-color: #e9ecef;
+        background-color: var(--bs-secondary-bg);
       }
     }
   }
@@ -281,18 +293,19 @@ main {
   font-size: 0.9rem;
   
   thead th {
-    background-color: #f8f9fa;
-    color: #495057;
+    background-color: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 0.5px;
     padding: 12px 15px;
-    border-bottom: 2px solid #dee2e6;
+    border-bottom: 2px solid var(--bs-border-color);
   }
   
   tbody td {
     padding: 12px 15px;
     vertical-align: middle;
+    color: var(--bs-body-color);
   }
 }

@@ -6,8 +6,8 @@
     <!-- Header Panel -->
     <div class="header-panel">
       <div class="d-flex align-items-center gap-2">
-        <i class="bi bi-bell-fill"></i>
-        <span>Notifications</span>
+        <i class="bi bi-bell-fill text-white"></i>
+        <span class="text-white">Notifications</span>
       </div>
       <p class="m-0 text-white opacity-75">Stay updated with your supply requests and inventory status</p>
     </div>
@@ -17,18 +17,18 @@
       <div class="card-body">
         <div class="row g-3 align-items-end">
           <div class="col-md-4">
-            <label class="form-label small fw-bold text-muted">Filter by Office</label>
+            <label class="form-label small fw-bold text-secondary">Filter by Office</label>
             <select class="form-select" [(ngModel)]="filters.office_id">
               <option value="">All Offices</option>
               <option *ngFor="let office of offices" [value]="office.id">{{ office.office_name }}</option>
             </select>
           </div>
           <div class="col-md-3">
-            <label class="form-label small fw-bold text-muted">From Date</label>
+            <label class="form-label small fw-bold text-secondary">From Date</label>
             <input type="date" class="form-control" [(ngModel)]="filters.from_date">
           </div>
           <div class="col-md-3">
-            <label class="form-label small fw-bold text-muted">To Date</label>
+            <label class="form-label small fw-bold text-secondary">To Date</label>
             <input type="date" class="form-control" [(ngModel)]="filters.to_date">
           </div>
           <div class="col-md-2 d-flex gap-2">
@@ -87,7 +87,7 @@
         </ul>
       </div>
 
-      <div class="card-header d-flex justify-content-between align-items-center bg-white border-top-0">
+      <div class="card-header d-flex justify-content-between align-items-center border-top-0">
         <div class="title-with-icon">
           <i class="bi bi-list-ul text-primary"></i>
           <span>Recent Activity</span>
@@ -109,8 +109,8 @@
         </div>
 
         <div *ngIf="!isLoading() && notifications.length === 0" class="empty-state text-center p-5">
-          <i class="bi bi-bell-slash fs-1 text-muted mb-3"></i>
-          <p class="text-muted">No notifications yet.</p>
+          <i class="bi bi-bell-slash fs-1 text-secondary mb-3"></i>
+          <p class="text-secondary">No notifications yet.</p>
         </div>
 
         <div class="notification-list" *ngIf="!isLoading() && notifications.length > 0">
@@ -132,11 +132,11 @@
               <div class="flex-grow-1">
                 <p class="mb-1 message">{{ notif.message }}</p>
                 <div class="d-flex align-items-center gap-2">
-                  <small class="text-muted">
+                  <small class="text-secondary">
                     <i class="bi bi-clock me-1"></i>
                     {{ notif.created_at | date:'medium' }}
                   </small>
-                  <span class="badge bg-light text-secondary border-0 fw-normal">{{ getRelativeTime(notif.created_at) }}</span>
+                  <span class="badge bg-secondary-subtle text-secondary border-0 fw-normal">{{ getRelativeTime(notif.created_at) }}</span>
                   <span *ngIf="!notif.read_at" class="badge bg-primary rounded-pill">New</span>
                 </div>
               </div>
@@ -161,9 +161,9 @@
       </div>
 
       <!-- Pagination Footer -->
-      <div class="card-footer bg-white py-3" *ngIf="!isLoading() && notifications.length > 0">
+      <div class="card-footer py-3" *ngIf="!isLoading() && notifications.length > 0">
         <div class="d-flex justify-content-between align-items-center">
-          <span class="text-muted small">Page {{ currentPage }} of {{ lastPage }}</span>
+          <span class="text-secondary small">Page {{ currentPage }} of {{ lastPage }}</span>
           <div class="pagination-controls d-flex gap-2">
             <button 
               class="btn btn-outline-secondary btn-sm" 

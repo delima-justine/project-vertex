@@ -194,7 +194,7 @@
 
             <!-- Pagination for Request Logs -->
             <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="filteredRequests().length > 0">
-              <div class="text-muted">
+              <div class="text-secondary">
                 Showing {{ requestsPageStart() }} to {{ requestsPageEnd() }} of {{ filteredRequests().length }} results
               </div>
               <nav aria-label="Request logs pagination">
@@ -239,12 +239,12 @@
                   <tr *ngFor="let audit of adminAudits()">
                     <td>
                       <div class="fw-bold" *ngIf="audit.target_type">{{ audit.target_type.split('\\').pop() }}</div>
-                      <div class="text-muted" *ngIf="!audit.target_type">System</div>
+                      <div class="text-secondary" *ngIf="!audit.target_type">System</div>
                     </td>
                     <td>{{ audit.performed_at | date:'MMM d, y h:mm a' }}</td>
                     <td>
                       <div class="fw-bold">{{ audit.admin_name }}</div>
-                      <small class="text-muted">{{ audit.admin_role }}</small>
+                      <small class="text-secondary">{{ audit.admin_role }}</small>
                     </td>
                     <td>
                       <span class="status-badge" [ngClass]="{
@@ -256,7 +256,7 @@
                     </td>
                     <td>
                       <div>{{ audit.description }}</div>
-                      <small class="text-muted" *ngIf="audit.target_name">Target: {{ audit.target_name }}</small>
+                      <small class="text-secondary" *ngIf="audit.target_name">Target: {{ audit.target_name }}</small>
                     </td>
                   </tr>
                 </tbody>
@@ -265,7 +265,7 @@
 
             <!-- Pagination for Audits -->
             <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="auditTotal() > 0">
-              <div class="text-muted">
+              <div class="text-secondary">
                 Showing {{ (auditPage() - 1) * auditLimit + 1 }} to {{ auditPage() * auditLimit > auditTotal() ? auditTotal() : auditPage() * auditLimit }} of {{ auditTotal() }} results
               </div>
               <nav aria-label="Audit pagination">
