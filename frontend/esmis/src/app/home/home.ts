@@ -193,6 +193,7 @@ export class Home implements OnInit {
     if (this.isEditMode && this.currentStockNum) {
       this.supplyService.updateSupply(this.currentStockNum, payload).subscribe({
         next: () => {
+          this.toastService.success('Supply updated successfully!');
           this.loadData();
           this.closeModal();
         },
@@ -204,6 +205,7 @@ export class Home implements OnInit {
     } else {
       this.supplyService.createSupply(payload).subscribe({
         next: () => {
+          this.toastService.success('Supply added successfully!');
           this.loadData();
           this.closeModal();
         },
@@ -225,6 +227,7 @@ export class Home implements OnInit {
     if (confirmed) {
       this.supplyService.deleteSupply(stockNum).subscribe({
         next: () => {
+          this.toastService.success('Supply deleted successfully!');
           this.loadData();
         },
         error: (err) => {
@@ -260,6 +263,7 @@ export class Home implements OnInit {
 
     this.supplyService.createCategory(name).subscribe({
       next: () => {
+        this.toastService.success('Category added successfully!');
         this.newCategoryName.set('');
         this.loadData();
       },
@@ -280,6 +284,7 @@ export class Home implements OnInit {
     if (confirmed) {
       this.supplyService.deleteCategory(id).subscribe({
         next: () => {
+          this.toastService.success('Category deleted successfully!');
           this.loadData();
         },
         error: (err) => {
@@ -315,6 +320,7 @@ export class Home implements OnInit {
 
     this.supplyService.createUnit(name).subscribe({
       next: () => {
+        this.toastService.success('Unit added successfully!');
         this.newUnitName.set('');
         this.loadData();
       },
@@ -335,6 +341,7 @@ export class Home implements OnInit {
     if (confirmed) {
       this.supplyService.deleteUnit(id).subscribe({
         next: () => {
+          this.toastService.success('Unit deleted successfully!');
           this.loadData();
         },
         error: (err) => {
