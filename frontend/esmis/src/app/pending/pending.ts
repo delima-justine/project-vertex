@@ -22,6 +22,10 @@ export class Pending implements OnInit {
   user = this.authService.currentUser;
 
   requests = signal<SupplyRequest[]>([]);
+  currentPage = signal(1);
+  lastPage = signal(1);
+  isLoading = signal(false);
+  feedback = signal('');
   searchTerm = signal('');
   selectedOffice = signal('all');
 
@@ -53,10 +57,14 @@ export class Pending implements OnInit {
     const groups: { [key: string]: SupplyRequest[] } = {};
     
     this.requests().forEach(req => {
-      // Use local date string (YYYY-MM-DD) for batching
-      const dateObj = new Date(req.created_at);
-      const date = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
-      const key = `${req.user_id}_${date}`;
+      // Use batch_id if available, otherwise fallback to user_id + local date string
+      let key = req.batch_id;
+      
+      if (!key) {
+        const dateObj = new Date(req.created_at);
+        const date = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
+        key = `LEGACY_${req.user_id}_${date}`;
+      }
       
       if (!groups[key]) {
         groups[key] = [];
@@ -98,11 +106,26 @@ export class Pending implements OnInit {
     this.loadPendingRequests();
   }
 
-  loadPendingRequests() {
-    this.supplyService.listSupplyRequests('pending').subscribe({
-      next: (data) => this.requests.set(data),
-      error: (err) => console.error('Error fetching pending requests', err)
+  loadPendingRequests(page: number = 1) {
+    this.isLoading.set(true);
+    this.supplyService.listSupplyRequests('pending', undefined, page).subscribe({
+      next: (response) => {
+        this.requests.set(response.data);
+        this.currentPage.set(response.current_page);
+        this.lastPage.set(response.last_page);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error fetching pending requests', err);
+        this.isLoading.set(false);
+      }
     });
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.lastPage()) {
+      this.loadPendingRequests(page);
+    }
   }
 
   viewRequest(batch: any) {
