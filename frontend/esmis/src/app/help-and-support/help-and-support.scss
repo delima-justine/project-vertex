@@ -289,6 +289,25 @@ main {
     }
   }
 
+  /* Contact Support Section */
+  .contact-details-grid {
+    .contact-item {
+      background-color: #fcfcfc;
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: #fff;
+        border-color: #800000;
+        box-shadow: 0 4px 12px rgba(128, 0, 0, 0.08);
+      }
+
+      .text-maroon {
+        color: #800000;
+      }
+    }
+  }
+
   @media (max-width: 767px) {
     .video-tutorial-card {
       flex-direction: column;
