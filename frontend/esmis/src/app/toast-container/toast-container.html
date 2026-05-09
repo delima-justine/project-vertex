@@ -1,0 +1,16 @@
+@for (toast of toastService.toasts(); track toast) {
+  <div class="toast show mb-2" [ngClass]="toast.classname" role="alert" aria-live="assertive" aria-atomic="true">
+    @if (toast.header) {
+      <div class="toast-header">
+        <strong class="me-auto">{{ toast.header }}</strong>
+        <button type="button" class="btn-close" aria-label="Close" (click)="remove(toast)"></button>
+      </div>
+    }
+    <div class="toast-body d-flex justify-content-between">
+      {{ toast.body }}
+      @if (!toast.header) {
+        <button type="button" class="btn-close ms-2" [class.btn-close-white]="toast.classname?.includes('bg-success') || toast.classname?.includes('bg-danger') || toast.classname?.includes('bg-info')" aria-label="Close" (click)="remove(toast)"></button>
+      }
+    </div>
+  </div>
+}
