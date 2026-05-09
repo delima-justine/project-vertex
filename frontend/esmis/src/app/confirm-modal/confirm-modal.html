@@ -1,0 +1,29 @@
+<div class="modal fade" #confirmModal tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header" [class.bg-danger]="confirmService.state().danger" [class.text-white]="confirmService.state().danger">
+        <h5 class="modal-title fw-bold">
+          @if (confirmService.state().danger) {
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          }
+          {{ confirmService.state().title }}
+        </h5>
+        <button type="button" class="btn-close" [class.btn-close-white]="confirmService.state().danger" (click)="onCancel()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 text-center">
+        <p class="fs-5 mb-0">{{ confirmService.state().message }}</p>
+      </div>
+      <div class="modal-footer border-0 pb-4 justify-content-center">
+        <button type="button" class="btn btn-light px-4" (click)="onCancel()">
+          {{ confirmService.state().cancelText }}
+        </button>
+        <button type="button" class="btn px-4" 
+                [class.btn-danger]="confirmService.state().danger" 
+                [class.btn-primary]="!confirmService.state().danger"
+                (click)="onConfirm()">
+          {{ confirmService.state().confirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
