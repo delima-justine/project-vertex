@@ -5,6 +5,8 @@ import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
+import { ConfirmService } from '../../services/confirm.service';
 import { interval, Subscription, forkJoin } from 'rxjs';
 
 @Component({
@@ -19,6 +21,8 @@ export class EditRis implements OnInit, OnDestroy {
   private router = inject(Router);
   private supplyService = inject(SupplyService);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
+  private confirmService = inject(ConfirmService);
 
   requests = signal<SupplyRequest[]>([]);
   approver = signal(this.authService.currentUser());
@@ -86,7 +90,7 @@ export class EditRis implements OnInit, OnDestroy {
       },
       error: (err: unknown) => {
         console.error('Error fetching requests', err);
-        alert('Failed to load request data.');
+        this.toastService.error('Failed to load request data.');
         this.router.navigate(['/pending-requests']);
       }
     });
@@ -96,12 +100,17 @@ export class EditRis implements OnInit, OnDestroy {
     this.router.navigate(['/pending-requests']);
   }
 
-  saveAndApprove() {
+  async saveAndApprove() {
     const admin = this.approver();
     const reqs = this.requests();
     if (reqs.length === 0 || !admin) return;
 
-    if (confirm(`Are you sure you want to approve these ${reqs.length} requests?`)) {
+    const confirmed = await this.confirmService.confirm(`Are you sure you want to approve these ${reqs.length} requests?`, {
+      title: 'Approve Requests',
+      confirmText: 'Approve'
+    });
+
+    if (confirmed) {
       const updates = reqs.map((req: SupplyRequest) => {
         const data = this.requestData()[req.id];
         return this.supplyService.updateSupplyRequest(req.id, {
@@ -113,12 +122,12 @@ export class EditRis implements OnInit, OnDestroy {
 
       forkJoin(updates).subscribe({
         next: () => {
-          alert('Requests approved successfully!');
+          this.toastService.success('Requests approved successfully!');
           this.router.navigate(['/pending-requests']);
         },
         error: (err: unknown) => {
           console.error('Error approving requests', err);
-          alert('Failed to approve one or more requests.');
+          this.toastService.error('Failed to approve one or more requests.');
         }
       });
     }
@@ -157,7 +166,7 @@ export class EditRis implements OnInit, OnDestroy {
   async printRIS() {
     const reqs = this.requests();
     if (reqs.length === 0) {
-      alert('Error: No request data found.');
+      this.toastService.error('Error: No request data found.');
       return;
     }
 
@@ -329,7 +338,7 @@ export class EditRis implements OnInit, OnDestroy {
       
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('An error occurred while generating the PDF.');
+      this.toastService.error('An error occurred while generating the PDF.');
     }
   }
 
