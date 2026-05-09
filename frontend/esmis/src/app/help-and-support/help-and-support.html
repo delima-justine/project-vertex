@@ -16,9 +16,11 @@
       <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('faq')">
         <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
       </button>
-      <button *ngIf="isAdmin" class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('admin')">
-        <i class="bi bi-journal-richtext me-2"></i>Admin Guide
-      </button>
+      @if (isAdmin) {
+        <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('admin')">
+          <i class="bi bi-journal-richtext me-2"></i>Admin Guide
+        </button>
+      }
       <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('contact')">
         <i class="bi bi-headset me-2"></i>Contact Support
       </button>
@@ -53,126 +55,146 @@
             </div>
 
             <!-- FAQ Tabs (Hidden when searching) -->
-            <ul class="nav nav-tabs custom-faq-tabs border-bottom mb-4" *ngIf="!searchQuery">
-              <li class="nav-item">
-                <a class="nav-link" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">General</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" [class.active]="activeTab === 'account'" (click)="activeTab = 'account'">Account & Access</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Orders & Management</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" [class.active]="activeTab === 'technical'" (click)="activeTab = 'technical'">Technical Issues</a>
-              </li>
-            </ul>
+            @if (!searchQuery) {
+              <ul class="nav nav-tabs custom-faq-tabs border-bottom mb-4">
+                <li class="nav-item">
+                  <a class="nav-link" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">General</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [class.active]="activeTab === 'account'" (click)="activeTab = 'account'">Account & Access</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Orders & Management</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [class.active]="activeTab === 'technical'" (click)="activeTab = 'technical'">Technical Issues</a>
+                </li>
+              </ul>
+            }
 
             <!-- Search Results Header -->
-            <div *ngIf="searchQuery" class="mb-4">
-              <h6 class="text-secondary">Search results for: "<span class="text-maroon fw-bold">{{searchQuery}}</span>" ({{filteredFaqs.length}} found)</h6>
-            </div>
+            @if (searchQuery) {
+              <div class="mb-4">
+                <h6 class="text-secondary">Search results for: "<span class="text-maroon fw-bold">{{searchQuery}}</span>" ({{filteredFaqs.length}} found)</h6>
+              </div>
+            }
 
             <!-- FAQ Content (Dynamic) -->
             <div class="faq-accordion">
-              <div *ngFor="let faq of filteredFaqs; let i = index" class="accordion-item shadow-sm border rounded mb-3">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" [class.collapsed]="!faq.isExpanded" type="button" (click)="toggleFaq(faq)">
-                    {{faq.question}}
-                  </button>
-                </h2>
-                <div class="accordion-collapse" [class.show]="faq.isExpanded">
-                  <div class="accordion-body">
-                    <p>{{faq.answer}}</p>
-                    
-                    <ul *ngIf="faq.features" class="ps-3 mb-2">
-                      <li *ngFor="let feature of faq.features" [innerHTML]="feature"></li>
-                    </ul>
+              @for (faq of filteredFaqs; track faq.id) {
+                <div class="accordion-item shadow-sm border rounded mb-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" [class.collapsed]="!faq.isExpanded" type="button" (click)="toggleFaq(faq)">
+                      {{faq.question}}
+                    </button>
+                  </h2>
+                  <div class="accordion-collapse" [class.show]="faq.isExpanded">
+                    <div class="accordion-body">
+                      <p>{{faq.answer}}</p>
+                      
+                      @if (faq.features) {
+                        <ul class="ps-3 mb-2">
+                          @for (feature of faq.features; track $index) {
+                            <li [innerHTML]="feature"></li>
+                          }
+                        </ul>
+                      }
 
-                    <ol *ngIf="faq.steps" class="ps-3 mb-2">
-                      <li *ngFor="let step of faq.steps">{{step}}</li>
-                    </ol>
+                      @if (faq.steps) {
+                        <ol class="ps-3 mb-2">
+                          @for (step of faq.steps; track $index) {
+                            <li>{{step}}</li>
+                          }
+                        </ol>
+                      }
 
-                    <p *ngIf="faq.notes" class="mt-2 mb-0" [innerHTML]="faq.notes"></p>
+                      @if (faq.notes) {
+                        <p class="mt-2 mb-0" [innerHTML]="faq.notes"></p>
+                      }
+                    </div>
                   </div>
                 </div>
-              </div>
+              }
 
               <!-- No Results State -->
-              <div *ngIf="filteredFaqs.length === 0" class="py-5 text-center">
-                <i class="bi bi-search-heart fs-1 text-secondary opacity-50"></i>
-                <h5 class="mt-3 text-secondary">No matching FAQs found for "{{searchQuery}}"</h5>
-                <p class="text-secondary small">Try different keywords or browse categories.</p>
-                <button class="btn btn-sm btn-outline-maroon mt-2" (click)="searchQuery = ''">Clear Search</button>
-              </div>
+              @if (filteredFaqs.length === 0) {
+                <div class="py-5 text-center">
+                  <i class="bi bi-search-heart fs-1 text-secondary opacity-50"></i>
+                  <h5 class="mt-3 text-secondary">No matching FAQs found for "{{searchQuery}}"</h5>
+                  <p class="text-secondary small">Try different keywords or browse categories.</p>
+                  <button class="btn btn-sm btn-outline-maroon mt-2" (click)="searchQuery = ''">Clear Search</button>
+                </div>
+              }
             </div>
           </div>
         </div>
       </div>
 
       <!-- Admin Guide -->
-      <div class="col-12" *ngIf="isAdmin" #adminGuideSection>
-        <div class="card shadow-sm border-0">
-          <div class="card-header border-bottom-0 pt-4">
-            <h5 class="card-title fw-bold mb-0 text-maroon">
-              <i class="bi bi-journal-richtext me-2"></i>Admin Guide
-            </h5>
-            <hr class="header-divider mt-2 mb-0" />
-          </div>
-          <div class="card-body pt-0">
-            <p class="description mb-4 mt-3">Learn how to manage the SMIS system effectively with our step-by-step guides.</p>
-
-            <div class="row g-4 mb-5">
-              <div class="col-md-6">
-                <div class="guide-card shadow-sm rounded overflow-hidden">
-                  <div class="guide-icon-side">
-                    <i class="bi bi-people-fill"></i>
-                  </div>
-                  <div class="guide-content p-3">
-                    <h6 class="fw-bold mb-2">User Management</h6>
-                    <p class="text-secondary small mb-3">Learn how to manage user accounts and permissions.</p>
-                    <button class="btn btn-outline-maroon btn-sm px-3">
-                      <i class="bi bi-play-circle-fill me-2"></i>View Guide
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="guide-card shadow-sm rounded overflow-hidden">
-                  <div class="guide-icon-side">
-                    <i class="bi bi-check-circle-fill"></i>
-                  </div>
-                  <div class="guide-content p-3">
-                    <h6 class="fw-bold mb-2">Request Approval Process</h6>
-                    <p class="text-secondary small mb-3">Understand how to review and approve supply requests.</p>
-                    <button class="btn btn-outline-maroon btn-sm px-3">
-                      <i class="bi bi-play-circle-fill me-2"></i>View Guide
-                    </button>
-                  </div>
-                </div>
-              </div>
+      @if (isAdmin) {
+        <div class="col-12" #adminGuideSection>
+          <div class="card shadow-sm border-0">
+            <div class="card-header border-bottom-0 pt-4">
+              <h5 class="card-title fw-bold mb-0 text-maroon">
+                <i class="bi bi-journal-richtext me-2"></i>Admin Guide
+              </h5>
+              <hr class="header-divider mt-2 mb-0" />
             </div>
+            <div class="card-body pt-0">
+              <p class="description mb-4 mt-3">Learn how to manage the SMIS system effectively with our step-by-step guides.</p>
 
-            <div class="video-tutorials-section">
-              <h4 class="fw-bold mb-3">Visual Walkthrough</h4>
-              <div class="video-tutorial-card shadow-sm rounded overflow-hidden d-flex">
-                <div class="video-icon-side">
-                  <i class="bi bi-youtube"></i>
+              <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                  <div class="guide-card shadow-sm rounded overflow-hidden">
+                    <div class="guide-icon-side">
+                      <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="guide-content p-3">
+                      <h6 class="fw-bold mb-2">User Management</h6>
+                      <p class="text-secondary small mb-3">Learn how to manage user accounts and permissions.</p>
+                      <button class="btn btn-outline-maroon btn-sm px-3">
+                        <i class="bi bi-play-circle-fill me-2"></i>View Guide
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div class="video-content p-4 d-flex flex-column justify-content-center">
-                  <h3 class="fw-bold mb-2">Video Tutorials</h3>
-                  <p class="text-secondary mb-4">Learn how to manage the system effectively with our comprehensive video guides.</p>
-                  <div class="d-flex">
-                    <button class="btn btn-pill-maroon px-4 py-2">
-                      <i class="bi bi-play-btn-fill me-2"></i>View Playlist
-                    </button>
+                <div class="col-md-6">
+                  <div class="guide-card shadow-sm rounded overflow-hidden">
+                    <div class="guide-icon-side">
+                      <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="guide-content p-3">
+                      <h6 class="fw-bold mb-2">Request Approval Process</h6>
+                      <p class="text-secondary small mb-3">Understand how to review and approve supply requests.</p>
+                      <button class="btn btn-outline-maroon btn-sm px-3">
+                        <i class="bi bi-play-circle-fill me-2"></i>View Guide
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="video-tutorials-section">
+                <h4 class="fw-bold mb-3">Visual Walkthrough</h4>
+                <div class="video-tutorial-card shadow-sm rounded overflow-hidden d-flex">
+                  <div class="video-icon-side">
+                    <i class="bi bi-youtube"></i>
+                  </div>
+                  <div class="video-content p-4 d-flex flex-column justify-content-center">
+                    <h3 class="fw-bold mb-2">Video Tutorials</h3>
+                    <p class="text-secondary mb-4">Learn how to manage the system effectively with our comprehensive video guides.</p>
+                    <div class="d-flex">
+                      <button class="btn btn-pill-maroon px-4 py-2">
+                        <i class="bi bi-play-btn-fill me-2"></i>View Playlist
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      }
 
       <!-- Contact Support -->
       <div class="col-12" #contactSection>

@@ -226,11 +226,13 @@
     </div>
 
     <!-- Warn Message -->
-    <div *ngIf="!isPrinted()" class="alert alert-warning mt-1" role="alert">
-      <i class="bi bi-exclamation-triangle-fill me-1"></i>
-      <strong>Required!</strong> 
-      You must print or save the RIS before you can complete this form.
-    </div>
+    @if (!isPrinted()) {
+      <div class="alert alert-warning mt-1" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+        <strong>Required!</strong> 
+        You must print or save the RIS before you can complete this form.
+      </div>
+    }
     
     <!-- Print Status -->
     <div class="alert alert-light debug">

@@ -20,7 +20,9 @@
             <label class="form-label small fw-bold text-secondary">Filter by Office</label>
             <select class="form-select" [(ngModel)]="filters.office_id">
               <option value="">All Offices</option>
-              <option *ngFor="let office of offices" [value]="office.id">{{ office.office_name }}</option>
+              @for (office of offices; track office.id) {
+                <option [value]="office.id">{{ office.office_name }}</option>
+              }
             </select>
           </div>
           <div class="col-md-3">
@@ -63,9 +65,11 @@
               [class.active]="activeTab === 'unread'" 
               (click)="setTab('unread')">
               Unread
-              <span *ngIf="notifApiService.unreadCount() > 0" class="badge bg-danger ms-1">
-                {{ notifApiService.unreadCount() }}
-              </span>
+              @if (notifApiService.unreadCount() > 0) {
+                <span class="badge bg-danger ms-1">
+                  {{ notifApiService.unreadCount() }}
+                </span>
+              }
             </button>
           </li>
           <li class="nav-item">
@@ -92,96 +96,105 @@
           <i class="bi bi-list-ul text-primary"></i>
           <span>Recent Activity</span>
         </div>
-        <button 
-          class="btn btn-outline-primary btn-sm" 
-          (click)="markAllAsRead()"
-          *ngIf="notifications.length > 0">
-          <i class="bi bi-check2-all me-1"></i>
-          Mark all as read
-        </button>
+        @if (notifications.length > 0) {
+          <button 
+            class="btn btn-outline-primary btn-sm" 
+            (click)="markAllAsRead()">
+            <i class="bi bi-check2-all me-1"></i>
+            Mark all as read
+          </button>
+        }
       </div>
       
       <div class="card-body">
-        <div *ngIf="isLoading()" class="text-center p-5">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-
-        <div *ngIf="!isLoading() && notifications.length === 0" class="empty-state text-center p-5">
-          <i class="bi bi-bell-slash fs-1 text-secondary mb-3"></i>
-          <p class="text-secondary">No notifications yet.</p>
-        </div>
-
-        <div class="notification-list" *ngIf="!isLoading() && notifications.length > 0">
-          <div 
-            *ngFor="let notif of notifications" 
-            class="notification-item"
-            [class.unread]="!notif.read_at"
-            (click)="markAsRead(notif)">
-            <div class="d-flex align-items-start">
-
-              <div class="icon-wrapper me-3">
-                <i class="bi" [ngClass]="{
-                  'bi-check-circle-fill text-success': notif.action === 'approved' || notif.action === 'released',
-                  'bi-x-circle-fill text-danger': notif.action === 'disapproved',
-                  'bi-info-circle-fill text-primary': notif.action === 'status_update' || notif.action === 'pending',
-                  'bi-bell-fill text-warning': !notif.action
-                }"></i>
-              </div>
-              <div class="flex-grow-1">
-                <p class="mb-1 message">{{ notif.message }}</p>
-                <div class="d-flex align-items-center gap-2">
-                  <small class="text-secondary">
-                    <i class="bi bi-clock me-1"></i>
-                    {{ notif.created_at | date:'medium' }}
-                  </small>
-                  <span class="badge bg-secondary-subtle text-secondary border-0 fw-normal">{{ getRelativeTime(notif.created_at) }}</span>
-                  <span *ngIf="!notif.read_at" class="badge bg-primary rounded-pill">New</span>
-                </div>
-              </div>
-              <div class="actions d-flex gap-2">
-                <button 
-                  class="btn btn-link btn-sm p-0 text-decoration-none" 
-                  (click)="markAsRead(notif); $event.stopPropagation()" 
-                  *ngIf="!notif.read_at"
-                  title="Mark as read">
-                  <i class="bi bi-check-lg text-success fs-5"></i>
-                </button>
-                <button 
-                  class="btn btn-link btn-sm p-0 text-decoration-none" 
-                  (click)="deleteNotification($event, notif)"
-                  title="Delete notification">
-                  <i class="bi bi-trash text-danger fs-5"></i>
-                </button>
-              </div>
+        @if (isLoading()) {
+          <div class="text-center p-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
             </div>
           </div>
-        </div>
+        } @else if (notifications.length === 0) {
+          <div class="empty-state text-center p-5">
+            <i class="bi bi-bell-slash fs-1 text-secondary mb-3"></i>
+            <p class="text-secondary">No notifications yet.</p>
+          </div>
+        } @else {
+          <div class="notification-list">
+            @for (notif of notifications; track notif.id) {
+              <div 
+                class="notification-item"
+                [class.unread]="!notif.read_at"
+                (click)="markAsRead(notif)">
+                <div class="d-flex align-items-start">
+
+                  <div class="icon-wrapper me-3">
+                    <i class="bi" [ngClass]="{
+                      'bi-check-circle-fill text-success': notif.action === 'approved' || notif.action === 'released',
+                      'bi-x-circle-fill text-danger': notif.action === 'disapproved',
+                      'bi-info-circle-fill text-primary': notif.action === 'status_update' || notif.action === 'pending',
+                      'bi-bell-fill text-warning': !notif.action
+                    }"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <p class="mb-1 message">{{ notif.message }}</p>
+                    <div class="d-flex align-items-center gap-2">
+                      <small class="text-secondary">
+                        <i class="bi bi-clock me-1"></i>
+                        {{ notif.created_at | date:'medium' }}
+                      </small>
+                      <span class="badge bg-secondary-subtle text-secondary border-0 fw-normal">{{ getRelativeTime(notif.created_at) }}</span>
+                      @if (!notif.read_at) {
+                        <span class="badge bg-primary rounded-pill">New</span>
+                      }
+                    </div>
+                  </div>
+                  <div class="actions d-flex gap-2">
+                    @if (!notif.read_at) {
+                      <button 
+                        class="btn btn-link btn-sm p-0 text-decoration-none" 
+                        (click)="markAsRead(notif); $event.stopPropagation()" 
+                        title="Mark as read">
+                        <i class="bi bi-check-lg text-success fs-5"></i>
+                      </button>
+                    }
+                    <button 
+                      class="btn btn-link btn-sm p-0 text-decoration-none" 
+                      (click)="deleteNotification($event, notif)"
+                      title="Delete notification">
+                      <i class="bi bi-trash text-danger fs-5"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
       </div>
 
       <!-- Pagination Footer -->
-      <div class="card-footer py-3" *ngIf="!isLoading() && notifications.length > 0">
-        <div class="d-flex justify-content-between align-items-center">
-          <span class="text-secondary small">Page {{ currentPage }} of {{ lastPage }}</span>
-          <div class="pagination-controls d-flex gap-2">
-            <button 
-              class="btn btn-outline-secondary btn-sm" 
-              [disabled]="currentPage === 1"
-              (click)="changePage(currentPage - 1)">
-              <i class="bi bi-chevron-left me-1"></i>
-              Previous
-            </button>
-            <button 
-              class="btn btn-outline-secondary btn-sm" 
-              [disabled]="currentPage === lastPage"
-              (click)="changePage(currentPage + 1)">
-              Next
-              <i class="bi bi-chevron-right ms-1"></i>
-            </button>
+      @if (!isLoading() && notifications.length > 0) {
+        <div class="card-footer py-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="text-secondary small">Page {{ currentPage }} of {{ lastPage }}</span>
+            <div class="pagination-controls d-flex gap-2">
+              <button 
+                class="btn btn-outline-secondary btn-sm" 
+                [disabled]="currentPage === 1"
+                (click)="changePage(currentPage - 1)">
+                <i class="bi bi-chevron-left me-1"></i>
+                Previous
+              </button>
+              <button 
+                class="btn btn-outline-secondary btn-sm" 
+                [disabled]="currentPage === lastPage"
+                (click)="changePage(currentPage + 1)">
+                Next
+                <i class="bi bi-chevron-right ms-1"></i>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 </main>
