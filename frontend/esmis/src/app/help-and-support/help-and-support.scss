@@ -150,6 +150,33 @@ main {
     }
   }
 
+  /* FAQ Search Bar */
+  .faq-search-container {
+    width: 350px;
+
+    .input-group {
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-radius: 8px;
+      overflow: hidden;
+
+      .input-group-text {
+        border-color: #dee2e6;
+        padding-left: 1rem;
+      }
+
+      .form-control {
+        border-color: #dee2e6;
+        padding: 0.6rem 1rem 0.6rem 0;
+        font-size: 0.95rem;
+
+        &:focus {
+          box-shadow: none;
+          border-color: #dee2e6;
+        }
+      }
+    }
+  }
+
   /* Navigation Selection Buttons */
   .nav-selection-buttons {
     .btn-outline-maroon {
