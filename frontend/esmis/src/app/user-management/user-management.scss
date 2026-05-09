@@ -28,7 +28,7 @@ main {
 /* Permissions Section */
 .permissions-title {
   font-weight: 600;
-  color: #333;
+  color: var(--bs-body-color);
   font-size: 1rem;
 }
 
@@ -123,7 +123,28 @@ main {
   .form-check-label {
     margin-left: 0.5rem;
     font-size: 0.9rem;
-    color: #444;
+    color: var(--bs-body-color);
     cursor: pointer;
+  }
+}
+
+/* Dark mode overrides using ::ng-deep to penetrate modal scoping */
+::ng-deep [data-bs-theme="dark"] {
+  .permission-card {
+    background-color: #2b3035 !important;
+    border-color: #495057 !important;
+  }
+
+  .permission-group-header {
+    color: #ff4d4d !important;
+    border-bottom-color: #495057 !important;
+  }
+
+  .select-all-check .form-check-label {
+    color: #ff4d4d !important;
+  }
+
+  .permission-check .form-check-label {
+    color: #dee2e6 !important;
   }
 }
