@@ -1,8 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
-import { Supply } from '../../models/smis.model';
+import { Supply, Category } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -19,25 +19,66 @@ export class CreateRequest implements OnInit {
   private supplyService = inject(SupplyService);
   private authService = inject(AuthService);
 
-  availableSupplies: Supply[] = [];
+  availableSupplies = signal<Supply[]>([]);
+  categories = signal<Category[]>([]);
   requestList: (Supply & { quantity_req: number })[] = [];
+  
+  // Temporary selection list for the modal
+  tempSelectedItems: (Supply & { quantity_req: number })[] = [];
+  
+  // Filters for modal
+  modalSearchTerm = signal('');
+  modalCategoryFilter = signal('all');
+  modalStatusFilter = signal('all');
+
+  filteredAvailableSupplies = computed(() => {
+    const supplies = this.availableSupplies();
+    const term = this.modalSearchTerm().toLowerCase();
+    const category = this.modalCategoryFilter();
+    const status = this.modalStatusFilter();
+
+    return supplies.filter(s => {
+      const matchesSearch = !term || 
+        s.item_desc.toLowerCase().includes(term) || 
+        s.stock_num.toLowerCase().includes(term);
+      
+      const matchesCategory = category === 'all' || s.category_id.toString() === category;
+      const matchesStatus = status === 'all' || s.status === status;
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  });
+  
   purpose = '';
   purposeError = signal(false);
 
   ngOnInit() {
-    this.loadSupplies();
+    this.loadData();
   }
 
-  loadSupplies() {
+  loadData() {
     this.supplyService.listSupplies().subscribe({
       next: (supplies) => {
-        this.availableSupplies = supplies;
+        this.availableSupplies.set(supplies);
       },
       error: (err) => console.error('Error fetching supplies', err)
+    });
+
+    this.supplyService.listCategories().subscribe({
+      next: (cats) => this.categories.set(cats),
+      error: (err) => console.error('Error fetching categories', err)
     });
   }
 
   openModal() {
+    // Reset filters
+    this.modalSearchTerm.set('');
+    this.modalCategoryFilter.set('all');
+    this.modalStatusFilter.set('all');
+    
+    // Clone current request list into temporary list
+    this.tempSelectedItems = JSON.parse(JSON.stringify(this.requestList));
+    
     const modalElement = document.getElementById('supplyInventoryModal');
     if (modalElement) {
       const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
@@ -53,10 +94,42 @@ export class CreateRequest implements OnInit {
     }
   }
 
-  addItem(supply: Supply) {
-    const existing = this.requestList.find(s => s.stock_num === supply.stock_num);
-    if (!existing) {
-      this.requestList.push({ ...supply, quantity_req: 1 });
+  confirmSelection() {
+    // Save temporary selection to main list
+    this.requestList = JSON.parse(JSON.stringify(this.tempSelectedItems));
+    this.closeModal();
+  }
+
+  isItemSelected(stockNum: string): boolean {
+    return this.tempSelectedItems.some(s => s.stock_num === stockNum);
+  }
+
+  toggleItem(supply: Supply) {
+    const index = this.tempSelectedItems.findIndex(s => s.stock_num === supply.stock_num);
+    if (index > -1) {
+      this.tempSelectedItems.splice(index, 1);
+    } else if (supply.status !== 'Out of Stock') {
+      this.tempSelectedItems.push({ ...supply, quantity_req: 1 });
+    }
+  }
+
+  areAllItemsSelected(): boolean {
+    const available = this.filteredAvailableSupplies().filter(s => s.status !== 'Out of Stock');
+    if (available.length === 0) return false;
+    return available.every(s => this.isItemSelected(s.stock_num));
+  }
+
+  toggleAllItems() {
+    if (this.areAllItemsSelected()) {
+      // Remove all items that are in filtered results from tempSelectedItems
+      const filteredStockNums = new Set(this.filteredAvailableSupplies().map(s => s.stock_num));
+      this.tempSelectedItems = this.tempSelectedItems.filter(s => !filteredStockNums.has(s.stock_num));
+    } else {
+      this.filteredAvailableSupplies().forEach(supply => {
+        if (supply.status !== 'Out of Stock' && !this.isItemSelected(supply.stock_num)) {
+          this.tempSelectedItems.push({ ...supply, quantity_req: 1 });
+        }
+      });
     }
   }
 
