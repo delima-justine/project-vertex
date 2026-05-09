@@ -194,11 +194,52 @@ export class HelpAndSupport {
         'Enter and confirm your new password.',
         'Click "Save Changes" to save changes.'
       ]
+    },
+    {
+      id: 'ufaq3',
+      category: 'orders',
+      question: 'How do I create a new supply request?',
+      answer: 'To submit a new request for supplies:',
+      steps: [
+        'Navigate to "Create Request" in the sidebar.',
+        'Select the items you need from the available inventory.',
+        'Specify the quantity for each item.',
+        'Provide a justification for your request.',
+        'Review your items and click "Submit Request".'
+      ]
+    },
+    {
+      id: 'ufaq4',
+      category: 'orders',
+      question: 'How do I track my request status?',
+      answer: 'You can monitor the progress of your requests in real-time:',
+      steps: [
+        'Navigate to the "Orders" section in the sidebar.',
+        'Select "Pending" to see requests awaiting approval.',
+        'Select "Approved" to see requests ready for release.',
+        'Select "Disapproved" to see rejected requests and their reasons.',
+        'Check your notifications (bell icon) for instant updates.'
+      ]
+    },
+    {
+      id: 'ufaq5',
+      category: 'orders',
+      question: 'Can I modify or Cancel my request?',
+      answer: 'Currently, requests cannot be modified or cancelled directly by the user once they have been submitted.',
+      notes: 'If you need to make changes or cancel a request, please contact the Property Custodian Office or your system administrator as soon as possible.'
     }
   ];
 
   get filteredFaqs(): FaqItem[] {
-    const activeFaqs = this.isAdmin ? this.allFaqs : this.userFaqs;
+    let activeFaqs: FaqItem[] = [];
+
+    if (this.isAdmin) {
+      activeFaqs = this.allFaqs;
+    } else {
+      // For regular users: Show General FAQs from allFaqs + User-specific FAQs
+      const generalFaqs = this.allFaqs.filter(faq => faq.category === 'general');
+      activeFaqs = [...generalFaqs, ...this.userFaqs];
+    }
 
     if (!this.searchQuery) {
       return activeFaqs.filter(faq => faq.category === this.activeTab);
