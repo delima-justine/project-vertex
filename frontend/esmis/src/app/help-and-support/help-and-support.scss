@@ -308,6 +308,23 @@ main {
     }
   }
 
+  /* Contributors Section */
+  .contributor-card {
+    background-color: #fcfcfc;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: #fff;
+      border-color: #800000 !important;
+      box-shadow: 0 8px 20px rgba(128, 0, 0, 0.1);
+      transform: translateY(-5px);
+    }
+  }
+
+  .bg-maroon-soft {
+    background-color: rgba(128, 0, 0, 0.08);
+  }
+
   @media (max-width: 767px) {
     .video-tutorial-card {
       flex-direction: column;
