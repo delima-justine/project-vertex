@@ -14,11 +14,20 @@ export class AuthService {
   // Use a signal to track auth state
   currentUser = signal<User | null>(null);
   userPermissions = signal<string[]>([]);
+  initialized = signal<boolean>(false);
 
   constructor() {
     // If we have a token, fetch the user data on initialization
     if (this.isLoggedIn()) {
-      this.getUser().subscribe();
+      this.getUser().subscribe({
+        next: () => this.initialized.set(true),
+        error: () => {
+          this.initialized.set(true);
+          localStorage.removeItem('auth_token');
+        }
+      });
+    } else {
+      this.initialized.set(true);
     }
   }
 
