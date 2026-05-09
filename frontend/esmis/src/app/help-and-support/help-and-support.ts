@@ -31,6 +31,7 @@ export class HelpAndSupport {
   @ViewChild('faqSection') faqSection!: ElementRef;
   @ViewChild('adminGuideSection') adminGuideSection?: ElementRef;
   @ViewChild('contactSection') contactSection!: ElementRef;
+  @ViewChild('contributorsSection') contributorsSection!: ElementRef;
 
   allFaqs: FaqItem[] = [
     {
@@ -183,12 +184,13 @@ export class HelpAndSupport {
     return roleName === 'admin' || roleName === 'superadmin';
   }
 
-  scrollToSection(section: 'faq' | 'admin' | 'contact') {
+  scrollToSection(section: 'faq' | 'admin' | 'contact' | 'contributors') {
     let element: ElementRef | undefined;
     
     if (section === 'faq') element = this.faqSection;
     else if (section === 'admin') element = this.adminGuideSection;
     else if (section === 'contact') element = this.contactSection;
+    else if (section === 'contributors') element = this.contributorsSection;
 
     if (element) {
       element.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
