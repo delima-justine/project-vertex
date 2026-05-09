@@ -1,0 +1,25 @@
+.not-found-container {
+  min-height: calc(100vh - 100px);
+  padding: 2rem;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.icon-wrapper {
+  i.bi-link-45deg {
+    line-height: 1;
+  }
+  
+  i.bi-x {
+    color: var(--bs-body-color);
+  }
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: var(--bs-heading-color, var(--bs-body-color));
+}
+
+p.text-secondary {
+  color: var(--bs-secondary-color) !important;
+}
