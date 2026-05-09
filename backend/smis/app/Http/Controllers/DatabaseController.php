@@ -10,6 +10,10 @@ class DatabaseController extends Controller
 {
     public function backup()
     {
+        if (!function_exists('exec')) {
+            return response()->json(['message' => 'PHP exec() function is disabled on this server. Please enable it in your hosting PHP settings.'], 500);
+        }
+
         $connection = config('database.default');
         
         if ($connection !== 'mysql') {
@@ -37,10 +41,10 @@ class DatabaseController extends Controller
 
         $returnVar = NULL;
         $output = NULL;
-        exec($command, $output, $returnVar);
+        \exec($command, $output, $returnVar);
 
         if ($returnVar !== 0) {
-            return response()->json(['message' => 'Backup failed'], 500);
+            return response()->json(['message' => 'Backup failed. Ensure mysqldump is installed and accessible.'], 500);
         }
 
         AuditService::log('BACKUP', null, 'Database backup generated and downloaded.');
@@ -50,6 +54,10 @@ class DatabaseController extends Controller
 
     public function restore(Request $request)
     {
+        if (!function_exists('exec')) {
+            return response()->json(['message' => 'PHP exec() function is disabled on this server. Please enable it in your hosting PHP settings.'], 500);
+        }
+
         $request->validate([
             'file' => 'required|file',
         ]);
@@ -77,10 +85,10 @@ class DatabaseController extends Controller
 
         $returnVar = NULL;
         $output = NULL;
-        exec($command, $output, $returnVar);
+        \exec($command, $output, $returnVar);
 
         if ($returnVar !== 0) {
-            return response()->json(['message' => 'Restore failed'], 500);
+            return response()->json(['message' => 'Restore failed. Ensure mysql client is installed and accessible.'], 500);
         }
 
         AuditService::log('RESTORE', null, 'Database restored from uploaded file: ' . $file->getClientOriginalName());
