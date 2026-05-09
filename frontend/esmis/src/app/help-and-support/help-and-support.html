@@ -150,8 +150,70 @@
                   </div>
                 </div>
               </div>
-              <div *ngSwitchCase="'orders'" class="py-3 text-center text-muted">
-                <p>Frequently asked questions about Orders & Management will appear here.</p>
+              <!-- Orders & Management Tab -->
+              <div *ngSwitchCase="'orders'" class="faq-accordion">
+                <div class="accordion-item shadow-sm border rounded mb-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                      How do I review and approve requests?
+                    </button>
+                  </h2>
+                  <div id="faq6" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                      <p><strong>To review and approve supply requests:</strong></p>
+                      <ol class="ps-3">
+                        <li>Navigate to "Orders" → "Pending" to see all pending requests</li>
+                        <li>Click on a request to view detailed information</li>
+                        <li>Review the requested items, quantities, and justification</li>
+                        <li>Check inventory availability</li>
+                        <li>Click "Approve" or "Disapprove" with appropriate comments</li>
+                      </ol>
+                      <p class="mt-3 mb-0"><strong>Approved requests will automatically move to the "Approved" section for processing.</strong></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item shadow-sm border rounded mb-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                      How do I manage inventory levels?
+                    </button>
+                  </h2>
+                  <div id="faq7" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                      <p><strong>To manage inventory:</strong></p>
+                      <ol class="ps-3">
+                        <li>Access the inventory management section</li>
+                        <li>Monitor stock levels and set reorder points</li>
+                        <li>Add new items to the inventory catalog</li>
+                        <li>Update quantities when new supplies arrive</li>
+                        <li>Generate reports on inventory usage and trends</li>
+                      </ol>
+                      <p class="mt-3 mb-0"><strong>Regular monitoring helps prevent stockouts and ensures smooth operations.</strong></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item shadow-sm border rounded mb-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+                      How do I generate reports?
+                    </button>
+                  </h2>
+                  <div id="faq8" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                      <p><strong>To generate reports:</strong></p>
+                      <ul class="ps-3">
+                        <li>Navigate to the "Reports" section in the sidebar</li>
+                        <li>Select the type of report you need (inventory, requests, usage, etc.)</li>
+                        <li>Set the date range and filter criteria</li>
+                        <li>Choose export format (PDF, Excel, etc.)</li>
+                        <li>Click "Generate Report"</li>
+                      </ul>
+                      <p class="mt-3 mb-0"><strong>Reports help track system usage, inventory trends, and departmental needs.</strong></p>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div *ngSwitchCase="'technical'" class="py-3 text-center text-muted">
                 <p>Frequently asked questions about Technical Issues will appear here.</p>
