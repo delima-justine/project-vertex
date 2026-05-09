@@ -100,5 +100,10 @@ export const routes: Routes = [
     loadComponent: () => import('./reset-password/reset-password')
       .then(m => m.ResetPassword),
     title: 'Reset Password',
+  },
+  {
+    path: '**',
+    loadComponent: () => import('./not-found/not-found').then(m => m.NotFound),
+    title: '404 - Not Found'
   }
 ];
