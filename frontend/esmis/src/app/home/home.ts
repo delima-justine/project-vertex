@@ -41,6 +41,11 @@ export class Home implements OnInit {
   newCategoryName = signal('');
   newUnitName = signal('');
 
+  // History Modal
+  stockHistory = signal<any[]>([]);
+  historyLoading = signal(false);
+  selectedSupplyForHistory = signal<Supply | null>(null);
+
   // Total Active Items
   totalActiveItems = computed(() => this.supplies().length);
 
@@ -324,6 +329,42 @@ export class Home implements OnInit {
       const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
       modal.hide();
     }
+  }
+
+  // Stock History
+  openHistoryModal(supply: Supply) {
+    this.selectedSupplyForHistory.set(supply);
+    this.historyLoading.set(true);
+    this.stockHistory.set([]);
+    
+    const modalElement = document.getElementById('historyModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.show();
+    }
+
+    this.supplyService.getSupplyHistory(supply.stock_num).subscribe({
+      next: (data) => {
+        this.stockHistory.set(data);
+        this.historyLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error fetching stock history:', err);
+        this.historyLoading.set(false);
+      }
+    });
+  }
+
+  closeHistoryModal() {
+    const modalElement = document.getElementById('historyModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.hide();
+    }
+    setTimeout(() => {
+      this.selectedSupplyForHistory.set(null);
+      this.stockHistory.set([]);
+    }, 300);
   }
 
   // Report Generation

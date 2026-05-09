@@ -275,7 +275,8 @@
 
                     <button 
                       class="btn btn-sm btn-info"
-                      title="View Stock History">
+                      title="View Stock History"
+                      (click)="openHistoryModal(supply)">
                         <i class="bi bi-clock-history"></i>
                     </button>
                   </td>
@@ -492,6 +493,81 @@
 
         <div class="modal-footer-custom mt-4 d-flex justify-content-end">
           <button class="btn btn-cancel" type="button" (click)="closeUnitModal()">CLOSE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stock History Modal -->
+<div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content custom-modal">
+      <div class="modal-header custom-modal-header">
+        <h5 class="modal-title" id="historyModalLabel">
+          <i class="bi bi-clock-history me-2"></i>
+          Stock History: {{ selectedSupplyForHistory()?.item_desc }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeHistoryModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body custom-modal-body">
+        <div class="table-responsive">
+          <table class="table table-hover custom-history-table">
+            <thead>
+              <tr>
+                <th>Date/Time</th>
+                <th>Action</th>
+                <th>Change</th>
+                <th>Req/Approve Number</th>
+                <th>Previous Qty</th>
+                <th>New Qty</th>
+                <th>Performed By</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if(historyLoading()) {
+                <tr>
+                  <td colspan="8" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              } @else {
+                @for(entry of stockHistory(); track entry.date_time) {
+                  <tr>
+                    <td>{{ entry.date_time | date:'medium' }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'bg-primary': entry.action === 'CREATE',
+                        'bg-info': entry.action === 'UPDATE' || entry.action === 'UPDATE (Request)',
+                        'bg-danger': entry.action === 'DELETE',
+                        'bg-warning': entry.action === 'ARCHIVE'
+                      }">{{ entry.action }}</span>
+                    </td>
+                    <td [ngClass]="{
+                      'text-success fw-bold': entry.change?.toString()?.startsWith('+'),
+                      'text-danger fw-bold': entry.change?.toString()?.startsWith('-')
+                    }">{{ entry.change || '-' }}</td>
+                    <td>{{ entry.req_approve_num || '-' }}</td>
+                    <td>{{ entry.prev_qty !== null ? entry.prev_qty : '-' }}</td>
+                    <td>{{ entry.new_qty !== null ? entry.new_qty : '-' }}</td>
+                    <td>{{ entry.performed_by }}</td>
+                    <td><small class="text-muted">{{ entry.details }}</small></td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="8" class="text-center py-4">No history available for this item.</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-footer-custom mt-4 d-flex justify-content-end">
+          <button class="btn btn-cancel" type="button" (click)="closeHistoryModal()">CLOSE</button>
         </div>
       </div>
     </div>

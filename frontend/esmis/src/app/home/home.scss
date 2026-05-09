@@ -276,3 +276,23 @@ main {
 }
 
 @include custom-modal;
+
+.custom-history-table {
+  font-size: 0.9rem;
+  
+  thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 12px 15px;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  tbody td {
+    padding: 12px 15px;
+    vertical-align: middle;
+  }
+}
