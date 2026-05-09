@@ -278,12 +278,34 @@ main {
         }
       }
 
-      .accordion-body {
-        padding: 1.5rem 2rem;
-        color: #444;
-        
-        ul li {
-          margin-bottom: 0.5rem;
+      .accordion-collapse {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        visibility: hidden;
+
+        &.show {
+          grid-template-rows: 1fr;
+          visibility: visible;
+        }
+
+        &:not(.show) {
+          display: grid; /* Override Bootstrap's display: none */
+        }
+
+        .accordion-body {
+          overflow: hidden;
+          padding: 0 2rem; /* Start with 0 vertical padding */
+          transition: padding 0.4s ease;
+          color: #444;
+          
+          ul li {
+            margin-bottom: 0.5rem;
+          }
+        }
+
+        &.show .accordion-body {
+          padding: 1.5rem 2rem; /* Add padding when shown */
         }
       }
     }
