@@ -43,7 +43,6 @@ export class Authentication {
         },
         error: (err) => {
           console.error('Login failed:', err);
-          this.toastService.error("Invalid email or password. Please try again.");
           this.loginForm.reset();
           this.isFailed.set(true);
         }
