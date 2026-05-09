@@ -67,6 +67,7 @@ Route::middleware(['auth:sanctum', 'role:admin,superadmin'])->group(function () 
     Route::get('/admin-audits', [AdminAuditController::class, 'index']);
     Route::get('/admin-audits/{admin_audit}', [AdminAuditController::class, 'show']);
 
+    Route::get('/supplies/{supply}/history', [SupplyController::class, 'history']);
     Route::apiResource('supplies', SupplyController::class)->except(['index'])->parameters([
         'supplies' => 'supply'
     ]);
