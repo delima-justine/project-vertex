@@ -198,6 +198,10 @@ export class HelpAndSupport {
   }
 
   toggleFaq(faq: FaqItem) {
-    faq.isExpanded = !faq.isExpanded;
+    const currentState = faq.isExpanded;
+    // Close all FAQs first
+    this.allFaqs.forEach(item => item.isExpanded = false);
+    // Toggle the clicked one based on its previous state
+    faq.isExpanded = !currentState;
   }
 }
