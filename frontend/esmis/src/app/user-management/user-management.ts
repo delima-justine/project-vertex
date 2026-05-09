@@ -27,6 +27,9 @@ export class UserManagement {
   activeUser = signal<User | null>(null);
   userToDelete = signal<User | null>(null);
   feedback = signal('');
+  isProcessingBackup = signal(false);
+  isProcessingRestore = signal(false);
+  restoreFile: File | null = null;
 
   searchControl = new FormControl('');
 
@@ -411,5 +414,63 @@ export class UserManagement {
 
   trackByUser(_index: number, user: User) {
     return user.id;
+  }
+
+  openBackupModal() {
+    this.getModal('backupModal')?.show();
+  }
+
+  downloadBackup() {
+    this.isProcessingBackup.set(true);
+    this.userService.backupDatabase().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `backup-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.sql`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.isProcessingBackup.set(false);
+        this.feedback.set('Backup downloaded successfully.');
+        this.getModal('backupModal')?.hide();
+      },
+      error: () => {
+        this.isProcessingBackup.set(false);
+        this.feedback.set('Failed to generate backup.');
+      }
+    });
+  }
+
+  openRestoreModal() {
+    this.restoreFile = null;
+    this.getModal('restoreModal')?.show();
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.restoreFile = file;
+    }
+  }
+
+  performRestore() {
+    if (!this.restoreFile) {
+      this.feedback.set('Please select a SQL file to restore.');
+      return;
+    }
+
+    this.isProcessingRestore.set(true);
+    this.userService.restoreDatabase(this.restoreFile).subscribe({
+      next: () => {
+        this.isProcessingRestore.set(false);
+        this.feedback.set('Database restored successfully.');
+        this.getModal('restoreModal')?.hide();
+        this.loadUsers(1);
+      },
+      error: (err) => {
+        this.isProcessingRestore.set(false);
+        this.feedback.set(err.error?.message || 'Failed to restore database.');
+      }
+    });
   }
 }
