@@ -254,15 +254,16 @@ main {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        width: 100%;
+        border: none;
+        text-align: left;
 
         &:not(.collapsed) {
           background-color: #fcfcfc;
-          border-bottom: 1px solid rgba(0,0,0,0.05);
           color: #800000;
 
           &::after {
             transform: rotate(-180deg);
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23800000'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
           }
         }
 
@@ -283,19 +284,16 @@ main {
         grid-template-rows: 0fr;
         transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         visibility: hidden;
+        overflow: hidden;
 
         &.show {
           grid-template-rows: 1fr;
           visibility: visible;
         }
 
-        &:not(.show) {
-          display: grid; /* Override Bootstrap's display: none */
-        }
-
         .accordion-body {
-          overflow: hidden;
-          padding: 0 2rem; /* Start with 0 vertical padding */
+          min-height: 0;
+          padding: 0 2rem;
           transition: padding 0.4s ease;
           color: #444;
           
@@ -305,7 +303,7 @@ main {
         }
 
         &.show .accordion-body {
-          padding: 1.5rem 2rem; /* Add padding when shown */
+          padding: 1.5rem 2rem;
         }
       }
     }
