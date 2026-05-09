@@ -5,11 +5,11 @@ describe('ThemeService', () => {
   let service: ThemeService;
 
   beforeEach(() => {
+    localStorage.clear();
     TestBed.configureTestingModule({
       providers: [ThemeService]
     });
     service = TestBed.inject(ThemeService);
-    localStorage.clear();
   });
 
   it('should be created', () => {
@@ -24,6 +24,7 @@ describe('ThemeService', () => {
 
   it('should persist theme to localStorage', () => {
     service.toggleTheme();
+    TestBed.flushEffects(); // Explicitly flush effects to ensure localStorage is updated
     const currentTheme = service.theme();
     expect(localStorage.getItem('theme-preference')).toBe(currentTheme);
   });
