@@ -16,26 +16,103 @@
       <div class="col-12">
         <div class="card shadow-sm border-0">
           <div class="card-header bg-white border-bottom-0 pt-4">
-            <h5 class="card-title fw-bold mb-0">
-              <i class="bi bi-info-circle-fill text-primary me-2"></i>Frequently Asked Questions
+            <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
+              <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
             </h5>
+            <hr class="header-divider mt-2 mb-0" />
           </div>
-          <div class="card-body">
-            <p class="text-muted">Find quick answers to the most common questions about using the Supply Management Information System.</p>
-            <div class="placeholder-glow">
-              <span class="placeholder col-7"></span>
-              <span class="placeholder col-4"></span>
-              <span class="placeholder col-4"></span>
-              <span class="placeholder col-6"></span>
-              <span class="placeholder col-8"></span>
-            </div>
-            <div class="mt-3">
-              <p>Common topics include:</p>
-              <ul>
-                <li>How to request supplies</li>
-                <li>Tracking request status</li>
-                <li>Updating user profile</li>
-              </ul>
+          <div class="card-body pt-0">
+            <p class="description mb-4 mt-3">Welcome to the Help and Support section of the Supply Management Information System (SMIS). Find answers to common questions below.</p>
+
+            <!-- FAQ Tabs -->
+            <ul class="nav nav-tabs custom-faq-tabs border-bottom mb-4">
+              <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">General</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === 'account'" (click)="activeTab = 'account'">Account & Access</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Orders & Management</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === 'technical'" (click)="activeTab = 'technical'">Technical Issues</a>
+              </li>
+            </ul>
+
+            <!-- FAQ Content -->
+            <div [ngSwitch]="activeTab">
+              <div *ngSwitchCase="'general'" class="faq-accordion">
+                <div class="accordion-item shadow-sm border rounded mb-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                      What is SMIS?
+                    </button>
+                  </h2>
+                  <div id="faq1" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                      <p>The Supply Management Information System (SMIS) is a comprehensive platform designed to streamline inventory management, supply requests, and distribution processes within the organization.</p>
+                      <p class="mb-2">Key features include:</p>
+                      <ul class="ps-3">
+                        <li>Centralized inventory tracking</li>
+                        <li>Automated request processing</li>
+                        <li>Real-time status updates</li>
+                        <li>Comprehensive reporting tools</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item shadow-sm border rounded mb-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                      Who can access the system?
+                    </button>
+                  </h2>
+                  <div id="faq2" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                      <p>The system is accessible to:</p>
+                      <ul class="ps-3">
+                        <li><strong>System Administrator:</strong> Manages the overall system, users, and configurations</li>
+                        <li><strong>Inventory Managers:</strong> Handle inventory tracking and supply distribution</li>
+                        <li><strong>Department Heads:</strong> Review and approve supply requests</li>
+                        <li><strong>Authorized Personnel:</strong> Staff with specific permissions based on their role</li>
+                      </ul>
+                      <p class="mt-2 mb-0">Each user type has different permissions and access levels tailored to their responsibilities.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item shadow-sm border rounded mb-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                      What are the system requirements?
+                    </button>
+                  </h2>
+                  <div id="faq3" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                      <p>SMIS is a web-based application that works on most modern devices. Recommended requirements:</p>
+                      <ul class="ps-3">
+                        <li><strong>Browser:</strong> Chrome (latest), Firefox (latest), Edge (latest)</li>
+                        <li><strong>Internet Connection:</strong> Stable broadband connection</li>
+                        <li><strong>Screen Resolution:</strong> Minimum 1366 x 768</li>
+                      </ul>
+                      <p class="mt-2 mb-0">For optimal performance, ensure your browser is updated to the latest version.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Other tabs with placeholders -->
+              <div *ngSwitchCase="'account'" class="py-3 text-center text-muted">
+                <p>Frequently asked questions about Account & Access will appear here.</p>
+              </div>
+              <div *ngSwitchCase="'orders'" class="py-3 text-center text-muted">
+                <p>Frequently asked questions about Orders & Management will appear here.</p>
+              </div>
+              <div *ngSwitchCase="'technical'" class="py-3 text-center text-muted">
+                <p>Frequently asked questions about Technical Issues will appear here.</p>
+              </div>
             </div>
           </div>
         </div>

@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class HelpAndSupport {
   private authService = inject(AuthService);
+  activeTab = 'general';
 
   get isAdmin(): boolean {
     const roleName = this.authService.currentUser()?.role?.role_name?.toLowerCase();
