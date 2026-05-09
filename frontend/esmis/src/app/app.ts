@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgxLoadingBar } from '@ngx-loading-bar/core';
 import { ToastContainerComponent } from './toast-container/toast-container';
 import { ConfirmModalComponent } from './confirm-modal/confirm-modal';
+import { ThemeService } from '../services/theme';
 
 @Component({
   selector: 'app-root',
@@ -12,4 +13,5 @@ import { ConfirmModalComponent } from './confirm-modal/confirm-modal';
 })
 export class App {
   protected readonly title = signal('esmis');
+  private themeService = inject(ThemeService);
 }
