@@ -166,12 +166,45 @@ export class HelpAndSupport {
     }
   ];
 
+  userFaqs: FaqItem[] = [
+    {
+      id: 'ufaq1',
+      category: 'account',
+      question: 'How do I reset my password?',
+      answer: 'If you have forgotten your password, you can reset it by following these steps:',
+      steps: [
+        'On the Login page, click on the "Forgot Password?" link.',
+        'Enter your registered email address.',
+        'Check your email for a password reset link.',
+        'Click the link and enter your new password.',
+        'Log in with your new credentials.'
+      ],
+      notes: 'Note: The reset link is valid for 10 minutes. If it expires, you will need to request a new one.'
+    },
+    {
+      id: 'ufaq2',
+      category: 'account',
+      question: 'How do I update my password?',
+      answer: 'To update your password while logged in:',
+      steps: [
+        'Navigate to the top navigation bar.',
+        'Click on your profile name/icon to open the dropdown menu.',
+        'Select "Account Settings".',
+        'In the "Change Password" section, enter your current password.',
+        'Enter and confirm your new password.',
+        'Click "Save Changes" to save changes.'
+      ]
+    }
+  ];
+
   get filteredFaqs(): FaqItem[] {
+    const activeFaqs = this.isAdmin ? this.allFaqs : this.userFaqs;
+
     if (!this.searchQuery) {
-      return this.allFaqs.filter(faq => faq.category === this.activeTab);
+      return activeFaqs.filter(faq => faq.category === this.activeTab);
     }
     const query = this.searchQuery.toLowerCase();
-    return this.allFaqs.filter(faq => 
+    return activeFaqs.filter(faq => 
       faq.question.toLowerCase().includes(query) || 
       faq.answer.toLowerCase().includes(query) ||
       (faq.features && faq.features.some(f => f.toLowerCase().includes(query))) ||
