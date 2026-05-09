@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { Supply, Category, Unit, SupplyRequest, Archive, Office } from '../models/smis.model';
+import { Supply, Category, Unit, SupplyRequest, Archive, Office, PaginatedResponse } from '../models/smis.model';
 
 @Injectable({
   providedIn: 'root',
@@ -63,7 +63,7 @@ export class SupplyService {
     return this.http.post<any>(`${this.apiUrl}/supply-requests`, payload);
   }
 
-  listSupplyRequests(status?: string, userId?: number): Observable<SupplyRequest[]> {
+  listSupplyRequests(status?: string, userId?: number, page?: number, perPage?: number): Observable<PaginatedResponse<SupplyRequest>> {
     let params = new HttpParams();
     if (status) {
       params = params.set('status', status);
@@ -71,7 +71,13 @@ export class SupplyService {
     if (userId) {
       params = params.set('user_id', userId.toString());
     }
-    return this.http.get<SupplyRequest[]>(`${this.apiUrl}/supply-requests`, { params });
+    if (page) {
+      params = params.set('page', page.toString());
+    }
+    if (perPage) {
+      params = params.set('per_page', perPage.toString());
+    }
+    return this.http.get<PaginatedResponse<SupplyRequest>>(`${this.apiUrl}/supply-requests`, { params });
   }
 
   listOffices(): Observable<Office[]> {
