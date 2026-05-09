@@ -420,17 +420,18 @@ export class Home implements OnInit {
     const htmlContent = `
       <div style="padding: 40px; font-family: 'Times New Roman', Times, serif; color: #000; background: #fff;">
         <!-- Header -->
-        <div style="text-align: center; position: relative; margin-bottom: 40px;">
-          <img src="assets/pup_logo.png" alt="Logo" style="position: absolute; left: 0; top: 0; height: 65px;">
-          <div style="display: inline-block;">
-            <h2 style="margin: 0; font-weight: bold; font-size: 16pt;">POLYTECHNIC UNIVERSITY OF THE PHILIPPINES</h2>
-            <p style="margin: 0; font-size: 12pt;">Taguig Campus</p>
-            <h3 style="margin: 20px 0 0 0; font-weight: bold; text-transform: uppercase; font-size: 14pt;">Supply Management Office</h3>
+        <div style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
+          <img src="assets/pup_logo.png" alt="Logo" style="height: 100px; flex-shrink: 0;">
+          <div style="flex: 1;">
+            <p style="margin: 0; font-size: 11pt;">Republic of the Philippines</p>
+            <h2 style="margin: 5px 0; font-weight: bold; font-size: 16pt;">Polytechnic University of the Philippines</h2>
+            <p style="margin: 3px 0; font-size: 11pt;">Office of the Vice President for Campuses</p>
+            <p style="margin: 3px 0; font-weight: bold; font-size: 11pt;">Taguig Campus</p>
           </div>
-          <hr style="border: 1pt solid #000; margin-top: 30px; opacity: 1;">
-          <h2 style="font-weight: bold; margin-top: 30px; font-size: 18pt;">SUPPLY INVENTORY REPORT</h2>
-          <p style="margin: 0; font-size: 12pt;">As of ${dateStr}</p>
         </div>
+        <hr style="border: 1pt solid #000; margin-bottom: 30px; opacity: 1;">
+        <h2 style="text-align: center; font-weight: bold; margin-bottom: 5px; font-size: 18pt;">SUPPLY INVENTORY REPORT</h2>
+        <p style="text-align: center; margin: 0 0 20px 0; font-size: 12pt;">As of ${dateStr}</p>
 
         <!-- Table -->
         <table style="width: 100%; border-collapse: collapse; border: 1pt solid #000; font-size: 11pt;">
