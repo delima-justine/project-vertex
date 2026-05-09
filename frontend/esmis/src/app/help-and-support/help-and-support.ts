@@ -294,8 +294,9 @@ export class HelpAndSupport {
 
   toggleFaq(faq: FaqItem) {
     const targetState = !faq.isExpanded;
-    // Close all FAQs first
+    // Close all FAQs in both lists first
     this.allFaqs.forEach(item => item.isExpanded = false);
+    this.userFaqs.forEach(item => item.isExpanded = false);
     // Set the clicked one to its new state
     faq.isExpanded = targetState;
   }
