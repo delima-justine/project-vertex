@@ -32,13 +32,15 @@ class SupplyRequestController extends Controller
             $query->where('status', $request->status);
         }
 
-        return response()->json($query->get());
+        $perPage = $request->get('per_page', 100); // Higher default for batching to work better, or we can handle grouping better later
+        return response()->json($query->paginate($perPage));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:tbl_user,id',
+            'batch_id' => 'nullable|string|max:100',
             'supply_id' => 'required|exists:tbl_supply,stock_num',
             'quantity_req' => 'required|integer|min:1',
             'purpose' => 'nullable|string|max:255',
