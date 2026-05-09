@@ -6,6 +6,8 @@ import { Sidebar } from "../sidebar/sidebar";
 import { TopNav } from "../top-nav/top-nav";
 import { SupplyService } from '../../services/supply.service';
 import { AuditService } from '../../services/audit.service';
+import { ToastService } from '../../services/toast.service';
+import { ConfirmService } from '../../services/confirm.service';
 import { UserManagementService } from '../../services/user-management.service';
 import { AdminAudit, Archive, Office, SupplyRequest, User } from '../../models/smis.model';
 import { forkJoin } from 'rxjs';
@@ -21,6 +23,8 @@ export class Reports {
   private supplyService = inject(SupplyService);
   private auditService = inject(AuditService);
   private userService = inject(UserManagementService);
+  private toastService = inject(ToastService);
+  private confirmService = inject(ConfirmService);
 
   timePeriod = signal<'today' | 'week' | 'month' | 'custom'>('today');
   selectedStatus = signal('');
@@ -225,7 +229,7 @@ export class Reports {
         : this.archivedRecords();
 
     if (archives.length === 0) {
-      alert('No archive records available to export.');
+      this.toastService.info('No archive records available to export.');
       return;
     }
 
@@ -317,7 +321,7 @@ export class Reports {
         .save();
     } catch (error) {
       console.error('Error exporting archive PDF:', error);
-      alert('Failed to export archive PDF.');
+      this.toastService.error('Failed to export archive PDF.');
     }
   }
 
@@ -325,7 +329,7 @@ export class Reports {
     try {
       const requests = this.filteredRequests();
       if (requests.length === 0) {
-        alert('No data available to export.');
+        this.toastService.info('No data available to export.');
         return;
       }
 
@@ -486,7 +490,7 @@ export class Reports {
       console.log(`Excel file exported: ${fileName}`);
     } catch (error) {
       console.error('Error exporting to Excel:', error);
-      alert('Failed to export to Excel.');
+      this.toastService.error('Failed to export to Excel.');
     }
   }
 
@@ -654,29 +658,33 @@ export class Reports {
     this.archivePage.set(page);
   }
 
-  archiveFilteredResults() {
+  async archiveFilteredResults() {
     const requestsToArchive = this.filteredRequests();
 
     if (requestsToArchive.length === 0) {
-      alert('No records are available in the current filtered results.');
+      this.toastService.info('No records are available in the current filtered results.');
       return;
     }
 
-    if (!confirm(`Are you sure you want to archive ${requestsToArchive.length} record(s)?`)) {
-      return;
-    }
-
-    forkJoin(requestsToArchive.map((req) => this.supplyService.createArchive(req.id))).subscribe({
-      next: () => {
-        this.loadSupplyRequests();
-        this.loadArchives();
-        alert(`${requestsToArchive.length} request(s) archived successfully.`);
-      },
-      error: (err) => {
-        console.error('Error archiving filtered results', err);
-        alert('Failed to archive one or more records.');
-      }
+    const confirmed = await this.confirmService.confirm(`Are you sure you want to archive ${requestsToArchive.length} record(s)?`, {
+      title: 'Archive Records',
+      confirmText: 'Archive',
+      danger: true
     });
+
+    if (confirmed) {
+      forkJoin(requestsToArchive.map((req) => this.supplyService.createArchive(req.id))).subscribe({
+        next: () => {
+          this.loadSupplyRequests();
+          this.loadArchives();
+          this.toastService.success(`${requestsToArchive.length} request(s) archived successfully.`);
+        },
+        error: (err) => {
+          console.error('Error archiving filtered results', err);
+          this.toastService.error('Failed to archive one or more records.');
+        }
+      });
+    }
   }
 
   archiveSingle(req: SupplyRequest) {
@@ -684,11 +692,11 @@ export class Reports {
       next: () => {
         this.allRequests.set(this.allRequests().filter((item) => item.id !== req.id));
         this.loadArchives();
-        alert('Request archived successfully.');
+        this.toastService.success('Request archived successfully.');
       },
       error: (err) => {
         console.error('Error archiving request', err);
-        alert('Failed to archive the request.');
+        this.toastService.error('Failed to archive the request.');
       }
     });
   }
@@ -699,11 +707,11 @@ export class Reports {
         this.archivedRecords.set(this.archivedRecords().filter((item) => item.id !== archive.id));
         this.loadSupplyRequests();
         this.selectedArchiveIds.set(this.selectedArchiveIds().filter((id) => id !== archive.id));
-        alert('Archive restored successfully.');
+        this.toastService.success('Archive restored successfully.');
       },
       error: (err) => {
         console.error('Error restoring archive', err);
-        alert('Failed to restore the archive.');
+        this.toastService.error('Failed to restore the archive.');
       }
     });
   }
@@ -719,11 +727,11 @@ export class Reports {
         this.loadArchives();
         this.loadSupplyRequests();
         this.selectedArchiveIds.set([]);
-        alert(`${selectedIds.length} archived record(s) restored successfully.`);
+        this.toastService.success(`${selectedIds.length} archived record(s) restored successfully.`);
       },
       error: (err) => {
         console.error('Error restoring selected archives', err);
-        alert('Failed to restore selected archived records.');
+        this.toastService.error('Failed to restore selected archived records.');
       }
     });
   }

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ConfirmService } from '../../services/confirm.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,6 +17,7 @@ export class ResetPassword implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   authService = inject(AuthService);
+  confirmService = inject(ConfirmService);
 
   message = signal<string | null>(null);
   error = signal<string | null>(null);
@@ -47,10 +49,15 @@ export class ResetPassword implements OnInit {
       ? null : { 'mismatch': true };
   }
 
-  resetPassword() {
+  async resetPassword() {
     if (this.resetPasswordForm.invalid || !this.token || !this.email) return;
 
-    if (confirm('Are you sure you want to reset your password?')) {
+    const confirmed = await this.confirmService.confirm('Are you sure you want to reset your password?', {
+      title: 'Reset Password',
+      confirmText: 'Reset'
+    });
+
+    if (confirmed) {
       this.isLoading.set(true);
       this.message.set(null);
       this.error.set(null);

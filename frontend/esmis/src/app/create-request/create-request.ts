@@ -2,6 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 import { Supply, Category } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +19,7 @@ import { TopNav } from "../top-nav/top-nav";
 export class CreateRequest implements OnInit {
   private supplyService = inject(SupplyService);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   availableSupplies = signal<Supply[]>([]);
   categories = signal<Category[]>([]);
@@ -151,7 +153,7 @@ export class CreateRequest implements OnInit {
 
     const user = this.authService.currentUser();
     if (!user) {
-      alert('You must be logged in to submit a request.');
+      this.toastService.error('You must be logged in to submit a request.');
       return;
     }
 
@@ -169,13 +171,13 @@ export class CreateRequest implements OnInit {
 
     forkJoin(requests).subscribe({
       next: (responses) => {
-        alert('Request submitted successfully!');
+        this.toastService.success('Request submitted successfully!');
         this.requestList = [];
         this.purpose = '';
       },
       error: (err) => {
         console.error('Error submitting requests', err);
-        alert('There was an error submitting your request. Please check the console.');
+        this.toastService.error('There was an error submitting your request. Please check the console.');
       }
     });
   }

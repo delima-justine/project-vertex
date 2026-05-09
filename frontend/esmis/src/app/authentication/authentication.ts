@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-authentication',
@@ -15,6 +16,7 @@ export class Authentication {
   loginForm: FormGroup;
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
+  toastService = inject(ToastService);
   isFailed = signal(false);
 
   constructor() {
@@ -41,7 +43,7 @@ export class Authentication {
         },
         error: (err) => {
           console.error('Login failed:', err);
-          alert("Invalid email or password. Please try again.");
+          this.toastService.error("Invalid email or password. Please try again.");
           this.loginForm.reset();
           this.isFailed.set(true);
         }

@@ -2,6 +2,8 @@ import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef } fr
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
+import { ConfirmService } from '../../services/confirm.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +20,8 @@ import { TopNav } from "../top-nav/top-nav";
 export class Pending implements OnInit {
   supplyService = inject(SupplyService);
   authService = inject(AuthService);
+  toastService = inject(ToastService);
+  confirmService = inject(ConfirmService);
 
   user = this.authService.currentUser;
 
@@ -134,8 +138,14 @@ export class Pending implements OnInit {
     this.openModal();
   }
 
-  disapproveBatch() {
-    if (confirm('Are you sure you want to disapprove this entire batch?')) {
+  async disapproveBatch() {
+    const confirmed = await this.confirmService.confirm('Are you sure you want to disapprove this entire batch?', {
+      title: 'Disapprove Batch',
+      confirmText: 'Disapprove',
+      danger: true
+    });
+
+    if (confirmed) {
       const batch = this.selectedBatch();
       const adminId = this.user()?.id;
       const requests = batch.map(r => this.supplyService.updateSupplyRequest(r.id, { 
@@ -152,7 +162,7 @@ export class Pending implements OnInit {
             if (completed === batch.length) {
               this.closeModal();
               this.loadPendingRequests();
-              alert('Batch disapproved.');
+              this.toastService.success('Batch disapproved.');
             }
           }
         });

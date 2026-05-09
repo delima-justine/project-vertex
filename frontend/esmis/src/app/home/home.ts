@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Sidebar } from "../sidebar/sidebar";
 import { AuthService } from '../../services/auth.service';
 import { SupplyService } from '../../services/supply.service';
+import { ToastService } from '../../services/toast.service';
+import { ConfirmService } from '../../services/confirm.service';
 import { Supply, Category, Unit, SupplyRequest } from '../../models/smis.model';
 import { TopNav } from "../top-nav/top-nav";
 import { BaseChartDirective } from 'ng2-charts';
@@ -25,6 +27,8 @@ import { ChartConfiguration, ChartData } from 'chart.js';
 export class Home implements OnInit {
   authService: AuthService = inject(AuthService);
   supplyService: SupplyService = inject(SupplyService);
+  toastService: ToastService = inject(ToastService);
+  confirmService: ConfirmService = inject(ConfirmService);
   fb: FormBuilder = inject(FormBuilder);
 
   user = this.authService.currentUser;
@@ -194,7 +198,7 @@ export class Home implements OnInit {
         },
         error: (err) => {
           console.error('Error updating supply:', err);
-          alert('Failed to update supply. Please check the console for details.');
+          this.toastService.error('Failed to update supply. Please check the console for details.');
         }
       });
     } else {
@@ -205,21 +209,27 @@ export class Home implements OnInit {
         },
         error: (err) => {
           console.error('Error creating supply:', err);
-          alert('Failed to create supply. Stock number might already exist.');
+          this.toastService.error('Failed to create supply. Stock number might already exist.');
         }
       });
     }
   }
 
-  onDelete(stockNum: string) {
-    if (confirm('Are you sure you want to delete this supply?')) {
+  async onDelete(stockNum: string) {
+    const confirmed = await this.confirmService.confirm('Are you sure you want to delete this supply?', {
+      title: 'Delete Supply',
+      confirmText: 'Delete',
+      danger: true
+    });
+
+    if (confirmed) {
       this.supplyService.deleteSupply(stockNum).subscribe({
         next: () => {
           this.loadData();
         },
         error: (err) => {
           console.error('Error deleting supply:', err);
-          alert('Failed to delete supply.');
+          this.toastService.error('Failed to delete supply.');
         }
       });
     }
@@ -255,20 +265,26 @@ export class Home implements OnInit {
       },
       error: (err) => {
         console.error('Error adding category:', err);
-        alert('Failed to add category. It might already exist.');
+        this.toastService.error('Failed to add category. It might already exist.');
       }
     });
   }
 
-  deleteCategory(id: number) {
-    if (confirm('Are you sure you want to delete this category? This might fail if supplies are using it.')) {
+  async deleteCategory(id: number) {
+    const confirmed = await this.confirmService.confirm('Are you sure you want to delete this category? This might fail if supplies are using it.', {
+      title: 'Delete Category',
+      confirmText: 'Delete',
+      danger: true
+    });
+
+    if (confirmed) {
       this.supplyService.deleteCategory(id).subscribe({
         next: () => {
           this.loadData();
         },
         error: (err) => {
           console.error('Error deleting category:', err);
-          alert('Failed to delete category. Ensure no supplies are linked to it.');
+          this.toastService.error('Failed to delete category. Ensure no supplies are linked to it.');
         }
       });
     }
@@ -304,20 +320,26 @@ export class Home implements OnInit {
       },
       error: (err) => {
         console.error('Error adding unit:', err);
-        alert('Failed to add unit. It might already exist.');
+        this.toastService.error('Failed to add unit. It might already exist.');
       }
     });
   }
 
-  deleteUnit(id: number) {
-    if (confirm('Are you sure you want to delete this unit? This might fail if supplies are using it.')) {
+  async deleteUnit(id: number) {
+    const confirmed = await this.confirmService.confirm('Are you sure you want to delete this unit? This might fail if supplies are using it.', {
+      title: 'Delete Unit',
+      confirmText: 'Delete',
+      danger: true
+    });
+
+    if (confirmed) {
       this.supplyService.deleteUnit(id).subscribe({
         next: () => {
           this.loadData();
         },
         error: (err) => {
           console.error('Error deleting unit:', err);
-          alert('Failed to delete unit. Ensure no supplies are linked to it.');
+          this.toastService.error('Failed to delete unit. Ensure no supplies are linked to it.');
         }
       });
     }

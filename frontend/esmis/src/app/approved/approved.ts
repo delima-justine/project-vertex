@@ -2,6 +2,8 @@ import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef } fr
 import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
+import { ConfirmService } from '../../services/confirm.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +20,8 @@ import { forkJoin } from 'rxjs';
 export class Approved implements OnInit {
   private supplyService = inject(SupplyService);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
+  private confirmService = inject(ConfirmService);
 
   @ViewChild('requestDetailsModal') modalElement?: ElementRef;
 
@@ -120,21 +124,26 @@ export class Approved implements OnInit {
     }
   }
 
-  releaseBatch(batch: SupplyRequest[]) {
+  async releaseBatch(batch: SupplyRequest[]) {
     const itemNames = batch.map(r => r.supply?.item_desc).join(', ');
-    if (confirm(`Are you sure you want to release the following items: ${itemNames}?`)) {
+    const confirmed = await this.confirmService.confirm(`Are you sure you want to release the following items: ${itemNames}?`, {
+      title: 'Release Batch Requests',
+      confirmText: 'Release Items'
+    });
+
+    if (confirmed) {
       const observables = batch.map(req => 
         this.supplyService.updateSupplyRequest(req.id, { status: 'released' })
       );
 
       forkJoin(observables).subscribe({
         next: () => {
-          alert('Batch requests released!');
+          this.toastService.success('Batch requests released!');
           this.loadApprovedRequests();
         },
         error: (err) => {
           console.error('Error releasing request batch', err);
-          alert('Failed to release some requests in the batch.');
+          this.toastService.error('Failed to release some requests in the batch.');
           this.loadApprovedRequests();
         }
       });
