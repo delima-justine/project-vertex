@@ -89,7 +89,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="supplyInventoryModal" tabindex="-1" aria-labelledby="supplyInventoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content custom-modal">
       <div class="modal-header custom-modal-header">
         <h5 class="modal-title" id="supplyInventoryModalLabel">
@@ -98,10 +98,58 @@
         </h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeModal()" aria-label="Close"></button>
       </div>
-      <div class="modal-body custom-modal-body overflow-auto" style="max-height: 500px;">
+      <div class="modal-body custom-modal-body overflow-auto" style="max-height: 600px;">
+        <!-- Filters Row -->
+        <div class="row g-3 mb-4">
+          <!-- Search -->
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Search</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                placeholder="Stock number or description..." 
+                [ngModel]="modalSearchTerm()"
+                (ngModelChange)="modalSearchTerm.set($event)">
+            </div>
+          </div>
+
+          <!-- Category Filter -->
+          <div class="col-md-3">
+            <label class="form-label small fw-bold">Category</label>
+            <select class="form-select" [ngModel]="modalCategoryFilter()" (ngModelChange)="modalCategoryFilter.set($event)">
+              <option value="all">All Categories</option>
+              @for (cat of categories(); track cat.id) {
+                <option [value]="cat.id">{{ cat.category_name }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="col-md-3">
+            <label class="form-label small fw-bold">Status</label>
+            <select class="form-select" [ngModel]="modalStatusFilter()" (ngModelChange)="modalStatusFilter.set($event)">
+              <option value="all">All Statuses</option>
+              <option value="Available">Available</option>
+              <option value="Low Stock">Low Stock</option>
+              <option value="Out of Stock">Out of Stock</option>
+            </select>
+          </div>
+        </div>
+
         <table class="table table-hover align-middle">
           <thead class="table-light">
             <tr>
+              <th style="width: 40px;">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    [checked]="areAllItemsSelected()" 
+                    (change)="toggleAllItems()">
+                </div>
+              </th>
               <th>Stock Num</th>
               <th>Item Desc</th>
               <th>Category</th>
@@ -111,8 +159,18 @@
             </tr>
           </thead>
           <tbody>
-            @for (supply of availableSupplies; track supply.stock_num) {
-              <tr>
+            @for (supply of filteredAvailableSupplies(); track supply.stock_num) {
+              <tr [class.table-primary]="isItemSelected(supply.stock_num)">
+                <td>
+                  <div class="form-check">
+                    <input 
+                      class="form-check-input" 
+                      type="checkbox" 
+                      [checked]="isItemSelected(supply.stock_num)"
+                      (change)="toggleItem(supply)"
+                      [disabled]="supply.status === 'Out of Stock'">
+                  </div>
+                </td>
                 <td>{{ supply.stock_num }}</td>
                 <td>{{ supply.item_desc }}</td>
                 <td>{{ supply.category?.category_name }}</td>
@@ -125,17 +183,33 @@
                   }">{{ supply.status }}</span>
                 </td>
                 <td>
-                  <button class="btn btn-primary btn-sm modal-add-btn" (click)="addItem(supply)" [disabled]="supply.status === 'Out of Stock'">
-                    <i class="bi bi-plus-lg"></i> Add
+                  <button 
+                    class="btn btn-sm" 
+                    [class]="isItemSelected(supply.stock_num) ? 'btn-danger' : 'btn-primary'"
+                    (click)="toggleItem(supply)" 
+                    [disabled]="supply.status === 'Out of Stock' && !isItemSelected(supply.stock_num)">
+                    <i class="bi" [class]="isItemSelected(supply.stock_num) ? 'bi-dash-lg' : 'bi-plus-lg'"></i>
+                    {{ isItemSelected(supply.stock_num) ? ' Remove' : ' Add' }}
                   </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="text-center py-4 text-muted">
+                  <i class="bi bi-info-circle me-1"></i>
+                  No supplies match your current filters.
                 </td>
               </tr>
             }
           </tbody>
         </table>
       </div>
-      <div class="modal-footer-custom px-4 pb-4 d-flex justify-content-end">
-        <button type="button" class="btn btn-cancel" (click)="closeModal()">CLOSE</button>
+      <div class="modal-footer-custom px-4 pb-4 d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-cancel" (click)="closeModal()">CANCEL</button>
+        <button type="button" class="btn btn-save" (click)="confirmSelection()">
+          <i class="bi bi-check-circle-fill me-1"></i>
+          SELECT ITEMS
+        </button>
       </div>
     </div>
   </div>
