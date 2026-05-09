@@ -9,4 +9,126 @@
     <i class="bi bi-question-circle-fill me-1 text-white"></i>
     <span>Help and Support</span>
   </div>
+
+  <div class="content-container mt-4 px-4 pb-4">
+    <div class="row g-4">
+      <!-- Frequently Asked Questions -->
+      <div class="col-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-bottom-0 pt-4">
+            <h5 class="card-title fw-bold mb-0">
+              <i class="bi bi-info-circle-fill text-primary me-2"></i>Frequently Asked Questions
+            </h5>
+          </div>
+          <div class="card-body">
+            <p class="text-muted">Find quick answers to the most common questions about using the Supply Management Information System.</p>
+            <div class="placeholder-glow">
+              <span class="placeholder col-7"></span>
+              <span class="placeholder col-4"></span>
+              <span class="placeholder col-4"></span>
+              <span class="placeholder col-6"></span>
+              <span class="placeholder col-8"></span>
+            </div>
+            <div class="mt-3">
+              <p>Common topics include:</p>
+              <ul>
+                <li>How to request supplies</li>
+                <li>Tracking request status</li>
+                <li>Updating user profile</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Guide -->
+      <div class="col-12" *ngIf="isAdmin">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-bottom-0 pt-4">
+            <h5 class="card-title fw-bold mb-0 text-maroon">
+              <i class="bi bi-journal-richtext me-2"></i>Admin Guide
+            </h5>
+            <hr class="header-divider mt-2 mb-0" />
+          </div>
+          <div class="card-body pt-0">
+            <p class="description mb-4 mt-3">Learn how to manage the SMIS system effectively with our step-by-step guides.</p>
+
+            <div class="row g-4 mb-5">
+              <div class="col-md-6">
+                <div class="guide-card shadow-sm rounded overflow-hidden">
+                  <div class="guide-icon-side">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                  <div class="guide-content p-3">
+                    <h6 class="fw-bold mb-2">User Management</h6>
+                    <p class="text-muted small mb-3">Learn how to manage user accounts and permissions.</p>
+                    <button class="btn btn-outline-maroon btn-sm px-3">
+                      <i class="bi bi-play-circle-fill me-2"></i>View Guide
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="guide-card shadow-sm rounded overflow-hidden">
+                  <div class="guide-icon-side">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div class="guide-content p-3">
+                    <h6 class="fw-bold mb-2">Request Approval Process</h6>
+                    <p class="text-muted small mb-3">Understand how to review and approve supply requests.</p>
+                    <button class="btn btn-outline-maroon btn-sm px-3">
+                      <i class="bi bi-play-circle-fill me-2"></i>View Guide
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="video-tutorials-section">
+              <h4 class="fw-bold mb-3">Visual Walkthrough</h4>
+              <div class="video-tutorial-card shadow-sm rounded overflow-hidden d-flex">
+                <div class="video-icon-side">
+                  <i class="bi bi-youtube"></i>
+                </div>
+                <div class="video-content p-4 d-flex flex-column justify-content-center">
+                  <h3 class="fw-bold mb-2">Video Tutorials</h3>
+                  <p class="text-muted mb-4">Learn how to manage the system effectively with our comprehensive video guides.</p>
+                  <div class="d-flex">
+                    <button class="btn btn-pill-maroon px-4 py-2">
+                      <i class="bi bi-play-btn-fill me-2"></i>View Playlist
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Support -->
+      <div class="col-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-bottom-0 pt-4">
+            <h5 class="card-title fw-bold mb-0">
+              <i class="bi bi-envelope-at-fill text-success me-2"></i>Contact Support
+            </h5>
+          </div>
+          <div class="card-body">
+            <p class="text-muted">Need further assistance? Our technical support team is here to help you.</p>
+            <div class="alert alert-info border-0 shadow-sm">
+              <div class="d-flex">
+                <i class="bi bi-headset fs-3 me-3"></i>
+                <div>
+                  <h6 class="fw-bold mb-1">Technical Support Team</h6>
+                  <p class="mb-0 small">Email: support@pup.edu.ph</p>
+                  <p class="mb-0 small">Phone: (02) 8-713-9304</p>
+                </div>
+              </div>
+            </div>
+            <p class="small text-muted mt-3 mb-0">Availability: Monday to Friday, 8:00 AM - 5:00 PM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
