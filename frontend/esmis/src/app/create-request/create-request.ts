@@ -82,9 +82,12 @@ export class CreateRequest implements OnInit {
       return;
     }
 
+    const batchId = `BATCH-${user.id}-${Date.now()}`;
+
     const requests = this.requestList.map(item => {
       return this.supplyService.createSupplyRequest({
         user_id: user.id,
+        batch_id: batchId,
         supply_id: item.stock_num,
         quantity_req: item.quantity_req,
         purpose: this.purpose
