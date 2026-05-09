@@ -20,13 +20,13 @@ export const permissionGuard: CanActivateFn = (route, state) => {
       const requiredRole = route.data['role'] as string;
 
       if (requiredRole && !authService.hasRole(requiredRole)) {
-        return router.parseUrl('/home');
+        return router.parseUrl('/**');
       }
 
       if (requiredPermissions && requiredPermissions.length > 0) {
         const hasPermission = authService.hasAnyPermission(requiredPermissions);
         if (!hasPermission) {
-          return router.parseUrl('/home');
+          return router.parseUrl('/**');
         }
       }
 
