@@ -22,6 +22,20 @@
         <i class="bi bi-arrow-clockwise me-1"></i>
         <span>Refresh</span>
       </button>
+
+      @if (authService.hasRole('superadmin') || authService.hasRole('admin')) {
+        <button class="btn btn-success" (click)="openBackupModal()">
+          <i class="bi bi-box-arrow-in-down me-1"></i>
+          <span>Backup Database</span>
+        </button>
+  
+        @if (authService.hasRole('superadmin')) {
+          <button class="btn btn-danger" (click)="openRestoreModal()">
+            <i class="bi bi-upload me-1"></i>
+            <span>Restore Database</span>
+          </button>
+        }
+      }
     </div>
 
     <div class="search-row d-flex align-items-center gap-2">
@@ -109,25 +123,6 @@
       </div>
     </div>
   }
-
-  <!-- Functionalities Container -->
-  @if (authService.hasRole('superadmin') || authService.hasRole('admin')) {
-    <div class="functionalities-container">
-      <div class="b-r-function">
-        <button class="btn btn-success" (click)="openBackupModal()">
-          <i class="bi bi-box-arrow-in-down me-1"></i>
-          <span>Backup Database</span>
-        </button>
-  
-        @if (authService.hasRole('superadmin')) {
-          <button class="btn btn-danger" (click)="openRestoreModal()">
-            <i class="bi bi-upload me-1"></i>
-            <span>Restore Database</span>
-          </button>
-        }
-      </div>
-     </div>
-  }
 </main>
 
 <!-- Backup Modal -->
@@ -173,18 +168,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button 
-          type="button" 
-          class="btn btn-secondary" 
-          data-bs-dismiss="modal">
-            Cancel
-        </button>
-
-        <button 
-          type="button" 
-          class="btn btn-danger" 
-          (click)="performRestore()" 
-          [disabled]="isProcessingRestore() || !restoreFile">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="performRestore()" [disabled]="isProcessingRestore() || !restoreFile">
           @if (isProcessingRestore()) {
             <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
           }
