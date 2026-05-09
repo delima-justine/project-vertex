@@ -4,7 +4,7 @@
   top: 0;
   left: var(--sidebar-width);
   right: 0;
-  background-color: #fff;
+  background-color: var(--bs-body-bg);
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   z-index: 1000;
   display: flex;
@@ -41,12 +41,12 @@
   align-items: center;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  color: #333;
+  color: var(--bs-body-color);
   transition: background-color 0.2s ease;
   border-radius: 4px;
 
   &:hover {
-    background: #f8f9fa;
+    background: var(--bs-tertiary-bg);
   }
 
   .user-info {
@@ -59,7 +59,7 @@
 
     .user-role {
       font-size: 0.75rem;
-      color: #6c757d;
+      color: var(--bs-secondary-color);
       text-transform: capitalize;
     }
   }
@@ -81,8 +81,8 @@
     font-size: 0.9rem;
 
     &:hover {
-      background-color: #f8f9fa;
-      color: #007bff;
+      background-color: var(--bs-tertiary-bg);
+      color: var(--bs-primary);
     }
   }
 }

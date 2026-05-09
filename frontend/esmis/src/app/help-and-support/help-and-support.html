@@ -31,7 +31,7 @@
       <!-- Frequently Asked Questions -->
       <div class="col-12" #faqSection>
         <div class="card shadow-sm border-0">
-          <div class="card-header bg-white border-bottom-0 pt-4">
+          <div class="card-header border-bottom-0 pt-4">
             <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
               <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
             </h5>
@@ -44,8 +44,8 @@
               <!-- FAQ Search Bar -->
               <div class="faq-search-container">
                 <div class="input-group">
-                  <span class="input-group-text bg-white border-end-0">
-                    <i class="bi bi-search text-muted"></i>
+                  <span class="input-group-text border-end-0">
+                    <i class="bi bi-search text-secondary"></i>
                   </span>
                   <input type="text" class="form-control border-start-0 ps-0" placeholder="Search FAQs..." [(ngModel)]="searchQuery">
                 </div>
@@ -70,7 +70,7 @@
 
             <!-- Search Results Header -->
             <div *ngIf="searchQuery" class="mb-4">
-              <h6 class="text-muted">Search results for: "<span class="text-maroon fw-bold">{{searchQuery}}</span>" ({{filteredFaqs.length}} found)</h6>
+              <h6 class="text-secondary">Search results for: "<span class="text-maroon fw-bold">{{searchQuery}}</span>" ({{filteredFaqs.length}} found)</h6>
             </div>
 
             <!-- FAQ Content (Dynamic) -->
@@ -100,9 +100,9 @@
 
               <!-- No Results State -->
               <div *ngIf="filteredFaqs.length === 0" class="py-5 text-center">
-                <i class="bi bi-search-heart fs-1 text-muted opacity-50"></i>
-                <h5 class="mt-3 text-muted">No matching FAQs found for "{{searchQuery}}"</h5>
-                <p class="text-muted small">Try different keywords or browse categories.</p>
+                <i class="bi bi-search-heart fs-1 text-secondary opacity-50"></i>
+                <h5 class="mt-3 text-secondary">No matching FAQs found for "{{searchQuery}}"</h5>
+                <p class="text-secondary small">Try different keywords or browse categories.</p>
                 <button class="btn btn-sm btn-outline-maroon mt-2" (click)="searchQuery = ''">Clear Search</button>
               </div>
             </div>
@@ -113,7 +113,7 @@
       <!-- Admin Guide -->
       <div class="col-12" *ngIf="isAdmin" #adminGuideSection>
         <div class="card shadow-sm border-0">
-          <div class="card-header bg-white border-bottom-0 pt-4">
+          <div class="card-header border-bottom-0 pt-4">
             <h5 class="card-title fw-bold mb-0 text-maroon">
               <i class="bi bi-journal-richtext me-2"></i>Admin Guide
             </h5>
@@ -130,7 +130,7 @@
                   </div>
                   <div class="guide-content p-3">
                     <h6 class="fw-bold mb-2">User Management</h6>
-                    <p class="text-muted small mb-3">Learn how to manage user accounts and permissions.</p>
+                    <p class="text-secondary small mb-3">Learn how to manage user accounts and permissions.</p>
                     <button class="btn btn-outline-maroon btn-sm px-3">
                       <i class="bi bi-play-circle-fill me-2"></i>View Guide
                     </button>
@@ -144,7 +144,7 @@
                   </div>
                   <div class="guide-content p-3">
                     <h6 class="fw-bold mb-2">Request Approval Process</h6>
-                    <p class="text-muted small mb-3">Understand how to review and approve supply requests.</p>
+                    <p class="text-secondary small mb-3">Understand how to review and approve supply requests.</p>
                     <button class="btn btn-outline-maroon btn-sm px-3">
                       <i class="bi bi-play-circle-fill me-2"></i>View Guide
                     </button>
@@ -161,7 +161,7 @@
                 </div>
                 <div class="video-content p-4 d-flex flex-column justify-content-center">
                   <h3 class="fw-bold mb-2">Video Tutorials</h3>
-                  <p class="text-muted mb-4">Learn how to manage the system effectively with our comprehensive video guides.</p>
+                  <p class="text-secondary mb-4">Learn how to manage the system effectively with our comprehensive video guides.</p>
                   <div class="d-flex">
                     <button class="btn btn-pill-maroon px-4 py-2">
                       <i class="bi bi-play-btn-fill me-2"></i>View Playlist
@@ -177,7 +177,7 @@
       <!-- Contact Support -->
       <div class="col-12" #contactSection>
         <div class="card shadow-sm border-0">
-          <div class="card-header bg-white border-bottom-0 pt-4">
+          <div class="card-header border-bottom-0 pt-4">
             <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
               <i class="bi bi-headset me-2"></i>Contact Support
             </h5>
@@ -204,7 +204,7 @@
                       <i class="bi bi-telephone-fill text-maroon fs-4 me-2"></i>
                       <span class="fw-bold">Phone</span>
                     </div>
-                    <span class="text-muted small">(02) 8123-4567</span>
+                    <span class="text-secondary small">(02) 8123-4567</span>
                   </div>
                 </div>
                 
@@ -214,7 +214,7 @@
                       <i class="bi bi-clock-fill text-maroon fs-4 me-2"></i>
                       <span class="fw-bold">Support Hours</span>
                     </div>
-                    <span class="text-muted small">Mon - Fri, 8AM - 5PM</span>
+                    <span class="text-secondary small">Mon - Fri, 8AM - 5PM</span>
                   </div>
                 </div>
                 
@@ -224,7 +224,7 @@
                       <i class="bi bi-geo-alt-fill text-maroon fs-4 me-2"></i>
                       <span class="fw-bold">Location</span>
                     </div>
-                    <span class="text-muted small">PUP Taguig, Property Custodian Office, Bldg A</span>
+                    <span class="text-secondary small">PUP Taguig, Property Custodian Office, Bldg A</span>
                   </div>
                 </div>
               </div>
@@ -235,7 +235,7 @@
     <!-- Developers & Contributors -->
     <div class="col-12" #contributorsSection>
       <div class="card shadow-sm border-0">
-        <div class="card-header bg-white border-bottom-0 pt-4">
+        <div class="card-header border-bottom-0 pt-4">
           <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
             <i class="bi bi-people-fill me-2"></i>Developers & Contributors
           </h5>
@@ -251,9 +251,9 @@
                   <i class="bi bi-stars fs-1 text-maroon"></i>
                 </div>
                 <h4 class="fw-bold text-maroon">Astral Angels</h4>
-                <p class="text-muted mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2025</p>
+                <p class="text-secondary mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2025</p>
                 <span class="badge bg-maroon-soft text-maroon px-3 py-2 rounded-pill">Original Developers</span>
-                <p class="mt-3 small text-muted">Laid the foundation of SMIS, designing and implementing the core architecture and features of the system.</p>
+                <p class="mt-3 small text-secondary">Laid the foundation of SMIS, designing and implementing the core architecture and features of the system.</p>
               </div>
             </div>
 
@@ -263,9 +263,9 @@
                   <i class="bi bi-triangle-half fs-1 text-maroon"></i>
                 </div>
                 <h4 class="fw-bold text-maroon">Vertex</h4>
-                <p class="text-muted mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2026</p>
+                <p class="text-secondary mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2026</p>
                 <span class="badge bg-maroon-soft text-maroon px-3 py-2 rounded-pill">Contributors</span>
-                <p class="mt-3 small text-muted">Currently enhancing the system with advanced analytics, improved UI/UX, and optimized backend workflows.</p>
+                <p class="mt-3 small text-secondary">Currently enhancing the system with advanced analytics, improved UI/UX, and optimized backend workflows.</p>
               </div>
             </div>
           </div>

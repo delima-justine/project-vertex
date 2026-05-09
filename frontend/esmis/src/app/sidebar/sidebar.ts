@@ -3,6 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { AuthService } from '../../services/auth.service';
 import { LayoutService } from '../../services/layout.service';
+import { ThemeService } from '../../services/theme';
 import { NotificationApiService } from '../../services/notification-api.service';
 import { NotificationService } from '../../services/notification.service';
 
@@ -16,6 +17,7 @@ import { NotificationService } from '../../services/notification.service';
 export class Sidebar implements OnInit {
   public authService: AuthService = inject(AuthService);
   public layoutService: LayoutService = inject(LayoutService);
+  public themeService: ThemeService = inject(ThemeService);
   public notifApiService = inject(NotificationApiService);
   public notifService = inject(NotificationService);
 

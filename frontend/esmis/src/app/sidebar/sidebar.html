@@ -1,9 +1,10 @@
 <div class="sidebar" [class.collapsed]="!layoutService.isSidebarOpen()">
   <!-- Header -->
   <div class="header">
-    <img src="assets/pup_logo.png" alt="PUP Logo"/>
-    <span>SMIS</span>
+    <img src="assets/pup_logo.png" alt="PUP Logo" [style.filter]="themeService.theme() === 'dark' ? 'brightness(0.9) contrast(1.1)' : 'none'">
+    <span>PUP SMIS</span>
   </div>
+
 
   <!-- Body -->
   <div class="body">

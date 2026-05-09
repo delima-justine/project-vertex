@@ -1,7 +1,16 @@
 <!-- Top Nav Container -->
 <nav class="top-nav-container">
-  <div class="dropdown-container">
-    <button class="dropdown-trigger" (click)="toggleDropdown()">
+  <div class="d-flex align-items-center gap-3">
+    <!-- Theme Toggle -->
+    <button class="btn btn-link text-decoration-none p-0" (click)="themeService.toggleTheme()" 
+      [title]="themeService.theme() === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'">
+      <i class="bi" [class.bi-sun-fill]="themeService.theme() === 'dark'" 
+        [class.bi-moon-stars-fill]="themeService.theme() === 'light'"
+        [class.text-warning]="themeService.theme() === 'dark'"></i>
+    </button>
+
+    <div class="dropdown-container">
+      <button class="dropdown-trigger" (click)="toggleDropdown()">
       @if(user()?.role?.role_name?.toLowerCase() === 'superadmin' || 
         user()?.role?.role_name?.toLowerCase() === 'admin') 
       {
@@ -35,6 +44,7 @@
       <li class="dropdown-item" (click)="openLogoutModal()">Logout</li>
     </ul>
   }
+    </div>
   </div>
 </nav>
 
