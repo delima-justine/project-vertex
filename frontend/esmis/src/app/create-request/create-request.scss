@@ -104,3 +104,49 @@ main {
 }
 
 @include custom-modal;
+
+/* Dark mode overrides using ::ng-deep to penetrate modal scoping */
+::ng-deep [data-bs-theme="dark"] {
+  .custom-modal-body {
+    background-color: #2b3035 !important;
+    color: #dee2e6 !important;
+  }
+
+  .input-group-text.bg-white {
+    background-color: #343a40 !important;
+    border-color: #495057 !important;
+    color: #dee2e6 !important;
+  }
+
+  .form-control, .form-select {
+    background-color: #343a40 !important;
+    border-color: #495057 !important;
+    color: #dee2e6 !important;
+
+    &::placeholder {
+      color: #adb5bd !important;
+    }
+  }
+
+  .table-light {
+    --bs-table-bg: #343a40 !important;
+    --bs-table-color: #dee2e6 !important;
+  }
+
+  .table-hover tbody tr:hover {
+    --bs-table-hover-bg: #3d4246 !important;
+  }
+
+  .table-primary {
+    --bs-table-bg: #052c65 !important;
+    --bs-table-color: #cfe2ff !important;
+  }
+
+  .form-label {
+    color: #dee2e6 !important;
+  }
+
+  .text-muted {
+    color: #adb5bd !important;
+  }
+}
