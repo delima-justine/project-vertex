@@ -10,6 +10,7 @@ class SupplyRequest extends Model
 
     protected $fillable = [
         'user_id',
+        'batch_id',
         'supply_id',
         'quantity_req',
         'purpose',
