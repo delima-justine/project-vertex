@@ -18,9 +18,18 @@
     </div>
   </div>
 
-  <div class="alert alert-info mt-3 mb-3 py-2">
-    Backups exclude Audit and Request logs. Restores preserve existing Audit/Request logs (including SuperAdmin logs).
-  </div>
+  @if (isAdmin) {
+    <div class="alert alert-info mt-3 mb-3 py-2">
+      Backups exclude Audit and Request logs. Restores preserve existing Audit/Request logs 
+      @if (isSuperAdmin) {
+        <span>(including SuperAdmin logs)</span>
+      }
+    </div>
+  } @else {
+    <div class="alert alert-info mt-3 mb-3 py-2">
+      View and export your personal supply request history and logs below.
+    </div>
+  }
 
   <div class="content-panel card">
     <div class="card-body">
@@ -33,16 +42,18 @@
               <i class="bi bi-funnel-fill text-danger"></i>
               <strong>Filter Reports</strong>
             </div>
-            <div class="btn-group">
-              <button class="btn toggle-btn" [ngClass]="{'active': activeView() === 'request_logs'}" (click)="openRequestLogs()">
-                <i class="bi bi-journal-text me-1"></i>
-                Request Logs
-              </button>
-              <button class="btn toggle-btn" [ngClass]="{'active': activeView() === 'admin_audit'}" (click)="openAdminAudit()">
-                <i class="bi bi-shield-lock-fill me-1"></i>
-                Admin Audit
-              </button>
-            </div>
+            @if (isAdmin) {
+              <div class="btn-group">
+                <button class="btn toggle-btn" [ngClass]="{'active': activeView() === 'request_logs'}" (click)="openRequestLogs()">
+                  <i class="bi bi-journal-text me-1"></i>
+                  Request Logs
+                </button>
+                <button class="btn toggle-btn" [ngClass]="{'active': activeView() === 'admin_audit'}" (click)="openAdminAudit()">
+                  <i class="bi bi-shield-lock-fill me-1"></i>
+                  Admin Audit
+                </button>
+              </div>
+            }
           </div>
 
           <div class="time-period-grid mb-3">
@@ -53,54 +64,68 @@
           </div>
 
           <div class="row g-3 mb-3">
-            <div class="col-md-6" *ngIf="activeView() === 'request_logs'">
-              <label for="statusSelect" class="form-label">Status</label>
-              <select id="statusSelect" class="form-select" [(ngModel)]="selectedStatus">
-                <option value="">All Statuses</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="released">Released</option>
-                <option value="disapproved">Disapproved</option>
-              </select>
-            </div>
-            <div class="col-md-6" *ngIf="activeView() === 'admin_audit'">
-              <label for="actionTypeSelect" class="form-label">Action Type</label>
-              <select id="actionTypeSelect" class="form-select" [(ngModel)]="selectedActionType">
-                <option value="">All Actions</option>
-                <option value="CREATE">Create</option>
-                <option value="UPDATE">Update</option>
-                <option value="DELETE">Delete</option>
-                <option value="RESTORE">Restore</option>
-                <option value="LOGIN">Login</option>
-                <option value="LOGOUT">Logout</option>
-              </select>
-            </div>
-            <div class="col-md-6" *ngIf="activeView() === 'request_logs'">
-              <label for="officeSelect" class="form-label">Office</label>
-              <select id="officeSelect" class="form-select" [(ngModel)]="selectedOffice">
-                <option value="">All Offices</option>
-                <option *ngFor="let office of allOffices()" [value]="office.office_name">{{ office.office_name }}</option>
-              </select>
-            </div>
-            <div class="col-md-6" *ngIf="activeView() === 'admin_audit'">
-              <label for="adminSelect" class="form-label">Admin</label>
-              <select id="adminSelect" class="form-select" [(ngModel)]="selectedAdminId">
-                <option [ngValue]="null">All Admins</option>
-                <option *ngFor="let admin of allAdmins()" [ngValue]="admin.id">{{ admin.first_name }} {{ admin.last_name }}</option>
-              </select>
-            </div>
+            @if (activeView() === 'request_logs') {
+              <div [class]="isAdmin ? 'col-md-6' : 'col-md-12'">
+                <label for="statusSelect" class="form-label">Status</label>
+                <select id="statusSelect" class="form-select" [(ngModel)]="selectedStatus">
+                  <option value="">All Statuses</option>
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="released">Released</option>
+                  <option value="disapproved">Disapproved</option>
+                </select>
+              </div>
+            }
+            @if (isAdmin && activeView() === 'admin_audit') {
+              <div class="col-md-6">
+                <label for="actionTypeSelect" class="form-label">Action Type</label>
+                <select id="actionTypeSelect" class="form-select" [(ngModel)]="selectedActionType">
+                  <option value="">All Actions</option>
+                  <option value="CREATE">Create</option>
+                  <option value="UPDATE">Update</option>
+                  <option value="DELETE">Delete</option>
+                  <option value="RESTORE">Restore</option>
+                  <option value="LOGIN">Login</option>
+                  <option value="LOGOUT">Logout</option>
+                </select>
+              </div>
+            }
+            @if (isAdmin && activeView() === 'request_logs') {
+              <div class="col-md-6">
+                <label for="officeSelect" class="form-label">Office</label>
+                <select id="officeSelect" class="form-select" [(ngModel)]="selectedOffice">
+                  <option value="">All Offices</option>
+                  @for (office of allOffices(); track office.office_name) {
+                    <option [value]="office.office_name">{{ office.office_name }}</option>
+                  }
+                </select>
+              </div>
+            }
+            @if (isAdmin && activeView() === 'admin_audit') {
+              <div class="col-md-6">
+                <label for="adminSelect" class="form-label">Admin</label>
+                <select id="adminSelect" class="form-select" [(ngModel)]="selectedAdminId">
+                  <option [ngValue]="null">All Admins</option>
+                  @for (admin of allAdmins(); track admin.id) {
+                    <option [ngValue]="admin.id">{{ admin.first_name }} {{ admin.last_name }}</option>
+                  }
+                </select>
+              </div>
+            }
           </div>
 
-          <div class="row g-3 mb-3" *ngIf="showCustomRange()">
-            <div class="col-md-6">
-              <label for="startDate" class="form-label">Start Date</label>
-              <input id="startDate" type="date" class="form-control" [(ngModel)]="startDate" />
+          @if (showCustomRange()) {
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input id="startDate" type="date" class="form-control" [(ngModel)]="startDate" />
+              </div>
+              <div class="col-md-6">
+                <label for="endDate" class="form-label">End Date</label>
+                <input id="endDate" type="date" class="form-control" [(ngModel)]="endDate" />
+              </div>
             </div>
-            <div class="col-md-6">
-              <label for="endDate" class="form-label">End Date</label>
-              <input id="endDate" type="date" class="form-control" [(ngModel)]="endDate" />
-            </div>
-          </div>
+          }
 
           <div class="d-flex flex-wrap gap-2">
             <button class="btn filter-btn-apply" (click)="applyFilters()">Apply Filters</button>
@@ -109,67 +134,78 @@
         </div>
       </div>
 
-      <!-- Archive Management Section -->
-      <div class="section-card archive-management mt-4">
-        <div class="card-body">
-          <div class="archive-header">
-            <i class="bi bi-box-archive me-2"></i>
-            <span>Archive Management</span>
-          </div>
-
-          <div class="archive-cards-grid mt-3">
-            <!-- View Archived Records Card -->
-            <div class="archive-card">
-              <div class="card-icon-container icon-purple">
-                <i class="bi bi-eye"></i>
-              </div>
-              <h5 class="card-title">View Archived Records</h5>
-              <p class="card-subtitle">See all archived items and restore them if needed</p>
-              <button class="btn btn-archive btn-archive-purple" (click)="openArchiveModal()">
-                <i class="bi bi-eye me-1"></i>
-                Open Archive
-              </button>
+      <!-- Archive Management Section (Admin Only) -->
+      @if (isAdmin) {
+        <div class="section-card archive-management mt-4">
+          <div class="card-body">
+            <div class="archive-header">
+              <i class="bi bi-box-archive me-2"></i>
+              <span>Archive Management</span>
             </div>
 
-            <!-- Archive Current Results Card -->
-            <div class="archive-card">
-              <div class="card-icon-container icon-orange">
-                <i class="bi bi-archive"></i>
+            <div class="archive-cards-grid mt-3">
+              <!-- View Archived Records Card -->
+              <div class="archive-card">
+                <div class="card-icon-container icon-purple">
+                  <i class="bi bi-eye"></i>
+                </div>
+                <h5 class="card-title">View Archived Records</h5>
+                <p class="card-subtitle">See all archived items and restore them if needed</p>
+                <button class="btn btn-archive btn-archive-purple" (click)="openArchiveModal()">
+                  <i class="bi bi-eye me-1"></i>
+                  Open Archive
+                </button>
               </div>
-              <h5 class="card-title">Archive Current Results</h5>
-              <p class="card-subtitle">Move filtered records to archive for safe storage</p>
-              <button class="btn btn-archive btn-archive-orange" (click)="archiveFilteredResults()">
-                <i class="bi bi-archive me-1"></i>
-                Archive Now
-              </button>
+
+              <!-- Archive Current Results Card -->
+              <div class="archive-card">
+                <div class="card-icon-container icon-orange">
+                  <i class="bi bi-archive"></i>
+                </div>
+                <h5 class="card-title">Archive Current Results</h5>
+                <p class="card-subtitle">Move filtered records to archive for safe storage</p>
+                <button class="btn btn-archive btn-archive-orange" (click)="archiveFilteredResults()">
+                  <i class="bi bi-archive me-1"></i>
+                  Archive Now
+                </button>
+              </div>
+            </div>
+
+            <div class="alert alert-info d-flex align-items-center gap-2 mt-3">
+              <i class="bi bi-info-circle me-2"></i>
+              <span><strong>Quick Tip:</strong> Use filters above to select specific records, then archive them. You can restore archived items anytime.</span>
             </div>
           </div>
+        </div>
+      }
 
-          <div class="alert alert-info d-flex align-items-center gap-2 mt-3">
-            <i class="bi bi-info-circle me-2"></i>
-            <span><strong>Quick Tip:</strong> Use filters above to select specific records, then archive them. You can restore archived items anytime.</span>
-          </div>
-
-          <div *ngIf="activeView() === 'request_logs'" class="request-logs-table-section mt-4">
-            <div class="table-responsive">
-              <table class="table report-table">
-                <thead>
-                  <tr>
-                    <th>Stock #</th>
-                    <th>Requester</th>
-                    <th>Office</th>
-                    <th>Supply Name</th>
-                    <th>Requested Qty</th>
-                    <th>Status</th>
-                    <th>Created At</th>
+      <!-- Data Table Section -->
+      @if (activeView() === 'request_logs') {
+        <div class="request-logs-table-section mt-4">
+          <div class="table-responsive">
+            <table class="table report-table">
+              <thead>
+                <tr>
+                  <th>Stock #</th>
+                  <th>Requester</th>
+                  <th>Office</th>
+                  <th>Supply Name</th>
+                  <th>Requested Qty</th>
+                  <th>Status</th>
+                  <th>Created At</th>
+                  @if (isAdmin) {
                     <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="filteredRequests().length === 0">
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @if (filteredRequests().length === 0) {
+                  <tr>
                     <td colspan="8" class="empty-state">No records found for the selected filters.</td>
                   </tr>
-                  <tr *ngFor="let req of paginatedRequests(); trackBy: trackByRequestId">
+                }
+                @for (req of paginatedRequests(); track req.id) {
+                  <tr>
                     <td>{{ req.supply_id }}</td>
                     <td>{{ req.user?.first_name }} {{ req.user?.last_name }}</td>
                     <td>{{ req.user?.office?.office_name }}</td>
@@ -184,16 +220,20 @@
                       }">{{ req.status }}</span>
                     </td>
                     <td>{{ req.created_at | date:'MMM d, y' }}</td>
-                    <td>
-                      <button class="btn btn-sm table-archive-btn" (click)="archiveSingle(req)">Archive</button>
-                    </td>
+                    @if (isAdmin) {
+                      <td>
+                        <button class="btn btn-sm table-archive-btn" (click)="archiveSingle(req)">Archive</button>
+                      </td>
+                    }
                   </tr>
-                </tbody>
-              </table>
-            </div>
+                }
+              </tbody>
+            </table>
+          </div>
 
-            <!-- Pagination for Request Logs -->
-            <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="filteredRequests().length > 0">
+          <!-- Pagination for Request Logs -->
+          @if (filteredRequests().length > 0) {
+            <div class="d-flex justify-content-between align-items-center mt-3">
               <div class="text-secondary">
                 Showing {{ requestsPageStart() }} to {{ requestsPageEnd() }} of {{ filteredRequests().length }} results
               </div>
@@ -202,69 +242,86 @@
                   <li class="page-item" [class.disabled]="requestsPage() === 1">
                     <button class="page-link" (click)="setRequestsPage(requestsPage() - 1)">Previous</button>
                   </li>
-                  <li class="page-item" *ngFor="let page of requestsPageNumbers()" [class.active]="requestsPage() === page">
-                    <button class="page-link" (click)="setRequestsPage(page)">{{ page }}</button>
-                  </li>
+                  @for (page of requestsPageNumbers(); track page) {
+                    <li class="page-item" [class.active]="requestsPage() === page">
+                      <button class="page-link" (click)="setRequestsPage(page)">{{ page }}</button>
+                    </li>
+                  }
                   <li class="page-item" [class.disabled]="requestsPage() === requestsPageCount()">
                     <button class="page-link" (click)="setRequestsPage(requestsPage() + 1)">Next</button>
                   </li>
                 </ul>
               </nav>
             </div>
-          </div>
+          }
+        </div>
+      }
 
-          <div *ngIf="activeView() === 'admin_audit'" class="request-logs-table-section admin-audit-section mt-4">
-            <div class="table-responsive">
-              <table class="table report-table">
-                <thead>
+      @if (isAdmin && activeView() === 'admin_audit') {
+        <div class="request-logs-table-section admin-audit-section mt-4">
+          <div class="table-responsive">
+            <table class="table report-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Date/Time</th>
+                  <th>Admin</th>
+                  <th>Action</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (isAuditLoading()) {
                   <tr>
-                    <th>Type</th>
-                    <th>Date/Time</th>
-                    <th>Admin</th>
-                    <th>Action</th>
-                    <th>Details</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="isAuditLoading()">
                     <td colspan="5" class="text-center py-4">
                       <div class="spinner-border text-danger" role="status">
                         <span class="visually-hidden">Loading...</span>
                       </div>
                     </td>
                   </tr>
-                  <tr *ngIf="!isAuditLoading() && adminAudits().length === 0">
+                } @else if (adminAudits().length === 0) {
+                  <tr>
                     <td colspan="5" class="empty-state">No audit logs found for the selected filters.</td>
                   </tr>
-                  <tr *ngFor="let audit of adminAudits()">
-                    <td>
-                      <div class="fw-bold" *ngIf="audit.target_type">{{ audit.target_type.split('\\').pop() }}</div>
-                      <div class="text-secondary" *ngIf="!audit.target_type">System</div>
-                    </td>
-                    <td>{{ audit.performed_at | date:'MMM d, y h:mm a' }}</td>
-                    <td>
-                      <div class="fw-bold">{{ audit.admin_name }}</div>
-                      <small class="text-secondary">{{ audit.admin_role }}</small>
-                    </td>
-                    <td>
-                      <span class="status-badge" [ngClass]="{
-                        'status-approved': audit.action_type === 'CREATE' || audit.action_type === 'RESTORE' || audit.action_type === 'LOGIN',
-                        'status-released': audit.action_type === 'UPDATE',
-                        'status-disapproved': audit.action_type === 'DELETE' || audit.action_type === 'LOGOUT',
-                        'status-pending': audit.action_type === 'CHANGE_PASSWORD'
-                      }">{{ audit.action_type }}</span>
-                    </td>
-                    <td>
-                      <div>{{ audit.description }}</div>
-                      <small class="text-secondary" *ngIf="audit.target_name">Target: {{ audit.target_name }}</small>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                } @else {
+                  @for (audit of adminAudits(); track audit.performed_at) {
+                    <tr>
+                      <td>
+                        @if (audit.target_type) {
+                          <div class="fw-bold">{{ audit.target_type.split('\\').pop() }}</div>
+                        } @else {
+                          <div class="text-secondary">System</div>
+                        }
+                      </td>
+                      <td>{{ audit.performed_at | date:'MMM d, y h:mm a' }}</td>
+                      <td>
+                        <div class="fw-bold">{{ audit.admin_name }}</div>
+                        <small class="text-secondary">{{ audit.admin_role }}</small>
+                      </td>
+                      <td>
+                        <span class="status-badge" [ngClass]="{
+                          'status-approved': audit.action_type === 'CREATE' || audit.action_type === 'RESTORE' || audit.action_type === 'LOGIN',
+                          'status-released': audit.action_type === 'UPDATE',
+                          'status-disapproved': audit.action_type === 'DELETE' || audit.action_type === 'LOGOUT',
+                          'status-pending': audit.action_type === 'CHANGE_PASSWORD'
+                        }">{{ audit.action_type }}</span>
+                      </td>
+                      <td>
+                        <div>{{ audit.description }}</div>
+                        @if (audit.target_name) {
+                          <small class="text-secondary">Target: {{ audit.target_name }}</small>
+                        }
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
 
-            <!-- Pagination for Audits -->
-            <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="auditTotal() > 0">
+          <!-- Pagination for Audits -->
+          @if (auditTotal() > 0) {
+            <div class="d-flex justify-content-between align-items-center mt-3">
               <div class="text-secondary">
                 Showing {{ (auditPage() - 1) * auditLimit + 1 }} to {{ auditPage() * auditLimit > auditTotal() ? auditTotal() : auditPage() * auditLimit }} of {{ auditTotal() }} results
               </div>
@@ -279,9 +336,9 @@
                 </ul>
               </nav>
             </div>
-          </div>
+          }
         </div>
-      </div>
+      }
     </div>
   </div>
 </main>
@@ -336,37 +393,41 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngIf="paginatedArchives().length === 0">
-                <td colspan="8" class="empty-state">No archived records found.</td>
-              </tr>
-              <tr *ngFor="let archive of paginatedArchives()">
-                <td>
-                  <input class="form-check-input" type="checkbox" [checked]="selectedArchiveIds().includes(archive.id)" (change)="toggleArchiveSelection(archive.id)" />
-                </td>
-                <td>
-                  <span class="badge badge-teal">requests</span>
-                </td>
-                <td>{{ archive.original_id }}</td>
-                <td>
-                  Request for {{ archive.data.supply?.item_desc || 'item' }} (Qty: {{ archive.data.quantity_req }})
-                </td>
-                <td>
-                  <span class="status-badge" [ngClass]="{
-                    'status-pending': archive.data.status === 'pending',
-                    'status-approved': archive.data.status === 'approved',
-                    'status-released': archive.data.status === 'released',
-                    'status-disapproved': archive.data.status === 'disapproved'
-                  }">{{ archive.data.status }}</span>
-                </td>
-                <td>{{ archive.archived_at | date:'MMM d, y' }}</td>
-                <td>{{ archive.archiver?.first_name }} {{ archive.archiver?.last_name }}</td>
-                <td>
-                  <button class="btn btn-sm restore-archive-btn" type="button" (click)="restoreArchive(archive)">
-                    <i class="bi bi-arrow-counterclockwise me-1"></i>
-                    Restore
-                  </button>
-                </td>
-              </tr>
+              @if (paginatedArchives().length === 0) {
+                <tr>
+                  <td colspan="8" class="empty-state">No archived records found.</td>
+                </tr>
+              }
+              @for (archive of paginatedArchives(); track archive.id) {
+                <tr>
+                  <td>
+                    <input class="form-check-input" type="checkbox" [checked]="selectedArchiveIds().includes(archive.id)" (change)="toggleArchiveSelection(archive.id)" />
+                  </td>
+                  <td>
+                    <span class="badge badge-teal">requests</span>
+                  </td>
+                  <td>{{ archive.original_id }}</td>
+                  <td>
+                    Request for {{ archive.data.supply?.item_desc || 'item' }} (Qty: {{ archive.data.quantity_req }})
+                  </td>
+                  <td>
+                    <span class="status-badge" [ngClass]="{
+                      'status-pending': archive.data.status === 'pending',
+                      'status-approved': archive.data.status === 'approved',
+                      'status-released': archive.data.status === 'released',
+                      'status-disapproved': archive.data.status === 'disapproved'
+                    }">{{ archive.data.status }}</span>
+                  </td>
+                  <td>{{ archive.archived_at | date:'MMM d, y' }}</td>
+                  <td>{{ archive.archiver?.first_name }} {{ archive.archiver?.last_name }}</td>
+                  <td>
+                    <button class="btn btn-sm restore-archive-btn" type="button" (click)="restoreArchive(archive)">
+                      <i class="bi bi-arrow-counterclockwise me-1"></i>
+                      Restore
+                    </button>
+                  </td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
@@ -380,9 +441,11 @@
               <li class="page-item" [class.disabled]="archivePage() === 1">
                 <button class="page-link" type="button" (click)="setArchivePage(archivePage() - 1)">Prev</button>
               </li>
-              <li class="page-item" *ngFor="let page of archivePageNumbers()" [class.active]="archivePage() === page">
-                <button class="page-link" type="button" (click)="setArchivePage(page)">{{ page }}</button>
-              </li>
+              @for (page of archivePageNumbers(); track page) {
+                <li class="page-item" [class.active]="archivePage() === page">
+                  <button class="page-link" type="button" (click)="setArchivePage(page)">{{ page }}</button>
+                </li>
+              }
               <li class="page-item" [class.disabled]="archivePage() === archivePageCount()">
                 <button class="page-link" type="button" (click)="setArchivePage(archivePage() + 1)">Next</button>
               </li>

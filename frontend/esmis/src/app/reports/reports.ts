@@ -12,6 +12,8 @@ import { UserManagementService } from '../../services/user-management.service';
 import { AdminAudit, Archive, Office, SupplyRequest, User } from '../../models/smis.model';
 import { forkJoin } from 'rxjs';
 
+import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-reports',
   standalone: true,
@@ -25,6 +27,7 @@ export class Reports {
   private userService = inject(UserManagementService);
   private toastService = inject(ToastService);
   private confirmService = inject(ConfirmService);
+  private authService = inject(AuthService);
 
   timePeriod = signal<'today' | 'week' | 'month' | 'custom'>('today');
   selectedStatus = signal('');
@@ -191,6 +194,16 @@ export class Reports {
 
     return selectedIds.length === this.totalArchivedCount() && this.totalArchivedCount() > 0;
   });
+
+  get isAdmin(): boolean {
+    const user = this.authService.currentUser();
+    const roleName = user?.role?.role_name?.toLowerCase();
+    return roleName === 'admin' || roleName === 'superadmin';
+  }
+
+  get isSuperAdmin(): boolean {
+    return this.authService.currentUser()?.role?.role_name?.toLowerCase() === 'superadmin';
+  }
 
   constructor() {
     this.loadSupplyRequests();
