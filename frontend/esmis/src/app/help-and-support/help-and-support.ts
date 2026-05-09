@@ -227,6 +227,24 @@ export class HelpAndSupport {
       question: 'Can I modify or Cancel my request?',
       answer: 'Currently, requests cannot be modified or cancelled directly by the user once they have been submitted.',
       notes: 'If you need to make changes or cancel a request, please contact the Property Custodian Office or your system administrator as soon as possible.'
+    },
+    {
+      id: 'ufaq6',
+      category: 'technical',
+      question: 'Common Issues & Solutions',
+      answer: 'If you encounter issues while using the system, try these solutions:',
+      notes: `<strong>Login Issues:</strong><br>
+              • Verify your username and password<br>
+              • Clear browser cache and cookies<br>
+              • Use the "Forgot Password" feature to reset<br>
+              • Ensure Caps Lock is off<br>
+              • Contact system administrator if issues persist<br><br>
+              <strong>System Performance:</strong><br>
+              • Check your internet connection<br>
+              • Clear browser cache (press Ctrl+F5)<br>
+              • Use recommended browsers (Chrome, Firefox)<br>
+              • Close unnecessary browser tabs<br>
+              • Try disabling browser extensions temporarily`
     }
   ];
 
@@ -236,9 +254,12 @@ export class HelpAndSupport {
     if (this.isAdmin) {
       activeFaqs = this.allFaqs;
     } else {
-      // For regular users: Show General FAQs from allFaqs + User-specific FAQs
-      const generalFaqs = this.allFaqs.filter(faq => faq.category === 'general');
-      activeFaqs = [...generalFaqs, ...this.userFaqs];
+      // For regular users: Show General + Technical (except admin version of common issues) + User-specific FAQs
+      const sharedFaqs = this.allFaqs.filter(faq => 
+        faq.category === 'general' || 
+        (faq.category === 'technical' && faq.id !== 'faq9')
+      );
+      activeFaqs = [...sharedFaqs, ...this.userFaqs];
     }
 
     if (!this.searchQuery) {
