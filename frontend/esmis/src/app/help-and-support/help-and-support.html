@@ -35,10 +35,22 @@
             <hr class="header-divider mt-2 mb-0" />
           </div>
           <div class="card-body pt-0">
-            <p class="description mb-4 mt-3">Welcome to the Help and Support section of the Supply Management Information System (SMIS). Find answers to common questions below.</p>
+            <div class="d-flex flex-column align-items-center mb-4 mt-3">
+              <p class="description mb-0">Welcome to the Help and Support section of the Supply Management Information System (SMIS). Find answers to common questions below.</p>
+              
+              <!-- FAQ Search Bar -->
+              <div class="faq-search-container">
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                  </span>
+                  <input type="text" class="form-control border-start-0 ps-0" placeholder="Search FAQs..." [(ngModel)]="searchQuery">
+                </div>
+              </div>
+            </div>
 
-            <!-- FAQ Tabs -->
-            <ul class="nav nav-tabs custom-faq-tabs border-bottom mb-4">
+            <!-- FAQ Tabs (Hidden when searching) -->
+            <ul class="nav nav-tabs custom-faq-tabs border-bottom mb-4" *ngIf="!searchQuery">
               <li class="nav-item">
                 <a class="nav-link" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">General</a>
               </li>
@@ -53,231 +65,42 @@
               </li>
             </ul>
 
-            <!-- FAQ Content -->
-            <div [ngSwitch]="activeTab">
-              <div *ngSwitchCase="'general'" class="faq-accordion">
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                      What is SMIS?
-                    </button>
-                  </h2>
-                  <div id="faq1" class="accordion-collapse collapse show">
-                    <div class="accordion-body">
-                      <p>The Supply Management Information System (SMIS) is a comprehensive platform designed to streamline inventory management, supply requests, and distribution processes within the organization.</p>
-                      <p class="mb-2">Key features include:</p>
-                      <ul class="ps-3">
-                        <li>Centralized inventory tracking</li>
-                        <li>Automated request processing</li>
-                        <li>Real-time status updates</li>
-                        <li>Comprehensive reporting tools</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
+            <!-- Search Results Header -->
+            <div *ngIf="searchQuery" class="mb-4">
+              <h6 class="text-muted">Search results for: "<span class="text-maroon fw-bold">{{searchQuery}}</span>" ({{filteredFaqs.length}} found)</h6>
+            </div>
 
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                      Who can access the system?
-                    </button>
-                  </h2>
-                  <div id="faq2" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                      <p>The system is accessible to:</p>
-                      <ul class="ps-3">
-                        <li><strong>System Administrator:</strong> Manages the overall system, users, and configurations</li>
-                        <li><strong>Inventory Managers:</strong> Handle inventory tracking and supply distribution</li>
-                        <li><strong>Department Heads:</strong> Review and approve supply requests</li>
-                        <li><strong>Authorized Personnel:</strong> Staff with specific permissions based on their role</li>
-                      </ul>
-                      <p class="mt-2 mb-0">Each user type has different permissions and access levels tailored to their responsibilities.</p>
-                    </div>
-                  </div>
-                </div>
+            <!-- FAQ Content (Dynamic) -->
+            <div class="faq-accordion">
+              <div *ngFor="let faq of filteredFaqs; let i = index" class="accordion-item shadow-sm border rounded mb-3">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" [class.collapsed]="!faq.isExpanded" type="button" (click)="toggleFaq(faq)">
+                    {{faq.question}}
+                  </button>
+                </h2>
+                <div class="accordion-collapse collapse" [class.show]="faq.isExpanded">
+                  <div class="accordion-body">
+                    <p>{{faq.answer}}</p>
+                    
+                    <ul *ngIf="faq.features" class="ps-3 mb-2">
+                      <li *ngFor="let feature of faq.features" [innerHTML]="feature"></li>
+                    </ul>
 
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                      What are the system requirements?
-                    </button>
-                  </h2>
-                  <div id="faq3" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                      <p>SMIS is a web-based application that works on most modern devices. Recommended requirements:</p>
-                      <ul class="ps-3">
-                        <li><strong>Browser:</strong> Chrome (latest), Firefox (latest), Edge (latest)</li>
-                        <li><strong>Internet Connection:</strong> Stable broadband connection</li>
-                        <li><strong>Screen Resolution:</strong> Minimum 1366 x 768</li>
-                      </ul>
-                      <p class="mt-2 mb-0">For optimal performance, ensure your browser is updated to the latest version.</p>
-                    </div>
+                    <ol *ngIf="faq.steps" class="ps-3 mb-2">
+                      <li *ngFor="let step of faq.steps">{{step}}</li>
+                    </ol>
+
+                    <p *ngIf="faq.notes" class="mt-2 mb-0" [innerHTML]="faq.notes"></p>
                   </div>
                 </div>
               </div>
 
-              <!-- Account & Access Tab -->
-              <div *ngSwitchCase="'account'" class="faq-accordion">
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                      How do I manage user accounts?
-                    </button>
-                  </h2>
-                  <div id="faq4" class="accordion-collapse collapse show">
-                    <div class="accordion-body">
-                      <p><strong>To manage user accounts:</strong></p>
-                      <ol class="ps-3">
-                        <li>Navigate to "User Management" in the sidebar</li>
-                        <li>View all registered users and their status</li>
-                        <li>Use the "Add User" button to create new accounts</li>
-                        <li>Click on any user to edit their information or change permissions</li>
-                        <li>Use the activate/deactivate options to control access</li>
-                      </ol>
-                      <p class="mt-3 mb-0"><strong>Remember to assign appropriate roles based on user responsibilities.</strong></p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
-                      How to reset your password?
-                    </button>
-                  </h2>
-                  <div id="faq5" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                      <p><strong>To reset your password:</strong></p>
-                      <ol class="ps-3">
-                        <li>Go to "Forget Password"</li>
-                        <li>Put your email</li>
-                        <li>Click "send reset link"</li>
-                        <li>Check your email</li>
-                        <li>Click the link to reset your password.</li>
-                      </ol>
-                      <p class="mt-3 mb-0">
-                        <strong>Note:</strong>
-                        You have 10 mins to do so if fail to change, request another link to reset.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Orders & Management Tab -->
-              <div *ngSwitchCase="'orders'" class="faq-accordion">
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
-                      How do I review and approve requests?
-                    </button>
-                  </h2>
-                  <div id="faq6" class="accordion-collapse collapse show">
-                    <div class="accordion-body">
-                      <p><strong>To review and approve supply requests:</strong></p>
-                      <ol class="ps-3">
-                        <li>Navigate to "Orders" → "Pending" to see all pending requests</li>
-                        <li>Click on a request to view detailed information</li>
-                        <li>Review the requested items, quantities, and justification</li>
-                        <li>Check inventory availability</li>
-                        <li>Click "Approve" or "Disapprove" with appropriate comments</li>
-                      </ol>
-                      <p class="mt-3 mb-0"><strong>Approved requests will automatically move to the "Approved" section for processing.</strong></p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
-                      How do I manage inventory levels?
-                    </button>
-                  </h2>
-                  <div id="faq7" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                      <p><strong>To manage inventory:</strong></p>
-                      <ol class="ps-3">
-                        <li>Access the inventory management section</li>
-                        <li>Monitor stock levels and set reorder points</li>
-                        <li>Add new items to the inventory catalog</li>
-                        <li>Update quantities when new supplies arrive</li>
-                        <li>Generate reports on inventory usage and trends</li>
-                      </ol>
-                      <p class="mt-3 mb-0"><strong>Regular monitoring helps prevent stockouts and ensures smooth operations.</strong></p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
-                      How do I generate reports?
-                    </button>
-                  </h2>
-                  <div id="faq8" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                      <p><strong>To generate reports:</strong></p>
-                      <ul class="ps-3">
-                        <li>Navigate to the "Reports" section in the sidebar</li>
-                        <li>Select the type of report you need (inventory, requests, usage, etc.)</li>
-                        <li>Set the date range and filter criteria</li>
-                        <li>Choose export format (PDF, Excel, etc.)</li>
-                        <li>Click "Generate Report"</li>
-                      </ul>
-                      <p class="mt-3 mb-0"><strong>Reports help track system usage, inventory trends, and departmental needs.</strong></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Technical Issues Tab -->
-              <div *ngSwitchCase="'technical'" class="faq-accordion">
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq9">
-                      Common Issues & Solutions
-                    </button>
-                  </h2>
-                  <div id="faq9" class="accordion-collapse collapse show">
-                    <div class="accordion-body">
-                      <p class="fw-bold">Login Issues:</p>
-                      <ul class="ps-3">
-                        <li>Verify your username and password</li>
-                        <li>Clear browser cache and cookies</li>
-                        <li>Use the "Forgot Password" feature to reset</li>
-                        <li>Ensure Caps Lock is off</li>
-                        <li>Contact system administrator if issues persist</li>
-                      </ul>
-
-                      <p class="fw-bold mt-3">System Performance:</p>
-                      <ul class="ps-3">
-                        <li>Check your internet connection</li>
-                        <li>Clear browser cache (press Ctrl+F5)</li>
-                        <li>Use recommended browsers (Chrome, Firefox)</li>
-                        <li>Close unnecessary browser tabs</li>
-                        <li>Try disabling browser extensions temporarily</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq10">
-                      Browser Compatibility
-                    </button>
-                  </h2>
-                  <div id="faq10" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                      <p><strong>SMIS works best with the following browsers:</strong></p>
-                      <ul class="ps-3">
-                        <li>Google Chrome (Version 90+)</li>
-                        <li>Mozilla Firefox (Version 88+)</li>
-                        <li>Microsoft Edge (Version 90+)</li>
-                        <li>Safari (Version 14+)</li>
-                      </ul>
-                      <p class="mt-3 mb-0"><strong>If you're experiencing issues, try updating your browser to the latest version.</strong></p>
-                    </div>
-                  </div>
-                </div>
+              <!-- No Results State -->
+              <div *ngIf="filteredFaqs.length === 0" class="py-5 text-center">
+                <i class="bi bi-search-heart fs-1 text-muted opacity-50"></i>
+                <h5 class="mt-3 text-muted">No matching FAQs found for "{{searchQuery}}"</h5>
+                <p class="text-muted small">Try different keywords or browse categories.</p>
+                <button class="btn btn-sm btn-outline-maroon mt-2" (click)="searchQuery = ''">Clear Search</button>
               </div>
             </div>
           </div>
