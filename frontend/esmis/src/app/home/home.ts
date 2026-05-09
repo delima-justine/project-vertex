@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Sidebar } from "../sidebar/sidebar";
@@ -44,6 +44,10 @@ export class Home implements OnInit {
   selectedCategory = signal('all');
   newCategoryName = signal('');
   newUnitName = signal('');
+
+  // Pagination signals
+  currentPage = signal(1);
+  pageSize = 5;
 
   // History Modal
   stockHistory = signal<any[]>([]);
@@ -129,6 +133,42 @@ export class Home implements OnInit {
     });
   });
 
+  paginatedSupplies = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.filteredSupplies().slice(start, end);
+  });
+
+  totalPages = computed(() => {
+    return Math.ceil(this.filteredSupplies().length / this.pageSize);
+  });
+
+  pageNumbers = computed(() => {
+    const pages = [];
+    for (let i = 1; i <= this.totalPages(); i++) {
+      pages.push(i);
+    }
+    return pages;
+  });
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update(p => p + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
+    }
+  }
+
   supplyForm: FormGroup;
   isEditMode = false;
   currentStockNum: string | null = null;
@@ -143,6 +183,14 @@ export class Home implements OnInit {
       status: ['Available'],
       remarks: [''],
     });
+
+    // Reset page to 1 when search or filters change
+    effect(() => {
+      this.searchTerm();
+      this.selectedStatus();
+      this.selectedCategory();
+      this.currentPage.set(1);
+    }, { allowSignalWrites: true });
   }
 
   ngOnInit() {
