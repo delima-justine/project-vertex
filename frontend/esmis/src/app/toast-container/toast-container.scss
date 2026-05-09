@@ -2,5 +2,31 @@
   pointer-events: none;
   .toast {
     pointer-events: auto;
+    animation: toast-fade-in 0.3s ease-out, toast-fade-out 0.3s ease-in 4.7s forwards;
+    
+    // Ensure smooth height transitions if possible, though flex/stacking handles most of it
+    transition: all 0.3s ease-in-out;
+  }
+}
+
+@keyframes toast-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-fade-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
   }
 }
