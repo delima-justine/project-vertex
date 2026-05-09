@@ -53,6 +53,7 @@ export type User = {
 export type SupplyRequest = {
   id: number;
   user_id: number;
+  batch_id?: string;
   supply_id: string;
   quantity_req: number;
   purpose: string;
