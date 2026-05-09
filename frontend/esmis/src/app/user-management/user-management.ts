@@ -96,12 +96,57 @@ export class UserManagement {
 
     // Reset permissions when role changes
     this.userForm.get('role_id')?.valueChanges.subscribe(roleId => {
-      if (roleId && this.editMode()) {
+      if (roleId) {
         this.updatePermissionsByRole(roleId);
       } else {
         this.userForm.patchValue({ permission_ids: [] });
       }
     });
+  }
+
+  toggleSelectAllPermissions() {
+    const roleId = this.userForm.get('role_id')?.value;
+    if (!roleId) return;
+
+    if (this.areAllPermissionsSelected()) {
+      this.userForm.patchValue({ permission_ids: [] }, { emitEvent: false });
+    } else {
+      // Get all visible permission IDs
+      const visiblePermIds: number[] = [];
+      this.permissionGroups.forEach(group => {
+        group.permissions.forEach(perm => {
+          if (this.isPermissionVisible(group.label, perm.name)) {
+            const id = this.getPermissionId(perm.name);
+            if (id) visiblePermIds.push(id);
+          }
+        });
+      });
+      this.userForm.patchValue({ permission_ids: visiblePermIds }, { emitEvent: false });
+    }
+  }
+
+  areAllPermissionsSelected(): boolean {
+    const roleId = this.userForm.get('role_id')?.value;
+    if (!roleId) return false;
+
+    const currentIds = this.userForm.get('permission_ids')?.value as number[] || [];
+    
+    let visibleCount = 0;
+    let selectedVisibleCount = 0;
+
+    this.permissionGroups.forEach(group => {
+      group.permissions.forEach(perm => {
+        if (this.isPermissionVisible(group.label, perm.name)) {
+          visibleCount++;
+          const id = this.getPermissionId(perm.name);
+          if (currentIds.includes(id)) {
+            selectedVisibleCount++;
+          }
+        }
+      });
+    });
+
+    return visibleCount > 0 && visibleCount === selectedVisibleCount;
   }
 
   private getModal(id: string) {
