@@ -48,6 +48,12 @@ export class AuthService {
     return this.userPermissions().includes(permissionName);
   }
 
+  hasRole(roleName: string): boolean {
+    const user = this.currentUser();
+    if (!user || !user.role) return false;
+    return user.role.role_name.toLowerCase() === roleName.toLowerCase();
+  }
+
   hasAnyPermission(permissionNames: string[]): boolean {
     return permissionNames.some(p => this.userPermissions().includes(p));
   }
