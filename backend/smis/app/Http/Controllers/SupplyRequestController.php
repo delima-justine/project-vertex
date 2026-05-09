@@ -82,6 +82,40 @@ class SupplyRequestController extends Controller
         $oldValues = $supply_request->toArray();
         $supply_request->update($validated);
 
+        // Deduct stock if status is changed to 'released'
+        if (isset($validated['status']) && $validated['status'] === 'released' && ($oldValues['status'] ?? '') !== 'released') {
+            $supply = $supply_request->supply;
+            if ($supply) {
+                $oldSupplyValues = $supply->toArray();
+                $supply->quantity -= $supply_request->quantity_req;
+                
+                // Prevent negative quantity
+                if ($supply->quantity < 0) {
+                    $supply->quantity = 0;
+                }
+
+                // Auto-update status based on new quantity
+                if ($supply->quantity == 0) {
+                    $supply->status = 'Out of Stock';
+                } elseif ($supply->quantity <= 5) {
+                    $supply->status = 'Low Stock';
+                } else {
+                    $supply->status = 'Available';
+                }
+
+                $supply->save();
+
+                // Log the stock update on the supply model
+                AuditService::log(
+                    'UPDATE', 
+                    $supply, 
+                    "Deducted stock due to released Request #{$supply_request->id}", 
+                    $oldSupplyValues, 
+                    $supply->fresh()->toArray()
+                );
+            }
+        }
+
         AuditService::log('UPDATE', $supply_request, "Updated supply request status to: {$supply_request->status}", $oldValues, $supply_request->fresh()->toArray());
 
         $notif = Notification::create([
