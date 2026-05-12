@@ -1,65 +1,126 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #2d3748;
             margin: 0;
             padding: 0;
+            background-color: #f7fafc;
+        }
+        .wrapper {
+            width: 100%;
+            padding: 40px 0;
+            background-color: #f7fafc;
         }
         .container {
-            width: 80%;
-            margin: 20px auto;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             overflow: hidden;
         }
         .header {
-            background-color: #800000; /* PUP Maroon */
-            color: white;
-            padding: 20px;
+            padding: 40px 20px;
             text-align: center;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #800000;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: #718096;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
         .content {
-            padding: 30px;
+            padding: 40px;
+            text-align: center;
+        }
+        .content h2 {
+            margin-top: 0;
+            color: #1a202c;
+            font-size: 20px;
+        }
+        .content p {
+            margin-bottom: 25px;
+            color: #4a5568;
         }
         .button {
             display: inline-block;
-            padding: 12px 24px;
+            padding: 14px 32px;
             background-color: #800000;
-            color: white;
+            color: #ffffff !important;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .button-secondary {
+            background-color: transparent !important;
+            color: #800000 !important;
+            border: 2px solid #800000;
+        }
+        .expiration {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #a0aec0;
         }
         .footer {
-            background-color: #f4f4f4;
-            padding: 10px;
+            padding: 30px;
             text-align: center;
-            font-size: 0.8em;
-            color: #777;
+            font-size: 12px;
+            color: #718096;
+            background-color: #f8fafc;
+        }
+        .footer hr {
+            border: 0;
+            border-top: 1px solid #edf2f7;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>SMIS</h1>
-            <p>Supply Management Information System</p>
-        </div>
-        <div class="content">
-            <h2>Hello, {{ $name }}!</h2>
-            <p>You are receiving this email because we received a password reset request for your account.</p>
-            <p>If you did not request a password reset, no further action is required.</p>
-            <p>To proceed with resetting your password, please click the button below:</p>
-            <a href="{{ $url }}" class="button">Reset Password</a>
-            <p>This password reset link will expire in 60 minutes.</p>
-        </div>
-        <div class="footer">
-            <p>&copy; {{ date('Y') }} SMIS - PUP. All rights reserved.</p>
+    <div class="wrapper">
+        <div class="container">
+            <div class="header">
+                <img src="{{ $message->embed(public_path('images/pup_logo.png')) }}" alt="PUP Logo" class="logo">
+                <h1>SMIS</h1>
+                <p>Supply Management Information System</p>
+            </div>
+            <div class="content">
+                <h2>Hello, {{ $name }}!</h2>
+                <p>We received a request to reset the password for your SMIS account.</p>
+                
+                <a href="{{ $url }}" class="button">Reset Password</a>
+                <br>
+                <a href="{{ $resendUrl }}" class="button button-secondary">Request New Link</a>
+                
+                <p class="expiration">
+                    This link will expire in <strong>10 minutes</strong>.<br>
+                    If you did not request this, you can safely ignore this email.
+                </p>
+            </div>
+            <div class="footer">
+                <p>&copy; {{ date('Y') }} Polytechnic University of the Philippines</p>
+                <p>Supply Management Office</p>
+            </div>
         </div>
     </div>
 </body>
