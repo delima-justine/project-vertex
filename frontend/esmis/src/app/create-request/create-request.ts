@@ -159,18 +159,18 @@ export class CreateRequest implements OnInit {
 
     const batchId = `BATCH-${user.id}-${Date.now()}`;
 
-    const requests = this.requestList.map(item => {
-      return this.supplyService.createSupplyRequest({
-        user_id: user.id,
-        batch_id: batchId,
+    const payload = {
+      user_id: user.id,
+      batch_id: batchId,
+      purpose: this.purpose,
+      items: this.requestList.map(item => ({
         supply_id: item.stock_num,
-        quantity_req: item.quantity_req,
-        purpose: this.purpose
-      });
-    });
+        quantity_req: item.quantity_req
+      }))
+    };
 
-    forkJoin(requests).subscribe({
-      next: (responses) => {
+    this.supplyService.createBatchSupplyRequest(payload).subscribe({
+      next: (response) => {
         this.toastService.success('Request submitted successfully!');
         this.requestList = [];
         this.purpose = '';

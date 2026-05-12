@@ -63,6 +63,10 @@ export class SupplyService {
     return this.http.post<any>(`${this.apiUrl}/supply-requests`, payload);
   }
 
+  createBatchSupplyRequest(payload: { user_id: number, batch_id?: string, purpose?: string, items: { supply_id: string, quantity_req: number }[] }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/supply-requests/batch-store`, payload);
+  }
+
   listSupplyRequests(status?: string, userId?: number, page?: number, perPage?: number): Observable<PaginatedResponse<SupplyRequest>> {
     let params = new HttpParams();
     if (status) {
@@ -106,7 +110,7 @@ export class SupplyService {
     return this.http.patch<SupplyRequest>(`${this.apiUrl}/supply-requests/${id}`, payload);
   }
 
-  updateBatchSupplyRequest(payload: { ids: number[], status: string, approved_by?: number }): Observable<any> {
+  updateBatchSupplyRequest(payload: { items: { id: number, quantity_req?: number }[], status: string, approved_by?: number }): Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}/supply-requests/batch-update`, payload);
   }
 }

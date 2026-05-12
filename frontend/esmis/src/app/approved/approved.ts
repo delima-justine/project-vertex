@@ -132,18 +132,19 @@ export class Approved implements OnInit {
     });
 
     if (confirmed) {
-      const observables = batch.map(req => 
-        this.supplyService.updateSupplyRequest(req.id, { status: 'released' })
-      );
+      const items = batch.map(req => ({ id: req.id }));
 
-      forkJoin(observables).subscribe({
+      this.supplyService.updateBatchSupplyRequest({
+        items: items,
+        status: 'released'
+      }).subscribe({
         next: () => {
           this.toastService.success('Batch requests released!');
           this.loadApprovedRequests();
         },
         error: (err) => {
           console.error('Error releasing request batch', err);
-          this.toastService.error('Failed to release some requests in the batch.');
+          this.toastService.error('Failed to release request batch.');
           this.loadApprovedRequests();
         }
       });

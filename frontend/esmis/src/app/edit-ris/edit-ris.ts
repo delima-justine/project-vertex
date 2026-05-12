@@ -111,23 +111,26 @@ export class EditRis implements OnInit, OnDestroy {
     });
 
     if (confirmed) {
-      const updates = reqs.map((req: SupplyRequest) => {
+      const items = reqs.map((req: SupplyRequest) => {
         const data = this.requestData()[req.id];
-        return this.supplyService.updateSupplyRequest(req.id, {
-          status: 'approved',
-          approved_by: admin.id,
+        return {
+          id: req.id,
           quantity_req: data.issueQty
-        });
+        };
       });
 
-      forkJoin(updates).subscribe({
+      this.supplyService.updateBatchSupplyRequest({
+        items: items,
+        status: 'approved',
+        approved_by: admin.id
+      }).subscribe({
         next: () => {
           this.toastService.success('Requests approved successfully!');
           this.router.navigate(['/pending-requests']);
         },
         error: (err: unknown) => {
           console.error('Error approving requests', err);
-          this.toastService.error('Failed to approve one or more requests.');
+          this.toastService.error('Failed to approve requests.');
         }
       });
     }
