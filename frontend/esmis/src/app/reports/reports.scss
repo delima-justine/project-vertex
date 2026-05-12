@@ -326,6 +326,12 @@ main {
     color: #800000;
     padding: 6px 10px;
     font-size: 12px;
+
+    &:hover {
+      background-color: #800000;
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(128, 0, 0, 0.2);
+    }
   }
 }
 
