@@ -535,7 +535,9 @@ export class Home implements OnInit {
           <div style="width: 250px;">
             <p style="margin-bottom: 50px;">Prepared by:</p>
             <div style="border-bottom: 1pt solid #000; text-align: center;">
-              <strong style="text-transform: uppercase; font-size: 12pt;">${user?.first_name || ''} ${user?.last_name || ''}</strong>
+              <strong style="text-transform: uppercase; font-size: 12pt;">
+                ${user?.first_name || ''} ${user?.middle_initial ? user.middle_initial + '. ' : ''}${user?.last_name || ''}
+              </strong>
             </div>
             <p style="text-align: center; margin-top: 5px;">${user?.office?.office_name || ''}</p>
           </div>
