@@ -80,6 +80,16 @@
               Approved
             </button>
           </li>
+          @if(authService.hasRole('admin') || authService.hasRole('superadmin')) {
+            <li class="nav-item">
+              <button 
+                class="nav-link tab-system" 
+                [class.active]="activeTab === 'system'" 
+                (click)="setTab('system')">
+                System Alerts
+              </button>
+            </li>
+          }
           <li class="nav-item">
             <button 
               class="nav-link tab-denied" 
@@ -132,7 +142,9 @@
                       'bi-check-circle-fill text-success': notif.action === 'approved' || notif.action === 'released',
                       'bi-x-circle-fill text-danger': notif.action === 'disapproved',
                       'bi-info-circle-fill text-primary': notif.action === 'status_update' || notif.action === 'pending',
-                      'bi-bell-fill text-warning': !notif.action
+                      'bi-exclamation-triangle-fill icon-low-stock': notif.action === 'low stock',
+                      'bi-exclamation-octagon-fill icon-out-of-stock': notif.action === 'out of stock',
+                      'bi-bell-fill text-warning': !notif.action || (notif.action !== 'approved' && notif.action !== 'released' && notif.action !== 'disapproved' && notif.action !== 'status_update' && notif.action !== 'pending' && notif.action !== 'low stock' && notif.action !== 'out of stock')
                     }"></i>
                   </div>
                   <div class="flex-grow-1">

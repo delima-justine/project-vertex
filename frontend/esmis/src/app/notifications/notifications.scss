@@ -27,48 +27,53 @@ main {
   overflow: hidden;
 
   .card-header {
-  background-color: var(--bs-body-bg);
-  border-bottom: 1px solid var(--bs-border-color);
-  padding: 15px 20px;
-  border-left: 4px solid #800000;
+    background-color: var(--bs-body-bg);
+    border-bottom: 1px solid var(--bs-border-color);
+    padding: 15px 20px;
+    border-left: 4px solid #800000;
 
-  &.p-0 {
-    padding: 0 !important;
-    border-left: none;
-    background-color: var(--bs-tertiary-bg);
-  }
+    &.p-0 {
+      padding: 0 !important;
+      border-left: none;
+      background-color: var(--bs-tertiary-bg);
+    }
 
-  .nav-tabs {
-    .nav-link {
-      border: none;
-      color: var(--bs-secondary-color);
-      font-weight: 500;
-      padding: 12px 20px;
-      transition: all 0.2s ease;
-      border-bottom: 3px solid transparent;
+    .nav-tabs {
+      .nav-link {
+        border: none;
+        color: var(--bs-secondary-color);
+        font-weight: 500;
+        padding: 12px 20px;
+        transition: all 0.2s ease;
+        border-bottom: 3px solid transparent;
 
-      &:hover {
-        color: var(--bs-primary);
-        background-color: var(--bs-tertiary-bg);
-      }
-
-      &.active {
-        color: var(--bs-primary);
-        background-color: transparent;
-        border-bottom: 3px solid var(--bs-primary);
-
-        &.tab-approved {
-          color: #198754;
-          border-bottom-color: #198754;
+        &:hover {
+          color: var(--bs-primary);
+          background-color: var(--bs-tertiary-bg);
         }
 
-        &.tab-denied {
-          color: #800020;
-          border-bottom-color: #800020;
+        &.active {
+          color: var(--bs-primary);
+          background-color: transparent;
+          border-bottom: 3px solid var(--bs-primary);
+
+          &.tab-approved {
+            color: #198754;
+            border-bottom-color: #198754;
+          }
+
+          &.tab-denied {
+            color: #800020;
+            border-bottom-color: #800020;
+          }
+
+          &.tab-system {
+            color: #ffc107; // Yellow for system alerts
+            border-bottom-color: #ffc107;
+          }
         }
       }
-      }
-      }
+    }
 
     .title-with-icon {
       display: flex;
@@ -86,6 +91,15 @@ main {
       }
     }
   }
+}
+
+// Specific icon colors for inventory alerts
+.icon-low-stock {
+  color: #ffc107 !important; // Explicit Gold/Yellow
+}
+
+.icon-out-of-stock {
+  color: #d63031 !important; // Explicit Bright Red (Ferrari Red)
 }
 
 .notification-list {
@@ -137,6 +151,10 @@ main {
     min-width: 32px;
     display: flex;
     justify-content: center;
+    
+    // Fallback coloring inside wrapper
+    .icon-low-stock { color: #ffc107 !important; }
+    .icon-out-of-stock { color: #d63031 !important; }
   }
 
   .message {
