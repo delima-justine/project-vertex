@@ -184,6 +184,29 @@ class SupplyRequestController extends Controller
         return response()->json(['message' => 'Supply request deleted successfully']);
     }
 
+    public function statusCounts(Request $request)
+    {
+        $user = $request->user();
+        $query = SupplyRequest::whereDoesntHave('archive');
+
+        $role = strtolower($user->role->role_name ?? '');
+
+        if ($role === 'user') {
+            $query->where('user_id', $user->id);
+        }
+
+        $counts = $query->selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        return response()->json([
+            'pending' => (int)($counts['pending'] ?? 0),
+            'approved' => (int)($counts['approved'] ?? 0),
+            'released' => (int)($counts['released'] ?? 0),
+            'disapproved' => (int)($counts['disapproved'] ?? 0),
+        ]);
+    }
+
     // Update multiple requests in a batch
     public function updateBatch(Request $request)
     {
