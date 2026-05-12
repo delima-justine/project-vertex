@@ -1,3 +1,7 @@
+@use '../mixins' as *;
+
+@include custom-modal;
+
 .top-nav-container {
   height: 4rem;
   position: fixed;

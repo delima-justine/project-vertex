@@ -51,26 +51,36 @@
 <!-- Account Settings Modal -->
 <div class="modal fade" tabindex="-1" #accountSettingsModal>
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Account Settings</h5>
-        <button type="button" class="btn-close" (click)="closeAccountSettings()"></button>
+    <div class="modal-content custom-modal">
+      <div class="modal-header custom-modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-gear-fill me-2"></i>
+          Account Settings
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeAccountSettings()"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body custom-modal-body">
         @if(errorMessage()) {
-          <div class="alert alert-danger">{{ errorMessage() }}</div>
+          <div class="alert alert-danger d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ errorMessage() }}
+          </div>
         }
         @if(successMessage()) {
-          <div class="alert alert-success">{{ successMessage() }}</div>
+          <div class="alert alert-success d-flex align-items-center">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            {{ successMessage() }}
+          </div>
         }
 
         <form [formGroup]="accountSettingsForm">
           <div class="mb-3">
-            <label class="form-label">Current Password</label>
-            <div class="input-group">
+            <label class="form-label custom-label">Current Password</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
               <input [type]="showCurrentPassword() ? 'text' : 'password'" class="form-control" formControlName="currentPassword" 
-                [class.is-invalid]="currentPassword?.touched && currentPassword?.invalid">
-              <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility('current')">
+                [class.is-invalid]="currentPassword?.touched && currentPassword?.invalid" placeholder="Enter current password">
+              <button class="btn btn-outline-secondary border-start-0" type="button" (click)="togglePasswordVisibility('current')" style="border-color: #ced4da;">
                 <i [class]="showCurrentPassword() ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
               </button>
               @if(currentPassword?.hasError('required') && currentPassword?.touched) {
@@ -80,11 +90,12 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label">New Password</label>
-            <div class="input-group">
+            <label class="form-label custom-label">New Password</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
               <input [type]="showNewPassword() ? 'text' : 'password'" class="form-control" formControlName="newPassword"
-                [class.is-invalid]="newPassword?.touched && newPassword?.invalid">
-              <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility('new')">
+                [class.is-invalid]="newPassword?.touched && newPassword?.invalid" placeholder="Min. 8 characters">
+              <button class="btn btn-outline-secondary border-start-0" type="button" (click)="togglePasswordVisibility('new')" style="border-color: #ced4da;">
                 <i [class]="showNewPassword() ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
               </button>
               @if(newPassword?.touched) {
@@ -99,11 +110,12 @@
           </div>
           
           <div class="mb-3">
-            <label class="form-label">Confirm New Password</label>
-            <div class="input-group">
+            <label class="form-label custom-label">Confirm New Password</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-shield-fill-check"></i></span>
               <input [type]="showConfirmPassword() ? 'text' : 'password'" class="form-control" formControlName="confirmNewPassword"
-                [class.is-invalid]="confirmNewPassword?.touched && confirmNewPassword?.invalid">
-              <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility('confirm')">
+                [class.is-invalid]="confirmNewPassword?.touched && confirmNewPassword?.invalid" placeholder="Confirm new password">
+              <button class="btn btn-outline-secondary border-start-0" type="button" (click)="togglePasswordVisibility('confirm')" style="border-color: #ced4da;">
                 <i [class]="showConfirmPassword() ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
               </button>
               @if(confirmNewPassword?.touched) {
@@ -118,14 +130,15 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeAccountSettings()" [disabled]="isLoading()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="accountSettingsForm.invalid || isLoading()" (click)="saveChanges()">
+      <div class="modal-footer modal-footer-custom">
+        <button type="button" class="btn btn-cancel" (click)="closeAccountSettings()" [disabled]="isLoading()">CANCEL</button>
+        <button type="button" class="btn btn-save" [disabled]="accountSettingsForm.invalid || isLoading()" (click)="saveChanges()">
           @if(isLoading()) {
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Saving...
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            SAVING...
           } @else {
-            Save changes
+            <i class="bi bi-floppy-fill me-2"></i>
+            SAVE CHANGES
           }
         </button>
       </div>
@@ -136,17 +149,21 @@
 <!-- Logout Confirmation Modal -->
 <div class="modal fade" tabindex="-1" #logoutModal>
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Confirm Logout</h5>
-        <button type="button" class="btn-close" (click)="closeLogoutModal()"></button>
+    <div class="modal-content custom-modal border-0 shadow">
+      <div class="modal-header bg-danger text-white border-0">
+        <h5 class="modal-title fw-bold">
+          <i class="bi bi-box-arrow-right me-2"></i>
+          Confirm Logout
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeLogoutModal()"></button>
       </div>
-      <div class="modal-body">
-        <p>Are you sure you want to logout from the system?</p>
+      <div class="modal-body p-4 text-center custom-modal-body">
+        <i class="bi bi-exclamation-circle text-danger mb-3" style="font-size: 3rem;"></i>
+        <p class="fs-5 mb-0">Are you sure you want to logout from the system?</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeLogoutModal()">Cancel</button>
-        <button type="button" class="btn btn-danger" (click)="confirmLogout()">Logout</button>
+      <div class="modal-footer border-0 pb-4 justify-content-center modal-footer-custom bg-body">
+        <button type="button" class="btn btn-light px-4 fw-bold" (click)="closeLogoutModal()">CANCEL</button>
+        <button type="button" class="btn btn-danger px-4 fw-bold" (click)="confirmLogout()">LOGOUT</button>
       </div>
     </div>
   </div>
