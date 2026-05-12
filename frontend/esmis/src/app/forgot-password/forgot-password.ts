@@ -1,8 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -10,10 +10,11 @@ import { Router } from '@angular/router';
   templateUrl: './forgot-password.html',
   styleUrl: './forgot-password.scss',
 })
-export class ForgotPassword {
+export class ForgotPassword implements OnInit {
   forgotPasswordForm: FormGroup;
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
+  route = inject(ActivatedRoute);
   
   message = signal<string | null>(null);
   error = signal<string | null>(null);
@@ -25,6 +26,21 @@ export class ForgotPassword {
     this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
     });
+  }
+
+  ngOnInit(): void {
+    const status = this.route.snapshot.queryParamMap.get('status');
+    const autoResend = this.route.snapshot.queryParamMap.get('auto_resend');
+    const emailParam = this.route.snapshot.queryParamMap.get('email');
+
+    if (status === 'resent') {
+      this.message.set('A new reset link has been sent to your email.');
+    }
+
+    if (autoResend === 'true' && emailParam) {
+      this.forgotPasswordForm.patchValue({ email: emailParam });
+      this.sendResetLink();
+    }
   }
 
   sendResetLink() {
