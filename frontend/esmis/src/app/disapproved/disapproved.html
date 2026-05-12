@@ -1,123 +1,115 @@
-<!-- Sidebar Component -->
-<app-sidebar/>
-
-<!-- Top Navigation -->
-<app-top-nav/>
-
 <!-- Main Content -->
-<main>
-  <div class="header-panel">
-    <i class="bi bi-clipboard2-x-fill me-1 text-white"></i>
-    <span>Disapproved Requests</span>
-  </div>
+<div class="header-panel">
+  <i class="bi bi-clipboard2-x-fill me-1 text-white"></i>
+  <span>Disapproved Requests</span>
+</div>
 
-  <div class="functionalities-container card">
-    <div class="card-body">
-      <div class="input-group">
-        <span class="input-group-text">
-          <i class="bi bi-search"></i>
-        </span>
-        <input 
-          type="text" 
-          class="form-control" 
-          placeholder="Search disapproved requests..."
-          [ngModel]="searchTerm()"
-          (ngModelChange)="searchTerm.set($event)">
-      </div>
+<div class="functionalities-container card">
+  <div class="card-body">
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="bi bi-search"></i>
+      </span>
+      <input 
+        type="text" 
+        class="form-control" 
+        placeholder="Search disapproved requests..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)">
+    </div>
 
-      @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
-        <select class="form-select" [ngModel]="selectedOffice()" (ngModelChange)="selectedOffice.set($event)" style="width: 250px;">
-          <option value="all">All Offices</option>
-          @for (office of offices(); track office) {
-            <option [value]="office">{{ office }}</option>
-          }
-        </select>
-      }
+    @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+      <select class="form-select" [ngModel]="selectedOffice()" (ngModelChange)="selectedOffice.set($event)" style="width: 250px;">
+        <option value="all">All Offices</option>
+        @for (office of offices(); track office) {
+          <option [value]="office">{{ office }}</option>
+        }
+      </select>
+    }
 
-      <div class="btn-container">
-        <button class="btn btn-primary refresh-btn" (click)="loadDisapprovedRequests()">
-          <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-        </button>
-      </div>
+    <div class="btn-container">
+      <button class="btn btn-primary refresh-btn" (click)="loadDisapprovedRequests()">
+        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+      </button>
     </div>
   </div>
+</div>
 
-  @if (feedback()) {
-    <div class="alert alert-info mt-3">{{ feedback() }}</div>
-  }
+@if (feedback()) {
+  <div class="alert alert-info mt-3">{{ feedback() }}</div>
+}
 
-  @if (isLoading()) {
-    <div class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+@if (isLoading()) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-  } @else {
-    <!-- Table Container -->
-    <div class="table-container">
-      <table class="table table-striped table-hover">
-        <thead>
+  </div>
+} @else {
+  <!-- Table Container -->
+  <div class="table-container">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Requester</th>
+          <th>Office</th>
+          <th>Items</th>
+          <th>Total Qty</th>
+          <th>Status</th>
+          <th>Date Requested</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (batch of filteredRequests(); track batch.id) {
           <tr>
-            <th>Requester</th>
-            <th>Office</th>
-            <th>Items</th>
-            <th>Total Qty</th>
-            <th>Status</th>
-            <th>Date Requested</th>
-            <th>Actions</th>
+            <td>{{ batch.user?.first_name }} {{ batch.user?.last_name }}</td>
+            <td>{{ batch.office }}</td>
+            <td>{{ batch.itemSummary }}</td>
+            <td>{{ batch.totalQty }}</td>
+            <td><span class="badge bg-danger">Disapproved</span></td>
+            <td>{{ batch.date | date:'MMM d, y, h:mm a' }}</td>
+            <td>
+              <button class="btn btn-sm btn-warning" title="View Details" (click)="viewBatch(batch.requests)">
+                <i class="bi bi-eye-fill text-white"></i>
+              </button>
+            </td>
           </tr>
-        </thead>
+        } @empty {
+          <tr>
+            <td colspan="8" class="text-center">No disapproved requests found.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
-        <tbody>
-          @for (batch of filteredRequests(); track batch.id) {
-            <tr>
-              <td>{{ batch.user?.first_name }} {{ batch.user?.last_name }}</td>
-              <td>{{ batch.office }}</td>
-              <td>{{ batch.itemSummary }}</td>
-              <td>{{ batch.totalQty }}</td>
-              <td><span class="badge bg-danger">Disapproved</span></td>
-              <td>{{ batch.date | date:'MMM d, y, h:mm a' }}</td>
-              <td>
-                <button class="btn btn-sm btn-warning" title="View Details" (click)="viewBatch(batch.requests)">
-                  <i class="bi bi-eye-fill text-white"></i>
-                </button>
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="8" class="text-center">No disapproved requests found.</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Pagination Footer -->
-    @if (requests().length > 0) {
-      <div class="pagination-footer mt-4">
-        <div class="d-flex justify-content-between align-items-center">
-          <span class="text-muted small">Page {{ currentPage() }} of {{ lastPage() }}</span>
-          <div class="pagination-controls d-flex gap-2">
-            <button 
-              class="btn btn-outline-secondary btn-sm" 
-              [disabled]="currentPage() === 1"
-              (click)="changePage(currentPage() - 1)">
-              <i class="bi bi-chevron-left me-1"></i>
-              Previous
-            </button>
-            <button 
-              class="btn btn-outline-secondary btn-sm" 
-              [disabled]="currentPage() === lastPage()"
-              (click)="changePage(currentPage() + 1)">
-              Next
-              <i class="bi bi-chevron-right ms-1"></i>
-            </button>
-          </div>
+  <!-- Pagination Footer -->
+  @if (requests().length > 0) {
+    <div class="pagination-footer mt-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="text-muted small">Page {{ currentPage() }} of {{ lastPage() }}</span>
+        <div class="pagination-controls d-flex gap-2">
+          <button 
+            class="btn btn-outline-secondary btn-sm" 
+            [disabled]="currentPage() === 1"
+            (click)="changePage(currentPage() - 1)">
+            <i class="bi bi-chevron-left me-1"></i>
+            Previous
+          </button>
+          <button 
+            class="btn btn-outline-secondary btn-sm" 
+            [disabled]="currentPage() === lastPage()"
+            (click)="changePage(currentPage() + 1)">
+            Next
+            <i class="bi bi-chevron-right ms-1"></i>
+          </button>
         </div>
       </div>
-    }
+    </div>
   }
-</main>
+}
 
 <!-- Request Details Modal -->
 <div class="modal fade" id="requestDetailsModal" #requestDetailsModal tabindex="-1" aria-labelledby="requestDetailsModalLabel" aria-hidden="true">

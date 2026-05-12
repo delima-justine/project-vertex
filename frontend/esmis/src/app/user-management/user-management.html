@@ -1,330 +1,342 @@
-<!-- Sidebar Component -->
-<app-sidebar></app-sidebar>
+<div class="header-panel">
+  <span>User Management</span>
+</div>
 
-<!-- Top Navigation -->
-<app-top-nav></app-top-nav>
+<div class="functionalities-container">
+  <div class="b-r-function">
+    @if(authService.hasPermission('add_user')) {
+      <button class="btn btn-primary" type="button" (click)="openAddUser()">
+        <i class="bi bi-person-plus-fill me-1"></i>
+        <span>Add User</span>
+      </button>
+    }
+    
+    <button class="btn btn-outline-secondary" type="button" (click)="loadUsers(currentPage())">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      <span>Refresh</span>
+    </button>
 
-<main>
-  <div class="header-panel">
-    <span>User Management</span>
-  </div>
-
-  <div class="functionalities-container">
-    <div class="b-r-function">
-      @if(authService.hasPermission('add_user')) {
-        <button class="btn btn-primary" type="button" (click)="openAddUser()">
-          <i class="bi bi-person-plus-fill me-1"></i>
-          <span>Add User</span>
-        </button>
-      }
-      
-      <button class="btn btn-outline-secondary" type="button" (click)="loadUsers(currentPage())">
-        <i class="bi bi-arrow-clockwise me-1"></i>
-        <span>Refresh</span>
+    @if (authService.hasRole('superadmin') || authService.hasRole('admin')) {
+      <button class="btn btn-success" (click)="openBackupModal()">
+        <i class="bi bi-box-arrow-in-down me-1"></i>
+        <span>Backup Database</span>
       </button>
 
-      @if (authService.hasRole('superadmin') || authService.hasRole('admin')) {
-        <button class="btn btn-success" (click)="openBackupModal()">
-          <i class="bi bi-box-arrow-in-down me-1"></i>
-          <span>Backup Database</span>
+      @if (authService.hasRole('superadmin')) {
+        <button class="btn btn-danger" (click)="openRestoreModal()">
+          <i class="bi bi-upload me-1"></i>
+          <span>Restore Database</span>
         </button>
-  
-        @if (authService.hasRole('superadmin')) {
-          <button class="btn btn-danger" (click)="openRestoreModal()">
-            <i class="bi bi-upload me-1"></i>
-            <span>Restore Database</span>
-          </button>
-        }
       }
-    </div>
-
-    <div class="search-row d-flex align-items-center gap-2">
-      <input
-        type="search"
-        class="form-control"
-        [formControl]="searchControl"
-        placeholder="Search users by name, email, or role"
-      />
-      <button class="btn btn-primary" type="button" (click)="loadUsers(1)">Search</button>
-    </div>
+    }
   </div>
 
-  @if (isLoading()) {
-    <div class="text-center py-4">Loading users...</div>
-  }
+  <div class="search-row d-flex align-items-center gap-2">
+    <input
+      type="search"
+      class="form-control"
+      [formControl]="searchControl"
+      placeholder="Search users by name, email, or role"
+    />
+    <button class="btn btn-primary" type="button" (click)="loadUsers(1)">Search</button>
+  </div>
+</div>
 
-  @if (!isLoading()) {
-    <table class="table table-striped table-hover">
-      <thead>
+@if (isLoading()) {
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Office</th>
+        <th>First Name</th>
+        <th>M. Initial</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (i of [1,2,3,4,5]; track i) {
         <tr>
-          <th>Office</th>
-          <th>First Name</th>
-          <th>M. Initial</th>
-          <th>Last Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Actions</th>
+          @for (j of [1,2,3,4,5,6,7]; track j) {
+            <td><div class="skeleton skeleton-text"></div></td>
+          }
         </tr>
-      </thead>
-      <tbody>
-        @for (user of users(); track user.id) {
-          <tr>
-            <td>{{ user.office?.office_name || user.office_id }}</td>
-            <td>{{ user.first_name }}</td>
-            <td>{{ user.middle_initial || '-' }}</td>
-            <td>{{ user.last_name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ (user.role?.role_name || 'N/A') | titlecase }}</td>
-            <td>
-              @if(authService.hasPermission('edit_user')) {
-                <button class="btn btn-sm btn-warning me-1" type="button" (click)="editUser(user)">
-                  <i class="bi bi-pencil-fill"></i>
-                </button>
-              }
-              
-              @if(authService.hasPermission('delete_user')) {
-                <button class="btn btn-sm btn-danger" type="button" (click)="confirmDelete(user)">
-                  <i class="bi bi-trash-fill"></i>
-                </button>
-              }
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="7" class="text-center py-4">No users found.</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
+      }
+    </tbody>
+  </table>
+}
 
-  @if (!isLoading() && users().length > 0) {
-    <div class="d-flex justify-content-between align-items-center mt-3">
-      <small>Page {{ currentPage() }} of {{ lastPage() }} — {{ totalUsers() }} users total</small>
-      <div class="btn-group">
-        <button 
-          class="btn btn-outline-secondary btn-sm" 
-          type="button" 
-          (click)="previousPage()" 
-          [disabled]="currentPage() <= 1">
-            Previous
-        </button>
+@if (!isLoading()) {
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Office</th>
+        <th>First Name</th>
+        <th>M. Initial</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+        <tr>
+          <td>{{ user.office?.office_name || user.office_id }}</td>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.middle_initial || '-' }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ (user.role?.role_name || 'N/A') | titlecase }}</td>
+          <td>
+            @if(authService.hasPermission('edit_user')) {
+              <button class="btn btn-sm btn-warning me-1" type="button" (click)="editUser(user)">
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+            }
+            
+            @if(authService.hasPermission('delete_user')) {
+              <button class="btn btn-sm btn-danger" type="button" (click)="confirmDelete(user)">
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="7" class="text-center py-4">No users found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
 
-        <button 
-          class="btn btn-outline-secondary btn-sm" 
-          type="button" (click)="nextPage()" 
-          [disabled]="currentPage() >= lastPage()">
-            Next
-        </button>
-      </div>
+@if (!isLoading() && users().length > 0) {
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <small>Page {{ currentPage() }} of {{ lastPage() }} — {{ totalUsers() }} users total</small>
+    <div class="btn-group">
+      <button 
+        class="btn btn-outline-secondary btn-sm" 
+        type="button" 
+        (click)="previousPage()" 
+        [disabled]="currentPage() <= 1">
+          Previous
+      </button>
+
+      <button 
+        class="btn btn-outline-secondary btn-sm" 
+        type="button" (click)="nextPage()" 
+        [disabled]="currentPage() >= lastPage()">
+          Next
+      </button>
     </div>
-  }
-</main>
+  </div>
+}
 
 <!-- Backup Modal -->
 <div class="modal fade" id="backupModal" tabindex="-1" aria-labelledby="backupModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backupModalLabel">Backup Database</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Click the button below to download a full SQL backup of the system database.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-success" (click)="downloadBackup()" [disabled]="isProcessingBackup()">
-          @if (isProcessingBackup()) {
-            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-          }
-          {{ isProcessingBackup() ? 'Generating Backup...' : 'Download SQL' }}
-        </button>
-      </div>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="backupModalLabel">Backup Database</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p>Click the button below to download a full SQL backup of the system database.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-success" (click)="downloadBackup()" [disabled]="isProcessingBackup()">
+        @if (isProcessingBackup()) {
+          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        }
+        {{ isProcessingBackup() ? 'Generating Backup...' : 'Download SQL' }}
+      </button>
     </div>
   </div>
+</div>
 </div>
 
 <!-- Restore Modal -->
 <div class="modal fade" id="restoreModal" tabindex="-1" aria-labelledby="restoreModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="restoreModalLabel">Restore Database</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="restoreModalLabel">Restore Database</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="restoreFile" class="form-label">Select SQL Backup File</label>
+        <input class="form-control" type="file" id="restoreFile" accept=".sql" (change)="onFileSelected($event)">
       </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label for="restoreFile" class="form-label">Select SQL Backup File</label>
-          <input class="form-control" type="file" id="restoreFile" accept=".sql" (change)="onFileSelected($event)">
-        </div>
-        <div class="alert alert-warning">
-          <i class="bi bi-exclamation-triangle-fill me-2"></i>
-          Warning: Restoring the database will overwrite all current data. This action cannot be undone.
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" (click)="performRestore()" [disabled]="isProcessingRestore() || !restoreFile">
-          @if (isProcessingRestore()) {
-            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-          }
-          {{ isProcessingRestore() ? 'Restoring...' : 'Import SQL' }}
-        </button>
+      <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Warning: Restoring the database will overwrite all current data. This action cannot be undone.
       </div>
     </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-danger" (click)="performRestore()" [disabled]="isProcessingRestore() || !restoreFile">
+        @if (isProcessingRestore()) {
+          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        }
+        {{ isProcessingRestore() ? 'Restoring...' : 'Import SQL' }}
+      </button>
+    </div>
   </div>
+</div>
 </div>
 
 <!-- User Form Modal -->
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content custom-modal">
-      <div class="modal-header custom-modal-header">
-        <h5 class="modal-title" id="userModalLabel">
-          <i class="bi bi-person-plus-fill me-2"></i>
-          {{ editMode() ? 'Edit User' : 'Add New User' }}
-        </h5>
-        <button type="button" class="btn-close btn-close-white" (click)="cancelForm()" aria-label="Close"></button>
-      </div>
-      <div class="modal-body custom-modal-body">
-        <form [formGroup]="userForm" (ngSubmit)="saveUser()">
-          <div class="row g-3">
-            <!-- Office -->
-            <div class="col-md-6">
-              <label class="form-label custom-label">Office</label>
-              <div class="input-group custom-input-group">
-                <span class="input-group-text"><i class="bi bi-building"></i></span>
-                <input 
-                  class="form-control" 
-                  formControlName="office_name" 
-                  list="officeOptionsList"
-                  placeholder="Type or select office"
-                />
-                <datalist id="officeOptionsList">
-                  @for (office of officeOptions; track office.id) {
-                    <option [value]="office.office_name"></option>
-                  }
-                </datalist>
-              </div>
-            </div>
-
-            <!-- Email -->
-            <div class="col-md-6">
-              <label class="form-label custom-label">Email</label>
-              <div class="input-group custom-input-group">
-                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                <input class="form-control" formControlName="email" type="email" placeholder="example@gmail.com" />
-              </div>
-              <small class="text-muted help-text">Only Gmail accounts are accepted</small>
-            </div>
-
-            <!-- First Name -->
-            <div class="col-md-4">
-              <label class="form-label custom-label">First Name</label>
-              <div class="input-group custom-input-group">
-                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                <input class="form-control" formControlName="first_name" />
-              </div>
-            </div>
-
-            <!-- Middle Initial -->
-            <div class="col-md-4">
-              <label class="form-label custom-label">Middle Initial</label>
-              <div class="input-group custom-input-group">
-                <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
-                <input class="form-control" formControlName="middle_initial" maxlength="2" />
-              </div>
-              <small class="text-muted help-text">Use 1-2 letters; period optional (e.g., L or L.)</small>
-            </div>
-
-            <!-- Last Name -->
-            <div class="col-md-4">
-              <label class="form-label custom-label">Last Name</label>
-              <div class="input-group custom-input-group">
-                <span class="input-group-text"><i class="bi bi-person-fill-add"></i></span>
-                <input class="form-control" formControlName="last_name" />
-              </div>
-            </div>
-
-            <!-- Role -->
-            <div class="col-md-12">
-              <label class="form-label custom-label">Role</label>
-              <div class="input-group custom-input-group">
-                <span class="input-group-text"><i class="bi bi-person-badge-fill"></i></span>
-                <select class="form-select" formControlName="role_id">
-                  <option [ngValue]="null" disabled>Select role</option>
-                  @for (role of roleOptions; track role.id) {
-                    @if (role.role_name.toLowerCase() !== 'superadmin' || activeUser()?.role_id === role.id) {
-                      <option [value]="role.id">
-                        {{ role.role_name | titlecase }}
-                      </option>
-                    }
-                  }
-                </select>
-              </div>
-              <small class="text-muted help-text">A temporary password will be generated and sent to the user via email.</small>
+<div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-content custom-modal">
+    <div class="modal-header custom-modal-header">
+      <h5 class="modal-title" id="userModalLabel">
+        <i class="bi bi-person-plus-fill me-2"></i>
+        {{ editMode() ? 'Edit User' : 'Add New User' }}
+      </h5>
+      <button type="button" class="btn-close btn-close-white" (click)="cancelForm()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body custom-modal-body">
+      <form [formGroup]="userForm" (ngSubmit)="saveUser()">
+        <div class="row g-3">
+          <!-- Office -->
+          <div class="col-md-6">
+            <label class="form-label custom-label">Office</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-building"></i></span>
+              <input 
+                class="form-control" 
+                formControlName="office_name" 
+                list="officeOptionsList"
+                placeholder="Type or select office"
+              />
+              <datalist id="officeOptionsList">
+                @for (office of officeOptions; track office.id) {
+                  <option [value]="office.office_name"></option>
+                }
+              </datalist>
             </div>
           </div>
 
-          <!-- Permissions Section -->
-          @if (userForm.get('role_id')?.value) {
-            <div class="permissions-container mt-4">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="permissions-title mb-0">Permissions</h6>
-                <div class="form-check select-all-check">
-                  <input 
-                    class="form-check-input" 
-                    type="checkbox" 
-                    id="selectAllPermissions"
-                    [checked]="areAllPermissionsSelected()"
-                    (change)="toggleSelectAllPermissions()"
-                  >
-                  <label class="form-check-label" for="selectAllPermissions">
-                    Select All
-                  </label>
-                </div>
-              </div>
-              <div class="permission-cards-grid">
-                @for (group of permissionGroups; track group.label) {
-                  @if (hasVisiblePermissions(group)) {
-                    <div class="permission-card">
-                      <span class="permission-group-header">{{ group.label }}</span>
-                      <div class="permission-list">
-                        @for (perm of group.permissions; track perm.name) {
-                          @if (isPermissionVisible(group.label, perm.name)) {
-                            <div class="form-check permission-check">
-                              <input 
-                                class="form-check-input" 
-                                type="checkbox" 
-                                [id]="'perm_' + perm.name"
-                                [checked]="isPermissionChecked(perm.name)"
-                                (change)="onPermissionChange($event, getPermissionId(perm.name))"
-                              >
-                              <label class="form-check-label" [for]="'perm_' + perm.name">
-                                {{ perm.label }}
-                              </label>
-                            </div>
-                          }
-                        }
-                      </div>
-                    </div>
+          <!-- Email -->
+          <div class="col-md-6">
+            <label class="form-label custom-label">Email</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+              <input class="form-control" formControlName="email" type="email" placeholder="example@gmail.com" />
+            </div>
+            <small class="text-muted help-text">Only Gmail accounts are accepted</small>
+          </div>
+
+          <!-- First Name -->
+          <div class="col-md-4">
+            <label class="form-label custom-label">First Name</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+              <input class="form-control" formControlName="first_name" />
+            </div>
+          </div>
+
+          <!-- Middle Initial -->
+          <div class="col-md-4">
+            <label class="form-label custom-label">Middle Initial</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+              <input class="form-control" formControlName="middle_initial" maxlength="2" />
+            </div>
+            <small class="text-muted help-text">Use 1-2 letters; period optional (e.g., L or L.)</small>
+          </div>
+
+          <!-- Last Name -->
+          <div class="col-md-4">
+            <label class="form-label custom-label">Last Name</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-person-fill-add"></i></span>
+              <input class="form-control" formControlName="last_name" />
+            </div>
+          </div>
+
+          <!-- Role -->
+          <div class="col-md-12">
+            <label class="form-label custom-label">Role</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-person-badge-fill"></i></span>
+              <select class="form-select" formControlName="role_id">
+                <option [ngValue]="null" disabled>Select role</option>
+                @for (role of roleOptions; track role.id) {
+                  @if (role.role_name.toLowerCase() !== 'superadmin' || activeUser()?.role_id === role.id) {
+                    <option [value]="role.id">
+                      {{ role.role_name | titlecase }}
+                    </option>
                   }
                 }
+              </select>
+            </div>
+            <small class="text-muted help-text">A temporary password will be generated and sent to the user via email.</small>
+          </div>
+        </div>
+
+        <!-- Permissions Section -->
+        @if (userForm.get('role_id')?.value) {
+          <div class="permissions-container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="permissions-title mb-0">Permissions</h6>
+              <div class="form-check select-all-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="selectAllPermissions"
+                  [checked]="areAllPermissionsSelected()"
+                  (change)="toggleSelectAllPermissions()"
+                >
+                <label class="form-check-label" for="selectAllPermissions">
+                  Select All
+                </label>
               </div>
             </div>
-          }
-
-          <div class="modal-footer-custom mt-4 d-flex gap-2 justify-content-end">
-            <button class="btn btn-cancel" type="button" (click)="cancelForm()">CANCEL</button>
-            <button class="btn btn-save" type="submit">
-              <i class="bi bi-floppy-fill me-1"></i>
-              {{ editMode() ? 'UPDATE USER' : 'SAVE USER' }}
-            </button>
+            <div class="permission-cards-grid">
+              @for (group of permissionGroups; track group.label) {
+                @if (hasVisiblePermissions(group)) {
+                  <div class="permission-card">
+                    <span class="permission-group-header">{{ group.label }}</span>
+                    <div class="permission-list">
+                      @for (perm of group.permissions; track perm.name) {
+                        @if (isPermissionVisible(group.label, perm.name)) {
+                          <div class="form-check permission-check">
+                            <input 
+                              class="form-check-input" 
+                              type="checkbox" 
+                              [id]="'perm_' + perm.name"
+                              [checked]="isPermissionChecked(perm.name)"
+                              (change)="onPermissionChange($event, getPermissionId(perm.name))"
+                            >
+                            <label class="form-check-label" [for]="'perm_' + perm.name">
+                              {{ perm.label }}
+                            </label>
+                          </div>
+                        }
+                      }
+                    </div>
+                  </div>
+                }
+              }
+            </div>
           </div>
-        </form>
-      </div>
+        }
+
+        <div class="modal-footer-custom mt-4 d-flex gap-2 justify-content-end">
+          <button class="btn btn-cancel" type="button" (click)="cancelForm()">CANCEL</button>
+          <button class="btn btn-save" type="submit">
+            <i class="bi bi-floppy-fill me-1"></i>
+            {{ editMode() ? 'UPDATE USER' : 'SAVE USER' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
-
+</div>

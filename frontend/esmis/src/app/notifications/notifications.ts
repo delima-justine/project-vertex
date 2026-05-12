@@ -1,6 +1,4 @@
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
-import { Sidebar } from "../sidebar/sidebar";
-import { TopNav } from "../top-nav/top-nav";
 import { NotificationApiService } from '../../services/notification-api.service';
 import { UserManagementService } from '../../services/user-management.service';
 import { AuthService } from '../../services/auth.service';
@@ -12,7 +10,7 @@ import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-notifications',
-  imports: [Sidebar, TopNav, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './notifications.html',
   styleUrl: './notifications.scss',
 })

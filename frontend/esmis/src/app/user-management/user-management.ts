@@ -1,17 +1,15 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Sidebar } from '../sidebar/sidebar';
 import { User, Office, Role, Permission } from '../../models/smis.model';
 import { UserManagementService } from '../../services/user-management.service';
-import { TopNav } from "../top-nav/top-nav";
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmService } from '../../services/confirm.service';
 
 @Component({
   selector: 'app-user-management',
-  imports: [CommonModule, ReactiveFormsModule, Sidebar, TopNav],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './user-management.html',
   styleUrl: './user-management.scss',
 })

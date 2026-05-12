@@ -1,24 +1,21 @@
 import { Component, computed, inject, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Sidebar } from "../sidebar/sidebar";
 import { AuthService } from '../../services/auth.service';
 import { SupplyService } from '../../services/supply.service';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmService } from '../../services/confirm.service';
 import { Supply, Category, Unit, SupplyRequest } from '../../models/smis.model';
-import { TopNav } from "../top-nav/top-nav";
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   imports: [
-      Sidebar, 
       CommonModule, 
       ReactiveFormsModule, 
       FormsModule, 
-      TopNav,
       BaseChartDirective
     ],
   templateUrl: './home.html',
@@ -37,6 +34,7 @@ export class Home implements OnInit {
   units = signal<Unit[]>([]);
   requests = signal<SupplyRequest[]>([]);
   currentDate = signal(new Date());
+  isLoading = signal(true);
 
   // Filter signals
   searchTerm = signal('');
@@ -198,10 +196,25 @@ export class Home implements OnInit {
   }
 
   loadData() {
-    this.supplyService.listSupplies().subscribe((data) => this.supplies.set(data));
-    this.supplyService.listCategories().subscribe((data) => this.categories.set(data));
-    this.supplyService.listUnits().subscribe((data) => this.units.set(data));
-    this.supplyService.listSupplyRequests(undefined, undefined, 1, 1000).subscribe((response) => this.requests.set(response.data));
+    this.isLoading.set(true);
+    forkJoin({
+      supplies: this.supplyService.listSupplies(),
+      categories: this.supplyService.listCategories(),
+      units: this.supplyService.listUnits(),
+      requests: this.supplyService.listSupplyRequests(undefined, undefined, 1, 1000)
+    }).subscribe({
+      next: (data) => {
+        this.supplies.set(data.supplies);
+        this.categories.set(data.categories);
+        this.units.set(data.units);
+        this.requests.set(data.requests.data);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading home data:', err);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   openAddModal() {

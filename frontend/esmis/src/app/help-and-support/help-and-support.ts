@@ -19,7 +19,7 @@ interface FaqItem {
 @Component({
   selector: 'app-help-and-support',
   standalone: true,
-  imports: [Sidebar, TopNav, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './help-and-support.html',
   styleUrl: './help-and-support.scss',
 })

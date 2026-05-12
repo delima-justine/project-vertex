@@ -2,8 +2,6 @@ import { Component, computed, inject, signal, ViewChild, ElementRef } from '@ang
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as ExcelJS from 'exceljs';
-import { Sidebar } from "../sidebar/sidebar";
-import { TopNav } from "../top-nav/top-nav";
 import { SupplyService } from '../../services/supply.service';
 import { AuditService } from '../../services/audit.service';
 import { ToastService } from '../../services/toast.service';
@@ -17,7 +15,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [Sidebar, TopNav, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './reports.html',
   styleUrl: './reports.scss',
 })

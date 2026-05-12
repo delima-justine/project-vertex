@@ -1,42 +1,22 @@
 @mixin page-layout($has-top-nav: false) {
-  position: fixed;
-  left: var(--sidebar-width);
-  right: 0;
+  margin-left: var(--sidebar-width);
   padding: 20px 74px;
   box-sizing: border-box;
-  overflow-x: hidden;
   background-color: var(--bs-body-bg);
   color: var(--bs-body-color);
-  transition: left 0.3s ease;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  display: block;
 
   @if $has-top-nav {
-    top: 4rem;
-    height: calc(100vh - 4rem);
-    overflow-y: auto;
-  } @else {
-    top: 0;
-    height: 100vh;
+    padding-top: calc(4rem + 20px);
   }
 
   // Media queries
-  @media(min-width: 768px) and (max-width: 1024px) {
-    max-width: calc(100% - var(--sidebar-width));
-    width: calc(100% - var(--sidebar-width));
-  }
-
-  @media (min-width: 1025px) and (max-width: 1440px) {
-    max-width: calc(100% - var(--sidebar-width));
-    width: calc(100% - var(--sidebar-width));
-  }
-
   @media (max-width: 767px) {
-    position: relative;
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100%;
+    margin-left: 0;
     padding: 16px;
-    height: auto;
+    padding-top: calc(4rem + 16px);
   }
 }
 

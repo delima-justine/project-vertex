@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
-import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
@@ -7,13 +6,12 @@ import { ConfirmService } from '../../services/confirm.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TopNav } from "../top-nav/top-nav";
 import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-approved',
   standalone: true,
-  imports: [Sidebar, CommonModule, FormsModule, TopNav],
+  imports: [CommonModule, FormsModule],
   templateUrl: './approved.html',
   styleUrl: './approved.scss',
 })

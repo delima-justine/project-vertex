@@ -11,8 +11,54 @@ body.sidebar-collapsed {
 html, body {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
   background-color: var(--bs-body-bg);
   color: var(--bs-body-color);
+  overflow-x: hidden;
+}
+
+/* Skeleton Loading Shimmer Effect */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(190, 190, 190, 0.2) 25%,
+    rgba(129, 129, 129, 0.24) 37%,
+    rgba(190, 190, 190, 0.2) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.skeleton-text {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.skeleton-title {
+  height: 1.5rem;
+  margin-bottom: 1rem;
+  width: 60%;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.skeleton-card {
+  height: 180px;
+  width: 100%;
+  border-radius: 12px;
 }

@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
-import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
@@ -8,12 +7,11 @@ import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TopNav } from "../top-nav/top-nav";
 
 @Component({
   selector: 'app-pending',
   standalone: true,
-  imports: [Sidebar, CommonModule, FormsModule, TopNav],
+  imports: [CommonModule, FormsModule],
   templateUrl: './pending.html',
   styleUrl: './pending.scss',
 })

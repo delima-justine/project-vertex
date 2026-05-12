@@ -1,5 +1,4 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
@@ -7,12 +6,11 @@ import { Supply, Category } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
-import { TopNav } from "../top-nav/top-nav";
 
 @Component({
   selector: 'app-create-request',
   standalone: true,
-  imports: [Sidebar, CommonModule, FormsModule, TopNav],
+  imports: [CommonModule, FormsModule],
   templateUrl: './create-request.html',
   styleUrl: './create-request.scss',
 })
