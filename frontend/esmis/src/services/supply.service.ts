@@ -105,4 +105,8 @@ export class SupplyService {
   updateSupplyRequest(id: number, payload: Partial<SupplyRequest>): Observable<SupplyRequest> {
     return this.http.patch<SupplyRequest>(`${this.apiUrl}/supply-requests/${id}`, payload);
   }
+
+  updateBatchSupplyRequest(payload: { ids: number[], status: string, approved_by?: number }): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/supply-requests/batch-update`, payload);
+  }
 }

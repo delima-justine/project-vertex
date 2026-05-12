@@ -148,24 +148,22 @@ export class Pending implements OnInit {
     if (confirmed) {
       const batch = this.selectedBatch();
       const adminId = this.user()?.id;
-      const requests = batch.map(r => this.supplyService.updateSupplyRequest(r.id, { 
+      const ids = batch.map(r => r.id);
+      
+      this.supplyService.updateBatchSupplyRequest({
+        ids: ids,
         status: 'disapproved',
         approved_by: adminId
-      }));
-      
-      // Simple loop subscribe for now
-      let completed = 0;
-      requests.forEach(obs => {
-        obs.subscribe({
-          next: () => {
-            completed++;
-            if (completed === batch.length) {
-              this.closeModal();
-              this.loadPendingRequests();
-              this.toastService.success('Batch disapproved.');
-            }
-          }
-        });
+      }).subscribe({
+        next: () => {
+          this.closeModal();
+          this.loadPendingRequests();
+          this.toastService.success('Batch disapproved.');
+        },
+        error: (err) => {
+          console.error('Error disapproving batch', err);
+          this.toastService.error('Failed to disapprove batch.');
+        }
       });
     }
   }
