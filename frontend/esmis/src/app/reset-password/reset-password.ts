@@ -1,9 +1,11 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ConfirmService } from '../../services/confirm.service';
 import { CommonModule } from '@angular/common';
+import { interval, Subscription } from 'rxjs';
+import { strongPasswordValidator } from '../../validators/password.validator';
 
 @Component({
   selector: 'app-reset-password',
@@ -11,7 +13,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './reset-password.html',
   styleUrl: './reset-password.scss',
 })
-export class ResetPassword implements OnInit {
+export class ResetPassword implements OnInit, OnDestroy {
   resetPasswordForm: FormGroup;
   formBuilder = inject(FormBuilder);
   route = inject(ActivatedRoute);
@@ -22,13 +24,18 @@ export class ResetPassword implements OnInit {
   message = signal<string | null>(null);
   error = signal<string | null>(null);
   isLoading = signal<boolean>(false);
+  timeRemaining = signal<string | null>(null);
+  isExpired = signal<boolean>(false);
+  showPassword = signal<boolean>(false);
+  showConfirmPassword = signal<boolean>(false);
 
   token: string | null = null;
   email: string | null = null;
+  timerSubscription: Subscription | null = null;
 
   constructor() {
     this.resetPasswordForm = this.formBuilder.group({
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(8), strongPasswordValidator()]],
       password_confirmation: ['', [Validators.required]],
     }, {
       validators: this.passwordMatchValidator
@@ -41,6 +48,67 @@ export class ResetPassword implements OnInit {
 
     if (!this.token || !this.email) {
       this.error.set('Invalid or expired reset link.');
+      return;
+    }
+
+    this.checkToken();
+  }
+
+  ngOnDestroy(): void {
+    this.timerSubscription?.unsubscribe();
+  }
+
+  checkToken() {
+    this.isLoading.set(true);
+    this.authService.checkResetToken({ email: this.email!, token: this.token! }).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        this.startTimer(response.expires_at);
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        this.error.set(err.error?.message || 'Invalid or expired reset link.');
+        this.isExpired.set(true);
+      }
+    });
+  }
+
+  startTimer(expiresAt: string) {
+    const expiryDate = new Date(expiresAt).getTime();
+    
+    // Initial check
+    this.updateTimer(expiryDate);
+
+    this.timerSubscription = interval(1000).subscribe(() => {
+      this.updateTimer(expiryDate);
+    });
+  }
+
+  updateTimer(expiryDate: number) {
+    const now = new Date().getTime();
+    const distance = expiryDate - now;
+
+    if (distance <= 0) {
+      this.timeRemaining.set('00:00');
+      this.isExpired.set(true);
+      this.error.set('This reset link has expired.');
+      this.timerSubscription?.unsubscribe();
+      return;
+    }
+
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    this.timeRemaining.set(
+      `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+    );
+  }
+
+  togglePasswordVisibility(field: 'password' | 'confirm') {
+    if (field === 'password') {
+      this.showPassword.update(v => !v);
+    } else {
+      this.showConfirmPassword.update(v => !v);
     }
   }
 
