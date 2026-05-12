@@ -112,21 +112,21 @@
                   <td class="text-center">{{ req.quantity_req }}</td>
                   <td class="text-center">
                     <input type="radio" [name]="'stock_' + req.id" [id]="'stock-yes-' + req.id" 
-                           [checked]="requestData()[req.id].stockAvailable" (change)="updateRequestData(req.id, 'stockAvailable', true)">
+                           [checked]="requestData()[req.id]?.stockAvailable === true" (change)="updateRequestData(req.id, 'stockAvailable', true)">
                     <label [for]="'stock-yes-' + req.id"></label>
                   </td>
                   <td class="text-center">
                     <input type="radio" [name]="'stock_' + req.id" [id]="'stock-no-' + req.id" 
-                           [checked]="!requestData()[req.id].stockAvailable" (change)="updateRequestData(req.id, 'stockAvailable', false)">
+                           [checked]="requestData()[req.id]?.stockAvailable === false" (change)="updateRequestData(req.id, 'stockAvailable', false)">
                     <label [for]="'stock-no-' + req.id"></label>
                   </td>
                   <td>
-                    <input type="number" class="form-control" [ngModel]="requestData()[req.id].issueQty" 
+                    <input type="number" class="form-control" [ngModel]="requestData()[req.id]?.issueQty" 
                            (ngModelChange)="updateRequestData(req.id, 'issueQty', $event)"
-                           [disabled]="!requestData()[req.id].stockAvailable">
+                           [disabled]="!requestData()[req.id]?.stockAvailable">
                   </td>
                   <td>
-                    <input type="text" class="form-control" [ngModel]="requestData()[req.id].remarks" 
+                    <input type="text" class="form-control" [ngModel]="requestData()[req.id]?.remarks" 
                            (ngModelChange)="updateRequestData(req.id, 'remarks', $event)">
                   </td>
                 </tr>
@@ -154,7 +154,10 @@
                 <input 
                   type="text" 
                   class="auth-input"
-                  [value]="((requests()[0]?.user?.first_name || '') + ' ' + (requests()[0]?.user?.last_name || '')).toUpperCase()"
+                  [value]="((requests()[0]?.user?.first_name || '') + 
+                    (requests()[0]?.user?.middle_initial ? ' ' + 
+                    requests()[0]?.user?.middle_initial + '. ' : ' ') + 
+                    (requests()[0]?.user?.last_name || '')).toUpperCase()"
                   disabled>
 
                 <div class="divider"></div>

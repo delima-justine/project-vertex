@@ -189,7 +189,8 @@ export class EditRis implements OnInit, OnDestroy {
       const html2pdf = (h2p as any).default || h2p;
 
       const firstReq = reqs[0];
-      const fullName = ((firstReq.user?.first_name || '') + ' ' + (firstReq.user?.last_name || '')).trim();
+      const middleInitial = firstReq.user?.middle_initial ? ` ${firstReq.user.middle_initial}. ` : ' ';
+      const fullName = ((firstReq.user?.first_name || '') + middleInitial + (firstReq.user?.last_name || '')).trim();
       const office = (firstReq.user?.office?.office_name || '').trim();
       const purpose = this.combinedPurposes();
 
