@@ -96,15 +96,6 @@ class SupplyRequestController extends Controller
                     $supply->quantity = 0;
                 }
 
-                // Auto-update status based on new quantity
-                if ($supply->quantity == 0) {
-                    $supply->status = 'Out of Stock';
-                } elseif ($supply->quantity <= 5) {
-                    $supply->status = 'Low Stock';
-                } else {
-                    $supply->status = 'Available';
-                }
-
                 $supply->save();
 
                 // Log the stock update on the supply model

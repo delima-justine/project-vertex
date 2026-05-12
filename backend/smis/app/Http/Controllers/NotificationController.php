@@ -21,6 +21,9 @@ class NotificationController extends Controller
                 case 'approved':
                     $query->whereIn('action', ['approved', 'released']);
                     break;
+                case 'system':
+                    $query->whereIn('action', ['low stock', 'out of stock']);
+                    break;
                 case 'denied':
                     $query->where('action', 'disapproved');
                     break;
