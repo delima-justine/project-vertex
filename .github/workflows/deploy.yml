@@ -4,9 +4,17 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - 'documents/**'
+      - '.gitignore'
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - 'documents/**'
+      - '.gitignore'
 
 jobs:
   # 1. Run Angular Tests
