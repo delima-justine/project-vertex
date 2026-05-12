@@ -15,6 +15,13 @@ export class SupplyService {
   private unitsCache = signal<Unit[] | null>(null);
   private officesCache = signal<Office[] | null>(null);
 
+  statusCounts = signal<{ pending: number, approved: number, released: number, disapproved: number }>({
+    pending: 0,
+    approved: 0,
+    released: 0,
+    disapproved: 0
+  });
+
   listSupplies(): Observable<Supply[]> {
     return this.http.get<Supply[]>(`${this.apiUrl}/supplies`);
   }
@@ -82,11 +89,15 @@ export class SupplyService {
   }
 
   createSupplyRequest(payload: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/supply-requests`, payload);
+    return this.http.post<any>(`${this.apiUrl}/supply-requests`, payload).pipe(
+      tap(() => this.getStatusCounts().subscribe())
+    );
   }
 
   createBatchSupplyRequest(payload: { user_id: number, batch_id?: string, purpose?: string, items: { supply_id: string, quantity_req: number }[] }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/supply-requests/batch-store`, payload);
+    return this.http.post<any>(`${this.apiUrl}/supply-requests/batch-store`, payload).pipe(
+      tap(() => this.getStatusCounts().subscribe())
+    );
   }
 
   listSupplyRequests(status?: string, userId?: number, page?: number, perPage?: number): Observable<PaginatedResponse<SupplyRequest>> {
@@ -134,10 +145,20 @@ export class SupplyService {
   }
 
   updateSupplyRequest(id: number, payload: Partial<SupplyRequest>): Observable<SupplyRequest> {
-    return this.http.patch<SupplyRequest>(`${this.apiUrl}/supply-requests/${id}`, payload);
+    return this.http.patch<SupplyRequest>(`${this.apiUrl}/supply-requests/${id}`, payload).pipe(
+      tap(() => this.getStatusCounts().subscribe())
+    );
   }
 
   updateBatchSupplyRequest(payload: { items: { id: number, quantity_req?: number }[], status: string, approved_by?: number }): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/supply-requests/batch-update`, payload);
+    return this.http.patch<any>(`${this.apiUrl}/supply-requests/batch-update`, payload).pipe(
+      tap(() => this.getStatusCounts().subscribe())
+    );
+  }
+
+  getStatusCounts(): Observable<{ pending: number, approved: number, released: number, disapproved: number }> {
+    return this.http.get<{ pending: number, approved: number, released: number, disapproved: number }>(`${this.apiUrl}/supply-requests/status-counts`).pipe(
+      tap(counts => this.statusCounts.set(counts))
+    );
   }
 }
