@@ -73,6 +73,11 @@
             [title]="layoutService.isSidebarOpen() ? '' : 'Pending Requests'">
             <i class="bi bi-clock-fill"></i>
             <span>Pending</span>
+            @if(supplyService.statusCounts().pending > 0) {
+              <span class="badge rounded-pill bg-warning text-dark ms-auto">
+                {{ supplyService.statusCounts().pending }}
+              </span>
+            }
           </div>
         }
 
@@ -83,6 +88,11 @@
             [title]="layoutService.isSidebarOpen() ? '' : 'Approved Requests'">
             <i class="bi bi-hand-thumbs-up-fill"></i>
             <span>Approved</span>
+            @if(supplyService.statusCounts().approved > 0) {
+              <span class="badge rounded-pill bg-success ms-auto">
+                {{ supplyService.statusCounts().approved }}
+              </span>
+            }
           </div>
         }
 
@@ -93,6 +103,11 @@
             [title]="layoutService.isSidebarOpen() ? '' : 'Released Requests'">
             <i class="bi bi-truck"></i>
             <span>Released</span>
+            @if(supplyService.statusCounts().released > 0) {
+              <span class="badge rounded-pill bg-primary ms-auto">
+                {{ supplyService.statusCounts().released }}
+              </span>
+            }
           </div>
         }
 
@@ -103,6 +118,11 @@
             [title]="layoutService.isSidebarOpen() ? '' : 'Disapproved Requests'">
               <i class="bi bi-x-circle-fill"></i>
               <span>Disapproved</span>
+              @if(supplyService.statusCounts().disapproved > 0) {
+                <span class="badge rounded-pill bg-danger ms-auto">
+                  {{ supplyService.statusCounts().disapproved }}
+                </span>
+              }
           </div>
         }
       </div>

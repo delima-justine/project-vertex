@@ -6,6 +6,7 @@ import { LayoutService } from '../../services/layout.service';
 import { ThemeService } from '../../services/theme';
 import { NotificationApiService } from '../../services/notification-api.service';
 import { NotificationService } from '../../services/notification.service';
+import { SupplyService } from '../../services/supply.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +21,7 @@ export class Sidebar implements OnInit {
   public themeService: ThemeService = inject(ThemeService);
   public notifApiService = inject(NotificationApiService);
   public notifService = inject(NotificationService);
+  public supplyService = inject(SupplyService);
 
   public isDropdownOpen = signal(localStorage.getItem('isDropdownOpen') === 'true');
 
@@ -27,7 +29,13 @@ export class Sidebar implements OnInit {
     // Initial count fetch 
     if (this.authService.isLoggedIn()) {
       this.notifApiService.getUnreadCount().subscribe();
+      this.supplyService.getStatusCounts().subscribe();
     }
+
+    // Refresh counts when a notification arrives
+    this.notifService.notifications$.subscribe(() => {
+      this.supplyService.getStatusCounts().subscribe();
+    });
   }
 
   toggleDropdown() {
