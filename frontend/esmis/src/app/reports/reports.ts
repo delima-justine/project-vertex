@@ -277,37 +277,41 @@ export class Reports {
             : `Request ${archive.original_id}`;
           return `
             <tr style="background-color: ${index % 2 === 0 ? '#ffffff' : '#f8f9fa'};">
-              <td style="border:1px solid #ccc; padding:6px; text-align:center; font-size:10pt;">${typeLabel}</td>
-              <td style="border:1px solid #ccc; padding:6px; text-align:center; font-size:10pt;">${archive.original_id}</td>
-              <td style="border:1px solid #ccc; padding:6px; text-align:left; font-size:10pt;">${description}</td>
-              <td style="border:1px solid #ccc; padding:6px; text-align:center; font-size:10pt;">${archive.data?.status || ''}</td>
-              <td style="border:1px solid #ccc; padding:6px; text-align:left; font-size:10pt;">${archivedDate}</td>
-              <td style="border:1px solid #ccc; padding:6px; text-align:left; font-size:10pt;">${archivedBy}</td>
+              <td style="border:1px solid #000; padding:6px; text-align:center; font-size:10pt;">${typeLabel}</td>
+              <td style="border:1px solid #000; padding:6px; text-align:center; font-size:10pt;">${archive.original_id}</td>
+              <td style="border:1px solid #000; padding:6px; text-align:left; font-size:10pt;">${description}</td>
+              <td style="border:1px solid #000; padding:6px; text-align:center; font-size:10pt;">${archive.data?.status || ''}</td>
+              <td style="border:1px solid #000; padding:6px; text-align:left; font-size:10pt;">${archivedDate}</td>
+              <td style="border:1px solid #000; padding:6px; text-align:left; font-size:10pt;">${archivedBy}</td>
             </tr>
           `;
         })
         .join('');
 
       const html = `
-        <div style="font-family: Arial, sans-serif; padding: 16px;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px;">
-            ${logoBase64 ? `<img src="${logoBase64}" style="width: 64px; height: auto; object-fit: contain;" />` : ''}
-            <div style="text-align: left;">
-              <div style="font-size: 14pt; font-weight: 700;">Polytechnic University of the Philippines</div>
-              <div style="font-size: 12pt; margin-top: 4px;">Taguig Campus</div>
+        <div style="padding: 20px; font-family: Arial, sans-serif; color: #000; background: #fff; line-height: 1.2;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+            <div style="flex: 0 0 auto; max-width: 90px;">
+              ${logoBase64 ? `<img src="${logoBase64}" style="width: 90px; height: auto; display: block;" />` : ''}
+            </div>
+            <div style="flex: 1 1 auto; text-align: left; font-size: 9pt; line-height: 1.2;">
+              <div style="margin-bottom: 4px;">Republic of the Philippines</div>
+              <div style="font-weight: bold; font-size: 12pt; margin-bottom: 4px;">Polytechnic University of the Philippines</div>
+              <div style="margin-bottom: 4px;">Office of the Vice President for Campuses</div>
+              <div style="font-weight: bold;">Taguig Campus</div>
             </div>
           </div>
-          <div style="border-top: 1px solid #333; margin: 0 0 10px 0;"></div>
+          <hr style="border: none; border-top: 1px solid #000; margin: 0 0 14px 0;" />
           <div style="text-align: center; margin-bottom: 14px; font-size: 12pt; font-weight: 700;">Archived Records - Supply Management Information System</div>
           <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
             <thead>
               <tr style="background-color: #800000; color: #ffffff;">
-                <th style="border:1px solid #ccc; padding:10px 8px; text-align:center; width:90px;">Type</th>
-                <th style="border:1px solid #ccc; padding:10px 8px; text-align:center; width:90px;">Reference</th>
-                <th style="border:1px solid #ccc; padding:10px 8px; text-align:left;">Description</th>
-                <th style="border:1px solid #ccc; padding:10px 8px; text-align:center; width:90px;">Status</th>
-                <th style="border:1px solid #ccc; padding:10px 8px; text-align:left; width:150px;">Archived Date</th>
-                <th style="border:1px solid #ccc; padding:10px 8px; text-align:left; width:150px;">Archived By</th>
+                <th style="border:1px solid #000; padding:10px 8px; text-align:center; width:90px;">Type</th>
+                <th style="border:1px solid #000; padding:10px 8px; text-align:center; width:90px;">Reference</th>
+                <th style="border:1px solid #000; padding:10px 8px; text-align:left;">Description</th>
+                <th style="border:1px solid #000; padding:10px 8px; text-align:center; width:90px;">Status</th>
+                <th style="border:1px solid #000; padding:10px 8px; text-align:left; width:150px;">Archived Date</th>
+                <th style="border:1px solid #000; padding:10px 8px; text-align:left; width:150px;">Archived By</th>
               </tr>
             </thead>
             <tbody>

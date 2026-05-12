@@ -458,7 +458,7 @@ export class Home implements OnInit {
   }
 
   // Report Generation
-  printInventoryReport() {
+  async printInventoryReport() {
     const supplies = this.filteredSupplies();
     const user = this.user();
     const dateStr = new Date().toLocaleDateString('en-US', { 
@@ -466,6 +466,17 @@ export class Home implements OnInit {
       month: 'long', 
       day: 'numeric' 
     });
+
+    let logoBase64 = '';
+    try {
+      const logoResponse = await fetch('assets/pup_logo.png');
+      const logoBlob = await logoResponse.blob();
+      logoBase64 = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(logoBlob);
+      });
+    } catch {}
     
     const tableRows = supplies.map(s => `
       <tr>
@@ -479,18 +490,20 @@ export class Home implements OnInit {
     `).join('');
 
     const htmlContent = `
-      <div style="padding: 40px; font-family: 'Times New Roman', Times, serif; color: #000; background: #fff;">
+      <div style="padding: 20px; font-family: Arial, sans-serif; color: #000; background: #fff; line-height: 1.2;">
         <!-- Header -->
-        <div style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-          <img src="assets/pup_logo.png" alt="Logo" style="height: 100px; flex-shrink: 0;">
-          <div style="flex: 1;">
-            <p style="margin: 0; font-size: 11pt;">Republic of the Philippines</p>
-            <h2 style="margin: 5px 0; font-weight: bold; font-size: 16pt;">Polytechnic University of the Philippines</h2>
-            <p style="margin: 3px 0; font-size: 11pt;">Office of the Vice President for Campuses</p>
-            <p style="margin: 3px 0; font-weight: bold; font-size: 11pt;">Taguig Campus</p>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+          <div style="flex: 0 0 auto; max-width: 90px;">
+            ${logoBase64 ? `<img src="${logoBase64}" style="width: 90px; height: auto; display: block;" />` : ''}
+          </div>
+          <div style="flex: 1 1 auto; text-align: left; font-size: 9pt; line-height: 1.2;">
+            <div style="margin-bottom: 4px;">Republic of the Philippines</div>
+            <div style="font-weight: bold; font-size: 12pt; margin-bottom: 4px;">Polytechnic University of the Philippines</div>
+            <div style="margin-bottom: 4px;">Office of the Vice President for Campuses</div>
+            <div style="font-weight: bold;">Taguig Campus</div>
           </div>
         </div>
-        <hr style="border: 1pt solid #000; margin-bottom: 30px; opacity: 1;">
+        <hr style="border: none; border-top: 1px solid #000; margin: 0 0 14px 0;" />
         <h2 style="text-align: center; font-weight: bold; margin-bottom: 5px; font-size: 18pt;">SUPPLY INVENTORY REPORT</h2>
         <p style="text-align: center; margin: 0 0 20px 0; font-size: 12pt;">As of ${dateStr}</p>
 
