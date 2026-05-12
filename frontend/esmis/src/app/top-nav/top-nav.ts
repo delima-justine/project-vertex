@@ -5,10 +5,12 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ChangePasswordPayload, GeneralResponse } from '../../models/smis.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { strongPasswordValidator } from '../../validators/password.validator';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-top-nav',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './top-nav.html',
   styleUrl: './top-nav.scss',
 })
@@ -45,7 +47,7 @@ export class TopNav {
   constructor() {
     this.accountSettingsForm = this.formBuilder.group({
       currentPassword: ['', [Validators.required]],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      newPassword: ['', [Validators.required, Validators.minLength(8), strongPasswordValidator()]],
       confirmNewPassword: ['', [Validators.required]],
     }, { validators: this.passwordMatchValidator });
   }

@@ -102,10 +102,32 @@
                 @if(newPassword?.hasError('required')) {
                   <div class="invalid-feedback">New password is required.</div>
                 }
-                @if(newPassword?.hasError('minlength')) {
-                  <div class="invalid-feedback">New password must be at least 8 characters long.</div>
-                }
               }
+            </div>
+
+            <div class="password-requirements mt-2">
+              <ul class="list-unstyled small mb-0">
+                <li [class.text-success]="newPassword?.value?.length >= 8" [class.text-muted]="!newPassword?.value?.length || newPassword?.value?.length < 8">
+                  <i class="bi" [class.bi-check-circle-fill]="newPassword?.value?.length >= 8" [class.bi-circle]="!newPassword?.value?.length || newPassword?.value?.length < 8"></i> 
+                  At least 8 characters
+                </li>
+                <li [class.text-success]="newPassword?.value && !newPassword?.errors?.['strongPassword']?.hasUpperCase" [class.text-muted]="newPassword?.errors?.['strongPassword']?.hasUpperCase || !newPassword?.value">
+                  <i class="bi" [class.bi-check-circle-fill]="newPassword?.value && !newPassword?.errors?.['strongPassword']?.hasUpperCase" [class.bi-circle]="newPassword?.errors?.['strongPassword']?.hasUpperCase || !newPassword?.value"></i>
+                  One uppercase letter
+                </li>
+                <li [class.text-success]="newPassword?.value && !newPassword?.errors?.['strongPassword']?.hasLowerCase" [class.text-muted]="newPassword?.errors?.['strongPassword']?.hasLowerCase || !newPassword?.value">
+                  <i class="bi" [class.bi-check-circle-fill]="newPassword?.value && !newPassword?.errors?.['strongPassword']?.hasLowerCase" [class.bi-circle]="newPassword?.errors?.['strongPassword']?.hasLowerCase || !newPassword?.value"></i>
+                  One lowercase letter
+                </li>
+                <li [class.text-success]="newPassword?.value && !newPassword?.errors?.['strongPassword']?.hasNumber" [class.text-muted]="newPassword?.errors?.['strongPassword']?.hasNumber || !newPassword?.value">
+                  <i class="bi" [class.bi-check-circle-fill]="newPassword?.value && !newPassword?.errors?.['strongPassword']?.hasNumber" [class.bi-circle]="newPassword?.errors?.['strongPassword']?.hasNumber || !newPassword?.value"></i>
+                  One number
+                </li>
+                <li [class.text-success]="newPassword?.value && !newPassword?.errors?.['strongPassword']?.hasSpecialCharacter" [class.text-muted]="newPassword?.errors?.['strongPassword']?.hasSpecialCharacter || !newPassword?.value">
+                  <i class="bi" [class.bi-check-circle-fill]="newPassword?.value && !newPassword?.errors?.['strongPassword']?.hasSpecialCharacter" [class.bi-circle]="newPassword?.errors?.['strongPassword']?.hasSpecialCharacter || !newPassword?.value"></i>
+                  One special character
+                </li>
+              </ul>
             </div>
           </div>
           

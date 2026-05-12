@@ -108,3 +108,16 @@
     display: block;
   }
 }
+
+.password-requirements {
+  width: 100%;
+  
+  li {
+    margin-bottom: 2px;
+    transition: color 0.3s ease;
+    
+    i {
+      margin-right: 5px;
+    }
+  }
+}
