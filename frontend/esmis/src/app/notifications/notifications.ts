@@ -3,6 +3,7 @@ import { Sidebar } from "../sidebar/sidebar";
 import { TopNav } from "../top-nav/top-nav";
 import { NotificationApiService } from '../../services/notification-api.service';
 import { UserManagementService } from '../../services/user-management.service';
+import { AuthService } from '../../services/auth.service';
 import { Notification, Office, NotificationFilters } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +20,7 @@ export class Notifications implements OnInit {
   notifApiService = inject(NotificationApiService);
   notifService = inject(NotificationService);
   userManagementService = inject(UserManagementService);
+  authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
   
   notifications: Notification[] = [];
@@ -44,6 +46,13 @@ export class Notifications implements OnInit {
 
     // Listen for real-time updates to the list
     this.notifService.notifications$.subscribe((newNotif: Notification) => {
+      // Security check: Only show low stock / out of stock to admins/superadmins
+      if ((newNotif.action === 'low stock' || newNotif.action === 'out of stock') && 
+          !this.authService.hasRole('admin') && 
+          !this.authService.hasRole('superadmin')) {
+        return;
+      }
+
       this.notifications.unshift(newNotif);
       // Remove last if we exceed 5 (optional, but consistent with pagination)
       if (this.notifications.length > 5) {
