@@ -59,6 +59,18 @@ class AuthController extends Controller
             : response(['message' => __($status)], 400);
     }
 
+    // Resend Password Link (from email)
+    public function resendPasswordLink(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        Password::broker()->sendResetLink(
+            $request->only('email')
+        );
+
+        return redirect(config('app.frontend_url', 'http://localhost:4200') . '/forgot-password?status=resent');
+    }
+
     // Reset Password
     public function resetPassword(Request $request)
     {
