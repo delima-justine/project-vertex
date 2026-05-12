@@ -43,6 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     
     Route::post('/user/change-password', [AuthController::class, 'changePassword']);
     Route::patch('/supply-requests/batch-update', [SupplyRequestController::class, 'updateBatch']);
+    Route::post('/supply-requests/batch-store', [SupplyRequestController::class, 'storeBatch']);
     Route::apiResource('supply-requests', SupplyRequestController::class)->parameters([
         'supply-requests' => 'supply_request'
     ]);
