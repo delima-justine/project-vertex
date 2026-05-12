@@ -6,7 +6,7 @@ use App\Events\NotificationSent;
 use App\Models\SupplyRequest;
 use App\Models\Notification;
 use App\Services\AuditService;
-use App\Mail\RequestDisapproved;
+use App\Mail\SupplyRequestSlip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
@@ -55,6 +55,42 @@ class SupplyRequestController extends Controller
         return response()->json($supply_request, 201);
     }
 
+    public function storeBatch(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:tbl_user,id',
+            'batch_id' => 'nullable|string|max:100',
+            'items' => 'required|array',
+            'items.*.supply_id' => 'required|exists:tbl_supply,stock_num',
+            'items.*.quantity_req' => 'required|integer|min:1',
+            'purpose' => 'nullable|string|max:255',
+        ]);
+
+        $createdRequests = [];
+        foreach ($validated['items'] as $item) {
+            $sr = SupplyRequest::create([
+                'user_id' => $validated['user_id'],
+                'batch_id' => $validated['batch_id'],
+                'supply_id' => $item['supply_id'],
+                'quantity_req' => $item['quantity_req'],
+                'purpose' => $validated['purpose'],
+                'status' => 'pending'
+            ]);
+            $createdRequests[] = $sr->load(['user', 'supply']);
+        }
+
+        if (count($createdRequests) > 0) {
+            try {
+                $user = $createdRequests[0]->user;
+                Mail::to($user->email)->send(new SupplyRequestSlip(collect($createdRequests), 'pending'));
+            } catch (\Exception $e) {
+                Log::error("Failed to send pending request email: " . $e->getMessage());
+            }
+        }
+
+        return response()->json(['message' => 'Batch request created successfully', 'data' => $createdRequests], 201);
+    }
+
     // Returns request with related user, supply, and approver data
     public function show(SupplyRequest $supply_request)
     {
@@ -87,14 +123,14 @@ class SupplyRequestController extends Controller
         $oldValues = $supply_request->toArray();
         $supply_request->update($validated);
 
-        // Send email if status is changed to 'disapproved'
-        if (isset($validated['status']) && $validated['status'] === 'disapproved' && ($oldValues['status'] ?? '') !== 'disapproved') {
+        // Send email if status is changed
+        if (isset($validated['status']) && $validated['status'] !== ($oldValues['status'] ?? '')) {
             try {
                 // Ensure user and supply are loaded for the email
                 $supply_request->load(['user', 'supply']);
-                Mail::to($supply_request->user->email)->send(new RequestDisapproved(collect([$supply_request])));
+                Mail::to($supply_request->user->email)->send(new SupplyRequestSlip(collect([$supply_request]), $supply_request->status));
             } catch (\Exception $e) {
-                Log::error("Failed to send disapproval email: " . $e->getMessage());
+                Log::error("Failed to send status update email: " . $e->getMessage());
             }
         }
 
@@ -152,20 +188,38 @@ class SupplyRequestController extends Controller
     public function updateBatch(Request $request)
     {
         $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'exists:tbl_request,id',
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:tbl_request,id',
+            'items.*.quantity_req' => 'nullable|integer|min:0',
             'status' => 'required|in:pending,approved,released,disapproved',
             'approved_by' => 'nullable|exists:tbl_user,id',
         ]);
 
-        $requests = SupplyRequest::whereIn('id', $validated['ids'])->get();
         $updatedRequests = [];
 
-        foreach ($requests as $sr) {
+        foreach ($validated['items'] as $itemData) {
+            $sr = SupplyRequest::find($itemData['id']);
+            if (!$sr) continue;
+
             $oldValues = $sr->toArray();
+            $newQuantity = $itemData['quantity_req'] ?? $sr->quantity_req;
+
+            // Deduct stock if status is changed to 'released'
+            if ($validated['status'] === 'released' && $sr->status !== 'released') {
+                $supply = $sr->supply;
+                if ($supply) {
+                    $oldSupplyValues = $supply->toArray();
+                    $supply->quantity -= $newQuantity;
+                    if ($supply->quantity < 0) $supply->quantity = 0;
+                    $supply->save();
+                    AuditService::log('UPDATE', $supply, "Deducted stock due to released Request #{$sr->id}", $oldSupplyValues, $supply->fresh()->toArray());
+                }
+            }
+
             $sr->update([
                 'status' => $validated['status'],
                 'approved_by' => $validated['approved_by'] ?? $sr->approved_by,
+                'quantity_req' => $newQuantity
             ]);
 
             AuditService::log('UPDATE', $sr, "Batch updated supply request status to: {$sr->status}", $oldValues, $sr->fresh()->toArray());
@@ -181,12 +235,12 @@ class SupplyRequestController extends Controller
             $updatedRequests[] = $sr->load(['user', 'supply']);
         }
 
-        if ($validated['status'] === 'disapproved' && count($updatedRequests) > 0) {
+        if (count($updatedRequests) > 0) {
             try {
                 $user = $updatedRequests[0]->user;
-                Mail::to($user->email)->send(new RequestDisapproved(collect($updatedRequests)));
+                Mail::to($user->email)->send(new SupplyRequestSlip(collect($updatedRequests), $validated['status']));
             } catch (\Exception $e) {
-                Log::error("Failed to send batch disapproval email: " . $e->getMessage());
+                Log::error("Failed to send batch status email: " . $e->getMessage());
             }
         }
 
