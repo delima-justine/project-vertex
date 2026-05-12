@@ -108,6 +108,17 @@ export type ResetPasswordPayload = {
   password_confirmation: string;
 };
 
+export type CheckResetTokenPayload = {
+  email: string;
+  token: string;
+};
+
+export type CheckResetTokenResponse = {
+  message: string;
+  expires_at: string;
+  server_time: string;
+};
+
 export type GeneralResponse = {
   message: string;
 };
