@@ -6,7 +6,10 @@ use App\Events\NotificationSent;
 use App\Models\SupplyRequest;
 use App\Models\Notification;
 use App\Services\AuditService;
+use App\Mail\RequestDisapproved;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class SupplyRequestController extends Controller
 {
@@ -84,6 +87,17 @@ class SupplyRequestController extends Controller
         $oldValues = $supply_request->toArray();
         $supply_request->update($validated);
 
+        // Send email if status is changed to 'disapproved'
+        if (isset($validated['status']) && $validated['status'] === 'disapproved' && ($oldValues['status'] ?? '') !== 'disapproved') {
+            try {
+                // Ensure user and supply are loaded for the email
+                $supply_request->load(['user', 'supply']);
+                Mail::to($supply_request->user->email)->send(new RequestDisapproved(collect([$supply_request])));
+            } catch (\Exception $e) {
+                Log::error("Failed to send disapproval email: " . $e->getMessage());
+            }
+        }
+
         // Deduct stock if status is changed to 'released'
         if (isset($validated['status']) && $validated['status'] === 'released' && ($oldValues['status'] ?? '') !== 'released') {
             $supply = $supply_request->supply;
@@ -132,5 +146,50 @@ class SupplyRequestController extends Controller
         AuditService::log('DELETE', $supply_request, "Deleted supply request for: {$supply_request->supply_id}", $oldValues);
 
         return response()->json(['message' => 'Supply request deleted successfully']);
+    }
+
+    // Update multiple requests in a batch
+    public function updateBatch(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:tbl_request,id',
+            'status' => 'required|in:pending,approved,released,disapproved',
+            'approved_by' => 'nullable|exists:tbl_user,id',
+        ]);
+
+        $requests = SupplyRequest::whereIn('id', $validated['ids'])->get();
+        $updatedRequests = [];
+
+        foreach ($requests as $sr) {
+            $oldValues = $sr->toArray();
+            $sr->update([
+                'status' => $validated['status'],
+                'approved_by' => $validated['approved_by'] ?? $sr->approved_by,
+            ]);
+
+            AuditService::log('UPDATE', $sr, "Batch updated supply request status to: {$sr->status}", $oldValues, $sr->fresh()->toArray());
+
+            $notif = Notification::create([
+                'user_id' => $sr->user_id,
+                'request_id' => $sr->id,
+                'message' => "Your request for {$sr->supply_id} has been {$sr->status}.",
+                'action' => $sr->status,
+            ]);
+            broadcast(new NotificationSent($notif));
+            
+            $updatedRequests[] = $sr->load(['user', 'supply']);
+        }
+
+        if ($validated['status'] === 'disapproved' && count($updatedRequests) > 0) {
+            try {
+                $user = $updatedRequests[0]->user;
+                Mail::to($user->email)->send(new RequestDisapproved(collect($updatedRequests)));
+            } catch (\Exception $e) {
+                Log::error("Failed to send batch disapproval email: " . $e->getMessage());
+            }
+        }
+
+        return response()->json(['message' => 'Batch updated successfully', 'count' => count($updatedRequests)]);
     }
 }
