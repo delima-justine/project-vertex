@@ -148,10 +148,10 @@ export class Pending implements OnInit {
     if (confirmed) {
       const batch = this.selectedBatch();
       const adminId = this.user()?.id;
-      const ids = batch.map(r => r.id);
+      const items = batch.map(r => ({ id: r.id }));
       
       this.supplyService.updateBatchSupplyRequest({
-        ids: ids,
+        items: items,
         status: 'disapproved',
         approved_by: adminId
       }).subscribe({
