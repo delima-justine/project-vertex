@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
     
     Route::post('/user/change-password', [AuthController::class, 'changePassword']);
+    Route::get('/supply-requests/status-counts', [SupplyRequestController::class, 'statusCounts']);
     Route::patch('/supply-requests/batch-update', [SupplyRequestController::class, 'updateBatch']);
     Route::post('/supply-requests/batch-store', [SupplyRequestController::class, 'storeBatch']);
     Route::apiResource('supply-requests', SupplyRequestController::class)->parameters([
