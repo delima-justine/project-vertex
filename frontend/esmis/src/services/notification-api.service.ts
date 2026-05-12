@@ -21,8 +21,12 @@ export class NotificationApiService {
 
   constructor() {
     // Listen for real-time notifications once
-    this.notifService.notifications$.subscribe(() => {
-      this.unreadCount.update(c => c + 1);
+    this.notifService.notifications$.subscribe((notif: Notification) => {
+      // Only increment and notify if it's a regular notification 
+      // OR if it's a low stock / out of stock notification and the user is an admin/superadmin
+      if ((notif.action !== 'low stock' && notif.action !== 'out of stock') || this.authService.hasRole('admin') || this.authService.hasRole('superadmin')) {
+        this.unreadCount.update(c => c + 1);
+      }
     });
 
     // Automatically manage real-time connection based on auth state
