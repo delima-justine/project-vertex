@@ -7,10 +7,43 @@ use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
+    // Check Reset Token
+    public function checkResetToken(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'token' => 'required',
+        ]);
+
+        $record = DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->first();
+
+        if ($record && Hash::check($request->token, $record->token)) {
+            $createdAt = Carbon::parse($record->created_at);
+            $expiresAt = $createdAt->copy()->addMinutes(config('auth.passwords.users.expire'));
+
+            if (Carbon::now()->greaterThan($expiresAt)) {
+                return response(['message' => 'Token has expired.'], 400);
+            }
+
+            return response([
+                'message' => 'Token is valid.',
+                'expires_at' => $expiresAt->toIso8601String(),
+                'server_time' => Carbon::now()->toIso8601String(),
+            ], 200);
+        }
+
+        return response(['message' => 'Invalid token.'], 400);
+    }
+
     // Forgot Password
     public function forgotPassword(Request $request)
     {
@@ -32,7 +65,16 @@ class AuthController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => [
+                'required', 
+                'string', 
+                'confirmed',
+                PasswordRule::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ],
         ]);
 
         $status = Password::broker()->reset(
@@ -122,7 +164,16 @@ class AuthController extends Controller
     {
         $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|string|min:8|confirmed',
+            'new_password' => [
+                'required', 
+                'string', 
+                'confirmed',
+                PasswordRule::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ],
         ]);
 
         $user = $request->user();
