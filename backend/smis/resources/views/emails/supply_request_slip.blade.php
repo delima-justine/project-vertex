@@ -78,11 +78,17 @@
             font-weight: bold;
             font-size: 18px;
             margin: 10px 0;
-            border: 2px solid #800000;
-            color: #800000;
+            border: 2px solid;
             padding: 5px;
             text-transform: uppercase;
         }
+        
+        /* Status Colors */
+        .status-pending { border-color: #6c757d; color: #6c757d; }
+        .status-approved { border-color: #28a745; color: #28a745; }
+        .status-released { border-color: #007bff; color: #007bff; }
+        .status-disapproved { border-color: #800000; color: #800000; }
+
         .reason {
             font-size: 12px;
             font-style: italic;
@@ -98,8 +104,8 @@
             <p>PUP Taguig Branch</p>
         </div>
 
-        <div class="status-badge">
-            DISAPPROVED
+        <div class="status-badge status-{{ strtolower($status) }}">
+            {{ strtoupper($status) }}
         </div>
 
         <div class="info">
@@ -135,7 +141,15 @@
         </div>
 
         <div class="reason">
-            <p>Your request has been reviewed and disapproved by the supply office.</p>
+            @if($status === 'pending')
+                <p>Your request has been submitted and is currently pending review.</p>
+            @elseif($status === 'approved')
+                <p>Your request has been approved. Please wait for the items to be released.</p>
+            @elseif($status === 'released')
+                <p>Your items have been released. Thank you!</p>
+            @else
+                <p>Your request has been reviewed and disapproved by the supply office.</p>
+            @endif
         </div>
 
         <div class="divider"></div>
