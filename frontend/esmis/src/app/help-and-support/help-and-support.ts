@@ -29,6 +29,7 @@ export class HelpAndSupport {
   searchQuery = '';
 
   @ViewChild('faqSection') faqSection!: ElementRef;
+  @ViewChild('userGuideSection') userGuideSection?: ElementRef;
   @ViewChild('adminGuideSection') adminGuideSection?: ElementRef;
   @ViewChild('contactSection') contactSection!: ElementRef;
   @ViewChild('contributorsSection') contributorsSection!: ElementRef;
@@ -279,10 +280,16 @@ export class HelpAndSupport {
     return roleName === 'admin' || roleName === 'superadmin';
   }
 
-  scrollToSection(section: 'faq' | 'admin' | 'contact' | 'contributors') {
+  get isUser(): boolean {
+    const roleName = this.authService.currentUser()?.role?.role_name?.toLowerCase();
+    return roleName === 'user';
+  }
+
+  scrollToSection(section: 'faq' | 'user' | 'admin' | 'contact' | 'contributors') {
     let element: ElementRef | undefined;
     
     if (section === 'faq') element = this.faqSection;
+    else if (section === 'user') element = this.userGuideSection;
     else if (section === 'admin') element = this.adminGuideSection;
     else if (section === 'contact') element = this.contactSection;
     else if (section === 'contributors') element = this.contributorsSection;
