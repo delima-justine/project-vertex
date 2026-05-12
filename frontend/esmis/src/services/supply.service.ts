@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 import { Supply, Category, Unit, SupplyRequest, Archive, Office, PaginatedResponse } from '../models/smis.model';
 
@@ -11,32 +11,54 @@ export class SupplyService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
+  private categoriesCache = signal<Category[] | null>(null);
+  private unitsCache = signal<Unit[] | null>(null);
+  private officesCache = signal<Office[] | null>(null);
+
   listSupplies(): Observable<Supply[]> {
     return this.http.get<Supply[]>(`${this.apiUrl}/supplies`);
   }
 
   listCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.apiUrl}/categories`);
+    if (this.categoriesCache()) {
+      return of(this.categoriesCache()!);
+    }
+    return this.http.get<Category[]>(`${this.apiUrl}/categories`).pipe(
+      tap(data => this.categoriesCache.set(data))
+    );
   }
 
   createCategory(name: string): Observable<Category> {
-    return this.http.post<Category>(`${this.apiUrl}/categories`, { category_name: name });
+    return this.http.post<Category>(`${this.apiUrl}/categories`, { category_name: name }).pipe(
+      tap(() => this.categoriesCache.set(null))
+    );
   }
 
   deleteCategory(id: number): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.apiUrl}/categories/${id}`);
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/categories/${id}`).pipe(
+      tap(() => this.categoriesCache.set(null))
+    );
   }
 
   listUnits(): Observable<Unit[]> {
-    return this.http.get<Unit[]>(`${this.apiUrl}/units`);
+    if (this.unitsCache()) {
+      return of(this.unitsCache()!);
+    }
+    return this.http.get<Unit[]>(`${this.apiUrl}/units`).pipe(
+      tap(data => this.unitsCache.set(data))
+    );
   }
 
   createUnit(name: string): Observable<Unit> {
-    return this.http.post<Unit>(`${this.apiUrl}/units`, { unit_name: name });
+    return this.http.post<Unit>(`${this.apiUrl}/units`, { unit_name: name }).pipe(
+      tap(() => this.unitsCache.set(null))
+    );
   }
 
   deleteUnit(id: number): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.apiUrl}/units/${id}`);
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/units/${id}`).pipe(
+      tap(() => this.unitsCache.set(null))
+    );
   }
 
   getSupply(stockNum: string): Observable<Supply> {
@@ -85,7 +107,12 @@ export class SupplyService {
   }
 
   listOffices(): Observable<Office[]> {
-    return this.http.get<Office[]>(`${this.apiUrl}/offices`);
+    if (this.officesCache()) {
+      return of(this.officesCache()!);
+    }
+    return this.http.get<Office[]>(`${this.apiUrl}/offices`).pipe(
+      tap(data => this.officesCache.set(data))
+    );
   }
 
   listArchives(): Observable<Archive[]> {

@@ -1,9 +1,5 @@
 @use '../mixins' as *;
 
-main {
-  @include page-layout(true);
-}
-
 .main-panel {
   background: linear-gradient(
     135deg, rgba(186, 52, 22, 0.8) 0%, rgba(30, 58, 138, 0.9) 100%);

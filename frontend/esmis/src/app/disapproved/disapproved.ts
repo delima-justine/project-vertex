@@ -1,16 +1,14 @@
 import { Component, inject, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
-import { Sidebar } from "../sidebar/sidebar";
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
 import { SupplyRequest } from '../../models/smis.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TopNav } from "../top-nav/top-nav";
 
 @Component({
   selector: 'app-disapproved',
   standalone: true,
-  imports: [Sidebar, CommonModule, FormsModule, TopNav],
+  imports: [CommonModule, FormsModule],
   templateUrl: './disapproved.html',
   styleUrl: './disapproved.scss',
 })

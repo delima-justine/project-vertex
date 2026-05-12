@@ -1,299 +1,290 @@
-<!-- Sidebar Component -->
-<app-sidebar/>
+<div class="header-panel">
+  <i class="bi bi-question-circle-fill me-1 text-white"></i>
+  <span>Help and Support</span>
+</div>
 
-<!-- Top Navigation -->
-<app-top-nav/>
-
-<main>
-  <div class="header-panel">
-    <i class="bi bi-question-circle-fill me-1 text-white"></i>
-    <span>Help and Support</span>
+<div class="content-container mt-4 px-4 pb-4">
+  <!-- Navigation Selection Buttons -->
+  <div class="nav-selection-buttons mb-4 d-flex flex-wrap">
+    <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('faq')">
+      <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
+    </button>
+    @if (isAdmin) {
+      <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('admin')">
+        <i class="bi bi-journal-richtext me-2"></i>Admin Guide
+      </button>
+    }
+    <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('contact')">
+      <i class="bi bi-headset me-2"></i>Contact Support
+    </button>
+    <button class="btn btn-outline-maroon mb-2 px-4 py-2" (click)="scrollToSection('contributors')">
+      <i class="bi bi-people-fill me-2"></i>Developers & Contributors
+    </button>
   </div>
 
-  <div class="content-container mt-4 px-4 pb-4">
-    <!-- Navigation Selection Buttons -->
-    <div class="nav-selection-buttons mb-4 d-flex flex-wrap">
-      <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('faq')">
-        <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
-      </button>
-      @if (isAdmin) {
-        <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('admin')">
-          <i class="bi bi-journal-richtext me-2"></i>Admin Guide
-        </button>
-      }
-      <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('contact')">
-        <i class="bi bi-headset me-2"></i>Contact Support
-      </button>
-      <button class="btn btn-outline-maroon mb-2 px-4 py-2" (click)="scrollToSection('contributors')">
-        <i class="bi bi-people-fill me-2"></i>Developers & Contributors
-      </button>
-    </div>
-
-    <div class="row g-5">
-      <!-- Frequently Asked Questions -->
-      <div class="col-12" #faqSection>
-        <div class="card shadow-sm border-0">
-          <div class="card-header border-bottom-0 pt-4">
-            <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
-              <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
-            </h5>
-            <hr class="header-divider mt-2 mb-0" />
-          </div>
-          <div class="card-body pt-0">
-            <div class="d-flex flex-column align-items-center mb-4 mt-3">
-              <p class="description mb-0">Welcome to the Help and Support section of the Supply Management Information System (SMIS). Find answers to common questions below.</p>
-              
-              <!-- FAQ Search Bar -->
-              <div class="faq-search-container">
-                <div class="input-group">
-                  <span class="input-group-text border-end-0">
-                    <i class="bi bi-search text-secondary"></i>
-                  </span>
-                  <input type="text" class="form-control border-start-0 ps-0" placeholder="Search FAQs..." [(ngModel)]="searchQuery">
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Tabs (Hidden when searching) -->
-            @if (!searchQuery) {
-              <ul class="nav nav-tabs custom-faq-tabs border-bottom mb-4">
-                <li class="nav-item">
-                  <a class="nav-link" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">General</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" [class.active]="activeTab === 'account'" (click)="activeTab = 'account'">Account & Access</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Orders & Management</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" [class.active]="activeTab === 'technical'" (click)="activeTab = 'technical'">Technical Issues</a>
-                </li>
-              </ul>
-            }
-
-            <!-- Search Results Header -->
-            @if (searchQuery) {
-              <div class="mb-4">
-                <h6 class="text-secondary">Search results for: "<span class="text-maroon fw-bold">{{searchQuery}}</span>" ({{filteredFaqs.length}} found)</h6>
-              </div>
-            }
-
-            <!-- FAQ Content (Dynamic) -->
-            <div class="faq-accordion">
-              @for (faq of filteredFaqs; track faq.id) {
-                <div class="accordion-item shadow-sm border rounded mb-3">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button" [class.collapsed]="!faq.isExpanded" type="button" (click)="toggleFaq(faq)">
-                      {{faq.question}}
-                    </button>
-                  </h2>
-                  <div class="accordion-collapse" [class.show]="faq.isExpanded">
-                    <div class="accordion-body">
-                      <p>{{faq.answer}}</p>
-                      
-                      @if (faq.features) {
-                        <ul class="ps-3 mb-2">
-                          @for (feature of faq.features; track $index) {
-                            <li [innerHTML]="feature"></li>
-                          }
-                        </ul>
-                      }
-
-                      @if (faq.steps) {
-                        <ol class="ps-3 mb-2">
-                          @for (step of faq.steps; track $index) {
-                            <li>{{step}}</li>
-                          }
-                        </ol>
-                      }
-
-                      @if (faq.notes) {
-                        <p class="mt-2 mb-0" [innerHTML]="faq.notes"></p>
-                      }
-                    </div>
-                  </div>
-                </div>
-              }
-
-              <!-- No Results State -->
-              @if (filteredFaqs.length === 0) {
-                <div class="py-5 text-center">
-                  <i class="bi bi-search-heart fs-1 text-secondary opacity-50"></i>
-                  <h5 class="mt-3 text-secondary">No matching FAQs found for "{{searchQuery}}"</h5>
-                  <p class="text-secondary small">Try different keywords or browse categories.</p>
-                  <button class="btn btn-sm btn-outline-maroon mt-2" (click)="searchQuery = ''">Clear Search</button>
-                </div>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Admin Guide -->
-      @if (isAdmin) {
-        <div class="col-12" #adminGuideSection>
-          <div class="card shadow-sm border-0">
-            <div class="card-header border-bottom-0 pt-4">
-              <h5 class="card-title fw-bold mb-0 text-maroon">
-                <i class="bi bi-journal-richtext me-2"></i>Admin Guide
-              </h5>
-              <hr class="header-divider mt-2 mb-0" />
-            </div>
-            <div class="card-body pt-0">
-              <p class="description mb-4 mt-3">Learn how to manage the SMIS system effectively with our step-by-step guides.</p>
-
-              <div class="row g-4 mb-5">
-                <div class="col-md-6">
-                  <div class="guide-card shadow-sm rounded overflow-hidden">
-                    <div class="guide-icon-side">
-                      <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div class="guide-content p-3">
-                      <h6 class="fw-bold mb-2">User Management</h6>
-                      <p class="text-secondary small mb-3">Learn how to manage user accounts and permissions.</p>
-                      <button class="btn btn-outline-maroon btn-sm px-3">
-                        <i class="bi bi-play-circle-fill me-2"></i>View Guide
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="guide-card shadow-sm rounded overflow-hidden">
-                    <div class="guide-icon-side">
-                      <i class="bi bi-check-circle-fill"></i>
-                    </div>
-                    <div class="guide-content p-3">
-                      <h6 class="fw-bold mb-2">Request Approval Process</h6>
-                      <p class="text-secondary small mb-3">Understand how to review and approve supply requests.</p>
-                      <button class="btn btn-outline-maroon btn-sm px-3">
-                        <i class="bi bi-play-circle-fill me-2"></i>View Guide
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="video-tutorials-section">
-                <h4 class="fw-bold mb-3">Visual Walkthrough</h4>
-                <div class="video-tutorial-card shadow-sm rounded overflow-hidden d-flex">
-                  <div class="video-icon-side">
-                    <i class="bi bi-youtube"></i>
-                  </div>
-                  <div class="video-content p-4 d-flex flex-column justify-content-center">
-                    <h3 class="fw-bold mb-2">Video Tutorials</h3>
-                    <p class="text-secondary mb-4">Learn how to manage the system effectively with our comprehensive video guides.</p>
-                    <div class="d-flex">
-                      <button class="btn btn-pill-maroon px-4 py-2">
-                        <i class="bi bi-play-btn-fill me-2"></i>View Playlist
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-
-      <!-- Contact Support -->
-      <div class="col-12" #contactSection>
-        <div class="card shadow-sm border-0">
-          <div class="card-header border-bottom-0 pt-4">
-            <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
-              <i class="bi bi-headset me-2"></i>Contact Support
-            </h5>
-            <hr class="header-divider mt-2 mb-0" />
-          </div>
-          <div class="card-body pt-0">
-            <p class="description mb-4 mt-3">Need additional help? Our support team is ready to assist you.</p>
-            
-            <div class="contact-details-grid mt-4">
-              <div class="row g-4">
-                <div class="col-md-6 col-lg-3">
-                  <div class="contact-item p-3 rounded h-100">
-                    <div class="d-flex align-items-center mb-2">
-                      <i class="bi bi-envelope-fill text-maroon fs-4 me-2"></i>
-                      <span class="fw-bold">Email</span>
-                    </div>
-                    <a href="mailto:smispupttaguig@gmail.com" class="text-decoration-none text-primary small">smispupttaguig@gmail.com</a>
-                  </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3">
-                  <div class="contact-item p-3 rounded h-100">
-                    <div class="d-flex align-items-center mb-2">
-                      <i class="bi bi-telephone-fill text-maroon fs-4 me-2"></i>
-                      <span class="fw-bold">Phone</span>
-                    </div>
-                    <span class="text-secondary small">(02) 8123-4567</span>
-                  </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3">
-                  <div class="contact-item p-3 rounded h-100">
-                    <div class="d-flex align-items-center mb-2">
-                      <i class="bi bi-clock-fill text-maroon fs-4 me-2"></i>
-                      <span class="fw-bold">Support Hours</span>
-                    </div>
-                    <span class="text-secondary small">Mon - Fri, 8AM - 5PM</span>
-                  </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3">
-                  <div class="contact-item p-3 rounded h-100">
-                    <div class="d-flex align-items-center mb-2">
-                      <i class="bi bi-geo-alt-fill text-maroon fs-4 me-2"></i>
-                      <span class="fw-bold">Location</span>
-                    </div>
-                    <span class="text-secondary small">PUP Taguig, Property Custodian Office, Bldg A</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <!-- Developers & Contributors -->
-    <div class="col-12" #contributorsSection>
+  <div class="row g-5">
+    <!-- Frequently Asked Questions -->
+    <div class="col-12" #faqSection>
       <div class="card shadow-sm border-0">
         <div class="card-header border-bottom-0 pt-4">
           <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
-            <i class="bi bi-people-fill me-2"></i>Developers & Contributors
+            <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
           </h5>
           <hr class="header-divider mt-2 mb-0" />
         </div>
         <div class="card-body pt-0">
-          <p class="description mb-4 mt-3">The Supply Management Information System (SMIS) is a product of collaborative effort and technical excellence.</p>
+          <div class="d-flex flex-column align-items-center mb-4 mt-3">
+            <p class="description mb-0">Welcome to the Help and Support section of the Supply Management Information System (SMIS). Find answers to common questions below.</p>
+            
+            <!-- FAQ Search Bar -->
+            <div class="faq-search-container">
+              <div class="input-group">
+                <span class="input-group-text border-end-0">
+                  <i class="bi bi-search text-secondary"></i>
+                </span>
+                <input type="text" class="form-control border-start-0 ps-0" placeholder="Search FAQs..." [(ngModel)]="searchQuery">
+              </div>
+            </div>
+          </div>
 
-          <div class="row g-4 mt-2">
-            <div class="col-md-6">
-              <div class="contributor-card p-4 rounded h-100 text-center border">
-                <div class="contributor-icon mb-3">
-                  <i class="bi bi-stars fs-1 text-maroon"></i>
+          <!-- FAQ Tabs (Hidden when searching) -->
+          @if (!searchQuery) {
+            <ul class="nav nav-tabs custom-faq-tabs border-bottom mb-4">
+              <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">General</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === 'account'" (click)="activeTab = 'account'">Account & Access</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Orders & Management</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === 'technical'" (click)="activeTab = 'technical'">Technical Issues</a>
+              </li>
+            </ul>
+          }
+
+          <!-- Search Results Header -->
+          @if (searchQuery) {
+            <div class="mb-4">
+              <h6 class="text-secondary">Search results for: "<span class="text-maroon fw-bold">{{searchQuery}}</span>" ({{filteredFaqs.length}} found)</h6>
+            </div>
+          }
+
+          <!-- FAQ Content (Dynamic) -->
+          <div class="faq-accordion">
+            @for (faq of filteredFaqs; track faq.id) {
+              <div class="accordion-item shadow-sm border rounded mb-3">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" [class.collapsed]="!faq.isExpanded" type="button" (click)="toggleFaq(faq)">
+                    {{faq.question}}
+                  </button>
+                </h2>
+                <div class="accordion-collapse" [class.show]="faq.isExpanded">
+                  <div class="accordion-body">
+                    <p>{{faq.answer}}</p>
+                    
+                    @if (faq.features) {
+                      <ul class="ps-3 mb-2">
+                        @for (feature of faq.features; track $index) {
+                          <li [innerHTML]="feature"></li>
+                        }
+                      </ul>
+                    }
+
+                    @if (faq.steps) {
+                      <ol class="ps-3 mb-2">
+                        @for (step of faq.steps; track $index) {
+                          <li>{{step}}</li>
+                        }
+                      </ol>
+                    }
+
+                    @if (faq.notes) {
+                      <p class="mt-2 mb-0" [innerHTML]="faq.notes"></p>
+                    }
+                  </div>
                 </div>
-                <h4 class="fw-bold text-maroon">Astral Angels</h4>
-                <p class="text-secondary mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2025</p>
-                <span class="badge bg-maroon-soft text-maroon px-3 py-2 rounded-pill">Original Developers</span>
-                <p class="mt-3 small text-secondary">Laid the foundation of SMIS, designing and implementing the core architecture and features of the system.</p>
+              </div>
+            }
+
+            <!-- No Results State -->
+            @if (filteredFaqs.length === 0) {
+              <div class="py-5 text-center">
+                <i class="bi bi-search-heart fs-1 text-secondary opacity-50"></i>
+                <h5 class="mt-3 text-secondary">No matching FAQs found for "{{searchQuery}}"</h5>
+                <p class="text-secondary small">Try different keywords or browse categories.</p>
+                <button class="btn btn-sm btn-outline-maroon mt-2" (click)="searchQuery = ''">Clear Search</button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Guide -->
+    @if (isAdmin) {
+      <div class="col-12" #adminGuideSection>
+        <div class="card shadow-sm border-0">
+          <div class="card-header border-bottom-0 pt-4">
+            <h5 class="card-title fw-bold mb-0 text-maroon">
+              <i class="bi bi-journal-richtext me-2"></i>Admin Guide
+            </h5>
+            <hr class="header-divider mt-2 mb-0" />
+          </div>
+          <div class="card-body pt-0">
+            <p class="description mb-4 mt-3">Learn how to manage the SMIS system effectively with our step-by-step guides.</p>
+
+            <div class="row g-4 mb-5">
+              <div class="col-md-6">
+                <div class="guide-card shadow-sm rounded overflow-hidden">
+                  <div class="guide-icon-side">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                  <div class="guide-content p-3">
+                    <h6 class="fw-bold mb-2">User Management</h6>
+                    <p class="text-secondary small mb-3">Learn how to manage user accounts and permissions.</p>
+                    <button class="btn btn-outline-maroon btn-sm px-3">
+                      <i class="bi bi-play-circle-fill me-2"></i>View Guide
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="guide-card shadow-sm rounded overflow-hidden">
+                  <div class="guide-icon-side">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div class="guide-content p-3">
+                    <h6 class="fw-bold mb-2">Request Approval Process</h6>
+                    <p class="text-secondary small mb-3">Understand how to review and approve supply requests.</p>
+                    <button class="btn btn-outline-maroon btn-sm px-3">
+                      <i class="bi bi-play-circle-fill me-2"></i>View Guide
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="contributor-card p-4 rounded h-100 text-center border">
-                <div class="contributor-icon mb-3">
-                  <i class="bi bi-triangle-half fs-1 text-maroon"></i>
+            <div class="video-tutorials-section">
+              <h4 class="fw-bold mb-3">Visual Walkthrough</h4>
+              <div class="video-tutorial-card shadow-sm rounded overflow-hidden d-flex">
+                <div class="video-icon-side">
+                  <i class="bi bi-youtube"></i>
                 </div>
-                <h4 class="fw-bold text-maroon">Vertex</h4>
-                <p class="text-secondary mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2026</p>
-                <span class="badge bg-maroon-soft text-maroon px-3 py-2 rounded-pill">Contributors</span>
-                <p class="mt-3 small text-secondary">Currently enhancing the system with advanced analytics, improved UI/UX, and optimized backend workflows.</p>
+                <div class="video-content p-4 d-flex flex-column justify-content-center">
+                  <h3 class="fw-bold mb-2">Video Tutorials</h3>
+                  <p class="text-secondary mb-4">Learn how to manage the system effectively with our comprehensive video guides.</p>
+                  <div class="d-flex">
+                    <button class="btn btn-pill-maroon px-4 py-2">
+                      <i class="bi bi-play-btn-fill me-2"></i>View Playlist
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Contact Support -->
+    <div class="col-12" #contactSection>
+      <div class="card shadow-sm border-0">
+        <div class="card-header border-bottom-0 pt-4">
+          <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
+            <i class="bi bi-headset me-2"></i>Contact Support
+          </h5>
+          <hr class="header-divider mt-2 mb-0" />
+        </div>
+        <div class="card-body pt-0">
+          <p class="description mb-4 mt-3">Need additional help? Our support team is ready to assist you.</p>
+          
+          <div class="contact-details-grid mt-4">
+            <div class="row g-4">
+              <div class="col-md-6 col-lg-3">
+                <div class="contact-item p-3 rounded h-100">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-envelope-fill text-maroon fs-4 me-2"></i>
+                    <span class="fw-bold">Email</span>
+                  </div>
+                  <a href="mailto:smispupttaguig@gmail.com" class="text-decoration-none text-primary small">smispupttaguig@gmail.com</a>
+                </div>
+              </div>
+              
+              <div class="col-md-6 col-lg-3">
+                <div class="contact-item p-3 rounded h-100">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-telephone-fill text-maroon fs-4 me-2"></i>
+                    <span class="fw-bold">Phone</span>
+                  </div>
+                  <span class="text-secondary small">(02) 8123-4567</span>
+                </div>
+              </div>
+              
+              <div class="col-md-6 col-lg-3">
+                <div class="contact-item p-3 rounded h-100">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-clock-fill text-maroon fs-4 me-2"></i>
+                    <span class="fw-bold">Support Hours</span>
+                  </div>
+                  <span class="text-secondary small">Mon - Fri, 8AM - 5PM</span>
+                </div>
+              </div>
+              
+              <div class="col-md-6 col-lg-3">
+                <div class="contact-item p-3 rounded h-100">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-geo-alt-fill text-maroon fs-4 me-2"></i>
+                    <span class="fw-bold">Location</span>
+                  </div>
+                  <span class="text-secondary small">PUP Taguig, Property Custodian Office, Bldg A</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  <!-- Developers & Contributors -->
+  <div class="col-12" #contributorsSection>
+    <div class="card shadow-sm border-0">
+      <div class="card-header border-bottom-0 pt-4">
+        <h5 class="card-title fw-bold mb-0 text-maroon d-flex align-items-center">
+          <i class="bi bi-people-fill me-2"></i>Developers & Contributors
+        </h5>
+        <hr class="header-divider mt-2 mb-0" />
+      </div>
+      <div class="card-body pt-0">
+        <p class="description mb-4 mt-3">The Supply Management Information System (SMIS) is a product of collaborative effort and technical excellence.</p>
+
+        <div class="row g-4 mt-2">
+          <div class="col-md-6">
+            <div class="contributor-card p-4 rounded h-100 text-center border">
+              <div class="contributor-icon mb-3">
+                <i class="bi bi-stars fs-1 text-maroon"></i>
+              </div>
+              <h4 class="fw-bold text-maroon">Astral Angels</h4>
+              <p class="text-secondary mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2025</p>
+              <span class="badge bg-maroon-soft text-maroon px-3 py-2 rounded-pill">Original Developers</span>
+              <p class="mt-3 small text-secondary">Laid the foundation of SMIS, designing and implementing the core architecture and features of the system.</p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="contributor-card p-4 rounded h-100 text-center border">
+              <div class="contributor-icon mb-3">
+                <i class="bi bi-triangle-half fs-1 text-maroon"></i>
+              </div>
+              <h4 class="fw-bold text-maroon">Vertex</h4>
+              <p class="text-secondary mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2026</p>
+              <span class="badge bg-maroon-soft text-maroon px-3 py-2 rounded-pill">Contributors</span>
+              <p class="mt-3 small text-secondary">Currently enhancing the system with advanced analytics, improved UI/UX, and optimized backend workflows.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
-    </main>
+  </div>
+</div>

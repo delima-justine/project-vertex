@@ -8,10 +8,6 @@
   --header-maroon: #ffffff;
 }
 
-main {
-  @include page-layout(true);
-}
-
 .header-panel {
   @include header-panel;
 }
