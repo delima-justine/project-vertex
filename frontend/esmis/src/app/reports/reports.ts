@@ -261,8 +261,10 @@ export class Reports {
 
       const rowsHtml = archives
         .map((archive, index) => {
-          const archivedBy = archive.archiver
-            ? `${archive.archiver.first_name} ${archive.archiver.last_name}`.trim()
+          const archiver = archive.archiver;
+          const middleInitial = archiver?.middle_initial ? ` ${archiver.middle_initial}. ` : ' ';
+          const archivedBy = archiver
+            ? `${archiver.first_name}${middleInitial}${archiver.last_name}`.trim()
             : '';
           const archivedDate = archive.archived_at
             ? new Date(archive.archived_at).toLocaleDateString('en-US', {
