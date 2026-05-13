@@ -177,22 +177,24 @@
       <div class="modal-body custom-modal-body">
         <!-- Desktop Tabs for multiple requests -->
         @if (selectedBatch().length > 1) {
-          <ul class="nav nav-tabs mb-3 d-none d-md-flex">
-            @for (req of selectedBatch(); track req.id; let i = $index) {
-              <li class="nav-item">
-                <button 
-                  class="nav-link" 
-                  [class.active]="activeTabIndex() === i"
-                  (click)="activeTabIndex.set(i)"
-                  type="button">
-                  {{ i === 0 ? 'Primary Request' : 'Request #' + (i + 1) }}
-                </button>
-              </li>
-            }
-          </ul>
+          <div class="tab-container d-none d-lg-block">
+            <ul class="nav nav-tabs">
+              @for (req of selectedBatch(); track req.id; let i = $index) {
+                <li class="nav-item">
+                  <button 
+                    class="nav-link" 
+                    [class.active]="activeTabIndex() === i"
+                    (click)="activeTabIndex.set(i)"
+                    type="button">
+                    {{ i === 0 ? 'Primary Request' : 'Request #' + (i + 1) }}
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
 
-          <!-- Mobile Dropdown for multiple requests -->
-          <div class="d-md-none mb-3">
+          <!-- Mobile/Tablet Dropdown for multiple requests -->
+          <div class="d-lg-none mb-3">
             <label class="form-label custom-label">Select Request</label>
             <select class="form-select" [value]="activeTabIndex()" (change)="activeTabIndex.set(+$any($event.target).value)">
               @for (req of selectedBatch(); track req.id; let i = $index) {
