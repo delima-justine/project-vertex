@@ -215,8 +215,8 @@
   }
 }
 
-// Mobile Small Phone
-@media(max-width: 320px) {
+// Mobile view (Mobile S to Mobile L and tablets)
+@media(max-width: 767px) {
   .sidebar {
     display: none;
   }
