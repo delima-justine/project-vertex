@@ -133,6 +133,10 @@
     border-top: none;
     padding-top: 1rem;
 
+    @media (max-width: 768px) {
+      justify-content: center !important;
+    }
+
     .btn-cancel {
       background-color: #6c757d;
       color: white;
@@ -144,13 +148,24 @@
       &:hover {
         background-color: #5a6268;
       }
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+      }
+
+      @media (max-width: 320px) {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+      }
     }
 
     .btn-save {
       background-color: #800000;
       color: white;
       font-weight: 600;
-      padding: 0.6rem 1.5rem;      border-radius: 6px;
+      padding: 0.6rem 1.5rem;
+      border-radius: 6px;
       font-size: 0.9rem;
       display: flex;
       align-items: center;
@@ -162,6 +177,16 @@
       &:disabled {
         background-color: #a55c5c;
         border-color: #a55c5c;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+      }
+
+      @media (max-width: 320px) {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
       }
     }
   }
