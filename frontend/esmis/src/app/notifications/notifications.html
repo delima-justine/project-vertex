@@ -45,56 +45,59 @@
   <!-- Main Content -->
   <div class="notifications-card card mt-4">
     <div class="card-header p-0">
-      <!-- Tabs -->
-      <ul class="nav nav-tabs border-0 px-3 pt-2">
-        <li class="nav-item">
-          <button 
-            class="nav-link" 
-            [class.active]="activeTab === 'all'" 
-            (click)="setTab('all')">
-            All
-          </button>
-        </li>
-        <li class="nav-item">
-          <button 
-            class="nav-link" 
-            [class.active]="activeTab === 'unread'" 
-            (click)="setTab('unread')">
-            Unread
-            @if (notifApiService.unreadCount() > 0) {
-              <span class="badge bg-danger ms-1">
-                {{ notifApiService.unreadCount() }}
-              </span>
-            }
-          </button>
-        </li>
-        <li class="nav-item">
-          <button 
-            class="nav-link tab-approved" 
-            [class.active]="activeTab === 'approved'" 
-            (click)="setTab('approved')">
-            Approved
-          </button>
-        </li>
-        @if(authService.hasRole('admin') || authService.hasRole('superadmin')) {
+      <!-- Tabs Container for horizontal scroll -->
+      <div class="tab-container">
+        <!-- Tabs -->
+        <ul class="nav nav-tabs border-0 px-3 pt-2">
           <li class="nav-item">
             <button 
-              class="nav-link tab-system" 
-              [class.active]="activeTab === 'system'" 
-              (click)="setTab('system')">
-              System Alerts
+              class="nav-link" 
+              [class.active]="activeTab === 'all'" 
+              (click)="setTab('all')">
+              All
             </button>
           </li>
-        }
-        <li class="nav-item">
-          <button 
-            class="nav-link tab-denied" 
-            [class.active]="activeTab === 'denied'" 
-            (click)="setTab('denied')">
-            Denied
-          </button>
-        </li>
-      </ul>
+          <li class="nav-item">
+            <button 
+              class="nav-link" 
+              [class.active]="activeTab === 'unread'" 
+              (click)="setTab('unread')">
+              Unread
+              @if (notifApiService.unreadCount() > 0) {
+                <span class="badge bg-danger ms-1">
+                  {{ notifApiService.unreadCount() }}
+                </span>
+              }
+            </button>
+          </li>
+          <li class="nav-item">
+            <button 
+              class="nav-link tab-approved" 
+              [class.active]="activeTab === 'approved'" 
+              (click)="setTab('approved')">
+              Approved
+            </button>
+          </li>
+          @if(authService.hasRole('admin') || authService.hasRole('superadmin')) {
+            <li class="nav-item">
+              <button 
+                class="nav-link tab-system" 
+                [class.active]="activeTab === 'system'" 
+                (click)="setTab('system')">
+                System Alerts
+              </button>
+            </li>
+          }
+          <li class="nav-item">
+            <button 
+              class="nav-link tab-denied" 
+              [class.active]="activeTab === 'denied'" 
+              (click)="setTab('denied')">
+              Denied
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div class="card-header d-flex justify-content-between align-items-center border-top-0">
