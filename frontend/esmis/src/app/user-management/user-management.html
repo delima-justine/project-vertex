@@ -119,9 +119,15 @@
     <ol class="mobile-user-list">
       @for (i of [1,2,3,4,5]; track i) {
         <li class="user-card skeleton-card">
-          <div class="skeleton skeleton-text w-75 mb-2"></div>
-          <div class="skeleton skeleton-text w-50 mb-2"></div>
-          <div class="skeleton skeleton-text w-100"></div>
+          <div class="user-card-header">
+            <div class="header-main">
+              <div class="skeleton skeleton-text w-75"></div>
+            </div>
+          </div>
+          <div class="user-card-body">
+            <div class="skeleton skeleton-text w-50 mb-2"></div>
+            <div class="skeleton skeleton-text w-100"></div>
+          </div>
         </li>
       }
     </ol>
@@ -132,7 +138,9 @@
       @for (user of users(); track user.id) {
         <li class="user-card">
           <div class="user-card-header">
-            <span class="user-name">{{ user.first_name }} {{ user.middle_initial || '' }} {{ user.last_name }}</span>
+            <div class="header-main">
+              <span class="user-name">{{ user.first_name }} {{ user.middle_initial || '' }} {{ user.last_name }}</span>
+            </div>
             <span class="user-role badge">{{ (user.role?.role_name || 'N/A') | titlecase }}</span>
           </div>
           <div class="user-card-body">
