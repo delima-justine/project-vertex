@@ -54,20 +54,22 @@
 
           <!-- FAQ Tabs (Hidden when searching) -->
           @if (!searchQuery) {
-            <ul class="nav nav-tabs custom-faq-tabs border-bottom mb-4">
-              <li class="nav-item">
-                <a class="nav-link" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">General</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" [class.active]="activeTab === 'account'" (click)="activeTab = 'account'">Account & Access</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Orders & Management</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" [class.active]="activeTab === 'technical'" (click)="activeTab = 'technical'">Technical Issues</a>
-              </li>
-            </ul>
+            <div class="tab-container">
+              <ul class="nav nav-tabs custom-faq-tabs border-bottom mb-4">
+                <li class="nav-item">
+                  <a class="nav-link" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">General</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [class.active]="activeTab === 'account'" (click)="activeTab = 'account'">Account & Access</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Orders & Management</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [class.active]="activeTab === 'technical'" (click)="activeTab = 'technical'">Technical Issues</a>
+                </li>
+              </ul>
+            </div>
           }
 
           <!-- Search Results Header -->

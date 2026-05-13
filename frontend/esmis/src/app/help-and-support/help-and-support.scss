@@ -218,10 +218,39 @@
   }
 
   /* FAQ Custom Tabs */
+  .tab-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    scrollbar-width: thin;
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(128, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background: rgba(128, 0, 0, 0.5);
+    }
+  }
+
   .custom-faq-tabs {
+    flex-wrap: nowrap;
+    display: inline-flex;
+    min-width: 100%;
     border-bottom: 2px solid var(--bs-border-color);
     
     .nav-item {
+      flex: 0 0 auto;
       .nav-link {
         color: var(--bs-secondary-color);
         border: none;
