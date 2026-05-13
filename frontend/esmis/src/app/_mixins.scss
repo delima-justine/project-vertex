@@ -212,28 +212,57 @@
 }
 
 @mixin custom-tabs {
-  /* Custom Tabs Styles */
-  .nav-tabs {
-    border-bottom: 2px solid #f2e6e4;
+  /* Custom Tabs Styles with Horizontal Scroll */
+  .tab-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    scrollbar-width: thin;
     
-    .nav-link {
-      color: #666;
-      border: none;
-      border-bottom: 3px solid transparent;
-      font-weight: 500;
-      padding: 0.75rem 1.25rem;
-      transition: all 0.2s;
+    &::-webkit-scrollbar {
+      height: 5px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #800000;
+      border-radius: 10px;
+    }
 
-      &:hover {
-        color: #800000;
-        background-color: #fdfaf9;
-        border-color: transparent;
+    .nav-tabs {
+      flex-wrap: nowrap;
+      border-bottom: 2px solid #f2e6e4;
+      display: inline-flex;
+      min-width: 100%;
+      
+      .nav-item {
+        flex: 0 0 auto;
       }
+      
+      .nav-link {
+        color: #666;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-weight: 500;
+        padding: 0.75rem 1.25rem;
+        transition: all 0.2s;
 
-      &.active {
-        color: #800000;
-        background-color: transparent;
-        border-bottom-color: #800000;
+        &:hover {
+          color: #800000;
+          background-color: #fdfaf9;
+          border-color: transparent;
+        }
+
+        &.active {
+          color: #800000;
+          background-color: transparent;
+          border-bottom-color: #800000;
+        }
       }
     }
   }
