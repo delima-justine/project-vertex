@@ -4,14 +4,20 @@ import { Injectable, signal, effect, WritableSignal } from '@angular/core';
   providedIn: 'root',
 })
 export class LayoutService {
-  isSidebarOpen: WritableSignal<boolean> = signal(localStorage.getItem('isSidebarOpen') !== 'false');
+  isSidebarOpen: WritableSignal<boolean> = signal(
+    window.innerWidth > 991 ? localStorage.getItem('isSidebarOpen') !== 'false' : false
+  );
 
   constructor() {
     effect(() => {
       if (this.isSidebarOpen()) {
         document.body.classList.remove('sidebar-collapsed');
+        if (window.innerWidth <= 991) {
+          document.body.style.overflow = 'hidden';
+        }
       } else {
         document.body.classList.add('sidebar-collapsed');
+        document.body.style.overflow = '';
       }
     });
   }
