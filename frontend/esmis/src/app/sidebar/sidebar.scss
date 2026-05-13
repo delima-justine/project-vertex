@@ -214,3 +214,14 @@
     transform: scale(1.1);
   }
 }
+
+// Mobile Small Phone
+@media(max-width: 320px) {
+  .sidebar {
+    display: none;
+  }
+
+  .toggle-btn {
+    display: none;
+  }
+}
