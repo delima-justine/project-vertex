@@ -375,9 +375,10 @@
       width: 100%;
       .input-group {
         width: 100%;
+        flex-wrap: nowrap;
       }
       input {
-        width: 100% !important;
+        width: auto;
       }
     }
 
