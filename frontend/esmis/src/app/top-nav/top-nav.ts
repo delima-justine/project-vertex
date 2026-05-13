@@ -8,6 +8,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { strongPasswordValidator } from '../../validators/password.validator';
 import { CommonModule } from '@angular/common';
 
+import { LayoutService } from '../../services/layout.service';
+
 @Component({
   selector: 'app-top-nav',
   imports: [ReactiveFormsModule, CommonModule],
@@ -18,6 +20,7 @@ export class TopNav {
   isOpen = signal(false);
   authService = inject(AuthService);
   themeService = inject(ThemeService);
+  layoutService = inject(LayoutService);
   user = this.authService.currentUser;
   router = inject(Router);
   

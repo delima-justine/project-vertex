@@ -17,8 +17,21 @@
   align-items: center;
   transition: left 0.3s ease;
 
-  @media (max-width: 767px) {
+  @media (max-width: 991px) {
     left: 0;
+    padding-right: 0;
+    
+    .justify-content-between {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+  }
+}
+
+.bi-list {
+  transition: transform 0.2s ease;
+  &:active {
+    transform: scale(0.9);
   }
 }
 

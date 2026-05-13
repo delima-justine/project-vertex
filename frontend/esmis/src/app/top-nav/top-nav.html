@@ -1,49 +1,56 @@
 <!-- Top Nav Container -->
 <nav class="top-nav-container">
-  <div class="d-flex align-items-center gap-3">
-    <!-- Theme Toggle -->
-    <button class="btn btn-link text-decoration-none p-0" (click)="themeService.toggleTheme()" 
-      [title]="themeService.theme() === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'">
-      <i class="bi" [class.bi-sun-fill]="themeService.theme() === 'dark'" 
-        [class.bi-moon-stars-fill]="themeService.theme() === 'light'"
-        [class.text-warning]="themeService.theme() === 'dark'"></i>
+  <div class="d-flex align-items-center gap-3 w-100 justify-content-between px-3">
+    <!-- Hamburger Menu (Mobile/Tablet Only) -->
+    <button class="btn btn-link text-decoration-none p-0 d-lg-none" (click)="layoutService.toggleSidebar()">
+      <i class="bi bi-list fs-1 text-body"></i>
     </button>
 
-    <div class="dropdown-container">
-      <button class="dropdown-trigger" (click)="toggleDropdown()">
-      @if(user()?.role?.role_name?.toLowerCase() === 'superadmin' || 
-        user()?.role?.role_name?.toLowerCase() === 'admin') 
-      {
-        <i class="bi bi-person-circle text-danger"></i>
-      } @else {
-        <i class="bi bi-person-circle text-primary"></i>
-      }
-      
-      <div class="user-info text-start">
-        <span class="user-name d-block">
-          {{ user()?.first_name }} {{ user()?.last_name }}
-        </span>
-        <small class="user-role text-muted d-block">
-          @if(user()?.role?.role_name === 'superadmin') {
-            Super Admin
-          } @else if (user()?.role?.role_name === 'admin') {
-              Admin
-          } @else {
-             User
-          }
-        </small>
+    <div class="d-flex align-items-center gap-3 ms-auto">
+      <!-- Theme Toggle -->
+      <button class="btn btn-link text-decoration-none p-0" (click)="themeService.toggleTheme()" 
+        [title]="themeService.theme() === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'">
+        <i class="bi" [class.bi-sun-fill]="themeService.theme() === 'dark'" 
+          [class.bi-moon-stars-fill]="themeService.theme() === 'light'"
+          [class.text-warning]="themeService.theme() === 'dark'"></i>
+      </button>
+
+      <div class="dropdown-container">
+        <button class="dropdown-trigger" (click)="toggleDropdown()">
+        @if(user()?.role?.role_name?.toLowerCase() === 'superadmin' || 
+          user()?.role?.role_name?.toLowerCase() === 'admin') 
+        {
+          <i class="bi bi-person-circle text-danger"></i>
+        } @else {
+          <i class="bi bi-person-circle text-primary"></i>
+        }
+        
+        <div class="user-info text-start d-none d-sm-block">
+          <span class="user-name d-block">
+            {{ user()?.first_name }} {{ user()?.last_name }}
+          </span>
+          <small class="user-role text-muted d-block">
+            @if(user()?.role?.role_name === 'superadmin') {
+              Super Admin
+            } @else if (user()?.role?.role_name === 'admin') {
+                Admin
+            } @else {
+               User
+            }
+          </small>
+        </div>
+
+        <i [class]="isOpen() ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
+      </button>
+
+      @if(isOpen()) {
+      <!-- Dropdown List -->
+      <ul class="dropdown-menu" [class.show]="isOpen()">
+        <li class="dropdown-item" (click)="openAccountSettings()">Account Settings</li>
+        <li class="dropdown-item" (click)="openLogoutModal()">Logout</li>
+      </ul>
+    }
       </div>
-
-      <i [class]="isOpen() ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
-    </button>
-
-    @if(isOpen()) {
-    <!-- Dropdown List -->
-    <ul class="dropdown-menu" [class.show]="isOpen()">
-      <li class="dropdown-item" (click)="openAccountSettings()">Account Settings</li>
-      <li class="dropdown-item" (click)="openLogoutModal()">Logout</li>
-    </ul>
-  }
     </div>
   </div>
 </nav>
