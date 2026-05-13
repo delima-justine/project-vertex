@@ -13,7 +13,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   transition: width 0.3s ease;
-  z-index: 100;
+  z-index: 2000;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 
@@ -215,13 +215,43 @@
   }
 }
 
-// Mobile view (Mobile S to Mobile L and tablets)
-@media(max-width: 767px) {
+// Mobile and Tablet view (Up to LG breakpoint)
+@media(max-width: 991px) {
   .sidebar {
-    display: none;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+
+    &:not(.collapsed) {
+      transform: translateX(0);
+      box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+    }
+
+    .header span {
+      display: block !important;
+    }
+
+    .body .nav-link span, 
+    .body .orders-link span,
+    .body .dropdown-arrow {
+      display: block !important;
+    }
   }
 
   .toggle-btn {
     display: none;
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+    backdrop-filter: blur(2px);
+    transition: opacity 0.3s ease;
   }
 }
