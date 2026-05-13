@@ -34,5 +34,139 @@
   @include standard-table;
 }
 
+/* Desktop/Mobile View visibility */
+.mobile-view {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-view {
+    display: none;
+  }
+
+  .mobile-view {
+    display: block;
+  }
+
+  .functionalities-container > .card-body {
+    flex-direction: column;
+    gap: 15px;
+
+    .input-group, .form-select, .btn-container, .refresh-btn {
+      width: 100% !important;
+    }
+
+    .refresh-btn {
+      justify-content: center;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .pagination-footer .d-flex {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+/* Mobile Batch List and Cards */
+.mobile-batch-list {
+  padding: 0;
+  list-style: none;
+  counter-reset: batch-counter;
+  margin-top: 20px;
+
+  .batch-card {
+    background-color: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    counter-increment: batch-counter;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+    .batch-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--bs-border-color-translucent);
+
+      .header-main {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+
+        &::before {
+          content: counter(batch-counter) ".";
+          font-weight: bold;
+          color: #800000;
+          font-size: 1.1rem;
+        }
+
+        .requester-name {
+          font-weight: 600;
+          font-size: 1.05rem;
+          color: var(--bs-body-color);
+        }
+      }
+
+      .dropdown {
+        .btn-link {
+          text-decoration: none;
+          font-size: 1.2rem;
+          line-height: 1;
+          color: var(--bs-body-color) !important;
+          
+          &:focus {
+            box-shadow: none;
+          }
+        }
+      }
+    }
+
+    .batch-card-body {
+      .info-row {
+        display: flex;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+
+        .label {
+          font-weight: 600;
+          width: 80px;
+          color: var(--bs-secondary-color);
+        }
+
+        .value {
+          color: var(--bs-body-color);
+          flex: 1;
+          word-break: break-word;
+        }
+      }
+    }
+  }
+}
+
 @include custom-modal;
 @include custom-tabs;
+
+.modal-footer-custom {
+  @media (max-width: 576px) {
+    flex-direction: column;
+    gap: 10px;
+
+    .btn {
+      width: 100%;
+      margin: 0;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
