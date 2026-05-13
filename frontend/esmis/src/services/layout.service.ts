@@ -12,12 +12,8 @@ export class LayoutService {
     effect(() => {
       if (this.isSidebarOpen()) {
         document.body.classList.remove('sidebar-collapsed');
-        if (window.innerWidth <= 991) {
-          document.body.style.overflow = 'hidden';
-        }
       } else {
         document.body.classList.add('sidebar-collapsed');
-        document.body.style.overflow = '';
       }
     });
   }
