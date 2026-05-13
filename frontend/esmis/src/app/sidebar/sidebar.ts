@@ -47,4 +47,10 @@ export class Sidebar implements OnInit {
   toggleSidebar() {
     this.layoutService.toggleSidebar();
   }
+
+  closeSidebarOnMobile() {
+    if (window.innerWidth <= 991) {
+      this.layoutService.isSidebarOpen.set(false);
+    }
+  }
 }
