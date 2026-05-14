@@ -3,26 +3,26 @@
   <span>Help and Support</span>
 </div>
 
-<div class="content-container mt-4 px-4 pb-4">
+<div class="content-container mt-4 px-3 px-sm-4 pb-4">
   <!-- Navigation Selection Buttons -->
-  <div class="nav-selection-buttons mb-4 d-flex flex-wrap">
-    <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('faq')">
+  <div class="nav-selection-buttons mb-4 d-flex flex-wrap gap-2">
+    <button class="btn btn-outline-maroon flex-grow-1 flex-md-grow-0 px-4 py-2" (click)="scrollToSection('faq')">
       <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
     </button>
     @if (isUser) {
-      <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('user')">
+      <button class="btn btn-outline-maroon flex-grow-1 flex-md-grow-0 px-4 py-2" (click)="scrollToSection('user')">
         <i class="bi bi-journal-text me-2"></i>User Guide
       </button>
     }
     @if (isAdmin) {
-      <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('admin')">
+      <button class="btn btn-outline-maroon flex-grow-1 flex-md-grow-0 px-4 py-2" (click)="scrollToSection('admin')">
         <i class="bi bi-journal-richtext me-2"></i>Admin Guide
       </button>
     }
-    <button class="btn btn-outline-maroon me-3 mb-2 px-4 py-2" (click)="scrollToSection('contact')">
+    <button class="btn btn-outline-maroon flex-grow-1 flex-md-grow-0 px-4 py-2" (click)="scrollToSection('contact')">
       <i class="bi bi-headset me-2"></i>Contact Support
     </button>
-    <button class="btn btn-outline-maroon mb-2 px-4 py-2" (click)="scrollToSection('contributors')">
+    <button class="btn btn-outline-maroon flex-grow-1 flex-md-grow-0 px-4 py-2" (click)="scrollToSection('contributors')">
       <i class="bi bi-people-fill me-2"></i>Developers & Contributors
     </button>
   </div>
