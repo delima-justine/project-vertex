@@ -18,6 +18,7 @@ export class Authentication {
   authService = inject(AuthService);
   toastService = inject(ToastService);
   isFailed = signal(false);
+  errorMessage = signal('Invalid email or password. Please try again.');
 
   constructor() {
     this.loginForm = this.formBuilder.group({
@@ -43,6 +44,7 @@ export class Authentication {
         },
         error: (err) => {
           console.error('Login failed:', err);
+          this.errorMessage.set(err.error?.message || 'Invalid email or password. Please try again.');
           this.loginForm.reset();
           this.isFailed.set(true);
         }

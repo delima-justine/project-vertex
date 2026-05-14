@@ -84,7 +84,7 @@
         <span class="slip-title">REQUISITION AND ISSUE SLIP</span>
       
         <div class="table-container">
-          <table class="table table-hover table-bordered">
+          <table class="table table-hover table-bordered responsive-table">
             <thead>
               <tr>
                 <th colspan="4">Requisition</th>
@@ -103,29 +103,29 @@
               </tr>
             </thead>
 
-            <tbody>
+            <tbody class="ordered-list-mobile">
               @for (req of requests(); track req.id) {
                 <tr>
-                  <td>{{ req.supply_id }}</td>
-                  <td>{{ req.supply?.unit?.unit_name }}</td>
-                  <td>{{ req.supply?.item_desc }}</td>
-                  <td class="text-center">{{ req.quantity_req }}</td>
-                  <td class="text-center">
+                  <td data-label="Stock No.">{{ req.supply_id }}</td>
+                  <td data-label="Unit">{{ req.supply?.unit?.unit_name }}</td>
+                  <td data-label="Description">{{ req.supply?.item_desc }}</td>
+                  <td data-label="Qty Req" class="text-center">{{ req.quantity_req }}</td>
+                  <td data-label="Stock: Yes" class="text-center">
                     <input type="radio" [name]="'stock_' + req.id" [id]="'stock-yes-' + req.id" 
                            [checked]="requestData()[req.id]?.stockAvailable === true" (change)="updateRequestData(req.id, 'stockAvailable', true)">
                     <label [for]="'stock-yes-' + req.id"></label>
                   </td>
-                  <td class="text-center">
+                  <td data-label="Stock: No" class="text-center">
                     <input type="radio" [name]="'stock_' + req.id" [id]="'stock-no-' + req.id" 
                            [checked]="requestData()[req.id]?.stockAvailable === false" (change)="updateRequestData(req.id, 'stockAvailable', false)">
                     <label [for]="'stock-no-' + req.id"></label>
                   </td>
-                  <td>
+                  <td data-label="Issue Qty">
                     <input type="number" class="form-control" [ngModel]="requestData()[req.id]?.issueQty" 
                            (ngModelChange)="updateRequestData(req.id, 'issueQty', $event)"
                            [disabled]="!requestData()[req.id]?.stockAvailable">
                   </td>
-                  <td>
+                  <td data-label="Remarks">
                     <input type="text" class="form-control" [ngModel]="requestData()[req.id]?.remarks" 
                            (ngModelChange)="updateRequestData(req.id, 'remarks', $event)">
                   </td>
@@ -145,85 +145,81 @@
             disabled>
         </div>
 
-        <!-- Authority Signatures -->
-        <table class="auth-signatures">
-          <tbody>
-            <tr>
-              <td>
-                <p>Requested By:</p>
-                <input 
-                  type="text" 
-                  class="auth-input"
-                  [value]="((requests()[0]?.user?.first_name || '') + 
-                    (requests()[0]?.user?.middle_initial ? ' ' + 
-                    requests()[0]?.user?.middle_initial + '. ' : ' ') + 
-                    (requests()[0]?.user?.last_name || '')).toUpperCase()"
-                  disabled>
+        <!-- Authority Signatures Refactored to Grid -->
+        <div class="auth-signatures-grid">
+          <div class="signature-column">
+            <p>Requested By:</p>
+            <input 
+              type="text" 
+              class="auth-input"
+              [value]="((requests()[0]?.user?.first_name || '') + 
+                (requests()[0]?.user?.middle_initial ? ' ' + 
+                requests()[0]?.user?.middle_initial + '. ' : ' ') + 
+                (requests()[0]?.user?.last_name || '')).toUpperCase()"
+              disabled>
 
-                <div class="divider"></div>
+            <div class="divider"></div>
 
-                <input 
-                  type="text" 
-                  class="auth-input"
-                  [value]="(requests()[0]?.user?.office?.office_name || '').toUpperCase()"
-                  disabled>
-              </td>
+            <input 
+              type="text" 
+              class="auth-input"
+              [value]="(requests()[0]?.user?.office?.office_name || '').toUpperCase()"
+              disabled>
+          </div>
 
-              <td>
-                <p>Approved By:</p>
-                <input 
-                  type="text" 
-                  class="auth-input" 
-                  value="DR. MARISSA B. FERRER"
-                  disabled>
+          <div class="signature-column">
+            <p>Approved By:</p>
+            <input 
+              type="text" 
+              class="auth-input" 
+              value="DR. MARISSA B. FERRER"
+              disabled>
 
-                <div class="divider"></div>
+            <div class="divider"></div>
 
-                <input 
-                  type="text" 
-                  class="auth-input" 
-                  value="DIRECTOR"
-                  disabled>
-              </td>
+            <input 
+              type="text" 
+              class="auth-input" 
+              value="DIRECTOR"
+              disabled>
+          </div>
 
-              <td>
-                <p>Issued By:</p>
-                <input 
-                  type="text" 
-                  class="auth-input" 
-                  value="GINA A. DELA CRUZ"
-                  disabled>
+          <div class="signature-column">
+            <p>Issued By:</p>
+            <input 
+              type="text" 
+              class="auth-input" 
+              value="GINA A. DELA CRUZ"
+              disabled>
 
-                <div class="divider"></div>
+            <div class="divider"></div>
 
-                <input 
-                  type="text" 
-                  class="auth-input" 
-                  value="PROPERTY CUSTODIAN"
-                  disabled>
-              </td>
+            <input 
+              type="text" 
+              class="auth-input" 
+              value="PROPERTY CUSTODIAN"
+              disabled>
+          </div>
 
-              <td>
-                <p>Received By:</p>
-                <input 
-                  type="text" 
-                  class="auth-input"
-                  [ngModel]="receivedByName()"
-                  (ngModelChange)="receivedByName.set($event)"
-                  placeholder="Name">
+          <div class="signature-column">
+            <p>Received By:</p>
+            <input 
+              type="text" 
+              class="auth-input"
+              [ngModel]="receivedByName()"
+              (ngModelChange)="receivedByName.set($event)"
+              placeholder="Name">
 
-                <div class="divider"></div>
+            <div class="divider"></div>
 
-                <input 
-                  type="text" 
-                  class="auth-input"
-                  [ngModel]="receivedByOffice()"
-                  (ngModelChange)="receivedByOffice.set($event)"
-                  placeholder="Position">
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <input 
+              type="text" 
+              class="auth-input"
+              [ngModel]="receivedByOffice()"
+              (ngModelChange)="receivedByOffice.set($event)"
+              placeholder="Position">
+          </div>
+        </div>
       </div>
     </div>
 

@@ -8,6 +8,13 @@ body.sidebar-collapsed {
   --sidebar-width: 70px;
 }
 
+/* Lock scroll on mobile/tablet when sidebar is open */
+body:not(.sidebar-collapsed) {
+  @media (max-width: 991px) {
+    overflow: hidden;
+  }
+}
+
 html, body {
   margin: 0;
   padding: 0;

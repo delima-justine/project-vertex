@@ -34,7 +34,40 @@
       background-color: var(--bs-tertiary-bg);
     }
 
+    .tab-container {
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      
+      &::-webkit-scrollbar {
+        height: 4px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: rgba(128, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+
+      &:hover::-webkit-scrollbar-thumb {
+        background: rgba(128, 0, 0, 0.5);
+      }
+    }
+
     .nav-tabs {
+      flex-wrap: nowrap;
+      display: inline-flex;
+      min-width: 100%;
+      border-bottom: none;
+
+      .nav-item {
+        flex: 0 0 auto;
+      }
+
       .nav-link {
         border: none;
         color: var(--bs-secondary-color);

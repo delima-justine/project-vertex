@@ -305,3 +305,203 @@
     color: var(--bs-body-color);
   }
 }
+
+@media (max-width: 992px) {
+  .second-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-panel {
+    padding: 15px;
+    span {
+      font-size: 1.25rem;
+    }
+    p {
+      font-size: 0.85rem;
+    }
+  }
+
+  .second-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+
+    .stat-card {
+      width: 100%;
+      height: 140px;
+      padding: 15px;
+
+      .card-value {
+        font-size: 2.8rem;
+      }
+
+      .background-icon {
+        font-size: 5rem;
+      }
+    }
+  }
+
+  .third-row {
+    flex-direction: column;
+    gap: 20px;
+
+    .third-row-chart {
+      width: 100%;
+    }
+
+    .three-cards {
+      width: 100%;
+      gap: 12px;
+    }
+  }
+
+  .functionalities-container {
+    gap: 10px;
+
+    .filters {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+
+      select {
+        width: 100% !important;
+      }
+    }
+
+    .search-container {
+      width: 100%;
+      .input-group {
+        width: 100%;
+        flex-wrap: nowrap;
+      }
+      input {
+        width: auto;
+      }
+    }
+
+    .btn-container {
+      width: 100%;
+      flex-direction: column;
+      gap: 8px;
+
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  /* Table to Ordered List Transformation */
+  .responsive-table {
+    display: block;
+    border: none;
+    
+    thead {
+      display: none; /* Hide headers */
+    }
+
+    tbody.ordered-list-mobile {
+      display: block;
+      counter-reset: table-counter;
+
+      tr {
+        display: block;
+        background-color: var(--bs-tertiary-bg) !important;
+        border: 1px solid var(--bs-border-color);
+        border-radius: 12px;
+        margin-bottom: 20px;
+        padding: 20px;
+        position: relative;
+        counter-increment: table-counter;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+        /* Ordered List Marker */
+        &:before {
+          content: counter(table-counter);
+          position: absolute;
+          top: -10px;
+          left: -10px;
+          width: 28px;
+          height: 28px;
+          background-color: #800000;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.85rem;
+          font-weight: bold;
+          z-index: 10;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        td {
+          background-color: transparent !important;
+          box-shadow: none !important;
+          --bs-table-accent-bg: transparent !important;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 0;
+          border-top: none;
+          border-bottom: 1px solid var(--bs-border-color);
+          text-align: right;
+          font-size: 0.9rem;
+          min-height: 40px;
+
+          &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-top: 10px;
+            justify-content: center;
+            gap: 10px;
+          }
+
+          &:before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: var(--bs-secondary-color);
+            text-align: left;
+            margin-right: 15px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          /* Handle badges and buttons alignment */
+          .badge {
+            margin-left: auto;
+          }
+
+          .btn {
+            margin: 0 !important;
+          }
+        }
+      }
+    }
+  }
+
+  .pagination {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .d-flex.justify-content-between.align-items-center.mt-3 {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-card .card-value {
+    font-size: 2.2rem;
+  }
+  
+  .main-panel span {
+    font-size: 1.1rem;
+  }
+}

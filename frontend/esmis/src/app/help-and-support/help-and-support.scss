@@ -167,7 +167,8 @@
 
   /* FAQ Search Bar */
   .faq-search-container {
-    width: 350px;
+    width: 100%;
+    max-width: 500px;
 
     .input-group {
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -201,27 +202,76 @@
 
   /* Navigation Selection Buttons */
   .nav-selection-buttons {
+    width: 100%;
+    
     .btn-outline-maroon {
-      border: 1.5px solid #800000;
-      color: #800000;
+      border: 1.5px solid var(--header-maroon);
+      color: var(--header-maroon);
       font-weight: 600;
       background-color: var(--bs-body-bg);
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      text-align: left;
+      
+      i {
+        flex-shrink: 0;
+      }
       
       &:hover {
         background-color: #800000;
         color: #fff;
+        border-color: #800000;
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(128, 0, 0, 0.2);
+      }
+
+      @media (max-width: 576px) {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        
+        i {
+          font-size: 1.1rem;
+        }
       }
     }
   }
 
   /* FAQ Custom Tabs */
+  .tab-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    scrollbar-width: thin;
+    position: relative;
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(128, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background: rgba(128, 0, 0, 0.5);
+    }
+  }
+
   .custom-faq-tabs {
+    flex-wrap: nowrap;
+    display: inline-flex;
+    min-width: 100%;
     border-bottom: 2px solid var(--bs-border-color);
     
     .nav-item {
+      flex: 0 0 auto;
       .nav-link {
         color: var(--bs-secondary-color);
         border: none;
@@ -296,6 +346,11 @@
             filter: brightness(0) invert(1);
           }
         }
+
+        @media (max-width: 576px) {
+          padding: 1rem 1.25rem 1rem 1.5rem;
+          font-size: 0.95rem;
+        }
       }
 
       .accordion-collapse {
@@ -320,10 +375,18 @@
           ul li, ol li {
             margin-bottom: 0.75rem;
           }
+
+          @media (max-width: 576px) {
+            padding: 0 1.5rem;
+          }
         }
 
         &.show .accordion-body {
           padding: 2rem 2.5rem 2.5rem 2.5rem;
+
+          @media (max-width: 576px) {
+            padding: 1.25rem 1.5rem 1.5rem 1.5rem;
+          }
         }
       }
     }
@@ -368,6 +431,15 @@
     background-color: rgba(128, 0, 0, 0.15);
   }
 
+  @media (max-width: 991px) {
+    .video-tutorial-card {
+      .video-icon-side {
+        width: 180px;
+        font-size: 4rem;
+      }
+    }
+  }
+
   @media (max-width: 767px) {
     .video-tutorial-card {
       flex-direction: column;
@@ -375,12 +447,36 @@
         width: 100%;
         height: 180px;
       }
+      .video-content {
+        text-align: center;
+        align-items: center;
+
+        .d-flex {
+          justify-content: center;
+        }
+      }
     }
     
     .guide-card {
+      min-height: auto;
       .guide-icon-side {
         width: 80px;
         font-size: 1.75rem;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .guide-card {
+      flex-direction: column;
+      .guide-icon-side {
+        width: 100%;
+        height: 80px;
+      }
+      .guide-content {
+        text-align: center;
+        padding: 1.5rem !important;
+        align-items: center;
       }
     }
   }

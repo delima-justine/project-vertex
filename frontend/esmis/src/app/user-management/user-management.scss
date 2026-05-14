@@ -21,6 +21,145 @@
 @include standard-table;
 @include custom-modal;
 
+/* Desktop/Mobile View visibility */
+.mobile-view {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-view {
+    display: none;
+  }
+
+  .mobile-view {
+    display: block;
+  }
+
+  .functionalities-container {
+    flex-direction: column;
+    gap: 15px;
+
+    .b-r-function {
+      flex-direction: column;
+      gap: 10px;
+
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .search-row {
+      width: 100%;
+      
+      input {
+        flex: 1;
+      }
+    }
+  }
+
+  /* Pagination adjustment for mobile */
+  .d-flex.justify-content-between.align-items-center.mt-3 {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+/* Mobile User List and Cards */
+.mobile-user-list {
+  padding: 0;
+  list-style: none;
+  counter-reset: user-counter;
+  margin-top: 20px;
+
+  .user-card {
+    background-color: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    counter-increment: user-counter;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+    .user-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--bs-border-color-translucent);
+
+      .header-main {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+
+        &::before {
+          content: counter(user-counter) ".";
+          font-weight: bold;
+          color: #800000;
+          font-size: 1.1rem;
+        }
+
+        .user-name {
+          font-weight: 600;
+          font-size: 1.05rem;
+          color: var(--bs-body-color);
+          padding-right: 10px;
+        }
+      }
+
+      .user-role {
+        background-color: #800000;
+        color: white;
+        font-size: 0.75rem;
+        padding: 4px 8px;
+      }
+    }
+
+    .user-card-body {
+      .info-row {
+        display: flex;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+
+        .label {
+          font-weight: 600;
+          width: 60px;
+          color: var(--bs-secondary-color);
+        }
+
+        .value {
+          color: var(--bs-body-color);
+          word-break: break-all;
+        }
+      }
+    }
+
+    .user-card-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      
+      button {
+        flex: 1;
+        font-size: 0.85rem;
+        padding: 8px;
+      }
+    }
+  }
+
+  .skeleton-card {
+    .skeleton {
+      height: 20px;
+      border-radius: 4px;
+    }
+  }
+}
+
 /* Permissions Section */
 .permissions-title {
   font-weight: 600;
