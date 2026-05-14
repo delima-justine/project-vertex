@@ -91,6 +91,48 @@ export class Reports {
   selectedAdminId = signal<number | null>(null);
   appliedAdminId = signal<number | null>(null);
 
+  get selectedStatusValue() {
+    return this.selectedStatus();
+  }
+  set selectedStatusValue(value: string) {
+    this.selectedStatus.set(value);
+  }
+
+  get selectedOfficeValue() {
+    return this.selectedOffice();
+  }
+  set selectedOfficeValue(value: string) {
+    this.selectedOffice.set(value);
+  }
+
+  get selectedActionTypeValue() {
+    return this.selectedActionType();
+  }
+  set selectedActionTypeValue(value: string) {
+    this.selectedActionType.set(value);
+  }
+
+  get selectedAdminIdValue() {
+    return this.selectedAdminId();
+  }
+  set selectedAdminIdValue(value: number | null) {
+    this.selectedAdminId.set(value);
+  }
+
+  get startDateValue() {
+    return this.startDate();
+  }
+  set startDateValue(value: string) {
+    this.startDate.set(value);
+  }
+
+  get endDateValue() {
+    return this.endDate();
+  }
+  set endDateValue(value: string) {
+    this.endDate.set(value);
+  }
+
   @ViewChild('archiveModal', { static: false }) archiveModalElement?: ElementRef<HTMLElement>;
 
   private getModalInstance() {
@@ -124,7 +166,7 @@ export class Reports {
           matchesTime = created.getMonth() === now.getMonth() && created.getFullYear() === now.getFullYear();
           break;
         case 'custom': {
-          const start = this.startDate() ? new Date(this.startDate()) : null;
+          const start = this.appliedStartDate() ? new Date(this.appliedStartDate()) : null;
           const end = this.appliedEndDate() ? new Date(this.appliedEndDate()) : null;
           if (start) {
             start.setHours(0, 0, 0, 0);
@@ -194,13 +236,11 @@ export class Reports {
   });
 
   get isAdmin(): boolean {
-    const user = this.authService.currentUser();
-    const roleName = user?.role?.role_name?.toLowerCase();
-    return roleName === 'admin' || roleName === 'superadmin';
+    return this.authService.hasRole('admin') || this.authService.hasRole('superadmin');
   }
 
   get isSuperAdmin(): boolean {
-    return this.authService.currentUser()?.role?.role_name?.toLowerCase() === 'superadmin';
+    return this.authService.hasRole('superadmin');
   }
 
   constructor() {
@@ -551,6 +591,14 @@ export class Reports {
     this.selectedAdminId.set(null);
     this.startDate.set('');
     this.endDate.set('');
+
+    this.appliedTimePeriod.set('today');
+    this.appliedStatus.set('');
+    this.appliedOffice.set('');
+    this.appliedActionType.set('');
+    this.appliedAdminId.set(null);
+    this.appliedStartDate.set('');
+    this.appliedEndDate.set('');
     
     this.requestsPage.set(1);
 

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { LayoutService } from '../../services/layout.service';
 import { NotificationApiService } from '../../services/notification-api.service';
 import { SupplyService } from '../../services/supply.service';
 
@@ -17,6 +18,7 @@ export class MobileNavComponent implements OnInit {
   public isNavHidden = signal(false);
   private lastScrollY = 0;
   public authService = inject(AuthService);
+  public layoutService = inject(LayoutService);
   public notifApiService = inject(NotificationApiService);
   public supplyService = inject(SupplyService);
 
@@ -38,6 +40,10 @@ export class MobileNavComponent implements OnInit {
       }
     }
     this.lastScrollY = currentScrollY;
+  }
+
+  public isSidebarOpenOnMobile() {
+    return window.innerWidth <= 991 && this.layoutService.isSidebarOpen();
   }
 
   toggleDrawer() {

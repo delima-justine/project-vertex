@@ -49,16 +49,16 @@
   </div>
 
   <!-- Bottom Navigation Bar -->
-  <nav class="mobile-bottom-nav" [class.nav-hidden]="isNavHidden()">
+  <nav class="mobile-bottom-nav" [class.nav-hidden]="isNavHidden() || isSidebarOpenOnMobile()">
     <a class="nav-item" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" aria-label="Home">
       <span class="nav-icon"><i class="bi bi-house-door-fill"></i></span>
       <span class="nav-label">Home</span>
     </a>
 
-    <a class="nav-item" routerLink="/pending-requests" routerLinkActive="active" aria-label="Orders">
+    <button class="nav-item" type="button" (click)="toggleDrawer()" [class.active]="drawerOpen()" aria-label="Orders">
       <span class="nav-icon"><i class="bi bi-cart-fill"></i></span>
       <span class="nav-label">Orders</span>
-    </a>
+    </button>
 
     <a class="nav-item nav-item--center" routerLink="/create-request" routerLinkActive="active" aria-label="New Request">
       <div class="nav-fab">

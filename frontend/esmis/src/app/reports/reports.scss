@@ -228,6 +228,19 @@
 }
 
 .request-logs-table-section {
+  .table-section-header {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--bs-body-color);
+
+    i {
+      font-size: 20px;
+      color: #800000;
+    }
+  }
+
   .report-table {
     margin-top: 1rem;
     width: 100%;
