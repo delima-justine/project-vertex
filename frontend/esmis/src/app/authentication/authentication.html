@@ -45,7 +45,7 @@
 
         @if(isFailed()) {
           <span class="text-danger mt-1 mb-1 error-message">
-            Invalid email or password. Please try again.
+            {{ errorMessage() }}
           </span>
         }
 
