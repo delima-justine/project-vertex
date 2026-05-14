@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -115,6 +116,21 @@ class AuthController extends Controller
         ]);
 
         $loginValue = $fields['email'];
+        $lockoutKey = 'login_lockout:' . $loginValue;
+        $failedAttemptsKey = 'failed_attempts:' . $loginValue;
+
+        // Check if account is currently locked
+        if (Cache::has($lockoutKey)) {
+            $lockoutUntil = Cache::get($lockoutKey);
+            $secondsRemaining = Carbon::now()->diffInSeconds($lockoutUntil, false);
+            
+            if ($secondsRemaining > 0) {
+                return response([
+                    'message' => 'Too many failed attempts. Please try again in ' . ceil($secondsRemaining / 60) . ' minute(s).',
+                    'seconds_remaining' => $secondsRemaining
+                ], 429);
+            }
+        }
 
         // Find all users matching email or office name
         $users = User::where('email', $loginValue)
@@ -132,15 +148,30 @@ class AuthController extends Controller
         }
 
         // Check if user exists and password is correct
-        // Hash::check compares the plain text password with the hashed password in DB
         if (!$user) {
+            $failedCount = Cache::get($failedAttemptsKey, 0) + 1;
+            Cache::put($failedAttemptsKey, $failedCount, now()->addDay());
+
+            if ($failedCount % 3 === 0) {
+                $lockoutMinutes = $failedCount / 3;
+                Cache::put($lockoutKey, Carbon::now()->addMinutes($lockoutMinutes), Carbon::now()->addMinutes($lockoutMinutes));
+                
+                return response([
+                    'message' => "Too many failed attempts. Account locked for $lockoutMinutes minute(s).",
+                    'seconds_remaining' => $lockoutMinutes * 60
+                ], 429);
+            }
+
             return response([
                 'message' => 'Invalid credentials'
-            ], 401); // 401 = Unauthorized
+            ], 401);
         }
 
+        // Successful login: Reset failed attempts and lockout
+        Cache::forget($failedAttemptsKey);
+        Cache::forget($lockoutKey);
+
         // Create new api token for this specific user
-        // auth_token is just a label for the token
         $token = $user->createToken('auth_token')->plainTextToken;
 
         AuditService::log('LOGIN', $user, "User logged in: {$user->email}", null, null, $user);
