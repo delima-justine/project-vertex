@@ -12,7 +12,7 @@
       class="nav-link" 
       routerLink="/home"
       routerLinkActive="active"
-      [title]="layoutService.isSidebarOpen() ? '' : 'Home'">
+      title="Home">
       <i class="bi bi-house-door-fill"></i>
       <span>Home</span>
     </div>
@@ -22,7 +22,7 @@
         class="nav-link" 
         routerLink="/admin/user-management"
         routerLinkActive="active"
-        [title]="layoutService.isSidebarOpen() ? '' : 'User Management'">
+        title="User Management">
         <i class="bi bi-people-fill"></i>
         <span>User Management</span>
       </div>
@@ -32,7 +32,7 @@
       class="nav-link" 
       routerLink="/notifications"
       routerLinkActive="active"
-      [title]="layoutService.isSidebarOpen() ? '' : 'Notifications'">
+      title="Notifications">
       <i class="bi bi-bell-fill"></i>
       <span>Notifications</span>
 
@@ -46,7 +46,7 @@
     <div class="orders-link" (click)="toggleDropdown()">
       <div 
         class="link-content"
-        [title]="layoutService.isSidebarOpen() ? '' : 'Orders'">
+        title="Orders">
         <i class="bi bi-cart-fill"></i>
         <span>Orders</span>
       </div>
@@ -61,7 +61,7 @@
         <div 
           class="new-req dropdown-item" 
           routerLink="/create-request"
-          [title]="layoutService.isSidebarOpen() ? '' : 'Create New Request'">
+          title="Create New Request">
           <i class="bi bi-plus-circle-fill"></i>
           <span>Create New Request</span>
         </div>
@@ -70,7 +70,7 @@
           <div 
             class="pending-req dropdown-item" 
             routerLink="/pending-requests"
-            [title]="layoutService.isSidebarOpen() ? '' : 'Pending Requests'">
+            title="Pending Requests">
             <i class="bi bi-clock-fill"></i>
             <span>Pending</span>
             @if(supplyService.statusCounts().pending > 0) {
@@ -85,7 +85,7 @@
           <div 
             class="approved-req dropdown-item" 
             routerLink="/approved-requests"
-            [title]="layoutService.isSidebarOpen() ? '' : 'Approved Requests'">
+            title="Approved Requests">
             <i class="bi bi-hand-thumbs-up-fill"></i>
             <span>Approved</span>
             @if(supplyService.statusCounts().approved > 0) {
@@ -100,7 +100,7 @@
           <div 
             class="released-req dropdown-item" 
             routerLink="/released-requests"
-            [title]="layoutService.isSidebarOpen() ? '' : 'Released Requests'">
+            title="Released Requests">
             <i class="bi bi-truck"></i>
             <span>Released</span>
             @if(supplyService.statusCounts().released > 0) {
@@ -115,7 +115,7 @@
           <div 
             class="disapproved-req dropdown-item" 
             routerLink="/disapproved-requests"
-            [title]="layoutService.isSidebarOpen() ? '' : 'Disapproved Requests'">
+            title="Disapproved Requests">
               <i class="bi bi-x-circle-fill"></i>
               <span>Disapproved</span>
               @if(supplyService.statusCounts().disapproved > 0) {
@@ -132,7 +132,7 @@
       class="nav-link" 
       routerLink="/reports"
       routerLinkActive="active"
-      [title]="layoutService.isSidebarOpen() ? '' : 'Reports'">
+      title="Reports">
       <i class="bi bi-graph-up"></i>
       <span>Reports</span>
     </div>
@@ -141,7 +141,7 @@
       class="nav-link" 
       routerLink="/help"
       routerLinkActive="active"
-      [title]="layoutService.isSidebarOpen() ? '' : 'Help & Support'">
+      title="Help & Support">
       <i class="bi bi-question-circle-fill"></i>
       <span>Help & Support</span>
     </div>
