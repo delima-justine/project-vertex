@@ -13,7 +13,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   transition: width 0.3s ease;
-  z-index: 2000;
+  z-index: 1040;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 
@@ -202,7 +202,7 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  z-index: 2001;
+  z-index: 1041;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 
   i {
@@ -250,7 +250,7 @@
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1999;
+    z-index: 1039;
     backdrop-filter: blur(2px);
     transition: opacity 0.3s ease;
   }
