@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NotificationSent;
 use App\Models\SupplyRequest;
 use App\Models\Notification;
+use App\Models\User;
 use App\Services\AuditService;
 use App\Mail\SupplyRequestSlip;
 use Illuminate\Http\Request;
@@ -53,6 +54,10 @@ class SupplyRequestController extends Controller
         // Default status to 'pending'
         $supply_request = SupplyRequest::create($validated);
 
+        // Notify Admins
+        $user = $request->user() ?: User::find($validated['user_id']);
+        $this->notifyAdminsOfNewRequest($user, 1, $supply_request->batch_id);
+
         return response()->json($supply_request, 201);
     }
 
@@ -81,6 +86,10 @@ class SupplyRequestController extends Controller
         }
 
         if (count($createdRequests) > 0) {
+            // Notify Admins
+            $user = $request->user() ?: User::find($validated['user_id']);
+            $this->notifyAdminsOfNewRequest($user, count($createdRequests), $validated['batch_id']);
+
             try {
                 $user = $createdRequests[0]->user;
                 Mail::to($user->email)->send(new SupplyRequestSlip(collect($createdRequests), 'pending'));
@@ -90,6 +99,33 @@ class SupplyRequestController extends Controller
         }
 
         return response()->json(['message' => 'Batch request created successfully', 'data' => $createdRequests], 201);
+    }
+
+    /**
+     * Notify all Admins and SuperAdmins of a new supply request.
+     */
+    private function notifyAdminsOfNewRequest($requester, $itemCount, $batchId = null)
+    {
+        $admins = User::whereHas('role', function($query) {
+            $query->whereIn('role_name', ['admin', 'superadmin', 'Admin', 'SuperAdmin']);
+        })->get();
+
+        $officeName = $requester->office->office_name ?? 'an unknown office';
+        $message = $itemCount > 1 
+            ? "New batch request ({$itemCount} items) submitted by {$requester->first_name} {$requester->last_name} from {$officeName}."
+            : "New supply request submitted by {$requester->first_name} {$requester->last_name} from {$officeName}.";
+
+        foreach ($admins as $admin) {
+            $notif = Notification::create([
+                'user_id' => $admin->id,
+                'office_id' => $requester->office_id, // Link to the requester's office
+                'batch_id' => $batchId,
+                'message' => $message,
+                'action' => 'pending',
+            ]);
+
+            broadcast(new NotificationSent($notif));
+        }
     }
 
     // Returns request with related user, supply, and approver data
