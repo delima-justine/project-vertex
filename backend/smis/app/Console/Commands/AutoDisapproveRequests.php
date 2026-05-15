@@ -41,35 +41,53 @@ class AutoDisapproveRequests extends Command
             return;
         }
 
-        $count = 0;
-        foreach ($pendingRequests as $request) {
-            $oldValues = $request->toArray();
+        // Group by batch_id (null values will be grouped together under an empty key)
+        $groupedByBatch = $pendingRequests->groupBy(function ($item) {
+            return $latestBatchId = $item->batch_id ?? 'single-' . $item->id;
+        });
+
+        $totalCount = 0;
+        foreach ($groupedByBatch as $key => $requests) {
+            $count = $requests->count();
+            $firstRequest = $requests->first();
+            $isBatch = !str_starts_with($key, 'single-');
             
-            $request->status = 'disapproved';
-            $request->save();
+            foreach ($requests as $request) {
+                $oldValues = $request->toArray();
+                
+                $request->status = 'disapproved';
+                $request->save();
 
-            // Log the action
-            AuditService::log(
-                'UPDATE', 
-                $request, 
-                "Automatically disapproved request due to inactivity (over 5 days)", 
-                $oldValues, 
-                $request->fresh()->toArray()
-            );
+                // Log the action for each individual item in the audit trail
+                AuditService::log(
+                    'UPDATE', 
+                    $request, 
+                    "Automatically disapproved request due to inactivity (over 5 days)", 
+                    $oldValues, 
+                    $request->fresh()->toArray()
+                );
+            }
 
-            // Send notification
+            // Send consolidated notification
+            if ($isBatch && $count > 1) {
+                $message = "Your batch request with {$count} items has been automatically disapproved due to inactivity (over 5 days).";
+            } else {
+                $message = "Your request for {$firstRequest->supply_id} has been automatically disapproved due to inactivity (over 5 days).";
+            }
+
             $notif = Notification::create([
-                'user_id' => $request->user_id,
-                'request_id' => $request->id,
-                'message' => "Your request for {$request->supply_id} has been automatically disapproved due to inactivity (over 5 days).",
+                'user_id' => $firstRequest->user_id,
+                'batch_id' => $isBatch ? $key : null,
+                'request_id' => $isBatch ? null : $firstRequest->id,
+                'message' => $message,
                 'action' => 'disapproved',
             ]);
 
             broadcast(new NotificationSent($notif));
             
-            $count++;
+            $totalCount += $count;
         }
 
-        $this->info("Successfully disapproved {$count} requests.");
+        $this->info("Successfully disapproved {$totalCount} requests.");
     }
 }
