@@ -68,7 +68,7 @@
   }
 
   .responsive-table {
-    @media (max-width: 991px) {
+    @media (max-width: 576px) {
       border: 0;
 
       thead {
@@ -171,7 +171,7 @@
 }
 
 .responsive-table-modal {
-  @media (max-width: 991px) {
+  @media (max-width: 576px) {
     border: 0;
 
     thead {
