@@ -69,3 +69,67 @@ html, body {
   width: 100%;
   border-radius: 12px;
 }
+
+/* Global Mobile Fixes */
+@media (max-width: 991px) {
+  /* Ensure images and content don't overflow */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Fix table overflow on mobile */
+  table {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
+  table thead {
+    font-size: 0.8rem;
+  }
+
+  /* Fix form elements on mobile */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Prevent horizontal scroll */
+  main,
+  .container,
+  .container-fluid {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* Add padding-bottom to prevent content from being hidden behind bottom nav */
+  main {
+    padding-bottom: 80px;
+  }
+
+  /* Fix card spacing */
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  /* Reduce padding on small screens */
+  .container-fluid,
+  main {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Fix modal spacing */
+  .modal-dialog {
+    max-width: calc(100vw - 24px);
+  }
+
+  /* Ensure buttons are touchable */
+  button,
+  a.btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

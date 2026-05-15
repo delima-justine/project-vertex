@@ -13,7 +13,7 @@
       routerLink="/home"
       routerLinkActive="active"
       (click)="closeSidebarOnMobile()"
-      [title]="layoutService.isSidebarOpen() ? '' : 'Home'">
+      title="Home">
       <i class="bi bi-house-door-fill"></i>
       <span>Home</span>
     </div>
@@ -24,7 +24,7 @@
         routerLink="/admin/user-management"
         routerLinkActive="active"
         (click)="closeSidebarOnMobile()"
-        [title]="layoutService.isSidebarOpen() ? '' : 'User Management'">
+        title="User Management">
         <i class="bi bi-people-fill"></i>
         <span>User Management</span>
       </div>
@@ -35,7 +35,7 @@
       routerLink="/notifications"
       routerLinkActive="active"
       (click)="closeSidebarOnMobile()"
-      [title]="layoutService.isSidebarOpen() ? '' : 'Notifications'">
+      title="Notifications">
       <i class="bi bi-bell-fill"></i>
       <span>Notifications</span>
 
@@ -49,7 +49,7 @@
     <div class="orders-link" (click)="toggleDropdown()">
       <div 
         class="link-content"
-        [title]="layoutService.isSidebarOpen() ? '' : 'Orders'">
+        title="Orders">
         <i class="bi bi-cart-fill"></i>
         <span>Orders</span>
       </div>
@@ -65,7 +65,7 @@
           class="new-req dropdown-item" 
           routerLink="/create-request"
           (click)="closeSidebarOnMobile()"
-          [title]="layoutService.isSidebarOpen() ? '' : 'Create New Request'">
+          title="Create New Request">
           <i class="bi bi-plus-circle-fill"></i>
           <span>Create New Request</span>
         </div>
@@ -75,7 +75,7 @@
             class="pending-req dropdown-item" 
             routerLink="/pending-requests"
             (click)="closeSidebarOnMobile()"
-            [title]="layoutService.isSidebarOpen() ? '' : 'Pending Requests'">
+            title="Pending Requests">
             <i class="bi bi-clock-fill"></i>
             <span>Pending</span>
             @if(supplyService.statusCounts().pending > 0) {
@@ -91,7 +91,7 @@
             class="approved-req dropdown-item" 
             routerLink="/approved-requests"
             (click)="closeSidebarOnMobile()"
-            [title]="layoutService.isSidebarOpen() ? '' : 'Approved Requests'">
+            title="Approved Requests">
             <i class="bi bi-hand-thumbs-up-fill"></i>
             <span>Approved</span>
             @if(supplyService.statusCounts().approved > 0) {
@@ -107,7 +107,7 @@
             class="released-req dropdown-item" 
             routerLink="/released-requests"
             (click)="closeSidebarOnMobile()"
-            [title]="layoutService.isSidebarOpen() ? '' : 'Released Requests'">
+            title="Released Requests">
             <i class="bi bi-truck"></i>
             <span>Released</span>
             @if(supplyService.statusCounts().released > 0) {
@@ -123,7 +123,7 @@
             class="disapproved-req dropdown-item" 
             routerLink="/disapproved-requests"
             (click)="closeSidebarOnMobile()"
-            [title]="layoutService.isSidebarOpen() ? '' : 'Disapproved Requests'">
+            title="Disapproved Requests">
               <i class="bi bi-x-circle-fill"></i>
               <span>Disapproved</span>
               @if(supplyService.statusCounts().disapproved > 0) {
@@ -141,7 +141,7 @@
       routerLink="/reports"
       routerLinkActive="active"
       (click)="closeSidebarOnMobile()"
-      [title]="layoutService.isSidebarOpen() ? '' : 'Reports'">
+      title="Reports">
       <i class="bi bi-graph-up"></i>
       <span>Reports</span>
     </div>
@@ -151,7 +151,7 @@
       routerLink="/help"
       routerLinkActive="active"
       (click)="closeSidebarOnMobile()"
-      [title]="layoutService.isSidebarOpen() ? '' : 'Help & Support'">
+      title="Help & Support">
       <i class="bi bi-question-circle-fill"></i>
       <span>Help & Support</span>
     </div>

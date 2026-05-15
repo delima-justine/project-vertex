@@ -1,0 +1,80 @@
+<div class="mobile-nav-container">
+  <!-- Drawer Backdrop -->
+  <div class="drawer-backdrop" [class.is-open]="drawerOpen()" (click)="closeDrawer()"></div>
+
+  <!-- Drawer Panel -->
+  <div class="mobile-drawer" [class.is-open]="drawerOpen()">
+    <div class="drawer-header">
+      <div class="drawer-title">Orders</div>
+      <button class="drawer-close" type="button" (click)="closeDrawer()" aria-label="Close orders menu">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <nav class="drawer-nav">
+      <a class="drawer-item" [class.drawer-active]="drawerOpen()" routerLink="/admin/user-management" routerLinkActive="drawer-active" (click)="closeDrawer()">
+        <span class="drawer-icon"><i class="bi bi-people-fill"></i></span>
+        <span>User Management</span>
+      </a>
+
+      <a class="drawer-item" routerLink="/pending-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
+        <span class="drawer-icon"><i class="bi bi-clock-fill"></i></span>
+        <span>Pending</span>
+        <span class="drawer-badge" *ngIf="supplyService.statusCounts().pending > 0">{{ supplyService.statusCounts().pending }}</span>
+      </a>
+
+      <a class="drawer-item" routerLink="/approved-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
+        <span class="drawer-icon"><i class="bi bi-hand-thumbs-up-fill"></i></span>
+        <span>Approved</span>
+        <span class="drawer-badge approved" *ngIf="supplyService.statusCounts().approved > 0">{{ supplyService.statusCounts().approved }}</span>
+      </a>
+
+      <a class="drawer-item" routerLink="/released-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
+        <span class="drawer-icon"><i class="bi bi-truck"></i></span>
+        <span>Released</span>
+        <span class="drawer-badge released" *ngIf="supplyService.statusCounts().released > 0">{{ supplyService.statusCounts().released }}</span>
+      </a>
+
+      <a class="drawer-item" routerLink="/disapproved-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
+        <span class="drawer-icon"><i class="bi bi-x-circle-fill"></i></span>
+        <span>Disapproved</span>
+        <span class="drawer-badge disapproved" *ngIf="supplyService.statusCounts().disapproved > 0">{{ supplyService.statusCounts().disapproved }}</span>
+      </a>
+
+      <a class="drawer-item" routerLink="/help" routerLinkActive="drawer-active" (click)="closeDrawer()">
+        <span class="drawer-icon"><i class="bi bi-question-circle-fill"></i></span>
+        <span>Help & Support</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" [class.nav-hidden]="isNavHidden() || isSidebarOpenOnMobile()">
+    <a class="nav-item" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" aria-label="Home">
+      <span class="nav-icon"><i class="bi bi-house-door-fill"></i></span>
+      <span class="nav-label">Home</span>
+    </a>
+
+    <button class="nav-item" type="button" (click)="toggleDrawer()" [class.active]="drawerOpen()" aria-label="Orders">
+      <span class="nav-icon"><i class="bi bi-cart-fill"></i></span>
+      <span class="nav-label">Orders</span>
+    </button>
+
+    <a class="nav-item nav-item--center" routerLink="/create-request" routerLinkActive="active" aria-label="New Request">
+      <div class="nav-fab">
+        <i class="bi bi-plus-lg"></i>
+      </div>
+    </a>
+
+    <a class="nav-item" routerLink="/notifications" routerLinkActive="active" aria-label="Notifications">
+      <span class="nav-icon"><i class="bi bi-bell-fill"></i></span>
+      <span class="nav-label">Notifications</span>
+      <span class="nav-badge" *ngIf="notifApiService.unreadCount() > 0">{{ notifApiService.unreadCount() }}</span>
+    </a>
+
+    <a class="nav-item" routerLink="/reports" routerLinkActive="active" aria-label="Reports">
+      <span class="nav-icon"><i class="bi bi-graph-up"></i></span>
+      <span class="nav-label">Reports</span>
+    </a>
+  </nav>
+</div>

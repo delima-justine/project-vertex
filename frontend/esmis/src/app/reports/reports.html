@@ -19,8 +19,9 @@
     }
   </div>
 } @else {
-  <div class="alert alert-info mt-3 mb-3 py-2">
-    View and export your personal supply request history and logs below.
+  <div class="alert alert-success mt-3 mb-3 py-2">
+    <i class="bi bi-info-circle me-2"></i>
+    <strong>Your Request History:</strong> View and export your personal supply request history below. Filter by status or date to find specific requests.
   </div>
 }
 
@@ -60,7 +61,7 @@
           @if (activeView() === 'request_logs') {
             <div [class]="isAdmin ? 'col-md-6' : 'col-md-12'">
               <label for="statusSelect" class="form-label">Status</label>
-              <select id="statusSelect" class="form-select" [(ngModel)]="selectedStatus">
+              <select id="statusSelect" class="form-select" [(ngModel)]="selectedStatusValue">
                 <option value="">All Statuses</option>
                 <option value="pending">Pending</option>
                 <option value="approved">Approved</option>
@@ -72,7 +73,7 @@
           @if (isAdmin && activeView() === 'admin_audit') {
             <div class="col-md-6">
               <label for="actionTypeSelect" class="form-label">Action Type</label>
-              <select id="actionTypeSelect" class="form-select" [(ngModel)]="selectedActionType">
+              <select id="actionTypeSelect" class="form-select" [(ngModel)]="selectedActionTypeValue">
                 <option value="">All Actions</option>
                 <option value="CREATE">Create</option>
                 <option value="UPDATE">Update</option>
@@ -86,7 +87,7 @@
           @if (isAdmin && activeView() === 'request_logs') {
             <div class="col-md-6">
               <label for="officeSelect" class="form-label">Office</label>
-              <select id="officeSelect" class="form-select" [(ngModel)]="selectedOffice">
+              <select id="officeSelect" class="form-select" [(ngModel)]="selectedOfficeValue">
                 <option value="">All Offices</option>
                 @for (office of allOffices(); track office.office_name) {
                   <option [value]="office.office_name">{{ office.office_name }}</option>
@@ -97,7 +98,7 @@
           @if (isAdmin && activeView() === 'admin_audit') {
             <div class="col-md-6">
               <label for="adminSelect" class="form-label">Admin</label>
-              <select id="adminSelect" class="form-select" [(ngModel)]="selectedAdminId">
+              <select id="adminSelect" class="form-select" [(ngModel)]="selectedAdminIdValue">
                 <option [ngValue]="null">All Admins</option>
                 @for (admin of allAdmins(); track admin.id) {
                   <option [ngValue]="admin.id">{{ admin.first_name }} {{ admin.last_name }}</option>
@@ -111,11 +112,11 @@
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label for="startDate" class="form-label">Start Date</label>
-              <input id="startDate" type="date" class="form-control" [(ngModel)]="startDate" />
+              <input id="startDate" type="date" class="form-control" [(ngModel)]="startDateValue" />
             </div>
             <div class="col-md-6">
               <label for="endDate" class="form-label">End Date</label>
-              <input id="endDate" type="date" class="form-control" [(ngModel)]="endDate" />
+              <input id="endDate" type="date" class="form-control" [(ngModel)]="endDateValue" />
             </div>
           </div>
         }
@@ -175,6 +176,10 @@
     <!-- Data Table Section -->
     @if (activeView() === 'request_logs') {
       <div class="request-logs-table-section mt-4">
+        <div class="table-section-header mb-3">
+          <i class="bi bi-journal-text me-2 text-danger"></i>
+          <strong>Your Request Logs</strong>
+        </div>
         <div class="table-responsive">
           <table class="table report-table">
             <thead>

@@ -57,10 +57,14 @@ export class AuthService {
     return this.userPermissions().includes(permissionName);
   }
 
+  private normalizeRoleName(roleName: string | null | undefined): string {
+    return roleName?.trim().toLowerCase().replace(/[^a-z0-9]/g, '') || '';
+  }
+
   hasRole(roleName: string): boolean {
     const user = this.currentUser();
     if (!user || !user.role) return false;
-    return user.role.role_name.toLowerCase() === roleName.toLowerCase();
+    return this.normalizeRoleName(user.role.role_name) === this.normalizeRoleName(roleName);
   }
 
   hasAnyPermission(permissionNames: string[]): boolean {
