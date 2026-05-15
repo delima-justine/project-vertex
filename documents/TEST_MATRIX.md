@@ -15,21 +15,21 @@ This document outlines the test cases for the Supply Management Information Syst
 ## 2. User & Access Management
 | ID | Test Case | Priority | Expected Result | Verification | Status |
 |---|---|---|---|---| :---: |
-| USER-01 | Create new user (Admin) | High | New user record created in `tbl_user` with correct office/role. | Manual/Auto |  |
-| USER-02 | Update user details | Medium | User info updated; audit log entry created. | Manual/Auto |  |
-| USER-03 | Delete/Archive user | Medium | User record is soft-deleted or archived; login disabled. | Manual |  |
-| ROLE-01 | RBAC - Admin Access | High | Admin can access all inventory and request management tools. | Manual |  |
-| ROLE-02 | RBAC - Regular User Access | High | User can only see their requests and inventory list (no approval). | Manual |  |
-| PERM-01 | Permission Override | Medium | User-specific permission overrides role defaults correctly. | Manual |  |
+| USER-01 | Create new user (Admin) | High | New user record created in `tbl_user` with correct office/role. | Manual/Auto | Passed |
+| USER-02 | Update user details | Medium | User info updated; audit log entry created. | Manual/Auto | Passed |
+| USER-03 | Delete/Archive user | Medium | User record is soft-deleted or archived; login disabled. | Manual | Passed |
+| ROLE-01 | RBAC - Admin Access | High | Admin can access all inventory and request management tools. | Manual | Passed |
+| ROLE-02 | RBAC - Regular User Access | High | User can only see their requests and inventory list (no approval). | Manual | Passed |
+| PERM-01 | Permission Override | Medium | User-specific permission overrides role defaults correctly. | Manual | Passed |
 
 ## 3. Supply & Inventory Management
 | ID | Test Case | Priority | Expected Result | Verification | Status |
 |---|---|---|---|---| :---: |
 | SUP-01 | Add new supply item | High | Item added with stock number, category, and unit. | Manual/Auto | Passed |
 | SUP-02 | Update stock quantity | High | Quantity updated correctly; status (Available/Low) reflects change. | Manual/Auto | Passed |
-| SUP-03 | Supply Categories CRUD | Medium | Can add/edit/delete categories (e.g., Writing Materials). | Manual | Pending |
-| SUP-04 | Supply Units CRUD | Medium | Can add/edit/delete units (e.g., piece, pack). | Manual | Pending |
-| SUP-05 | Soft Delete Supply | Medium | Supply removed from view but remains in database (`deleted_at`). | Manual | Pending |
+| SUP-03 | Supply Categories CRUD | Medium | Can add/edit/delete categories (e.g., Writing Materials). | Manual | Passed |
+| SUP-04 | Supply Units CRUD | Medium | Can add/edit/delete units (e.g., piece, pack). | Manual | Passed |
+| SUP-05 | Soft Delete Supply | Medium | Supply removed from view but remains in database (`deleted_at`). | Manual | Passed |
 
 ## 4. Supply Request Workflow
 | ID | Test Case | Priority | Expected Result | Verification | Status |
