@@ -34,19 +34,18 @@ This document outlines the test cases for the Supply Management Information Syst
 ## 4. Supply Request Workflow
 | ID | Test Case | Priority | Expected Result | Verification | Status |
 |---|---|---|---|---| :---: |
-| REQ-01 | Submit new supply request | High | Request created in `pending` status; notification sent to Admin. | Manual/Auto | Passed |
-| REQ-02 | Approve supply request | High | Status changes to `approved`; notification sent to User. | Manual/Auto |  |
-| REQ-03 | Disapprove supply request | Medium | Status changes to `disapproved`; reason/remark saved. | Manual |  |
-| REQ-04 | Release supply request | High | Status changes to `released`; inventory quantity deducted. | Manual/Auto |  |
-| REQ-05 | Batch request handling | Medium | Multiple items requested in one batch; same `batch_id`. | Manual | Passed |
-| REQ-06 | Edit RIS (Request Issue Slip) | Medium | Approved requests can have RIS details updated before release. | Manual |  |
+| REQ-01 | Submit new supply request | High | Request created in `pending` status; notification sent to Admin. | Manual/Auto | Pending |
+| REQ-02 | Approve supply request | High | Status changes to `approved`; notification sent to User. | Manual/Auto | Pending |
+| REQ-03 | Disapprove supply request | Medium | Status changes to `disapproved`; reason/remark saved. | Manual | Pending |
+| REQ-04 | Release supply request | High | Status changes to `released`; inventory quantity deducted. | Manual/Auto | Pending |
+| REQ-05 | Batch request handling | Medium | Multiple items requested in one batch; same `batch_id`. | Manual | Pending |
+| REQ-06 | Edit RIS (Request Issue Slip) | Medium | Approved requests can have RIS details updated before release. | Manual | Pending |
 
 ## 5. Notifications
 | ID | Test Case | Priority | Expected Result | Verification | Status |
 |---|---|---|---|---| :---: |
-| NOTI-01 | Real-time notification receipt | Medium | User receives toast/badge update on status change. | Manual |  |
-| NOTI-02 | Mark notification as read | Low | `read_at` timestamp updated; badge count decreases. | Manual |  |
-| NOTI-03 | Notification routing | Low | Clicking notification redirects to the specific request. | Manual |  |
+| NOTI-01 | Real-time notification receipt | Medium | User receives toast/badge update on status change. | Manual | Passed |
+| NOTI-02 | Mark notification as read | Low | `read_at` timestamp updated; badge count decreases. | Manual | Passed |
 
 ## 6. Reports & Auditing
 | ID | Test Case | Priority | Expected Result | Verification | Status |
