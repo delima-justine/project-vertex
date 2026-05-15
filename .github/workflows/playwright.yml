@@ -1,0 +1,36 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: 'npm'
+        cache-dependency-path: frontend/esmis/package-lock.json
+
+    - name: Install dependencies
+      working-directory: frontend/esmis
+      run: npm ci
+
+    - name: Install Playwright Browsers
+      working-directory: frontend/esmis
+      run: npx playwright install --with-deps
+
+    - name: Run Playwright tests
+      working-directory: frontend/esmis
+      run: npx playwright test
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: frontend/esmis/playwright-report/
+        retention-days: 30
