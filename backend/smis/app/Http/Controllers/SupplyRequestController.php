@@ -164,6 +164,7 @@ class SupplyRequestController extends Controller
         $notif = Notification::create([
             'user_id' => $supply_request->user_id,
             'request_id' => $supply_request->id,
+            'batch_id' => $supply_request->batch_id,
             'message' => "Your request for {$supply_request->supply_id} has been {$supply_request->status}.",
             'action' => $supply_request->status,
         ]);
@@ -219,6 +220,7 @@ class SupplyRequestController extends Controller
         ]);
 
         $updatedRequests = [];
+        $affectedBatches = [];
 
         foreach ($validated['items'] as $itemData) {
             $sr = SupplyRequest::find($itemData['id']);
@@ -246,16 +248,42 @@ class SupplyRequestController extends Controller
             ]);
 
             AuditService::log('UPDATE', $sr, "Batch updated supply request status to: {$sr->status}", $oldValues, $sr->fresh()->toArray());
-
-            $notif = Notification::create([
-                'user_id' => $sr->user_id,
-                'request_id' => $sr->id,
-                'message' => "Your request for {$sr->supply_id} has been {$sr->status}.",
-                'action' => $sr->status,
-            ]);
-            broadcast(new NotificationSent($notif));
+            
+            // Track affected batches for grouped notifications
+            $batchKey = $sr->batch_id ?? 'single-' . $sr->id;
+            if (!isset($affectedBatches[$batchKey])) {
+                $affectedBatches[$batchKey] = [
+                    'user_id' => $sr->user_id,
+                    'count' => 0,
+                    'first_supply' => $sr->supply_id,
+                    'first_id' => $sr->id,
+                    'batch_id' => $sr->batch_id
+                ];
+            }
+            $affectedBatches[$batchKey]['count']++;
             
             $updatedRequests[] = $sr->load(['user', 'supply']);
+        }
+
+        // Send grouped notifications
+        foreach ($affectedBatches as $key => $batchData) {
+            $isBatch = !str_starts_with($key, 'single-');
+            $status = $validated['status'];
+
+            if ($isBatch && $batchData['count'] > 1) {
+                $message = "Your batch request with {$batchData['count']} items has been {$status}.";
+            } else {
+                $message = "Your request for {$batchData['first_supply']} has been {$status}.";
+            }
+
+            $notif = Notification::create([
+                'user_id' => $batchData['user_id'],
+                'batch_id' => $batchData['batch_id'],
+                'request_id' => $isBatch ? null : $batchData['first_id'],
+                'message' => $message,
+                'action' => $status,
+            ]);
+            broadcast(new NotificationSent($notif));
         }
 
         if (count($updatedRequests) > 0) {
