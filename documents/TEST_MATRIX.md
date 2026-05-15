@@ -67,4 +67,4 @@ This document outlines the test cases for the Supply Management Information Syst
 | ID | Test Case | Priority | Expected Result | Verification | Status |
 |---|---|---|---|---| :---: |
 | INT-01 | API Interceptor Error Handling | Medium | 401/500 errors handled with appropriate UI feedback. | Manual/Auto | Passed |
-| INT-02 | Responsive Layout | Medium | Sidebar/Tables display correctly on mobile/tablet. | Manual | Pending |
+| INT-02 | Responsive Layout | Medium | Sidebar/Tables display correctly on mobile/tablet. | Manual/Auto | Passed |
