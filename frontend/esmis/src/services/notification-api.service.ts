@@ -1,10 +1,11 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { Notification, PaginatedResponse, NotificationFilters } from '../models/smis.model';
 import { tap } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { AuthService } from './auth.service';
 import { environment } from '../environments/environment';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({
   providedIn: 'root',
@@ -69,25 +70,39 @@ export class NotificationApiService {
   }
 
   getUnreadCount() {
-    return this.http.get<{ count: number }>(`${this.apiUrl}/notifications/unread-count`).pipe(
+    return this.http.get<{ count: number }>(
+      `${this.apiUrl}/notifications/unread-count`,
+      { context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true) }
+    ).pipe(
       tap(res => this.unreadCount.set(res.count))
     );
   }
 
   markAsRead(notificationId: number) {
-    return this.http.patch(`${this.apiUrl}/notifications/${notificationId}/read`, {}).pipe(
+    return this.http.patch(
+      `${this.apiUrl}/notifications/${notificationId}/read`, 
+      {},
+      { context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true) }
+    ).pipe(
       tap(() => this.unreadCount.update(c => Math.max(0, c - 1)))
     );
   }
 
   markAllAsRead() {
-    return this.http.post(`${this.apiUrl}/notifications/mark-all-read`, {}).pipe(
+    return this.http.post(
+      `${this.apiUrl}/notifications/mark-all-read`, 
+      {},
+      { context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true) }
+    ).pipe(
       tap(() => this.unreadCount.set(0))
     );
   }
 
   deleteNotification(notificationId: number) {
-    return this.http.delete(`${this.apiUrl}/notifications/${notificationId}`).pipe(
+    return this.http.delete(
+      `${this.apiUrl}/notifications/${notificationId}`,
+      { context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true) }
+    ).pipe(
       tap(() => {
         // We might want to refresh unread count if we deleted an unread notification
         // But for simplicity, we'll let the component handle the list update
