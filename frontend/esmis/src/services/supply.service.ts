@@ -1,8 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 import { Supply, Category, Unit, SupplyRequest, Archive, Office, PaginatedResponse } from '../models/smis.model';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({
   providedIn: 'root',
@@ -157,7 +158,10 @@ export class SupplyService {
   }
 
   getStatusCounts(): Observable<{ pending: number, approved: number, released: number, disapproved: number }> {
-    return this.http.get<{ pending: number, approved: number, released: number, disapproved: number }>(`${this.apiUrl}/supply-requests/status-counts`).pipe(
+    return this.http.get<{ pending: number, approved: number, released: number, disapproved: number }>(
+      `${this.apiUrl}/supply-requests/status-counts`, 
+      { context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true) }
+    ).pipe(
       tap(counts => this.statusCounts.set(counts))
     );
   }
