@@ -32,7 +32,7 @@ export class MobileNavComponent implements OnInit {
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const currentScrollY = window.scrollY;
-    if (window.innerWidth <= 991) {
+    if (window.innerWidth <= 1024) {
       if (currentScrollY > this.lastScrollY && currentScrollY > 100) {
         this.isNavHidden.set(true);
       } else if (currentScrollY < this.lastScrollY) {
@@ -43,7 +43,7 @@ export class MobileNavComponent implements OnInit {
   }
 
   public isSidebarOpenOnMobile() {
-    return window.innerWidth <= 991 && this.layoutService.isSidebarOpen();
+    return window.innerWidth <= 1024 && this.layoutService.isSidebarOpen();
   }
 
   toggleDrawer() {

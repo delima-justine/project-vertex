@@ -5,7 +5,7 @@ import { Injectable, signal, effect, WritableSignal } from '@angular/core';
 })
 export class LayoutService {
   isSidebarOpen: WritableSignal<boolean> = signal(
-    window.innerWidth > 991 ? localStorage.getItem('isSidebarOpen') !== 'false' : false
+    window.innerWidth > 1024 ? localStorage.getItem('isSidebarOpen') !== 'false' : false
   );
 
   constructor() {

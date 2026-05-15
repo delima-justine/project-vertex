@@ -49,7 +49,7 @@ export class Sidebar implements OnInit {
   }
 
   closeSidebarOnMobile() {
-    if (window.innerWidth <= 991) {
+    if (window.innerWidth <= 1024) {
       this.layoutService.isSidebarOpen.set(false);
     }
   }
