@@ -7,7 +7,10 @@ use App\Models\SupplyRequest;
 use App\Models\Notification;
 use App\Services\AuditService;
 use App\Events\NotificationSent;
+use App\Mail\SupplyRequestSlip;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class AutoDisapproveRequests extends Command
 {
@@ -43,7 +46,7 @@ class AutoDisapproveRequests extends Command
 
         // Group by batch_id (null values will be grouped together under an empty key)
         $groupedByBatch = $pendingRequests->groupBy(function ($item) {
-            return $latestBatchId = $item->batch_id ?? 'single-' . $item->id;
+            return $item->batch_id ?? 'single-' . $item->id;
         });
 
         $totalCount = 0;
@@ -51,6 +54,7 @@ class AutoDisapproveRequests extends Command
             $count = $requests->count();
             $firstRequest = $requests->first();
             $isBatch = !str_starts_with($key, 'single-');
+            $updatedRequests = [];
             
             foreach ($requests as $request) {
                 $oldValues = $request->toArray();
@@ -66,6 +70,8 @@ class AutoDisapproveRequests extends Command
                     $oldValues, 
                     $request->fresh()->toArray()
                 );
+
+                $updatedRequests[] = $request->load(['user', 'supply']);
             }
 
             // Send consolidated notification
@@ -85,6 +91,16 @@ class AutoDisapproveRequests extends Command
 
             broadcast(new NotificationSent($notif));
             
+            // Send email notification
+            if (count($updatedRequests) > 0) {
+                try {
+                    $user = $updatedRequests[0]->user;
+                    Mail::to($user->email)->send(new SupplyRequestSlip(collect($updatedRequests), 'disapproved'));
+                } catch (\Exception $e) {
+                    Log::error("Failed to send auto-disapprove email for batch/request {$key}: " . $e->getMessage());
+                }
+            }
+
             $totalCount += $count;
         }
 
