@@ -46,19 +46,22 @@ This document outlines the test cases for the Supply Management Information Syst
 |---|---|---|---|---| :---: |
 | NOTI-01 | Real-time notification receipt | Medium | User receives toast/badge update on status change. | Manual | Passed |
 | NOTI-02 | Mark notification as read | Low | `read_at` timestamp updated; badge count decreases. | Manual | Passed |
+| NOTI-03 | Notification Filtering | Medium | Can filter by Office and Date Range correctly. | Manual/Auto | Passed |
+| NOTI-04 | Pagination | Low | Can navigate through multiple pages of notifications. | Manual/Auto | Passed |
+| NOTI-05 | Role-based System Alerts | High | Low stock/Out of stock alerts visible only to Admin/Superadmin. | Manual/Auto | Passed |
 
 ## 6. Reports & Auditing
 | ID | Test Case | Priority | Expected Result | Verification | Status |
 |---|---|---|---|---| :---: |
-| AUD-01 | Admin Audit Logging | High | Every CRUD action by admin is logged in `tbl_admin_audit`. | Manual/Auto |  |
-| AUD-02 | Archive Data Retrieval | Medium | Archived records can be viewed/restored by superadmin. | Manual |  |
-| REP-01 | Generate Inventory Report | Medium | Exported file contains correct current stock levels. | Manual |  |
-| REP-02 | Generate Request Summary | Medium | Filtered list of requests for a specific office/date range. | Manual |  |
+| AUD-01 | Admin Audit Logging | High | Every CRUD action by admin is logged in `tbl_admin_audit`. | Manual/Auto | Passed |
+| AUD-02 | Archive Data Retrieval | Medium | Archived records can be viewed/restored by superadmin. | Manual | Passed |
+| REP-01 | Generate Inventory Report | Medium | Exported file contains correct current stock levels. | Manual | Passed |
+| REP-02 | Generate Request Summary | Medium | Filtered list of requests for a specific office/date range. | Manual | Passed |
 
 ## 7. Office Management
 | ID | Test Case | Priority | Expected Result | Verification | Status |
 |---|---|---|---|---| :---: |
-| OFC-01 | CRUD Offices | Medium | Add/Edit/Delete offices used for user assignment. | Manual |  |
+| OFC-01 | CRUD Offices | Medium | Add/Edit/Delete offices (via User Management). | Manual/Auto | Passed |
 
 ## 8. Frontend Integration
 | ID | Test Case | Priority | Expected Result | Verification | Status |

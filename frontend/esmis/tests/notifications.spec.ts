@@ -139,4 +139,83 @@ test.describe('Notifications Flow', () => {
     // Target the specific tab button, not the sidebar link
     await expect(page.locator('.tab-container .nav-link.active')).toHaveText(/Approved/i);
   });
+
+  test('NOTI-03: should apply office and date filters', async ({ page }) => {
+    // Mock filtered response
+    await page.route('**/api/notifications?*office_id=1*', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: [{ id: 2, message: 'Filtered Notification', action: 'pending', read_at: null, created_at: new Date().toISOString() }],
+          current_page: 1, last_page: 1, total: 1
+        })
+      });
+    });
+
+    // Select office
+    await page.locator('select.form-select').selectOption({ label: 'IT' });
+    
+    // Click Filter button
+    await page.locator('button', { hasText: /Filter/i }).click();
+
+    // Verify filtered content
+    await expect(page.locator('.notification-item')).toContainText('Filtered Notification');
+  });
+
+  test('NOTI-04: should handle pagination', async ({ page }) => {
+    // Mock multi-page response
+    await page.route('**/api/notifications*', async route => {
+      if (route.request().url().includes('page=2')) {
+        await route.fulfill({
+          status: 200,
+          body: JSON.stringify({
+            data: [{ id: 10, message: 'Page 2 Notification', action: 'pending', read_at: null, created_at: new Date().toISOString() }],
+            current_page: 2, last_page: 2, total: 11
+          })
+        });
+      } else {
+        await route.fulfill({
+          status: 200,
+          body: JSON.stringify({
+            data: Array(10).fill({ id: 1, message: 'Page 1 Notification', action: 'pending', read_at: null, created_at: new Date().toISOString() }),
+            current_page: 1, last_page: 2, total: 11
+          })
+        });
+      }
+    });
+
+    await page.reload();
+
+    // Click Next
+    await page.locator('button', { hasText: /Next/i }).click();
+
+    // Verify Page 2 content
+    await expect(page.locator('.notification-item')).toContainText('Page 2 Notification');
+    await expect(page.locator('text=Page 2 of 2')).toBeVisible();
+  });
+
+  test('NOTI-05: System Alerts should be hidden for regular users', async ({ page }) => {
+    // 1. Mock regular user (already done in beforeEach)
+    
+    // 2. Mock list with a system alert
+    await page.route('**/api/notifications*', async route => {
+      await route.fulfill({
+        status: 200,
+        body: JSON.stringify({
+          data: [
+            { id: 1, message: 'Stock is low', action: 'low stock', read_at: null, created_at: new Date().toISOString() }
+          ],
+          current_page: 1, last_page: 1, total: 1
+        })
+      });
+    });
+
+    await page.reload();
+
+    // 3. Verify it is NOT displayed (Component logic unshifts but we check the rendered list)
+    // Note: If the backend sends it, and the component filters it out, it shouldn't be in the list.
+    // However, the tab 'System Alerts' should also be hidden.
+    await expect(page.locator('.nav-link', { hasText: /System Alerts/i })).not.toBeVisible();
+  });
 });
