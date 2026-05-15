@@ -10,6 +10,7 @@ use App\Mail\SupplyRequestSlip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class SupplyRequestController extends Controller
 {
@@ -188,17 +189,23 @@ class SupplyRequestController extends Controller
     public function statusCounts(Request $request)
     {
         $user = $request->user();
-        $query = SupplyRequest::whereDoesntHave('archive');
+        $baseQuery = SupplyRequest::whereDoesntHave('archive');
 
         $role = strtolower($user->role->role_name ?? '');
-
         if ($role === 'user') {
-            $query->where('user_id', $user->id);
+            $baseQuery->where('user_id', $user->id);
         }
 
-        $counts = $query->selectRaw('status, count(*) as count')
+        // We count "Batches". 
+        // A "Batch" is defined by a unique batch_id. 
+        // Requests with NULL batch_id are treated as their own individual batches.
+        $counts = $baseQuery->select('status', 'batch_id', DB::raw('count(*) as item_count'))
+            ->groupBy('status', 'batch_id')
+            ->get()
             ->groupBy('status')
-            ->pluck('count', 'status');
+            ->map(function ($group) {
+                return $group->count();
+            });
 
         return response()->json([
             'pending' => (int)($counts['pending'] ?? 0),
