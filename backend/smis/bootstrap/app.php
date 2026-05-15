@@ -26,5 +26,5 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withSchedule(function ($schedule) {
-        $schedule->command('requests:auto-disapprove')->daily();
+        $schedule->command('requests:auto-disapprove')->everyMinute();
     })->create();
