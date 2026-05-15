@@ -8,7 +8,7 @@ This document outlines the test cases for the Supply Management Information Syst
 | AUTH-01 | Login with valid credentials | High | User is redirected to dashboard with valid token. | Manual/Auto | Passed |
 | AUTH-02 | Login with invalid credentials | High | Error message displayed: "Invalid email or password." | Manual/Auto | Passed |
 | AUTH-03 | Forgot Password request | Medium | Password reset link is sent to the registered email. | Manual | Passed |
-| AUTH-04 | Reset Password with valid token | Medium | Password is updated; user can login with new password. | Manual | Pending |
+| AUTH-04 | Reset Password with valid token | Medium | Password is updated; user can login with new password. | Manual | Passed |
 | AUTH-05 | Logout functionality | High | Session is terminated; token is invalidated; redirected to login. | Manual/Auto | Passed |
 | AUTH-06 | Token Expiration / Auth Guard | High | Protected routes redirect to login when token is missing/expired. | Manual/Auto | Passed |
 
