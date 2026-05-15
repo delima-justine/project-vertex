@@ -12,6 +12,7 @@ class Notification extends Model
         'user_id',
         'office_id',
         'request_id',
+        'batch_id',
         'action',
         'message',
         'read_at',
