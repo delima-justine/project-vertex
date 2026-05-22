@@ -46,6 +46,21 @@
       @if(isOpen()) {
       <!-- Dropdown List -->
       <ul class="dropdown-menu" [class.show]="isOpen()">
+        <!-- Mobile User Info Header -->
+        <li class="dropdown-header-mobile d-block d-sm-none">
+          <div class="mobile-user-box">
+            <span class="d-block fw-bold text-white">{{ user()?.first_name }} {{ user()?.last_name }}</span>
+            <small class="d-block text-white-50 small text-uppercase">
+              @if(user()?.role?.role_name === 'superadmin') {
+                Super Admin
+              } @else if (user()?.role?.role_name === 'admin') {
+                  Admin
+              } @else {
+                 User
+              }
+            </small>
+          </div>
+        </li>
         <li class="dropdown-item" (click)="openAccountSettings()">Account Settings</li>
         <li class="dropdown-item" (click)="openLogoutModal()">Logout</li>
       </ul>
