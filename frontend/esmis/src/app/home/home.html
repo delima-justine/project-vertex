@@ -602,7 +602,7 @@
                   </td>
                 </tr>
               } @else {
-                @for(entry of stockHistory(); track entry.date_time) {
+                @for(entry of paginatedHistory(); track entry.date_time) {
                   <tr>
                     <td>{{ entry.date_time | date:'medium' }}</td>
                     <td>
@@ -632,6 +632,32 @@
             </tbody>
           </table>
         </div>
+
+        <!-- History Pagination -->
+        @if (!historyLoading() && stockHistory().length > historyPageSize) {
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <small class="text-muted">
+              Page {{ historyCurrentPage() }} of {{ totalHistoryPages() }} 
+              — {{ stockHistory().length }} entries total
+            </small>
+            <div class="btn-group">
+              <button 
+                class="btn btn-outline-secondary btn-sm" 
+                type="button" 
+                (click)="prevHistoryPage()" 
+                [disabled]="historyCurrentPage() <= 1">
+                  Previous
+              </button>
+              <button 
+                class="btn btn-outline-secondary btn-sm" 
+                type="button" 
+                (click)="nextHistoryPage()" 
+                [disabled]="historyCurrentPage() >= totalHistoryPages()">
+                  Next
+              </button>
+            </div>
+          </div>
+        }
 
         <div class="modal-footer-custom mt-4 d-flex justify-content-end">
           <button class="btn btn-cancel" type="button" (click)="closeHistoryModal()">CLOSE</button>
