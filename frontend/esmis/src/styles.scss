@@ -147,11 +147,11 @@ html, body {
 }
 
 .animate-fade-up {
-  animation: fade-up 0.4s ease-out forwards;
+  animation: fade-up 0.4s ease-out;
 }
 
-// Apply the animation to the main layout.
+/* Add fade-up animation to all routes except main layout */
 router-outlet + *:not(app-main-layout):not(app-toast-container):not(app-confirm-modal) {
   display: block;
-  animation: fade-up 0.4s ease-out forwards;
+  animation: fade-up 0.4s ease-out;
 }
