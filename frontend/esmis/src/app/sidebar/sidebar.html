@@ -1,8 +1,21 @@
 <div class="sidebar" [class.collapsed]="!layoutService.isSidebarOpen()">
   <!-- Header -->
   <div class="header">
-    <img src="assets/pup_logo.png" alt="PUP Logo" [style.filter]="themeService.theme() === 'dark' ? 'brightness(0.9) contrast(1.1)' : 'none'">
-    <span>PUP SMIS</span>
+    <div class="brand">
+      <img 
+        src="assets/esmis_logo.png" 
+        alt="ESMIS Logo" 
+        [style.filter]="themeService.theme() === 'dark' ? 'brightness(0.9) contrast(1.1)' : 'none'">
+      <span>SMIS</span>
+    </div>
+    
+    <button 
+      class="toggle-btn" 
+      (click)="toggleSidebar()" 
+      title="Toggle Sidebar">
+      <i 
+        [class]="layoutService.isSidebarOpen() ? 'bi bi-arrow-bar-left' : 'bi bi-arrow-bar-right'"></i>
+    </button>
   </div>
 
 
@@ -162,8 +175,3 @@
 @if (layoutService.isSidebarOpen()) {
   <div class="sidebar-backdrop sidebar-backdrop-mobile" (click)="layoutService.toggleSidebar()"></div>
 }
-
-<!-- Sidebar Toggle Button moved outside -->
-<button class="toggle-btn" (click)="toggleSidebar()">
-  <i [class]="layoutService.isSidebarOpen() ? 'bi bi-arrow-bar-left' : 'bi bi-arrow-bar-right'"></i>
-</button>
