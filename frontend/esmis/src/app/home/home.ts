@@ -52,6 +52,38 @@ export class Home implements OnInit {
   historyLoading = signal(false);
   selectedSupplyForHistory = signal<Supply | null>(null);
 
+  // History Pagination signals
+  historyCurrentPage = signal(1);
+  historyPageSize = 10;
+
+  paginatedHistory = computed(() => {
+    const start = (this.historyCurrentPage() - 1) * this.historyPageSize;
+    const end = start + this.historyPageSize;
+    return this.stockHistory().slice(start, end);
+  });
+
+  totalHistoryPages = computed(() => {
+    return Math.ceil(this.stockHistory().length / this.historyPageSize);
+  });
+
+  setHistoryPage(page: number) {
+    if (page >= 1 && page <= this.totalHistoryPages()) {
+      this.historyCurrentPage.set(page);
+    }
+  }
+
+  nextHistoryPage() {
+    if (this.historyCurrentPage() < this.totalHistoryPages()) {
+      this.historyCurrentPage.update(p => p + 1);
+    }
+  }
+
+  prevHistoryPage() {
+    if (this.historyCurrentPage() > 1) {
+      this.historyCurrentPage.update(p => p - 1);
+    }
+  }
+
   // Total Active Items
   totalActiveItems = computed(() => this.supplies().length);
 
@@ -426,6 +458,7 @@ export class Home implements OnInit {
     this.selectedSupplyForHistory.set(supply);
     this.historyLoading.set(true);
     this.stockHistory.set([]);
+    this.historyCurrentPage.set(1);
     
     const modalElement = document.getElementById('historyModal');
     if (modalElement) {
