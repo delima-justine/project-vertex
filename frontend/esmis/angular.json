@@ -45,7 +45,8 @@
             "allowedCommonJsDependencies": [
               "pusher-js",
               "html2pdf.js",
-              "html2canvas"
+              "html2canvas",
+              "exceljs"
             ]
           },
           "configurations": {
@@ -53,7 +54,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1MB",
+                  "maximumWarning": "2MB",
                   "maximumError": "2MB"
                 },
                 {
