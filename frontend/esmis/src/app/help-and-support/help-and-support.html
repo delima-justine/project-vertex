@@ -282,7 +282,7 @@
                     <i class="bi bi-envelope-fill text-maroon fs-4 me-2"></i>
                     <span class="fw-bold">Email</span>
                   </div>
-                  <a href="mailto:smispupttaguig@gmail.com" class="text-decoration-none text-primary small">smispupttaguig@gmail.com</a>
+                  <a [href]="'mailto:' + env.identities.contactEmail" class="text-decoration-none text-primary small">{{ env.identities.contactEmail }}</a>
                 </div>
               </div>
               
@@ -312,7 +312,7 @@
                     <i class="bi bi-geo-alt-fill text-maroon fs-4 me-2"></i>
                     <span class="fw-bold">Location</span>
                   </div>
-                  <span class="text-secondary small">PUP Taguig, Property Custodian Office, Bldg A</span>
+                  <span class="text-secondary small">{{ env.identities.contactAddress }}</span>
                 </div>
               </div>
             </div>
