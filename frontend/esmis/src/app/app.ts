@@ -4,6 +4,7 @@ import { NgxLoadingBar } from '@ngx-loading-bar/core';
 import { ToastContainerComponent } from './toast-container/toast-container';
 import { ConfirmModalComponent } from './confirm-modal/confirm-modal';
 import { ThemeService } from '../services/theme';
+import { AutoLogoutService } from '../services/auto-logout';
 
 @Component({
   selector: 'app-root',
@@ -14,4 +15,5 @@ import { ThemeService } from '../services/theme';
 export class App {
   protected readonly title = signal('esmis');
   private themeService = inject(ThemeService);
+  private autoLogoutService = inject(AutoLogoutService);
 }
