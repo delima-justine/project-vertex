@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-authentication',
@@ -11,6 +12,7 @@ import { ToastService } from '../../services/toast.service';
   styleUrl: './authentication.scss',
 })
 export class Authentication {
+  public env = environment;
   showPassword = signal(false);
   router = inject(Router);
   loginForm: FormGroup;
