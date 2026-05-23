@@ -169,9 +169,11 @@ export class Pending implements OnInit {
   editBatchRIS() {
     const batch = this.selectedBatch();
     if (batch.length > 0) {
-      const ids = batch.map(r => r.id).join(',');
       this.closeModal();
-      this.router.navigate(['/requests/edit-ris', ids]);
+      const firstReq = batch[0];
+      // Use batch_id if available, otherwise join IDs
+      const param = firstReq.batch_id || batch.map(r => r.id).join(',');
+      this.router.navigate(['/requests/edit-ris', param]);
     }
   }
 }
