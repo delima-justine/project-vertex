@@ -100,13 +100,13 @@
     <div class="wrapper">
         <div class="container">
             <div class="header">
-                <img src="{{ $message->embed(public_path('images/pup_logo.png')) }}" alt="PUP Logo" class="logo">
-                <h1>SMIS</h1>
-                <p>Supply Management Information System</p>
+                <img src="{{ $message->embed(public_path('images/esmis_logo.png')) }}" alt="{{ config('identities.org_acronym') }} Logo" class="logo">
+                <h1>{{ config('identities.system_acronym') }}</h1>
+                <p>{{ config('identities.system_name') }}</p>
             </div>
             <div class="content">
                 <h2>Hello, {{ $name }}!</h2>
-                <p>We received a request to reset the password for your SMIS account.</p>
+                <p>We received a request to reset the password for your {{ config('identities.system_acronym') }} account.</p>
                 
                 <a href="{{ $url }}" class="button">Reset Password</a>
                 <br>
@@ -118,7 +118,7 @@
                 </p>
             </div>
             <div class="footer">
-                <p>&copy; {{ date('Y') }} Polytechnic University of the Philippines</p>
+                <p>&copy; {{ date('Y') }} {{ config('identities.org_name') }}</p>
                 <p>Supply Management Office</p>
             </div>
         </div>
