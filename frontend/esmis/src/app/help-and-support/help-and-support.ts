@@ -4,6 +4,7 @@ import { TopNav } from "../top-nav/top-nav";
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 interface FaqItem {
   id: string;
@@ -24,6 +25,7 @@ interface FaqItem {
   styleUrl: './help-and-support.scss',
 })
 export class HelpAndSupport {
+  public env = environment;
   private authService = inject(AuthService);
   activeTab = 'general';
   searchQuery = '';
