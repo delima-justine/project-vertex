@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-forgot-password',
@@ -11,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './forgot-password.scss',
 })
 export class ForgotPassword implements OnInit {
+  public env = environment;
   forgotPasswordForm: FormGroup;
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
