@@ -101,7 +101,7 @@ export class SupplyService {
     );
   }
 
-  listSupplyRequests(status?: string, userId?: number, page?: number, perPage?: number): Observable<PaginatedResponse<SupplyRequest>> {
+  listSupplyRequests(status?: string, userId?: number, page?: number, perPage?: number, batchId?: string): Observable<PaginatedResponse<SupplyRequest>> {
     let params = new HttpParams();
     if (status) {
       params = params.set('status', status);
@@ -114,6 +114,9 @@ export class SupplyService {
     }
     if (perPage) {
       params = params.set('per_page', perPage.toString());
+    }
+    if (batchId) {
+      params = params.set('batch_id', batchId);
     }
     return this.http.get<PaginatedResponse<SupplyRequest>>(`${this.apiUrl}/supply-requests`, { params });
   }
