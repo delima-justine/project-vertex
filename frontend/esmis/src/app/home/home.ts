@@ -9,6 +9,7 @@ import { Supply, Category, Unit, SupplyRequest } from '../../models/smis.model';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { forkJoin } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ import { forkJoin } from 'rxjs';
   styleUrl: './home.scss',
 })
 export class Home implements OnInit {
+  public env = environment;
   authService: AuthService = inject(AuthService);
   supplyService: SupplyService = inject(SupplyService);
   toastService: ToastService = inject(ToastService);
@@ -502,7 +504,7 @@ export class Home implements OnInit {
 
     let logoBase64 = '';
     try {
-      const logoResponse = await fetch('assets/pup_logo.png');
+      const logoResponse = await fetch(this.env.identities.logoPath);
       const logoBlob = await logoResponse.blob();
       logoBase64 = await new Promise<string>((resolve) => {
         const reader = new FileReader();
@@ -530,10 +532,10 @@ export class Home implements OnInit {
             ${logoBase64 ? `<img src="${logoBase64}" style="width: 90px; height: auto; display: block;" />` : ''}
           </div>
           <div style="flex: 1 1 auto; text-align: left; font-size: 9pt; line-height: 1.2;">
-            <div style="margin-bottom: 4px;">Republic of the Philippines</div>
-            <div style="font-weight: bold; font-size: 12pt; margin-bottom: 4px;">Polytechnic University of the Philippines</div>
-            <div style="margin-bottom: 4px;">Office of the Vice President for Campuses</div>
-            <div style="font-weight: bold;">Taguig Campus</div>
+            <div style="margin-bottom: 4px;">${this.env.identities.republicName}</div>
+            <div style="font-weight: bold; font-size: 12pt; margin-bottom: 4px;">${this.env.identities.orgName}</div>
+            <div style="margin-bottom: 4px;">${this.env.identities.officeName}</div>
+            <div style="font-weight: bold;">${this.env.identities.orgBranch}</div>
           </div>
         </div>
         <hr style="border: none; border-top: 1px solid #000; margin: 0 0 14px 0;" />
