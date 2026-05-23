@@ -61,8 +61,13 @@ export class EditRis implements OnInit, OnDestroy {
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
-      const ids = idParam.split(',').map(id => Number(id.trim()));
-      this.loadRequests(ids);
+      if (idParam.includes(',')) {
+        const ids = idParam.split(',').map(id => Number(id.trim()));
+        this.loadRequests(ids);
+      } else {
+        // Try as batch first, fallback to ID if no results
+        this.loadBatchOrId(idParam);
+      }
     }
 
     // Start counting from 0 when the component loads
@@ -75,20 +80,34 @@ export class EditRis implements OnInit, OnDestroy {
     this.timerSubscription?.unsubscribe();
   }
 
+  loadBatchOrId(param: string) {
+    this.supplyService.listSupplyRequests(undefined, undefined, 1, 100, param).subscribe({
+      next: (response) => {
+        if (response.data.length > 0) {
+          this.initializeRequestData(response.data);
+        } else if (!isNaN(Number(param))) {
+          this.loadRequests([Number(param)]);
+        } else {
+          this.toastService.error('No requests found for this ID/Batch.');
+          this.router.navigate(['/pending-requests']);
+        }
+      },
+      error: () => {
+        if (!isNaN(Number(param))) {
+          this.loadRequests([Number(param)]);
+        } else {
+          this.toastService.error('Failed to load request data.');
+          this.router.navigate(['/pending-requests']);
+        }
+      }
+    });
+  }
+
   loadRequests(ids: number[]) {
     const obs = ids.map((id: number) => this.supplyService.getSupplyRequest(id));
     forkJoin(obs).subscribe({
       next: (data: SupplyRequest[]) => {
-        this.requests.set(data);
-        const initialData: Record<number, { issueQty: number; remarks: string; stockAvailable: boolean }> = {};
-        data.forEach((req: SupplyRequest) => {
-          initialData[req.id] = {
-            issueQty: req.quantity_req,
-            remarks: '',
-            stockAvailable: true
-          };
-        });
-        this.requestData.set(initialData);
+        this.initializeRequestData(data);
       },
       error: (err: unknown) => {
         console.error('Error fetching requests', err);
@@ -96,6 +115,19 @@ export class EditRis implements OnInit, OnDestroy {
         this.router.navigate(['/pending-requests']);
       }
     });
+  }
+
+  initializeRequestData(data: SupplyRequest[]) {
+    this.requests.set(data);
+    const initialData: Record<number, { issueQty: number; remarks: string; stockAvailable: boolean }> = {};
+    data.forEach((req: SupplyRequest) => {
+      initialData[req.id] = {
+        issueQty: req.quantity_req,
+        remarks: '',
+        stockAvailable: true
+      };
+    });
+    this.requestData.set(initialData);
   }
 
   cancel() {
@@ -166,6 +198,11 @@ export class EditRis implements OnInit, OnDestroy {
       return `${hrs}:${formattedMins}:${formattedSecs}`;
     }
     return `${mins}:${formattedSecs}`;
+  }
+
+  capitalize(text: string): string {
+    if (!text) return '';
+    return text.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
 
   async printRIS() {
@@ -266,7 +303,7 @@ export class EditRis implements OnInit, OnDestroy {
                 <div style="font-size: 8pt; margin-bottom: 6px;">Approved by:</div>
                 <div style="height: 32px;"></div>
                 <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 10pt; margin: 6px 0;">${this.env.identities.directorName}</div>
+                <div style="font-size: 10pt; margin: 6px 0;">${this.capitalize(this.env.identities.directorName)}</div>
                 <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
                 <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.env.identities.directorTitle}</div>
               </td>
@@ -274,7 +311,7 @@ export class EditRis implements OnInit, OnDestroy {
                 <div style="font-size: 8pt; margin-bottom: 6px;">Issued by:</div>
                 <div style="height: 32px;"></div>
                 <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 10pt; margin: 6px 0;">${this.env.identities.custodianName}</div>
+                <div style="font-size: 10pt; margin: 6px 0;">${this.capitalize(this.env.identities.custodianName)}</div>
                 <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
                 <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.env.identities.custodianTitle}</div>
               </td>
@@ -298,14 +335,7 @@ export class EditRis implements OnInit, OnDestroy {
       `;
 
       const filename = `RIS-BATCH-${new Date().toISOString().split('T')[0]}.pdf`;
-      const opt = {
-        margin: 0,
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
+      
       const iframe = document.createElement('iframe');
       iframe.style.position = 'fixed';
       iframe.style.right = '0';
