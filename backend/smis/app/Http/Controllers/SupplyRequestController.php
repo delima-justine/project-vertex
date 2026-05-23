@@ -37,7 +37,11 @@ class SupplyRequestController extends Controller
             $query->where('status', $request->status);
         }
 
-        $perPage = $request->get('per_page', 100); // Higher default for batching to work better, or we can handle grouping better later
+        if ($request->has('batch_id')) {
+            $query->where('batch_id', $request->batch_id);
+        }
+
+        $perPage = $request->get('per_page', 100);
         return response()->json($query->paginate($perPage));
     }
 
