@@ -47,7 +47,7 @@ export class ResetPassword implements OnInit, OnDestroy {
     this.email = this.route.snapshot.queryParamMap.get('email');
 
     if (!this.token || !this.email) {
-      this.error.set('Invalid or expired reset link.');
+      this.router.navigate(['/']);
       return;
     }
 
