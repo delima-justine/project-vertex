@@ -7,6 +7,7 @@ import { ThemeService } from '../../services/theme';
 import { NotificationApiService } from '../../services/notification-api.service';
 import { NotificationService } from '../../services/notification.service';
 import { SupplyService } from '../../services/supply.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,6 +17,7 @@ import { SupplyService } from '../../services/supply.service';
   styleUrls: ['./sidebar.scss'],
 })
 export class Sidebar implements OnInit {
+  public env = environment;
   public authService: AuthService = inject(AuthService);
   public layoutService: LayoutService = inject(LayoutService);
   public themeService: ThemeService = inject(ThemeService);
