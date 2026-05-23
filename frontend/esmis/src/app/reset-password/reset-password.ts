@@ -6,6 +6,7 @@ import { ConfirmService } from '../../services/confirm.service';
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 import { strongPasswordValidator } from '../../validators/password.validator';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-reset-password',
@@ -14,6 +15,7 @@ import { strongPasswordValidator } from '../../validators/password.validator';
   styleUrl: './reset-password.scss',
 })
 export class ResetPassword implements OnInit, OnDestroy {
+  public env = environment;
   resetPasswordForm: FormGroup;
   formBuilder = inject(FormBuilder);
   route = inject(ActivatedRoute);
