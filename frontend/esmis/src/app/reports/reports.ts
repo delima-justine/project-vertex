@@ -9,6 +9,7 @@ import { ConfirmService } from '../../services/confirm.service';
 import { UserManagementService } from '../../services/user-management.service';
 import { AdminAudit, Archive, Office, SupplyRequest, User } from '../../models/smis.model';
 import { forkJoin } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 import { AuthService } from '../../services/auth.service';
 
@@ -20,6 +21,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './reports.scss',
 })
 export class Reports {
+  public env = environment;
   private supplyService = inject(SupplyService);
   private auditService = inject(AuditService);
   private userService = inject(UserManagementService);
@@ -287,7 +289,7 @@ export class Reports {
     try {
       let logoBase64 = '';
       try {
-        const logoResponse = await fetch('assets/pup_logo.png');
+        const logoResponse = await fetch(this.env.identities.logoPath);
         const logoBlob = await logoResponse.blob();
         logoBase64 = await new Promise<string>((resolve) => {
           const reader = new FileReader();
@@ -337,10 +339,10 @@ export class Reports {
               ${logoBase64 ? `<img src="${logoBase64}" style="width: 90px; height: auto; display: block;" />` : ''}
             </div>
             <div style="flex: 1 1 auto; text-align: left; font-size: 9pt; line-height: 1.2;">
-              <div style="margin-bottom: 4px;">Republic of the Philippines</div>
-              <div style="font-weight: bold; font-size: 12pt; margin-bottom: 4px;">Polytechnic University of the Philippines</div>
-              <div style="margin-bottom: 4px;">Office of the Vice President for Campuses</div>
-              <div style="font-weight: bold;">Taguig Campus</div>
+              <div style="margin-bottom: 4px;">${this.env.identities.republicName}</div>
+              <div style="font-weight: bold; font-size: 12pt; margin-bottom: 4px;">${this.env.identities.orgName}</div>
+              <div style="margin-bottom: 4px;">${this.env.identities.officeName}</div>
+              <div style="font-weight: bold;">${this.env.identities.orgBranch}</div>
             </div>
           </div>
           <hr style="border: none; border-top: 1px solid #000; margin: 0 0 14px 0;" />
@@ -395,7 +397,7 @@ export class Reports {
 
       let logoBase64 = '';
       try {
-        const logoResponse = await fetch('assets/pup_logo.png');
+        const logoResponse = await fetch(this.env.identities.logoPath);
         const logoBlob = await logoResponse.blob();
         logoBase64 = await new Promise<string>((resolve) => {
           const reader = new FileReader();
@@ -421,22 +423,22 @@ export class Reports {
       worksheet.mergeCells('B4:G4');
 
       const row1 = worksheet.getCell('B1');
-      row1.value = 'Republic of the Philippines';
+      row1.value = this.env.identities.republicName;
       row1.font = { size: 10, bold: false };
       row1.alignment = { horizontal: 'center', vertical: 'middle' };
 
       const row2 = worksheet.getCell('B2');
-      row2.value = 'Polytechnic University of the Philippines';
+      row2.value = this.env.identities.orgName;
       row2.font = { size: 13, bold: true };
       row2.alignment = { horizontal: 'center', vertical: 'middle' };
 
       const row3 = worksheet.getCell('B3');
-      row3.value = 'Office of the Vice President for Campuses';
+      row3.value = this.env.identities.officeName;
       row3.font = { size: 10, bold: false };
       row3.alignment = { horizontal: 'center', vertical: 'middle' };
 
       const row4 = worksheet.getCell('B4');
-      row4.value = 'Taguig Campus';
+      row4.value = this.env.identities.orgBranch;
       row4.font = { size: 11, bold: true };
       row4.alignment = { horizontal: 'center', vertical: 'middle' };
 
