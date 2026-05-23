@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmService } from '../../services/confirm.service';
 import { interval, Subscription, forkJoin } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-edit-ris',
@@ -17,6 +18,7 @@ import { interval, Subscription, forkJoin } from 'rxjs';
   styleUrl: './edit-ris.scss',
 })
 export class EditRis implements OnInit, OnDestroy {
+  public env = environment;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private supplyService = inject(SupplyService);
@@ -175,7 +177,7 @@ export class EditRis implements OnInit, OnDestroy {
 
     let logoBase64 = '';
     try {
-      const logoResponse = await fetch('assets/pup_logo.png');
+      const logoResponse = await fetch(this.env.identities.logoPath);
       const logoBlob = await logoResponse.blob();
       logoBase64 = await new Promise<string>((resolve) => {
         const reader = new FileReader();
@@ -219,10 +221,10 @@ export class EditRis implements OnInit, OnDestroy {
               ${logoBase64 ? `<img src="${logoBase64}" style="width: 90px; height: auto; display: block;" />` : ''}
             </div>
             <div style="flex: 1 1 auto; text-align: left; font-size: 9pt; line-height: 1.2;">
-              <div style="margin-bottom: 4px;">Republic of the Philippines</div>
-              <div style="font-weight: bold; font-size: 12pt; margin-bottom: 4px;">Polytechnic University of the Philippines</div>
-              <div style="margin-bottom: 4px;">Office of the Vice President for Campuses</div>
-              <div style="font-weight: bold;">Taguig Campus</div>
+              <div style="margin-bottom: 4px;">${this.env.identities.republicName}</div>
+              <div style="font-weight: bold; font-size: 12pt; margin-bottom: 4px;">${this.env.identities.orgName}</div>
+              <div style="margin-bottom: 4px;">${this.env.identities.officeName}</div>
+              <div style="font-weight: bold;">${this.env.identities.orgBranch}</div>
             </div>
           </div>
           <hr style="border: none; border-top: 1px solid #000; margin: 0 0 14px 0;" />
@@ -264,17 +266,17 @@ export class EditRis implements OnInit, OnDestroy {
                 <div style="font-size: 8pt; margin-bottom: 6px;">Approved by:</div>
                 <div style="height: 32px;"></div>
                 <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 10pt; margin: 6px 0;">Dr. Marissa B. Ferrer</div>
+                <div style="font-size: 10pt; margin: 6px 0;">${this.env.identities.directorName}</div>
                 <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">Director</div>
+                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.env.identities.directorTitle}</div>
               </td>
               <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; width: 25%; vertical-align: top;">
                 <div style="font-size: 8pt; margin-bottom: 6px;">Issued by:</div>
                 <div style="height: 32px;"></div>
                 <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 10pt; margin: 6px 0;">Gina A. Dela Cruz</div>
+                <div style="font-size: 10pt; margin: 6px 0;">${this.env.identities.custodianName}</div>
                 <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">Property Custodian</div>
+                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.env.identities.custodianTitle}</div>
               </td>
               <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; width: 25%; vertical-align: top;">
                 <div style="font-size: 8pt; margin-bottom: 6px;">Received by:</div>
@@ -287,7 +289,7 @@ export class EditRis implements OnInit, OnDestroy {
             </tr>
           </table>
           <div style="text-align: right; font-size: 8pt; margin-top: 18px; line-height: 1.6;">
-            <div>PUP-RISL-6-PSMO-010</div>
+            <div>${this.env.identities.formCode}</div>
             <div>Rev. 2</div>
             <div>Effectivity Date: April 23, 2026</div>
             <div>Appendix 63</div>
