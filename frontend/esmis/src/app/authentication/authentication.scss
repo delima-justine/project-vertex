@@ -7,51 +7,56 @@ main {
   width: 100%;
 }
 
-h1 {
-  margin: 0;
-}
-
-img {
-  width: 100px;
-  height: auto;
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .card {
   background-color: rgba(255, 255, 255, 0.9);
   border: none;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   max-width: 400px;
   width: 100%;
+  backdrop-filter: blur(5px);
 }
 
 .card-body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 480px;
   width: 100%;
+  padding: 0;
+
+  h6 {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #800000;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  h5 {
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
 
   .login-btn {
     width: 100%;
-    margin-top: 10px;
-  }
-
-  h6 {
-    font-size: 14px;
-    font-weight: bold;
-    color: #800000;
-  }
-
-  .login-btn {
+    margin-top: 15px;
     background-color: #800000;
     color: white;
     font-weight: bold;
     border: none;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 12px;
+    border-radius: 6px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 
     &:hover {
       background-color: #a00000;
@@ -61,49 +66,56 @@ img {
   form {
     display: flex;
     flex-direction: column;
-    align-items: start;
-    max-width: 480px;
+    align-items: stretch;
     width: 100%;
   }
 
   .back-btn {
-    margin-top: 5px;
+    margin-top: 10px;
     background-color: transparent;
     color: #800000;
     font-weight: bold;
     border: none;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     width: 100%;
     transition: all 0.3s ease;
+    font-size: 0.9rem;
 
     &:hover {
       background-color: rgba(128, 0, 0, 0.05);
-      transform: translateX(-5px);
       color: #a00000;
       text-decoration: none;
     }
   }
 }
 
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 .pup-logo {
   width: 80px;
   height: auto;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 576px) {
+  .card {
+    padding: 20px;
+  }
+
+  .card-body {
+    h6 {
+      font-size: 0.85rem;
+    }
+    
+    h5 {
+      font-size: 1.1rem;
+    }
+  }
 }
 
 .footer-container {
   background-color: #800000;
   color: white;
-  height: 100%;
   max-height: 60px;
   display: flex;
   flex-direction: row;
