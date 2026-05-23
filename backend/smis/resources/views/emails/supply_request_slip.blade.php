@@ -99,9 +99,9 @@
 <body>
     <div class="receipt">
         <div class="header">
-            <h1>SMIS-PUP</h1>
-            <p>Supply Management Information System</p>
-            <p>PUP Taguig Branch</p>
+            <h1>{{ config('identities.system_acronym') }}-{{ config('identities.org_acronym') }}</h1>
+            <p>{{ config('identities.system_name') }}</p>
+            <p>{{ config('identities.org_branch') }}</p>
         </div>
 
         <div class="status-badge status-{{ strtolower($status) }}">
