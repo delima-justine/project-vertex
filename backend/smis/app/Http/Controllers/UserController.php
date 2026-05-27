@@ -82,17 +82,32 @@ class UserController extends Controller
             $oldValues = $user->toArray();
             // Restore and update the existing user
             $user->restore();
+            
+            if ($request->has('permission_ids')) {
+                if (is_array($request->permission_ids)) {
+                    $validated['has_custom_permissions'] = true;
+                    $user->permissions()->sync($request->permission_ids);
+                } else {
+                    $validated['has_custom_permissions'] = false;
+                    $user->permissions()->detach();
+                }
+            }
+
             $user->update($validated);
             AuditService::log('RESTORE', $user, "Restored and updated user: {$user->email}", $oldValues, $user->fresh()->toArray());
         } else {
             // Create a new user
+            if ($request->has('permission_ids') && is_array($request->permission_ids)) {
+                $validated['has_custom_permissions'] = true;
+            }
             $user = User::create($validated);
-            AuditService::log('CREATE', $user, "Created new user: {$user->email}", null, $user->toArray());
-        }
 
-        // Sync permissions
-        if (isset($validated['permission_ids'])) {
-            $user->permissions()->sync($validated['permission_ids']);
+            if ($request->has('permission_ids')) {
+                if (is_array($request->permission_ids)) {
+                    $user->permissions()->sync($request->permission_ids);
+                }
+            }
+            AuditService::log('CREATE', $user, "Created new user: {$user->email}", null, $user->toArray());
         }
 
         // Send reset password email so the user can set their own password
@@ -135,7 +150,7 @@ class UserController extends Controller
             'password' => 'sometimes|required|string|min:8',
             'role_id' => 'sometimes|required|integer|exists:tbl_roles,id',
             'office_name' => 'sometimes|required|string|max:100',
-            'permission_ids' => 'sometimes|array',
+            'permission_ids' => 'sometimes|nullable|array',
             'permission_ids.*' => 'integer|exists:tbl_permissions,id',
         ]);
 
@@ -149,13 +164,20 @@ class UserController extends Controller
         }
 
         $oldValues = $user->toArray();
-        $user->update($validated);
-
-        // Sync permissions
-        if (isset($validated['permission_ids'])) {
-            $user->permissions()->sync($validated['permission_ids']);
+        
+        // Handle custom permissions flag
+        if ($request->has('permission_ids')) {
+            if (is_array($request->permission_ids)) {
+                $validated['has_custom_permissions'] = true;
+                $user->permissions()->sync($request->permission_ids);
+            } else {
+                $validated['has_custom_permissions'] = false;
+                $user->permissions()->detach();
+            }
         }
 
+        $user->update($validated);
+        
         $newValues = $user->fresh(['role', 'permissions', 'office'])->toArray();
         AuditService::log('UPDATE', $user, "Updated user: {$user->email}", $oldValues, $newValues);
 
