@@ -301,6 +301,11 @@
   display: block;
 }
 
+.text-emphasis {
+  font-weight: 700;
+  color: inherit;
+}
+
 /* Dark mode overrides using ::ng-deep to penetrate modal scoping */
 ::ng-deep [data-bs-theme="dark"] {
   .permission-card {
