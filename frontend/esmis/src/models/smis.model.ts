@@ -45,6 +45,7 @@ export type User = {
   email: string;
   role_id: number;
   office_id: number;
+  has_custom_permissions?: boolean;
   role?: Role;
   office?: Office;
   permissions?: Permission[];
