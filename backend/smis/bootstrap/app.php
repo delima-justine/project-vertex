@@ -27,4 +27,5 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withSchedule(function ($schedule) {
         $schedule->command('requests:auto-disapprove')->everyMinute();
+        $schedule->command('app:backup-database')->weeklyOn(0, '00:00');
     })->create();
