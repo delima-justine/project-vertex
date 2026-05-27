@@ -185,11 +185,12 @@ Stores system notifications for users.
 | 2 | `user_id` | bigint unsigned | FK | ID of the user who received the notification. |
 | 3 | `office_id` | int unsigned | FK | ID of the office associated with the notification. |
 | 4 | `request_id` | bigint unsigned | FK | ID of the supply request related to the notification. |
-| 5 | `action` | varchar(50) | | Action that triggered the notification. |
-| 6 | `message` | text | | Notification message content. |
-| 7 | `read_at` | timestamp | | Timestamp when the notification was read. |
-| 8 | `created_at` | timestamp | | Creation timestamp. |
-| 9 | `updated_at` | timestamp | | Update timestamp. |
+| 5 | `batch_id` | varchar(255) | | Group identifier for batch-related notifications. |
+| 6 | `action` | varchar(50) | | Action that triggered the notification. |
+| 7 | `message` | text | | Notification message content. |
+| 8 | `read_at` | timestamp | | Timestamp when the notification was read. |
+| 9 | `created_at` | timestamp | | Creation timestamp. |
+| 10 | `updated_at` | timestamp | | Update timestamp. |
 
 ---
 
@@ -292,10 +293,11 @@ System users.
 | 5 | `email` | varchar(191) | Unique | User's email address (login identifier). |
 | 6 | `password` | varchar(255) | | Hashed user password. |
 | 7 | `role_id` | tinyint unsigned | FK | ID of the user's assigned role. |
-| 8 | `office_id` | int unsigned | FK | ID of the user's primary office. |
-| 9 | `created_at` | timestamp | | Creation timestamp. |
-| 10 | `updated_at` | timestamp | | Update timestamp. |
-| 11 | `deleted_at` | timestamp | | Soft delete timestamp. |
+| 8 | `has_custom_permissions` | boolean | | Flag indicating if the user has a custom set of permissions (overriding role defaults). |
+| 9 | `office_id` | int unsigned | FK | ID of the user's primary office. |
+| 10 | `created_at` | timestamp | | Creation timestamp. |
+| 11 | `updated_at` | timestamp | | Update timestamp. |
+| 12 | `deleted_at` | timestamp | | Soft delete timestamp. |
 
 ---
 
