@@ -176,7 +176,7 @@ class AuthController extends Controller
 
         AuditService::log('LOGIN', $user, "User logged in: {$user->email}", null, null, $user);
 
-        $allPermissions = $user->permissions->isNotEmpty() 
+        $allPermissions = $user->has_custom_permissions
             ? $user->permissions->pluck('name') 
             : $user->role->permissions->pluck('name');
 
