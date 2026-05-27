@@ -93,9 +93,11 @@
             <td>{{ (user.role?.role_name || 'N/A') | titlecase }}</td>
             <td>
               @if(authService.hasPermission('edit_user')) {
-                <button class="btn btn-sm btn-warning me-1" type="button" (click)="editUser(user)">
-                  <i class="bi bi-pencil-fill"></i>
-                </button>
+                @if (user.role?.role_name?.toLowerCase() !== 'superadmin' || authService.hasRole('superadmin')) {
+                  <button class="btn btn-sm btn-warning me-1" type="button" (click)="editUser(user)">
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+                }
               }
               
               @if(authService.hasPermission('delete_user')) {
