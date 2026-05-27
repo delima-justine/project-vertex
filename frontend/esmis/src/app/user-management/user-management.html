@@ -346,21 +346,39 @@
         @if (userForm.get('role_id')?.value) {
           <div class="permissions-container mt-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h6 class="permissions-title mb-0">Permissions</h6>
-              <div class="form-check select-all-check">
-                <input 
-                  class="form-check-input" 
-                  type="checkbox" 
-                  id="selectAllPermissions"
-                  [checked]="areAllPermissionsSelected()"
-                  (change)="toggleSelectAllPermissions()"
-                >
-                <label class="form-check-label" for="selectAllPermissions">
-                  Select All
-                </label>
+              <div class="d-flex align-items-center gap-3">
+                <h6 class="permissions-title mb-0">Permissions</h6>
+                <div class="form-check form-switch override-toggle">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    role="switch" 
+                    id="overridePermissions"
+                    formControlName="override_permissions"
+                  >
+                  <label class="form-check-label" for="overridePermissions">
+                    Override Role Defaults
+                  </label>
+                </div>
               </div>
+
+              @if (userForm.get('override_permissions')?.value) {
+                <div class="form-check select-all-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="selectAllPermissions"
+                    [checked]="areAllPermissionsSelected()"
+                    (change)="toggleSelectAllPermissions()"
+                  >
+                  <label class="form-check-label" for="selectAllPermissions">
+                    Select All
+                  </label>
+                </div>
+              }
             </div>
-            <div class="permission-cards-grid">
+
+            <div class="permission-cards-grid" [class.disabled-grid]="!userForm.get('override_permissions')?.value">
               @for (group of permissionGroups; track group.label) {
                 @if (hasVisiblePermissions(group)) {
                   <div class="permission-card">
@@ -375,6 +393,7 @@
                               [id]="'perm_' + perm.name"
                               [checked]="isPermissionChecked(perm.name)"
                               (change)="onPermissionChange($event, getPermissionId(perm.name))"
+                              [disabled]="!userForm.get('override_permissions')?.value"
                             >
                             <label class="form-check-label" [for]="'perm_' + perm.name">
                               {{ perm.label }}
@@ -387,6 +406,12 @@
                 }
               }
             </div>
+            @if (!userForm.get('override_permissions')?.value) {
+              <small class="text-muted d-block mt-2">
+                <i class="bi bi-info-circle me-1"></i>
+                Using default permissions for this role. Toggle "Override" to customize.
+              </small>
+            }
           </div>
         }
 

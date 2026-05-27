@@ -263,6 +263,44 @@
   }
 }
 
+/* Override Toggle and Disabled Grid */
+.override-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .form-check-input {
+    width: 2.2rem;
+    height: 1.1rem;
+    cursor: pointer;
+
+    &:checked {
+      background-color: #800000;
+      border-color: #800000;
+    }
+  }
+
+  .form-check-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--bs-secondary-color);
+    cursor: pointer;
+  }
+}
+
+.disabled-grid {
+  opacity: 0.6;
+  pointer-events: none;
+  filter: grayscale(0.5);
+  cursor: not-allowed;
+}
+
+.help-text {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
 /* Dark mode overrides using ::ng-deep to penetrate modal scoping */
 ::ng-deep [data-bs-theme="dark"] {
   .permission-card {
