@@ -41,6 +41,7 @@ export class UserManagement {
     role_id: [null, Validators.required],
     office_name: ['', Validators.required],
     permission_ids: [[]],
+    override_permissions: [false],
   });
 
   roleOptions: Role[] = [];
@@ -310,6 +311,7 @@ export class UserManagement {
       role_id: null,
       office_name: '',
       permission_ids: [],
+      override_permissions: false,
     }, { emitEvent: false });
 
     this.userForm.get('role_id')?.enable();
@@ -323,7 +325,10 @@ export class UserManagement {
     // Use direct user permissions if they exist, otherwise fall back to role defaults
     const userPermIds = user.permissions?.map(p => Number(p.id)) || [];
     const rolePermIds = user.role?.permissions?.map(p => Number(p.id)) || [];
-    const initialPermIds = userPermIds.length > 0 ? userPermIds : rolePermIds;
+    
+    // If customized, use user permissions (even if empty). 
+    // If not customized, use role defaults for the initial view.
+    const initialPermIds = user.has_custom_permissions ? userPermIds : rolePermIds;
 
     // Use emitEvent: false to prevent the role_id change from triggering updatePermissionsByRole
     // which would overwrite our merged permissions with role defaults.
@@ -335,6 +340,7 @@ export class UserManagement {
       role_id: user.role_id,
       office_name: user.office?.office_name || '',
       permission_ids: initialPermIds,
+      override_permissions: !!user.has_custom_permissions,
     }, { emitEvent: false });
 
     const roleName = user.role?.role_name?.toLowerCase();
@@ -353,7 +359,19 @@ export class UserManagement {
       return;
     }
 
-    const payload = { ...this.userForm.value };
+    const formValue = this.userForm.getRawValue();
+    const payload: any = {
+      first_name: formValue.first_name,
+      middle_initial: formValue.middle_initial,
+      last_name: formValue.last_name,
+      email: formValue.email,
+      role_id: formValue.role_id,
+      office_name: formValue.office_name,
+    };
+
+    // If override is enabled, send the permission list (even if empty).
+    // If disabled, send null to tell the backend to use Role defaults.
+    payload.permission_ids = formValue.override_permissions ? formValue.permission_ids : null;
 
     if (this.editMode() && this.activeUser()) {
       this.userService.updateUser(this.activeUser()!.id, payload).subscribe({
