@@ -44,6 +44,7 @@ class User extends Authenticatable
         'password',
         'role_id',
         'office_id',
+        'has_custom_permissions',
     ];
 
     /**
@@ -96,7 +97,7 @@ class User extends Authenticatable
         }
 
         // If the user has customized permissions, use those as the source of truth
-        if ($this->permissions->isNotEmpty()) {
+        if ($this->has_custom_permissions) {
             return $this->permissions->contains('name', $permissionName);
         }
 

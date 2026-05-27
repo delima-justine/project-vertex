@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/user/profile', function (Request $request) {
     $user = $request->user();
-    $allPermissions = $user->permissions->isNotEmpty() 
+    $allPermissions = $user->has_custom_permissions
         ? $user->permissions->pluck('name') 
         : $user->role->permissions->pluck('name');
 
