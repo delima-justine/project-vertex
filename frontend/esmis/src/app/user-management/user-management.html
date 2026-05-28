@@ -17,7 +17,7 @@
       <span>Refresh</span>
     </button>
 
-    @if (authService.hasRole('superadmin') || authService.hasRole('admin')) {
+    @if (authService.hasRole('superadmin')) {
       <button class="btn btn-success" (click)="openBackupModal()">
         <i class="bi bi-box-arrow-in-down me-1"></i>
         <span>Backup Database</span>
@@ -101,9 +101,11 @@
               }
               
               @if(authService.hasPermission('delete_user')) {
-                <button class="btn btn-sm btn-danger" type="button" (click)="confirmDelete(user)">
-                  <i class="bi bi-trash-fill"></i>
-                </button>
+                @if (user.id !== authService.currentUser()?.id && (user.role?.role_name?.toLowerCase() !== 'superadmin' || authService.hasRole('superadmin'))) {
+                  <button class="btn btn-sm btn-danger" type="button" (click)="confirmDelete(user)">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                }
               }
             </td>
           </tr>
@@ -163,9 +165,11 @@
               </button>
             }
             @if(authService.hasPermission('delete_user')) {
-              <button class="btn btn-danger" type="button" (click)="confirmDelete(user)">
-                <i class="bi bi-trash-fill me-1"></i> Delete
-              </button>
+              @if (user.id !== authService.currentUser()?.id && (user.role?.role_name?.toLowerCase() !== 'superadmin' || authService.hasRole('superadmin'))) {
+                <button class="btn btn-danger" type="button" (click)="confirmDelete(user)">
+                  <i class="bi bi-trash-fill me-1"></i> Delete
+                </button>
+              }
             }
           </div>
         </li>
