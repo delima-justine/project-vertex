@@ -189,9 +189,25 @@ class UserController extends Controller
      */
     public function destroy(Request $request, User $user)
     {
-        if ($request->user()->id === $user->id) {
+        $currentUser = $request->user();
+
+        if ($currentUser->id === $user->id) {
             return response()->json([
                 'message' => 'You cannot delete your own account.',
+            ], 403);
+        }
+
+        // Load roles to check names
+        $currentUser->load('role');
+        $user->load('role');
+
+        $currentRoleName = strtolower($currentUser->role->role_name ?? '');
+        $targetRoleName = strtolower($user->role->role_name ?? '');
+
+        // Check if the current user is an Admin and the target user is a SuperAdmin
+        if ($currentRoleName === 'admin' && $targetRoleName === 'superadmin') {
+            return response()->json([
+                'message' => 'Admins cannot delete Super Admin accounts.',
             ], 403);
         }
 
