@@ -55,7 +55,17 @@ export class Authentication {
         },
         error: (err) => {
           console.error('Login failed:', err);
-          this.errorMessage.set(err.error?.message || 'Invalid email or password. Please try again.');
+          
+          let msg = 'Invalid email or password. Please try again.';
+          if (err.error) {
+            if (typeof err.error === 'string') {
+              msg = err.error;
+            } else if (err.error.message) {
+              msg = err.error.message;
+            }
+          }
+          
+          this.errorMessage.set(msg);
           this.loginForm.get('password')?.reset();
           this.isFailed.set(true);
         }
