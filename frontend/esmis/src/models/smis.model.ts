@@ -138,6 +138,7 @@ export type ProfileResponse = {
 export type LoginCredentials = {
   email: string;
   password: string;
+  login_type: 'user' | 'admin';
 };
 
 export type PaginatedResponse<T> = {

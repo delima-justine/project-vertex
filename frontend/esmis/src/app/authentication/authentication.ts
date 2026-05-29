@@ -14,6 +14,7 @@ import { environment } from '../../environments/environment';
 export class Authentication {
   public env = environment;
   showPassword = signal(false);
+  loginType = signal<'user' | 'admin'>('user');
   router = inject(Router);
   loginForm: FormGroup;
   formBuilder = inject(FormBuilder);
@@ -33,11 +34,19 @@ export class Authentication {
     this.showPassword.set(!this.showPassword());
   }
 
-  login() {
-    const loginValue = this.loginForm.value;
+  setLoginType(type: 'user' | 'admin') {
+    this.loginType.set(type);
+    this.isFailed.set(false);
+  }
 
+  login() {
     if(this.loginForm.valid) {
-      this.authService.login(loginValue).subscribe({
+      const payload = {
+        ...this.loginForm.value,
+        login_type: this.loginType()
+      };
+
+      this.authService.login(payload).subscribe({
         next: (res) => {
           console.log('Login successful:', res);
           console.log('User permissions:', res.permissions);
@@ -47,7 +56,7 @@ export class Authentication {
         error: (err) => {
           console.error('Login failed:', err);
           this.errorMessage.set(err.error?.message || 'Invalid email or password. Please try again.');
-          this.loginForm.reset();
+          this.loginForm.get('password')?.reset();
           this.isFailed.set(true);
         }
       });
