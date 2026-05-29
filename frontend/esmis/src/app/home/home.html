@@ -99,7 +99,7 @@
       }
     </div>
 
-    <!-- Third Row -->
+     <!-- Third Row -->
     <div class="third-row mt-4">
       @if (isLoading()) {
         <div class="card third-row-chart skeleton" style="height: 350px;"></div>
@@ -109,64 +109,66 @@
           }
         </div>
       } @else {
-        <div class="card third-row-chart">
-          <div class="card-header">
-            <div class="d-flex flex-column gap-1">
-              <div class="d-flex flex-row gap-2 chart-title">
-                <i class="bi bi-graph-up text-primary"></i>
-                <span class="text-primary">Inventory Status Overview</span>
+        @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+          <div class="card third-row-chart">
+            <div class="card-header">
+              <div class="d-flex flex-column gap-1">
+                <div class="d-flex flex-row gap-2 chart-title">
+                  <i class="bi bi-graph-up text-primary"></i>
+                  <span class="text-primary">Inventory Status Overview</span>
+                </div>
+                <p class="text-secondary ">Quick view of your current stock levels</p>
               </div>
-              <p class="text-secondary ">Quick view of your current stock levels</p>
             </div>
-          </div>
-          <div class="card-body">
-            <div class="chart-placeholder">
-              <canvas baseChart
-                [data]="barChartData()" 
-                [options]="barChartOptions"
-                [type]="'bar'">
-              </canvas>
-            </div>
-          </div>
-        </div>
-
-        <div class="three-cards">
-          <div class="card analytic-card">
             <div class="card-body">
-              <div class="analytic-header">
-                <span class="label">Stock Availability</span>
-                <span class="value">{{ stockAvailabilityPercentage() }}%</span>
-              </div>
-              <div class="progress" role="progressbar" [attr.aria-valuenow]="stockAvailabilityPercentage()" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar bg-success" [style.width]="stockAvailabilityPercentage() + '%'"></div>
+              <div class="chart-placeholder">
+                <canvas baseChart
+                  [data]="barChartData()" 
+                  [options]="barChartOptions"
+                  [type]="'bar'">
+                </canvas>
               </div>
             </div>
           </div>
 
-          <div class="card analytic-card">
-            <div class="card-body">
-              <div class="analytic-header">
-                <span class="label">Items Need Restocking</span>
-                <span class="value">{{ restockingNeedPercentage() }}%</span>
-              </div>
-              <div class="progress" role="progressbar" [attr.aria-valuenow]="restockingNeedPercentage()" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar bg-danger" [style.width]="restockingNeedPercentage() + '%'"></div>
+          <div class="three-cards">
+            <div class="card analytic-card">
+              <div class="card-body">
+                <div class="analytic-header">
+                  <span class="label">Stock Availability</span>
+                  <span class="value">{{ stockAvailabilityPercentage() }}%</span>
+                </div>
+                <div class="progress" role="progressbar" [attr.aria-valuenow]="stockAvailabilityPercentage()" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar bg-success" [style.width]="stockAvailabilityPercentage() + '%'"></div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="card analytic-card">
-            <div class="card-body">
-              <div class="analytic-header">
-                <span class="label">Recently Released</span>
-                <span class="value">{{ recentlyReleasedPercentage() }}%</span>
+            <div class="card analytic-card">
+              <div class="card-body">
+                <div class="analytic-header">
+                  <span class="label">Items Need Restocking</span>
+                  <span class="value">{{ restockingNeedPercentage() }}%</span>
+                </div>
+                <div class="progress" role="progressbar" [attr.aria-valuenow]="restockingNeedPercentage()" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar bg-danger" [style.width]="restockingNeedPercentage() + '%'"></div>
+                </div>
               </div>
-              <div class="progress" role="progressbar" [attr.aria-valuenow]="recentlyReleasedPercentage()" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar bg-primary" [style.width]="recentlyReleasedPercentage() + '%'"></div>
+            </div>
+
+            <div class="card analytic-card">
+              <div class="card-body">
+                <div class="analytic-header">
+                  <span class="label">Recently Released</span>
+                  <span class="value">{{ recentlyReleasedPercentage() }}%</span>
+                </div>
+                <div class="progress" role="progressbar" [attr.aria-valuenow]="recentlyReleasedPercentage()" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar bg-primary" [style.width]="recentlyReleasedPercentage() + '%'"></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        }
       }
     </div>
 
