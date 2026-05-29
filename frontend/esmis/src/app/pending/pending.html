@@ -74,7 +74,7 @@
               <td>
                 <!-- View Batch -->
                 <button class="btn btn-sm btn-warning" (click)="viewRequest(batch)">
-                  <i class="bi bi-eye-fill text-white"></i>
+                  <i class="bi bi-search text-white"></i>
                 </button>
               </td>
             </tr>
@@ -103,7 +103,7 @@
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
                   <button class="dropdown-item" (click)="viewRequest(batch)">
-                    <i class="bi bi-eye-fill me-2 text-warning"></i>View
+                    <i class="bi bi-search me-2 text-warning"></i>View
                   </button>
                 </li>
               </ul>
@@ -209,6 +209,15 @@
         @if (selectedBatch().length > 0) {
           @let currentReq = selectedBatch()[activeTabIndex()];
           <div class="row g-3">
+            <!-- Batch ID -->
+            <div class="col-md-6">
+              <label class="form-label custom-label">Batch ID</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-tag-fill"></i></span>
+                <input class="form-control" [value]="currentReq.batch_id || 'N/A'" readonly />
+              </div>
+            </div>
+
             <!-- Stock Number -->
             <div class="col-md-6">
               <label class="form-label custom-label">Stock Number</label>
