@@ -146,6 +146,14 @@ main {
     }
   }
 
+  .error-message {
+    font-size: 0.85rem;
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-weight: 600;
+  }
+
   .back-btn {
     margin-top: 10px;
     background-color: transparent;
