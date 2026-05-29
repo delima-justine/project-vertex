@@ -112,27 +112,26 @@ class AuthController extends Controller
         // Validate the request
         $fields = $request->validate([
             'email' => 'required|string',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'login_type' => 'required|string|in:user,admin'
         ]);
 
-        $loginValue = $fields['email'];
-        $lockoutKey = 'login_lockout:' . $loginValue;
-        $failedAttemptsKey = 'failed_attempts:' . $loginValue;
+        $loginValue = strtolower(trim($fields['email']));
+        $loginType = $fields['login_type'];
+        $throttleKey = 'login:' . $loginValue . '|' . $request->ip();
 
-        // Check if account is currently locked
-        if (Cache::has($lockoutKey)) {
-            $lockoutUntil = Cache::get($lockoutKey);
-            $secondsRemaining = Carbon::now()->diffInSeconds($lockoutUntil, false);
+        // 1. Check for lockout
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($throttleKey, 3)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($throttleKey);
+            $minutes = ceil($seconds / 60);
             
-            if ($secondsRemaining > 0) {
-                return response([
-                    'message' => 'Too many failed attempts. Please try again in ' . ceil($secondsRemaining / 60) . ' minute(s).',
-                    'seconds_remaining' => $secondsRemaining
-                ], 429);
-            }
+            return response([
+                'message' => "Too many failed attempts. Account locked for $minutes minute(s).",
+                'seconds_remaining' => $seconds
+            ], 429);
         }
 
-        // Find all users matching email or office name
+        // 2. Find Users
         $users = User::where('email', $loginValue)
             ->orWhereHas('office', function($query) use ($loginValue) {
                 $query->where('office_name', $loginValue);
@@ -142,34 +141,46 @@ class AuthController extends Controller
         $user = null;
         foreach ($users as $u) {
             if (Hash::check($fields['password'], $u->password)) {
-                $user = $u;
-                break;
+                // Verify role before accepting as valid user
+                $userRole = strtolower($u->role->role_name ?? '');
+                $validRole = true;
+                
+                if ($loginType === 'admin' && !in_array($userRole, ['admin', 'superadmin'])) {
+                    $validRole = false;
+                } else if ($loginType === 'user' && $userRole !== 'user') {
+                    $validRole = false;
+                }
+                
+                if ($validRole) {
+                    $user = $u;
+                    break;
+                }
             }
         }
 
-        // Check if user exists and password is correct
+        // 3. Handle Result
         if (!$user) {
-            $failedCount = Cache::get($failedAttemptsKey, 0) + 1;
-            Cache::put($failedAttemptsKey, $failedCount, now()->addDay());
-
-            if ($failedCount % 3 === 0) {
-                $lockoutMinutes = $failedCount / 3;
-                Cache::put($lockoutKey, Carbon::now()->addMinutes($lockoutMinutes), Carbon::now()->addMinutes($lockoutMinutes));
-                
+            \Illuminate\Support\Facades\RateLimiter::hit($throttleKey, 60); // 1 minute lockout window
+            
+            if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($throttleKey, 3)) {
+                $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($throttleKey);
+                $minutes = ceil($seconds / 60);
                 return response([
-                    'message' => "Too many failed attempts. Account locked for $lockoutMinutes minute(s).",
-                    'seconds_remaining' => $lockoutMinutes * 60
+                    'message' => "Too many failed attempts. Account locked for $minutes minute(s).",
+                    'seconds_remaining' => $seconds
                 ], 429);
             }
 
+            $attemptsLeft = \Illuminate\Support\Facades\RateLimiter::remaining($throttleKey, 3);
+            $tryWord = $attemptsLeft === 1 ? 'try' : 'tries';
+            
             return response([
-                'message' => 'Invalid credentials'
+                'message' => "Invalid credentials. You have $attemptsLeft $tryWord left."
             ], 401);
         }
 
-        // Successful login: Reset failed attempts and lockout
-        Cache::forget($failedAttemptsKey);
-        Cache::forget($lockoutKey);
+        // Success: Clear rate limiter
+        \Illuminate\Support\Facades\RateLimiter::clear($throttleKey);
 
         // Create new api token for this specific user
         $token = $user->createToken('auth_token')->plainTextToken;
