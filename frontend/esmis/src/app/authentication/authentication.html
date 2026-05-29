@@ -6,7 +6,28 @@
         <img class="pup-logo" [src]="env.identities.appLogoPath" alt="Logo"/>
         <h6>Supply Management Information System</h6>
 
-        <h5>Login</h5>
+        <div class="login-tabs mb-4">
+          <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+              <button 
+                class="nav-link" 
+                [class.active]="loginType() === 'user'"
+                (click)="setLoginType('user')">
+                User Login
+              </button>
+            </li>
+            <li class="nav-item">
+              <button 
+                class="nav-link" 
+                [class.active]="loginType() === 'admin'"
+                (click)="setLoginType('admin')">
+                Admin Login
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- <h5>{{ loginType() === 'admin' ? 'Admin Portal' : 'User Portal' }}</h5> -->
         <form [formGroup]="loginForm">
           <input 
             class="form-control mb-2 mt-2"
@@ -61,10 +82,4 @@
       </div>
     </div>
   </div>
-
-  <!-- Footer -->
-  <!-- <div class="footer-container">
-    <p class="fw-bold">SMIS Website</p>
-    <p>| Developed by Astral Angels 2025. All Rights Reserved</p>
-  </div> -->
 </main>
