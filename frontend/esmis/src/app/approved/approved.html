@@ -313,6 +313,12 @@
 
         <div class="modal-footer-custom mt-4 d-flex gap-2 justify-content-end">
           <button class="btn btn-cancel" type="button" data-bs-dismiss="modal">CLOSE</button>
+
+          @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
+            <button type="button" class="btn btn-info" (click)="releaseBatch(selectedBatch())" data-bs-dismiss="modal">
+              <i class="bi bi-truck me-1"></i>RELEASE BATCH
+            </button>
+          }
         </div>
       </div>
     </div>
