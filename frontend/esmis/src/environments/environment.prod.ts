@@ -6,18 +6,18 @@ export const environment = {
   forceTLS: true,
   identities: {
     republicName: 'Republic of the Philippines',
-    orgName: 'The Name of the University',
-    orgBranch: 'This Campus',
-    officeName: 'This Office of the Campuses',
-    directorName: 'Jane Dee',
-    directorTitle: 'Director',
-    custodianName: 'John Doe',
-    custodianTitle: 'Administrator Office',
-    contactEmail: 'vertex.group.0311@gmail.com',
-    contactAddress: 'UNI, Administrator Office, Bldg B',
-    formCode: 'UNI-RISL-6-PSMO-010',
-    logoPath: 'assets/esmis_logo_l.png',
-    appLogoPath: 'assets/esmis_logo_l.png',
-    sidebarLogoPath: 'assets/esmis_logo.png'
+    orgName: 'Polytechnic University of the Philippines',
+    orgBranch: 'Taguig Campus',
+    officeName: 'Office of the Vice President for Campuses',
+    directorName: 'DR. MARISSA B. FERRER',
+    directorTitle: 'DIRECTOR',
+    custodianName: 'GINA A. DELA CRUZ',
+    custodianTitle: 'Property Custodian',
+    contactEmail: 'smispupttaguig@gmail.com',
+    contactAddress: 'PUP Taguig, Property Custodian Office, Bldg A',
+    formCode: 'PUP-RISL-6-PSMO-010',
+    logoPath: 'assets/pup_logo.png',
+    appLogoPath: 'assets/pup_logo.png',
+    sidebarLogoPath: 'assets/pup_logo.png'
   }
 };
