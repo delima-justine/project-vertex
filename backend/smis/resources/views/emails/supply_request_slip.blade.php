@@ -144,7 +144,7 @@
             @if($status === 'pending')
                 <p>Your request has been submitted and is currently pending review.</p>
             @elseif($status === 'approved')
-                <p>Your request has been approved. Please wait for the items to be released.</p>
+                <p>Your request has been approved. Please wait for the items to be released. The process for your requested items is 3 working days.</p>
             @elseif($status === 'released')
                 <p>Your items have been released. Thank you!</p>
             @else
