@@ -79,6 +79,8 @@
                 <option value="UPDATE">Update</option>
                 <option value="DELETE">Delete</option>
                 <option value="RESTORE">Restore</option>
+                <option value="BACKUP">Backup</option>
+                <option value="SYSTEM_BACKUP">System Backup</option>
                 <option value="LOGIN">Login</option>
                 <option value="LOGOUT">Logout</option>
               </select>
@@ -298,7 +300,7 @@
                     </td>
                     <td>
                       <span class="status-badge" [ngClass]="{
-                        'status-approved': audit.action_type === 'CREATE' || audit.action_type === 'RESTORE' || audit.action_type === 'LOGIN',
+                        'status-approved': audit.action_type === 'CREATE' || audit.action_type === 'RESTORE' || audit.action_type === 'LOGIN' || audit.action_type === 'BACKUP' || audit.action_type === 'SYSTEM_BACKUP',
                         'status-released': audit.action_type === 'UPDATE',
                         'status-disapproved': audit.action_type === 'DELETE' || audit.action_type === 'LOGOUT',
                         'status-pending': audit.action_type === 'CHANGE_PASSWORD'
