@@ -37,7 +37,6 @@ export class AuthService {
         localStorage.setItem('auth_token', response.token);
         this.currentUser.set(response.user);
         this.userPermissions.set(response.permissions || []);
-        console.log('AuthService: User permissions loaded:', response.permissions);
       })
     );
   }
@@ -48,7 +47,6 @@ export class AuthService {
       tap((response: ProfileResponse) => {
         this.currentUser.set(response.user);
         this.userPermissions.set(response.permissions || []);
-        console.log('AuthService: User permissions loaded:', response.permissions);
       })
     );
   }

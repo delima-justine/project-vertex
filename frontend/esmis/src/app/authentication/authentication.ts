@@ -48,8 +48,6 @@ export class Authentication {
 
       this.authService.login(payload).subscribe({
         next: (res) => {
-          console.log('Login successful:', res);
-          console.log('User permissions:', res.permissions);
           this.isFailed.set(false);
           this.router.navigate(['/home']);
         },
