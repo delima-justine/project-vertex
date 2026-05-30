@@ -64,8 +64,8 @@ export class HelpAndSupport {
       question: 'What are the system requirements?',
       answer: 'SMIS is a web-based application that works on most modern devices. Recommended requirements:',
       features: [
-        'Browser: Chrome (latest), Firefox (latest), Edge (latest)',
-        'Internet Connection: Stable broadband connection',
+        'Browser: Chrome (latest), Edge (latest)',
+        'Internet Connection: Stable connection',
         'Screen Resolution: Minimum 1366 x 768'
       ],
       notes: 'For optimal performance, ensure your browser is updated to the latest version.'
@@ -152,7 +152,7 @@ export class HelpAndSupport {
         'Ensure Caps Lock is off',
         'Contact system administrator if issues persist'
       ],
-      notes: 'System Performance: Check connection, clear cache (Ctrl+F5), use Chrome/Firefox, close extra tabs.'
+      notes: 'System Performance: Check connection, clear cache (Ctrl+F5), use Chrome/Edge, close extra tabs.'
     },
     {
       id: 'faq10',
@@ -161,9 +161,7 @@ export class HelpAndSupport {
       answer: 'SMIS works best with the following browsers:',
       features: [
         'Google Chrome (Version 90+)',
-        'Mozilla Firefox (Version 88+)',
-        'Microsoft Edge (Version 90+)',
-        'Safari (Version 14+)'
+        'Microsoft Edge (Version 90+)'
       ],
       notes: 'If you\'re experiencing issues, try updating your browser to the latest version.'
     }
@@ -245,7 +243,7 @@ export class HelpAndSupport {
               <strong>System Performance:</strong><br>
               • Check your internet connection<br>
               • Clear browser cache (press Ctrl+F5)<br>
-              • Use recommended browsers (Chrome, Firefox)<br>
+              • Use recommended browsers (Chrome, Edge)<br>
               • Close unnecessary browser tabs<br>
               • Try disabling browser extensions temporarily`
     }
