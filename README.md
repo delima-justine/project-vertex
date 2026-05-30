@@ -12,10 +12,10 @@ A web-based Supply Management Information System designed for Polytechnic Univer
 
 | Frontend | Backend | AI & Infrastructure |
 |----------|---------|---------------------|
-| ![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white) | ![Laravel](https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white) | ![Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white) |
-| ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) | ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) | ![Hostinger](https://img.shields.io/badge/Hostinger-%23673de6.svg?style=for-the-badge&logo=hostinger&logoColor=white) |
-| ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white) | ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white) | |
-| ![Sass](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white) | ![Pusher](https://img.shields.io/badge/Pusher-302D2D?style=for-the-badge&logo=pusher&logoColor=white) | |
+| <img src="https://skillicons.dev/icons?i=angular" height="40" alt="Angular"> | <img src="https://skillicons.dev/icons?i=laravel" height="40" alt="Laravel"> | ![Gemini](https://img.shields.io/badge/Google_Gemini-8E75B2?style=flat&logo=googlegemini&logoColor=white) |
+| <img src="https://skillicons.dev/icons?i=ts" height="40" alt="TypeScript"> | <img src="https://skillicons.dev/icons?i=php" height="40" alt="PHP"> | ![Hostinger](https://img.shields.io/badge/Hostinger-%23673de6.svg?style=flat&logo=hostinger&logoColor=white) |
+| <img src="https://skillicons.dev/icons?i=bootstrap" height="40" alt="Bootstrap"> | <img src="https://skillicons.dev/icons?i=mysql" height="40" alt="MySQL"> | |
+| <img src="https://skillicons.dev/icons?i=sass" height="40" alt="Sass"> | ![Pusher](https://img.shields.io/badge/Pusher-302D2D?style=flat&logo=pusher&logoColor=white) | |
 
 ---
 
