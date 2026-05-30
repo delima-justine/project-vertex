@@ -83,7 +83,7 @@
                 </button>
                 @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
                   <button class="btn btn-sm btn-info me-1" title="Release" (click)="releaseBatch(batch.requests)">
-                    <i class="bi bi-truck"></i>
+                    <i class="bi bi-bag-check"></i>
                   </button>
                 }
               </td>
@@ -119,7 +119,7 @@
                 @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
                   <li>
                     <button class="dropdown-item" (click)="releaseBatch(batch.requests)">
-                      <i class="bi bi-truck me-2 text-info"></i>Release
+                      <i class="bi bi-bag-check me-2 text-info"></i>Release
                     </button>
                   </li>
                 }
@@ -316,7 +316,7 @@
 
           @if(user()?.role?.role_name?.toLowerCase() === 'admin' || user()?.role?.role_name?.toLowerCase() === 'superadmin') {
             <button type="button" class="btn btn-info" (click)="releaseBatch(selectedBatch())" data-bs-dismiss="modal">
-              <i class="bi bi-truck me-1"></i>RELEASE BATCH
+              <i class="bi bi-bag-check me-1"></i>RELEASE BATCH
             </button>
           }
         </div>
