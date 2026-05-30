@@ -8,6 +8,62 @@ A web-based Supply Management Information System designed for Polytechnic Univer
 
 ---
 
+## 🚀 Tech Stack
+
+### Frontend
+- **Framework:** Angular 19+
+- **Styling:** Bootstrap 5, SCSS
+- **State Management:** Angular Signals
+- **Icons:** Bootstrap Icons
+- **Real-time:** Laravel Echo, Pusher/Reverb
+
+### Backend
+- **Framework:** Laravel 11
+- **Database:** MySQL / MariaDB
+- **Security:** Laravel Sanctum, Spatie Permissions
+- **Notifications:** Laravel Notifications (Mail, Database, Real-time)
+
+---
+
+## 📂 Project Structure
+
+```text
+project-vertex/
+├── backend/            # Laravel API (smis)
+│   ├── app/            # Core logic (Models, Controllers, Services)
+│   ├── database/       # Migrations and Seeders
+│   └── routes/         # API and Web routes
+├── frontend/           # Angular Application (esmis)
+│   ├── src/app/        # Components, Services, Models
+│   └── src/assets/     # Static assets (images, fonts)
+└── documents/          # Database schemas and documentation
+```
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+- PHP 8.2+ & Composer
+- Node.js 20+ & npm
+- MySQL / MariaDB
+
+### Backend Setup (smis)
+1. Navigate to `backend/smis/`
+2. Run `composer install`
+3. Copy `.env.example` to `.env` and configure your database
+4. Run `php artisan key:generate`
+5. Run `php artisan migrate --seed`
+6. Start the server: `php artisan serve`
+
+### Frontend Setup (esmis)
+1. Navigate to `frontend/esmis/`
+2. Run `npm install`
+3. Start the application: `npm start`
+4. Access at `http://localhost:4200`
+
+---
+
 ## ✨ Key Features
 
 ### 🔐 Authentication & Security
