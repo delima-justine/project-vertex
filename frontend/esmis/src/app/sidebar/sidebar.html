@@ -10,9 +10,12 @@
     </div>
     
     <button 
+      #toggleBtn
       class="toggle-btn" 
       (click)="toggleSidebar()" 
-      title="Toggle Sidebar">
+      data-bs-toggle="tooltip"
+      data-bs-placement="right"
+      data-bs-title="Toggle Sidebar">
       <i 
         [class]="layoutService.isSidebarOpen() ? 'bi bi-arrow-bar-left' : 'bi bi-arrow-bar-right'"></i>
     </button>

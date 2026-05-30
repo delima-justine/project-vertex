@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { AuthService } from '../../services/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -8,6 +7,7 @@ import { NotificationApiService } from '../../services/notification-api.service'
 import { NotificationService } from '../../services/notification.service';
 import { SupplyService } from '../../services/supply.service';
 import { environment } from '../../environments/environment';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,7 +16,9 @@ import { environment } from '../../environments/environment';
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.scss'],
 })
-export class Sidebar implements OnInit {
+export class Sidebar implements OnInit, AfterViewInit {
+  @ViewChild('toggleBtn') toggleBtn!: ElementRef;
+
   public env = environment;
   public authService: AuthService = inject(AuthService);
   public layoutService: LayoutService = inject(LayoutService);
@@ -38,6 +40,14 @@ export class Sidebar implements OnInit {
     this.notifService.notifications$.subscribe(() => {
       this.supplyService.getStatusCounts().subscribe();
     });
+  }
+
+  ngAfterViewInit() {
+    // Initialize Bootstrap tooltip for the toggle button
+    const bootstrap = (window as any).bootstrap;
+    if (bootstrap && this.toggleBtn) {
+      new bootstrap.Tooltip(this.toggleBtn.nativeElement);
+    }
   }
 
   toggleDropdown() {
