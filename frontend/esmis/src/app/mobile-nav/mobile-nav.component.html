@@ -18,25 +18,25 @@
       </a>
 
       <a class="drawer-item" routerLink="/pending-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
-        <span class="drawer-icon"><i class="bi bi-clock-fill"></i></span>
+        <span class="drawer-icon"><i class="bi bi-clock"></i></span>
         <span>Pending</span>
         <span class="drawer-badge" *ngIf="supplyService.statusCounts().pending > 0">{{ supplyService.statusCounts().pending }}</span>
       </a>
 
       <a class="drawer-item" routerLink="/approved-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
-        <span class="drawer-icon"><i class="bi bi-hand-thumbs-up-fill"></i></span>
+        <span class="drawer-icon"><i class="bi bi-check-circle"></i></span>
         <span>Approved</span>
         <span class="drawer-badge approved" *ngIf="supplyService.statusCounts().approved > 0">{{ supplyService.statusCounts().approved }}</span>
       </a>
 
       <a class="drawer-item" routerLink="/released-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
-        <span class="drawer-icon"><i class="bi bi-truck"></i></span>
+        <span class="drawer-icon"><i class="bi bi-bag-check"></i></span>
         <span>Released</span>
         <span class="drawer-badge released" *ngIf="supplyService.statusCounts().released > 0">{{ supplyService.statusCounts().released }}</span>
       </a>
 
       <a class="drawer-item" routerLink="/disapproved-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
-        <span class="drawer-icon"><i class="bi bi-x-circle-fill"></i></span>
+        <span class="drawer-icon"><i class="bi bi-x-circle"></i></span>
         <span>Disapproved</span>
         <span class="drawer-badge disapproved" *ngIf="supplyService.statusCounts().disapproved > 0">{{ supplyService.statusCounts().disapproved }}</span>
       </a>
