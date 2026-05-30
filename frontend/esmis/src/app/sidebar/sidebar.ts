@@ -28,6 +28,8 @@ export class Sidebar implements OnInit, AfterViewInit {
   public supplyService = inject(SupplyService);
 
   public isDropdownOpen = signal(localStorage.getItem('isDropdownOpen') === 'true');
+  public tooltipText = signal(localStorage.getItem('sidebarTooltipShown') 
+    ? 'Toggle Sidebar' : 'Click here to collapse or open the sidebar');
 
   ngOnInit() {
     // Initial count fetch 
@@ -46,7 +48,14 @@ export class Sidebar implements OnInit, AfterViewInit {
     // Initialize Bootstrap tooltip for the toggle button
     const bootstrap = (window as any).bootstrap;
     if (bootstrap && this.toggleBtn) {
-      new bootstrap.Tooltip(this.toggleBtn.nativeElement);
+      const tooltip = new bootstrap.Tooltip(this.toggleBtn.nativeElement);
+
+      // Show instructional tooltip for first-time desktop users
+      if (window.innerWidth > 1024 && !localStorage.getItem('sidebarTooltipShown')) {
+        setTimeout(() => {
+          tooltip.show();
+        }, 1000); // 1-second delay for visibility after load
+      }
     }
   }
 
@@ -58,6 +67,25 @@ export class Sidebar implements OnInit, AfterViewInit {
 
   toggleSidebar() {
     this.layoutService.toggleSidebar();
+
+    // Mark as shown when the user interacts with the toggle button
+    if (!localStorage.getItem('sidebarTooltipShown')) {
+      localStorage.setItem('sidebarTooltipShown', '1');
+      this.tooltipText.set('Toggle Sidebar');
+      
+      const bootstrap = (window as any).bootstrap;
+      if (bootstrap && this.toggleBtn) {
+        let tooltip = bootstrap.Tooltip.getInstance(this.toggleBtn.nativeElement);
+        if (tooltip) {
+          tooltip.hide();
+          // Re-initialize to pick up the new data-bs-title from the signal update
+          setTimeout(() => {
+            tooltip?.dispose();
+            new bootstrap.Tooltip(this.toggleBtn.nativeElement);
+          }, 500);
+        }
+      }
+    }
   }
 
   closeSidebarOnMobile() {

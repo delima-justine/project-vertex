@@ -15,7 +15,7 @@
       (click)="toggleSidebar()" 
       data-bs-toggle="tooltip"
       data-bs-placement="right"
-      data-bs-title="Toggle Sidebar">
+      [attr.data-bs-title]="tooltipText()">
       <i 
         [class]="layoutService.isSidebarOpen() ? 'bi bi-arrow-bar-left' : 'bi bi-arrow-bar-right'"></i>
     </button>
