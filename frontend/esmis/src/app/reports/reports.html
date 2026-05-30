@@ -27,7 +27,9 @@
 
 <div class="content-panel card">
   <div class="card-body">
-    <span class="section-title">Supply Actions Log</span>
+    <span class="section-title">
+      {{ activeView() === 'admin_audit' ? 'Admin Audit Log' : 'Supply Actions Log' }}
+    </span>
 
     <div class="section-card mt-3 mb-4">
       <div class="card-body">
