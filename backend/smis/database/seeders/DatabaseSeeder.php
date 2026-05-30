@@ -28,17 +28,18 @@ class DatabaseSeeder extends Seeder
             'Registrar' => Office::firstOrCreate(['office_name' => 'Office of the University Registrar']),
             'Student Affairs' => Office::firstOrCreate(['office_name' => 'Office of Student Affairs']),
             'Dean' => Office::firstOrCreate(['office_name' => 'Office of the Dean']),
+            'Property Custodian' => Office::firstOrCreate(['office_name' => 'Property Custodian']),
         ];
 
         User::firstOrCreate([
-            'email' => 'superadmin@example.com',
+            'email' => 'propertyc.pup@gmail.com',
         ], [
-            'first_name' => 'Super',
-            'middle_initial' => 'A',
-            'last_name' => 'Admin',
-            'password' => Hash::make('SuperAdmin123!'),
+            'first_name' => 'Property',
+            'middle_initial' => '',
+            'last_name' => 'Custodian',
+            'password' => Hash::make('Property2026!'),
             'role_id' => $roles['SuperAdmin']->id,
-            'office_id' => $offices['Registrar']->id,
+            'office_id' => $offices['Property Custodian']->id,
         ]);
 
         $this->call(PermissionSeeder::class);
