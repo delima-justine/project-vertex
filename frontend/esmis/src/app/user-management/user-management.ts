@@ -30,6 +30,8 @@ export class UserManagement {
   isProcessingBackup = signal(false);
   isProcessingRestore = signal(false);
   restoreFile: File | null = null;
+  restorePassword = signal('');
+  showRestorePassword = signal(false);
 
   searchControl = new FormControl('');
 
@@ -466,6 +468,8 @@ export class UserManagement {
 
   openRestoreModal() {
     this.restoreFile = null;
+    this.restorePassword.set('');
+    this.showRestorePassword.set(false);
     this.getModal('restoreModal')?.show();
   }
 
@@ -482,8 +486,13 @@ export class UserManagement {
       return;
     }
 
+    if (!this.restorePassword()) {
+      this.toastService.warning('Please enter your password to confirm restoration.');
+      return;
+    }
+
     this.isProcessingRestore.set(true);
-    this.userService.restoreDatabase(this.restoreFile).subscribe({
+    this.userService.restoreDatabase(this.restoreFile, this.restorePassword()).subscribe({
       next: () => {
         this.isProcessingRestore.set(false);
         this.toastService.success('Database restored successfully.');
