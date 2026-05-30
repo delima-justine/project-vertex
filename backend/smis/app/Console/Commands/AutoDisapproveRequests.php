@@ -26,7 +26,7 @@ class AutoDisapproveRequests extends Command
      *
      * @var string
      */
-    protected $description = 'Automatically disapprove pending requests older than 5 days';
+    protected $description = 'Automatically disapprove approved requests older than 5 days';
 
     /**
      * Execute the console command.
@@ -35,17 +35,17 @@ class AutoDisapproveRequests extends Command
     {
         $cutoffDate = Carbon::now()->subDays(5);
 
-        $pendingRequests = SupplyRequest::where('status', 'pending')
-            ->where('created_at', '<=', $cutoffDate)
+        $approvedRequests = SupplyRequest::where('status', 'approved')
+            ->where('updated_at', '<=', $cutoffDate)
             ->get();
 
-        if ($pendingRequests->isEmpty()) {
-            $this->info('No pending requests found older than 5 days.');
+        if ($approvedRequests->isEmpty()) {
+            $this->info('No approved requests found older than 5 days.');
             return;
         }
 
         // Group by batch_id (null values will be grouped together under an empty key)
-        $groupedByBatch = $pendingRequests->groupBy(function ($item) {
+        $groupedByBatch = $approvedRequests->groupBy(function ($item) {
             return $item->batch_id ?? 'single-' . $item->id;
         });
 
@@ -66,7 +66,7 @@ class AutoDisapproveRequests extends Command
                 AuditService::log(
                     'UPDATE', 
                     $request, 
-                    "Automatically disapproved request due to inactivity (over 5 days)", 
+                    "Automatically disapproved request due to not being claimed within 5 days of approval", 
                     $oldValues, 
                     $request->fresh()->toArray()
                 );
@@ -76,9 +76,9 @@ class AutoDisapproveRequests extends Command
 
             // Send consolidated notification
             if ($isBatch && $count > 1) {
-                $message = "Your batch request with {$count} items has been automatically disapproved due to inactivity (over 5 days).";
+                $message = "Your batch request with {$count} items has been automatically disapproved because it was not claimed within 5 days of approval.";
             } else {
-                $message = "Your request for {$firstRequest->supply_id} has been automatically disapproved due to inactivity (over 5 days).";
+                $message = "Your request for {$firstRequest->supply_id} has been automatically disapproved because it was not claimed within 5 days of approval.";
             }
 
             $notif = Notification::create([
@@ -95,7 +95,7 @@ class AutoDisapproveRequests extends Command
             if (count($updatedRequests) > 0) {
                 try {
                     $user = $updatedRequests[0]->user;
-                    Mail::to($user->email)->send(new SupplyRequestSlip(collect($updatedRequests), 'disapproved'));
+                    Mail::to($user->email)->send(new SupplyRequestSlip(collect($updatedRequests), 'disapproved', $message));
                 } catch (\Exception $e) {
                     Log::error("Failed to send auto-disapprove email for batch/request {$key}: " . $e->getMessage());
                 }
