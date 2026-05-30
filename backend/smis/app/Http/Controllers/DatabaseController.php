@@ -60,7 +60,12 @@ class DatabaseController extends Controller
 
         $request->validate([
             'file' => 'required|file',
+            'password' => 'required|string',
         ]);
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->password, $request->user()->password)) {
+            return response()->json(['message' => 'Incorrect password. Restore aborted.'], 403);
+        }
 
         $connection = config('database.default');
         
