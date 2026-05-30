@@ -82,7 +82,7 @@
           routerLink="/create-request"
           (click)="closeSidebarOnMobile()"
           title="Create New Request">
-          <i class="bi bi-plus-circle-fill"></i>
+          <i class="bi bi-plus-circle"></i>
           <span>Create New Request</span>
         </div>
 
@@ -92,7 +92,7 @@
             routerLink="/pending-requests"
             (click)="closeSidebarOnMobile()"
             title="Pending Requests">
-            <i class="bi bi-clock-fill"></i>
+            <i class="bi bi-clock"></i>
             <span>Pending</span>
             @if(supplyService.statusCounts().pending > 0) {
               <span class="badge rounded-pill bg-warning text-dark ms-auto">
@@ -108,7 +108,7 @@
             routerLink="/approved-requests"
             (click)="closeSidebarOnMobile()"
             title="Approved Requests">
-            <i class="bi bi-hand-thumbs-up-fill"></i>
+            <i class="bi bi-check-circle"></i>
             <span>Approved</span>
             @if(supplyService.statusCounts().approved > 0) {
               <span class="badge rounded-pill bg-success ms-auto">
@@ -124,7 +124,7 @@
             routerLink="/released-requests"
             (click)="closeSidebarOnMobile()"
             title="Released Requests">
-            <i class="bi bi-truck"></i>
+            <i class="bi bi-bag-check"></i>
             <span>Released</span>
             @if(supplyService.statusCounts().released > 0) {
               <span class="badge rounded-pill bg-primary ms-auto">
@@ -140,7 +140,7 @@
             routerLink="/disapproved-requests"
             (click)="closeSidebarOnMobile()"
             title="Disapproved Requests">
-              <i class="bi bi-x-circle-fill"></i>
+              <i class="bi bi-x-circle"></i>
               <span>Disapproved</span>
               @if(supplyService.statusCounts().disapproved > 0) {
                 <span class="badge rounded-pill bg-danger ms-auto">
