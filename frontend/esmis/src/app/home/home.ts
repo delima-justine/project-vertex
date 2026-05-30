@@ -222,7 +222,7 @@ export class Home implements OnInit {
       this.selectedStatus();
       this.selectedCategory();
       this.currentPage.set(1);
-    }, { allowSignalWrites: true });
+    });
   }
 
   ngOnInit() {
