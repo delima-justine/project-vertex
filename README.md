@@ -22,8 +22,9 @@ A web-based Supply Management Information System designed for Polytechnic Univer
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
 ![Pusher](https://img.shields.io/badge/Pusher-302D2D?style=for-the-badge&logo=pusher&logoColor=white)
 
-### AI & Development Tools
+### AI & Infrastructure
 ![Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
+![Hostinger](https://img.shields.io/badge/Hostinger-%23673de6.svg?style=for-the-badge&logo=hostinger&logoColor=white)
 
 ---
 
