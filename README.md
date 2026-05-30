@@ -15,7 +15,7 @@ A web-based Supply Management Information System designed for Polytechnic Univer
 - **Styling:** Bootstrap 5, SCSS
 - **State Management:** Angular Signals
 - **Icons:** Bootstrap Icons
-- **Real-time:** Laravel Echo, Pusher/Reverb
+- **Real-time:** Laravel Echo & Pusher
 
 ### Backend
 - **Framework:** Laravel 11
