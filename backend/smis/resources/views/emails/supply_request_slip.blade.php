@@ -36,6 +36,11 @@
             margin: 2px 0;
             color: #fff;
         }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 5px;
+        }
         .info {
             font-size: 13px;
             margin-bottom: 15px;
@@ -99,6 +104,9 @@
 <body>
     <div class="receipt">
         <div class="header">
+            @if(file_exists(public_path('images/pup_logo.png')))
+                <img src="{{ $message->embed(public_path('images/pup_logo.png')) }}" alt="PUP Logo" class="logo">
+            @endif
             <h1>{{ config('identities.system_acronym') }}-{{ config('identities.org_acronym') }}</h1>
             <p>{{ config('identities.system_name') }}</p>
             <p>{{ config('identities.org_branch') }}</p>
@@ -141,10 +149,18 @@
         </div>
 
         <div class="reason">
-            @if($status === 'pending')
+            @if($reason)
+                <p>{{ $reason }}</p>
+            @elseif($status === 'pending')
                 <p>Your request has been submitted and is currently pending review.</p>
             @elseif($status === 'approved')
-                <p>Your request has been approved. Please wait for the items to be released. The process for your requested items is 3 working days.</p>
+                <p>
+                    Your request has been approved. 
+                    <strong>Please claim your items within 5 days.</strong> 
+                    Unclaimed items after this period will be automatically 
+                    disapproved. The process for your requested items is 
+                    3 working days.
+                </p>
             @elseif($status === 'released')
                 <p>Your items have been released. Thank you!</p>
             @else

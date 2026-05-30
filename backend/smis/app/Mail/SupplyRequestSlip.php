@@ -18,18 +18,21 @@ class SupplyRequestSlip extends Mailable
     public $items;
     public $user;
     public $status;
+    public $reason;
 
     /**
      * Create a new message instance.
      * 
      * @param \Illuminate\Support\Collection $items
      * @param string $status
+     * @param string|null $reason
      */
-    public function __construct($items, $status = 'pending')
+    public function __construct($items, $status = 'pending', $reason = null)
     {
         $this->items = $items;
         $this->user = $items->first()->user;
         $this->status = $status;
+        $this->reason = $reason;
     }
 
     /**
