@@ -21,14 +21,6 @@
     width: 6px;
   }
 
-  // Expanded Sidebar Hover: Show toggle button
-  &:not(.collapsed):hover {
-    .header .toggle-btn {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-
   &.collapsed {
     padding: 20px 5px;
 
@@ -132,8 +124,8 @@
   }
 
   .toggle-btn {
-    opacity: 0;
-    visibility: hidden;
+    opacity: 1;
+    visibility: visible;
     transition: all 0.2s ease;
   }
 }
