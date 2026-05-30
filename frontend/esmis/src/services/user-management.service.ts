@@ -103,9 +103,10 @@ export class UserManagementService {
     return this.http.post(`${this.apiUrl}/database/backup`, {}, { responseType: 'blob' });
   }
 
-  restoreDatabase(file: File): Observable<any> {
+  restoreDatabase(file: File, password: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('password', password);
     return this.http.post(`${this.apiUrl}/database/restore`, formData).pipe(
       tap(() => {
         // Clear all caches after restore

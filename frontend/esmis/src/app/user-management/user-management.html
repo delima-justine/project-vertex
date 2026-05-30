@@ -239,6 +239,16 @@
         <label for="restoreFile" class="form-label">Select SQL Backup File</label>
         <input class="form-control" type="file" id="restoreFile" accept=".sql" (change)="onFileSelected($event)">
       </div>
+      <div class="mb-3">
+        <label for="restorePassword" class="form-label">Confirm Password</label>
+        <div class="input-group">
+          <input [type]="showRestorePassword() ? 'text' : 'password'" class="form-control" id="restorePassword" placeholder="Enter your password" 
+                 (input)="restorePassword.set($any($event.target).value)">
+          <button class="btn btn-outline-secondary" type="button" (click)="showRestorePassword.set(!showRestorePassword())">
+            <i class="bi" [ngClass]="showRestorePassword() ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+          </button>
+        </div>
+      </div>
       <div class="alert alert-warning">
         <i class="bi bi-exclamation-triangle-fill me-2"></i>
         <span class="text-emphasis">Warning:</span> Restoring the database will overwrite all current data. 
@@ -247,7 +257,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-      <button type="button" class="btn btn-danger" (click)="performRestore()" [disabled]="isProcessingRestore() || !restoreFile">
+      <button type="button" class="btn btn-danger" (click)="performRestore()" [disabled]="isProcessingRestore() || !restoreFile || !restorePassword()">
         @if (isProcessingRestore()) {
           <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
         }
