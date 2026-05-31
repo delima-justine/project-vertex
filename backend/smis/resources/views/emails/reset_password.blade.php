@@ -102,7 +102,7 @@
             <div class="header">
                 <img src="{{ $message->embed(public_path('images/pup_logo.png')) }}" alt="{{ config('identities.org_acronym') }} Logo" class="logo">
                 <h1>{{ config('identities.system_acronym') }}</h1>
-                <p>{{ config('identities.system_name') }}</p>
+                <p>{{ config('identities.system_name') }} - {{ config('identities.org_acronym') }}</p>
             </div>
             <div class="content">
                 <h2>Hello, {{ $name }}!</h2>
@@ -118,8 +118,7 @@
                 </p>
             </div>
             <div class="footer">
-                <p>&copy; {{ date('Y') }} {{ config('identities.org_name') }}</p>
-                <p>Supply Management Office</p>
+                <p>&copy; {{ date('Y') }} {{ config('identities.org_name') }} - {{ config('identities.org_branch') }}</p>
             </div>
         </div>
     </div>
