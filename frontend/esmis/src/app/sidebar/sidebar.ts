@@ -68,12 +68,23 @@ export class Sidebar implements OnInit, AfterViewInit {
   toggleSidebar() {
     this.layoutService.toggleSidebar();
 
+    const bootstrap = (window as any).bootstrap;
+    if (bootstrap && this.toggleBtn) {
+      let tooltip = bootstrap.Tooltip.getInstance(this.toggleBtn.nativeElement);
+      
+      // Force hide the tooltip when toggling with a 1.5s delay
+      if (tooltip) {
+        setTimeout(() => {
+          tooltip.hide();
+        }, 1500); // 1.5sec timer as requested
+      }
+    }
+
     // Mark as shown when the user interacts with the toggle button
     if (!localStorage.getItem('sidebarTooltipShown')) {
       localStorage.setItem('sidebarTooltipShown', '1');
       this.tooltipText.set('Toggle Sidebar');
       
-      const bootstrap = (window as any).bootstrap;
       if (bootstrap && this.toggleBtn) {
         let tooltip = bootstrap.Tooltip.getInstance(this.toggleBtn.nativeElement);
         if (tooltip) {
