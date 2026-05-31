@@ -19,7 +19,7 @@ class ResetPasswordNotification extends ResetPassword
         $email = urlencode($notifiable->getEmailForPasswordReset());
         
         $url = $frontendUrl . '/reset-password?token=' . $this->token . '&email=' . $email;
-        $resendUrl = $frontendUrl . '/forgot-password?auto_resend=true&email=' . $email;
+        $resendUrl = $frontendUrl . '/forgot-pass?auto_resend=true&email=' . $email;
 
         return (new MailMessage)
             ->subject('SMIS - Reset Your Password')
