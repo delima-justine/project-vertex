@@ -13,9 +13,9 @@
   "start_url": "./",
   "icons": [
     {
-      "src": "assets/smis-logo-sm.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "assets/smis-logo-xl-text.png",
+      "sizes": "1000x1000",
+      "type": "image/png",
       "purpose": "maskable any"
     }
   ]
