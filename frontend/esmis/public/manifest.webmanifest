@@ -13,7 +13,7 @@
   "start_url": "./",
   "icons": [
     {
-      "src": "assets/smis-logo-xl-text.png",
+      "src": "assets/smis-logo-bg-sq.png",
       "sizes": "1000x1000",
       "type": "image/png",
       "purpose": "maskable any"
