@@ -5,6 +5,10 @@ export interface ToastInfo {
   body: string;
   delay?: number;
   classname?: string;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -15,8 +19,11 @@ export class ToastService {
     const toast: ToastInfo = { body, ...options };
     this.toasts.update((toasts) => [...toasts, toast]);
 
-    if (toast.delay !== 0) {
-      setTimeout(() => this.remove(toast), toast.delay || 5000);
+    // If an action is provided, we default to persistent (delay: 0) unless specified otherwise
+    const delay = toast.action ? (toast.delay ?? 0) : (toast.delay ?? 5000);
+
+    if (delay !== 0) {
+      setTimeout(() => this.remove(toast), delay);
     }
   }
 
