@@ -13,15 +13,9 @@
   "start_url": "./",
   "icons": [
     {
-      "src": "assets/esmis_logo_l.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/esmis_logo_l.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "assets/smis-logo-sm.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     }
   ]
