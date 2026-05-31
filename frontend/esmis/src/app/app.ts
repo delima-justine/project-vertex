@@ -5,6 +5,7 @@ import { ToastContainerComponent } from './toast-container/toast-container';
 import { ConfirmModalComponent } from './confirm-modal/confirm-modal';
 import { ThemeService } from '../services/theme';
 import { AutoLogoutService } from '../services/auto-logout';
+import { UpdateService } from '../services/update.service';
 
 @Component({
   selector: 'app-root',
@@ -16,4 +17,5 @@ export class App {
   protected readonly title = signal('esmis');
   private themeService = inject(ThemeService);
   private autoLogoutService = inject(AutoLogoutService);
+  private updateService = inject(UpdateService);
 }

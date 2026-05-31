@@ -6,8 +6,15 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="remove(toast)"></button>
       </div>
     }
-    <div class="toast-body d-flex justify-content-between">
-      {{ toast.body }}
+    <div class="toast-body d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        {{ toast.body }}
+        @if (toast.action) {
+          <button type="button" class="btn btn-sm btn-outline-light ms-3" (click)="toast.action.onClick(); remove(toast)">
+            {{ toast.action.label }}
+          </button>
+        }
+      </div>
       @if (!toast.header) {
         <button type="button" class="btn-close ms-2" [class.btn-close-white]="toast.classname?.includes('bg-success') || toast.classname?.includes('bg-danger') || toast.classname?.includes('bg-info')" aria-label="Close" (click)="remove(toast)"></button>
       }
