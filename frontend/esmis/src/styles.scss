@@ -156,3 +156,15 @@ router-outlet + *:not(app-main-layout):not(app-toast-container):not(app-confirm-
   display: block;
   animation: fade-up 0.4s ease-out;
 }
+
+/* Custom Loading Bar Color (PUP Gold) */
+ngx-loading-bar {
+  color: #FFD700 !important;
+}
+
+ngx-loading-bar .ngx-bar {
+  background: #FFD700 !important;
+  height: 4.5px !important;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
