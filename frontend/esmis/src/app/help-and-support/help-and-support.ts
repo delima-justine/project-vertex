@@ -38,6 +38,7 @@ export class HelpAndSupport {
 
   userManagementGuideURL = 'https://youtu.be/kWE5TtSwL7Y?si=K6LLYkgY3iRg7syC';
   adminPlaylistURL = 'https://www.youtube.com/playlist?list=PL9WX_LsJ2S4ub3kqM2QcZSxp46hIeMZ2e';
+  userPlaylistURL = 'https://www.youtube.com/playlist?list=PL9WX_LsJ2S4tJb1UHMJ4DyqgEugcZIaQj';
 
   allFaqs: FaqItem[] = [
     {
@@ -317,5 +318,9 @@ export class HelpAndSupport {
 
   goToAdminPlaylistURL() { 
     window.open(this.adminPlaylistURL, '_blank');
+  }
+
+  goToUserPlaylistURL() {
+    window.open(this.userPlaylistURL, '_blank');
   }
 }
