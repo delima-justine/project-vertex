@@ -36,6 +36,9 @@ export class HelpAndSupport {
   @ViewChild('contactSection') contactSection!: ElementRef;
   @ViewChild('contributorsSection') contributorsSection!: ElementRef;
 
+  userManagementGuideURL = 'https://youtu.be/kWE5TtSwL7Y?si=K6LLYkgY3iRg7syC';
+  adminPlaylistURL = 'https://www.youtube.com/playlist?list=PL9WX_LsJ2S4ub3kqM2QcZSxp46hIeMZ2e';
+
   allFaqs: FaqItem[] = [
     {
       id: 'faq1',
@@ -306,5 +309,13 @@ export class HelpAndSupport {
     this.userFaqs.forEach(item => item.isExpanded = false);
     // Set the clicked one to its new state
     faq.isExpanded = targetState;
+  }
+
+  goToUserManagementGuideURL() {
+    window.open(this.userManagementGuideURL, '_blank');
+  }
+
+  goToAdminPlaylistURL() { 
+    window.open(this.adminPlaylistURL, '_blank');
   }
 }

@@ -218,7 +218,9 @@
                   <div class="guide-content p-3">
                     <h6 class="fw-bold mb-2">User Management</h6>
                     <p class="text-secondary small mb-3">Learn how to manage user accounts and permissions.</p>
-                    <button class="btn btn-outline-maroon btn-sm px-3">
+                    <button 
+                      class="btn btn-outline-maroon btn-sm px-3"
+                      (click)="goToUserManagementGuideURL()">
                       <i class="bi bi-play-circle-fill me-2"></i>View Guide
                     </button>
                   </div>
@@ -232,7 +234,7 @@
                   <div class="guide-content p-3">
                     <h6 class="fw-bold mb-2">Request Approval Process</h6>
                     <p class="text-secondary small mb-3">Understand how to review and approve supply requests.</p>
-                    <button class="btn btn-outline-maroon btn-sm px-3">
+                    <button class="btn btn-outline-maroon btn-sm px-3" (click)="goToAdminPlaylistURL()">
                       <i class="bi bi-play-circle-fill me-2"></i>View Guide
                     </button>
                   </div>
@@ -250,7 +252,9 @@
                   <h3 class="fw-bold mb-2">Video Tutorials</h3>
                   <p class="text-secondary mb-4">Learn how to manage the system effectively with our comprehensive video guides.</p>
                   <div class="d-flex">
-                    <button class="btn btn-pill-maroon px-4 py-2">
+                    <button 
+                      class="btn btn-pill-maroon px-4 py-2" 
+                      (click)="goToAdminPlaylistURL()">
                       <i class="bi bi-play-btn-fill me-2"></i>View Playlist
                     </button>
                   </div>
