@@ -42,7 +42,10 @@ export class HelpAndSupport {
   adminPlaylistURL = 'https://www.youtube.com/playlist?list=PL9WX_LsJ2S4ub3kqM2QcZSxp46hIeMZ2e';
 
   // User URLs
+  supplyRequestGuideURL = 'https://youtu.be/RT3SWmA4CnA?si=YewkBEfLSqI7fS-D';
+  trackRequestGuideURL = 'https://youtu.be/QVjd2sepO68?si=URznYZyqpBh-l01e';
   userPlaylistURL = 'https://www.youtube.com/playlist?list=PL9WX_LsJ2S4tJb1UHMJ4DyqgEugcZIaQj';
+
 
   allFaqs: FaqItem[] = [
     {
@@ -326,6 +329,14 @@ export class HelpAndSupport {
 
   goToAdminPlaylistURL() { 
     window.open(this.adminPlaylistURL, '_blank');
+  }
+
+  goToSupplyRequestGuideURL() {
+    window.open(this.supplyRequestGuideURL, '_blank');
+  }
+
+  goToTrackRequestGuideURL() {
+    window.open(this.trackRequestGuideURL, '_blank');
   }
 
   goToUserPlaylistURL() {
