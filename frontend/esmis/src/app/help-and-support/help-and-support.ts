@@ -36,8 +36,12 @@ export class HelpAndSupport {
   @ViewChild('contactSection') contactSection!: ElementRef;
   @ViewChild('contributorsSection') contributorsSection!: ElementRef;
 
+  // Admin URLs
   userManagementGuideURL = 'https://youtu.be/kWE5TtSwL7Y?si=K6LLYkgY3iRg7syC';
+  requestApprovalGuideURL = 'https://youtu.be/ABpkMH3EvwI?si=e7ze9fnd0zAMgPeB';
   adminPlaylistURL = 'https://www.youtube.com/playlist?list=PL9WX_LsJ2S4ub3kqM2QcZSxp46hIeMZ2e';
+
+  // User URLs
   userPlaylistURL = 'https://www.youtube.com/playlist?list=PL9WX_LsJ2S4tJb1UHMJ4DyqgEugcZIaQj';
 
   allFaqs: FaqItem[] = [
@@ -314,6 +318,10 @@ export class HelpAndSupport {
 
   goToUserManagementGuideURL() {
     window.open(this.userManagementGuideURL, '_blank');
+  }
+
+  goToRequestApprovalGuideURL() {
+    window.open(this.requestApprovalGuideURL, '_blank');
   }
 
   goToAdminPlaylistURL() { 
