@@ -1,3 +1,19 @@
+# Disable Directory Listing
+Options -Indexes
+
+# Block access to sensitive files
+<FilesMatch "^\.env|composer\.(json|lock)|package\.(json|lock)|artisan|phpunit\.xml|\.gitignore|db_esmis">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to hidden files and folders (like .git)
+RewriteEngine On
+RewriteRule "(^|/)\.(?!well-known/)" - [F]
+
+# Disable Server Signature
+ServerSignature Off
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /api/

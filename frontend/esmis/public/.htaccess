@@ -1,3 +1,20 @@
+# Disable Directory Listing
+Options -Indexes
+
+<IfModule mod_headers.c>
+    # Prevent browsers from "sniffing" the content type
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Prevent the site from being embedded in iframes (Clickjacking)
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Enable XSS protection in older browsers
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Control how much info is sent in the Referer header
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
