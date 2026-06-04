@@ -62,45 +62,37 @@ project-vertex/
 ## ✨ Key Features
 
 ### 📱 Progressive Web App (PWA)
-- **Installable:** Install SMIS on Desktop and Mobile devices for a native app experience.
-- **Offline Indicator:** Full-screen "You are Offline" overlay that matches the system branding to prevent data loss during connectivity drops.
-- **Auto-Update:** Seamless background version detection with a user-friendly "Reload" prompt.
-- **Persistence:** High-priority z-index overlay that preserves application state while waiting for connection.
-- *Refer to [PWA_IMPLEMENTATION.md](./PWA_IMPLEMENTATION.md) for technical details.*
+- **Installable Experience:** Install ESMIS on Desktop and Mobile for a native app feel.
+- **Offline Resilience:** Real-time connectivity monitoring with a branded offline overlay to prevent data loss.
+- **Smart Updates:** Background version detection with user-friendly "Reload to Update" prompts.
 
 ### 🔐 Authentication & Security
-- Secure login with Gmail-based email validation
-- Role-Based Access Control (RBAC) using Spatie Permissions
-- Login cooldown on failed attempts
-- Forgot password with email reset link
-- CSRF protection and session management
+- **Granular RBAC:** Role-Based Access Control (Admin, SuperAdmin, User) with Spatie integration.
+- **Custom Permissions:** Ability to assign specific permissions to individual users beyond their default roles.
+- **Auto-Logout:** Automatic session termination for enhanced security on shared workstations.
+- **Secure Recovery:** Secure forgot password workflow with Gmail-based reset links.
 
-### 📊 Admin Dashboard
-- At-a-glance supply inventory overview
-- Pending requests counter and notifications
-- Audit logging for all admin actions
-- Real-time notification system with counters
+### 📦 Advanced Supply Workflow
+- **Batch Requisitions:** Users can submit multiple supply items in a single request batch for efficiency.
+- **Automated Stock Management:** Real-time stock deduction upon "Released" status and validation for availability.
+- **Auto-Disapprove Logic:** Scheduled system cleanup that automatically disapproves unclaimed approved requests after 5 days.
+- **Digital RIS Slips:** Automated Requisition and Issue Slips (RIS) sent via email with every status change.
 
-### 📦 Supply Inventory Management
-- Add, edit, and delete supply items
-- Track stock numbers, descriptions, quantities, and units
-- Organize supplies by categories
-- Monitor available stock vs. issued quantities
+### 📊 Admin & Data Management
+- **Comprehensive Audit Trail:** Detailed logging of all system actions (Create, Update, Delete) with before/after data snapshots.
+- **Database Governance:** Built-in tools for manual database backups and secure restorations.
+- **Automated Backups:** Scheduled database backups to ensure data persistence and disaster recovery.
+- **Request Archiving:** Archive completed transactions into JSON-based records for long-term tracking.
 
-### 📝 Supply Request Workflow
-| Step | Description |
-|------|-------------|
-| **Submit** | Users submit supply requests with quantity and purpose |
-| **Review** | Admin reviews pending requests |
-| **Approve/Reject** | Admin approves or rejects with remarks |
-| **Issue** | Approved requests are issued and tracked |
-| **Archive** | Completed requests are archived for records |
+### 🔔 Real-time Notifications
+- **Live Dashboard Updates:** Real-time status changes and notification counts powered by Pusher.
+- **Actionable Alerts:** Instant feedback for users and admins on request approvals, rejections, and releases.
 
 ### 🔄 Supply Request Journey
 
 | 1️⃣ Submit | 2️⃣ Review | 3️⃣ Decide | 4️⃣ Issue | 5️⃣ Archive |
 |-----------|------------|------------|----------|-------------|
-| Staff creates a request with quantity and purpose | Admin checks stock availability and request details | Request is approved or rejected with remarks | Approved supplies are released and recorded | Finished transactions are stored for reporting and history |
+| Staff creates a batch request with quantity and purpose | Admin checks stock availability and request details | Request is approved or rejected with remarks | Approved supplies are released and stock is auto-deducted | Finished transactions are archived for reporting and history |
 
 ### 👥 User Management
 - Create, edit, and deactivate user accounts
