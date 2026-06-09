@@ -240,10 +240,101 @@
   }
 }
 
+.modal-instructions {
+  background-color: transparent;
+  padding: 5px 0 5px 0;
+  
+  .instruction-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 1rem;
+
+    i {
+      font-size: 1.1rem;
+      color: #000;
+      width: 20px;
+      text-align: center;
+    }
+
+    span {
+      font-weight: 400;
+    }
+  }
+}
+
+.pagination-container {
+  .page-link {
+    color: #800000;
+    border-color: #dee2e6;
+    background-color: #fff;
+    cursor: pointer;
+    min-width: 32px;
+    text-align: center;
+
+    &:hover {
+      background-color: #f8f9fa;
+      border-color: #dee2e6;
+      color: #660000;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.25rem rgba(128, 0, 0, 0.25);
+    }
+  }
+
+  .page-item.active .page-link {
+    background-color: #800000;
+    border-color: #800000;
+    color: #fff;
+  }
+
+  .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+  }
+}
+
 @include custom-modal;
 
 /* Dark mode overrides using ::ng-deep to penetrate modal scoping */
 ::ng-deep [data-bs-theme="dark"] {
+  .modal-instructions {
+    .instruction-item {
+      color: #dee2e6 !important;
+      i {
+        color: #dee2e6 !important;
+      }
+    }
+  }
+
+  .pagination-container {
+    .page-link {
+      background-color: #343a40 !important;
+      border-color: #495057 !important;
+      color: #dee2e6 !important;
+
+      &:hover {
+        background-color: #3d4246 !important;
+      }
+    }
+
+    .page-item.active .page-link {
+      background-color: #800000 !important;
+      border-color: #800000 !important;
+      color: #fff !important;
+    }
+
+    .page-item.disabled .page-link {
+      background-color: #2b3035 !important;
+      color: #6c757d !important;
+    }
+  }
+
   .custom-modal-body {
     background-color: #2b3035 !important;
     color: #dee2e6 !important;

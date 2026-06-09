@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, effect } from '@angular/core';
 import { SupplyService } from '../../services/supply.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
@@ -19,6 +19,8 @@ export class CreateRequest implements OnInit {
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
 
+  protected readonly Math = Math;
+
   availableSupplies = signal<Supply[]>([]);
   categories = signal<Category[]>([]);
   requestList: (Supply & { quantity_req: number })[] = [];
@@ -30,6 +32,10 @@ export class CreateRequest implements OnInit {
   modalSearchTerm = signal('');
   modalCategoryFilter = signal('all');
   modalStatusFilter = signal('all');
+
+  // Pagination for modal
+  currentPage = signal(1);
+  itemsPerPage = signal(10);
 
   filteredAvailableSupplies = computed(() => {
     const supplies = this.availableSupplies();
@@ -48,9 +54,30 @@ export class CreateRequest implements OnInit {
       return matchesSearch && matchesCategory && matchesStatus;
     });
   });
+
+  paginatedSupplies = computed(() => {
+    const supplies = this.filteredAvailableSupplies();
+    const start = (this.currentPage() - 1) * this.itemsPerPage();
+    const end = start + this.itemsPerPage();
+    return supplies.slice(start, end);
+  });
+
+  totalPages = computed(() => {
+    return Math.ceil(this.filteredAvailableSupplies().length / this.itemsPerPage());
+  });
   
   purpose = '';
   purposeError = signal(false);
+
+  constructor() {
+    // Reset page to 1 when filters change
+    effect(() => {
+      this.modalSearchTerm();
+      this.modalCategoryFilter();
+      this.modalStatusFilter();
+      this.currentPage.set(1);
+    }, { allowSignalWrites: true });
+  }
 
   ngOnInit() {
     this.loadData();
@@ -75,6 +102,7 @@ export class CreateRequest implements OnInit {
     this.modalSearchTerm.set('');
     this.modalCategoryFilter.set('all');
     this.modalStatusFilter.set('all');
+    this.currentPage.set(1);
     
     // Clone current request list into temporary list
     this.tempSelectedItems = JSON.parse(JSON.stringify(this.requestList));
@@ -131,6 +159,43 @@ export class CreateRequest implements OnInit {
         }
       });
     }
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.set(this.currentPage() + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
+    }
+  }
+
+  getPaginationRange(): number[] {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const range: number[] = [];
+    const maxVisible = 5;
+
+    let start = Math.max(1, current - Math.floor(maxVisible / 2));
+    let end = Math.min(total, start + maxVisible - 1);
+
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+    return range;
   }
 
   removeItem(index: number) {
