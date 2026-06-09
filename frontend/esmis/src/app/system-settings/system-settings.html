@@ -1,0 +1,112 @@
+<div class="header-panel">
+  <i class="bi bi-gear-fill me-2"></i>
+  <span>System Settings</span>
+</div>
+
+<div class="settings-container">
+  @if (isLoading()) {
+    <div class="text-center p-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Loading settings...</p>
+    </div>
+  } @else {
+    <div class="card">
+      <form (ngSubmit)="saveSettings()">
+        <!-- Signatories Section -->
+        <div class="section-title">
+          <i class="bi bi-person-badge"></i>
+          <span>RIS Signatories</span>
+        </div>
+        
+        <div class="row">
+          <!-- Director Section -->
+          <div class="col-md-6">
+            <label class="custom-label">Approved By (Director Name)</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="settings().director_name" 
+                name="directorName" 
+                placeholder="e.g. DR. MARISSA B. FERRER"
+                required>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <label class="custom-label">Director Title</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-award-fill"></i></span>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="settings().director_title" 
+                name="directorTitle" 
+                placeholder="e.g. DIRECTOR"
+                required>
+            </div>
+          </div>
+
+          <!-- Custodian Section -->
+          <div class="col-md-6">
+            <label class="custom-label">Issued By (Property Custodian)</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-person-vcard-fill"></i></span>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="settings().custodian_name" 
+                name="custodianName" 
+                placeholder="e.g. GINA A. DELA CRUZ"
+                required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="custom-label">Custodian Title</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text"><i class="bi bi-briefcase-fill"></i></span>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="settings().custodian_title" 
+                name="custodianTitle" 
+                placeholder="e.g. Property Custodian"
+                required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="footer-actions">
+          <button type="button" class="btn btn-outline-secondary" (click)="loadSettings()" [disabled]="isSaving()">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            <span>Reset to Current</span>
+          </button>
+          
+          <button type="submit" class="btn btn-primary" [disabled]="isSaving()">
+            @if (isSaving()) {
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span>Saving Changes...</span>
+            } @else {
+              <i class="bi bi-floppy-fill"></i>
+              <span>Save Changes</span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Info Alert -->
+    <div class="info-alert">
+      <i class="bi bi-info-circle-fill"></i>
+      <div>
+        <strong>Heads up!</strong>
+        <p>Updating these values will immediately affect all newly generated Requisition and Issue Slips (RIS). Past requests already printed will remain unchanged.</p>
+      </div>
+    </div>
+  }
+</div>
