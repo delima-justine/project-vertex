@@ -345,29 +345,34 @@
         <p class="description mb-4 mt-3">The Supply Management Information System (SMIS) is a product of collaborative effort and technical excellence.</p>
 
         <div class="row g-4 mt-2">
-          <div class="col-md-6">
-            <div class="contributor-card p-4 rounded h-100 text-center border">
-              <div class="contributor-icon mb-3">
-                <i class="bi bi-stars fs-1 text-maroon"></i>
-              </div>
-              <h4 class="fw-bold text-maroon">Astral Angels</h4>
-              <p class="text-secondary mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2025</p>
-              <span class="badge bg-maroon-soft text-maroon px-3 py-2 rounded-pill">Original Developers</span>
-              <p class="mt-3 small text-secondary">Laid the foundation of SMIS, designing and implementing the core architecture and features of the system.</p>
-            </div>
-          </div>
+          @for (team of teams; track team.name) {
+            <div class="col-md-6">
+              <div class="contributor-card p-4 rounded h-100 text-center border position-relative overflow-hidden">
+                <div class="contributor-info">
+                  <div class="contributor-icon mb-3">
+                    <i class="bi fs-1 text-maroon" [class]="team.icon"></i>
+                  </div>
+                  <h4 class="fw-bold text-maroon">{{team.name}}</h4>
+                  <p class="text-secondary mb-2"><i class="bi bi-calendar3 me-2"></i>Year: {{team.year}}</p>
+                  <span class="badge bg-maroon-soft text-maroon px-3 py-2 rounded-pill">{{team.badge}}</span>
+                  <p class="mt-3 small text-secondary">{{team.description}}</p>
+                </div>
 
-          <div class="col-md-6">
-            <div class="contributor-card p-4 rounded h-100 text-center border">
-              <div class="contributor-icon mb-3">
-                <i class="bi bi-triangle-half fs-1 text-maroon"></i>
+                <!-- Hover Overlay for Members -->
+                <div class="members-overlay">
+                  <h5 class="fw-bold text-white mb-4">Team Members</h5>
+                  <div class="members-list">
+                    @for (member of team.members; track member.name) {
+                      <div class="member-item mb-3">
+                        <div class="fw-bold text-white">{{member.name}}</div>
+                        <div class="text-white-50 small">{{member.role}}</div>
+                      </div>
+                    }
+                  </div>
+                </div>
               </div>
-              <h4 class="fw-bold text-maroon">Vertex</h4>
-              <p class="text-secondary mb-2"><i class="bi bi-calendar3 me-2"></i>Year: 2026</p>
-              <span class="badge bg-maroon-soft text-maroon px-3 py-2 rounded-pill">Contributors</span>
-              <p class="mt-3 small text-secondary">Currently enhancing the system with advanced analytics, improved UI/UX, and optimized backend workflows.</p>
             </div>
-          </div>
+          }
         </div>
       </div>
     </div>
