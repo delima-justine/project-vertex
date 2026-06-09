@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SettingsService, SystemSettings } from '../../services/settings.service';
+import { SettingsService } from '../../services/settings.service';
+import { SystemSettings } from '../../models/smis.model';
 import { ToastService } from '../../services/toast.service';
 import { environment } from '../../environments/environment';
 
