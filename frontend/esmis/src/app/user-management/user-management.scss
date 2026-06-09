@@ -58,6 +58,15 @@
   }
 }
 
+/* Role Badge Styles */
+.badge-maroon {
+  background-color: #800000;
+  color: white;
+  font-weight: 500;
+  padding: 0.4em 0.8em;
+  border-radius: 6px;
+}
+
 @include standard-table;
 @include custom-modal;
 
