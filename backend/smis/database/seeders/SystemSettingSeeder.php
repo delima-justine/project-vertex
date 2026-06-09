@@ -13,9 +13,9 @@ class SystemSettingSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            ['key' => 'director_name', 'value' => 'DR. MARISSA B. FERRER'],
-            ['key' => 'director_title', 'value' => 'DIRECTOR'],
-            ['key' => 'custodian_name', 'value' => 'GINA A. DELA CRUZ'],
+            ['key' => 'director_name', 'value' => 'Director Name'],
+            ['key' => 'director_title', 'value' => 'Director'],
+            ['key' => 'custodian_name', 'value' => 'Custodian Name'],
             ['key' => 'custodian_title', 'value' => 'Property Custodian'],
         ];
 
