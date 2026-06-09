@@ -10,7 +10,7 @@ export const environment = {
     orgBranch: 'Taguig Campus',
     officeName: 'Office of the Vice President for Campuses',
     directorName: 'DR. MARISSA B. FERRER',
-    directorTitle: 'DIRECTOR',
+    directorTitle: 'Director',
     custodianName: 'GINA A. DELA CRUZ',
     custodianTitle: 'Property Custodian',
     contactEmail: 'smispupttaguig@gmail.com',
