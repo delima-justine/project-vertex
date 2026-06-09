@@ -13,6 +13,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\AdminAuditController;
 use App\Http\Controllers\DatabaseController;
+use App\Http\Controllers\SystemSettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/supplies', [SupplyController::class, 'index']);
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/units', [UnitController::class, 'index']);
+    Route::get('/settings', [SystemSettingController::class, 'index']);
     Route::get('/archives', [ArchiveController::class, 'index']);
     Route::post('/archives', [ArchiveController::class, 'store']);
     Route::post('/archives/{archive}/restore', [ArchiveController::class, 'restore']);
@@ -80,6 +82,7 @@ Route::middleware(['auth:sanctum', 'role:admin,superadmin'])->group(function () 
     ]);
     Route::apiResource('categories', CategoryController::class)->except(['index']);
     Route::apiResource('units', UnitController::class)->except(['index']);
+    Route::put('/settings', [SystemSettingController::class, 'update']);
 });
 
 Route::post('/login', [AuthController::class, 'login']);
