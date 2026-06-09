@@ -65,8 +65,8 @@ export class UserManagementService {
     return this.http.get<Permission[]>(`${this.apiUrl}/roles/${roleId}/permissions`);
   }
 
-  listUsers(page = 1, search = ''): Observable<PaginatedUsers> {
-    const params: Record<string, string> = { page: String(page) };
+  listUsers(page = 1, search = '', limit = 5): Observable<PaginatedUsers> {
+    const params: Record<string, string> = { page: String(page), limit: String(limit) };
 
     if (search) {
       params['search'] = search;

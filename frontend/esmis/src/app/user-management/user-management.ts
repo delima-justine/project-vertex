@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User, Office, Role, Permission } from '../../models/smis.model';
@@ -425,15 +425,29 @@ export class UserManagement {
     }
   }
 
+  pageNumbers = computed(() => {
+    const pages = [];
+    for (let i = 1; i <= this.lastPage(); i++) {
+      pages.push(i);
+    }
+    return pages;
+  });
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.lastPage()) {
+      this.loadUsers(page);
+    }
+  }
+
   previousPage() {
     if (this.currentPage() > 1) {
-      this.loadUsers(this.currentPage() - 1);
+      this.setPage(this.currentPage() - 1);
     }
   }
 
   nextPage() {
     if (this.currentPage() < this.lastPage()) {
-      this.loadUsers(this.currentPage() + 1);
+      this.setPage(this.currentPage() + 1);
     }
   }
 

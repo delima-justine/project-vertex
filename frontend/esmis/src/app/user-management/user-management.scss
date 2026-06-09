@@ -18,6 +18,46 @@
   }
 }
 
+/* Gradient Button Styles */
+.btn-gradient-primary {
+  background: linear-gradient(135deg, #800000 0%, #a52a2a 100%) !important;
+  border: none !important;
+  color: white !important;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    background: linear-gradient(135deg, #a52a2a 0%, #800000 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(128, 0, 0, 0.3);
+  }
+}
+
+.btn-gradient-success {
+  background: linear-gradient(135deg, #198754 0%, #146c43 100%) !important;
+  border: none !important;
+  color: white !important;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    background: linear-gradient(135deg, #146c43 0%, #0f5132 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3);
+  }
+}
+
+.btn-gradient-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%) !important;
+  border: none !important;
+  color: white !important;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    background: linear-gradient(135deg, #b02a37 0%, #842029 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+  }
+}
+
 @include standard-table;
 @include custom-modal;
 
