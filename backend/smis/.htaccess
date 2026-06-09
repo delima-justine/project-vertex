@@ -1,34 +1,101 @@
-# Disable Directory Listing
-Options -Indexes
-
-# Block access to sensitive files
-<FilesMatch "^\.env|composer\.(json|lock)|package\.(json|lock)|artisan|phpunit\.xml|\.gitignore|db_esmis">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Block access to hidden files and folders (like .git)
-RewriteEngine On
-RewriteRule "(^|/)\.(?!well-known/)" - [F]
-
-# Disable Server Signature
-ServerSignature Off
-
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /api/
+    
+    # ----------------------------------------------------
+    # 🔐 1. FORCE HTTPS
+    # ----------------------------------------------------
+    RewriteCond %{HTTPS} off
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # FIX: Pass Authorization Header to PHP (Crucial for Hostinger)
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # ----------------------------------------------------
+    # 🚫 2. BLOCK MALICIOUS BOTS BY NAME
+    # ----------------------------------------------------
+    RewriteCond %{HTTP_USER_AGENT} ^(RootEvidence|ClaudeBot|Leakix|l9scan|Go-http-client|sqlmap|nikto|masscan) [NC]
+    RewriteRule ^ - [F,L]
 
-    # Redirect all requests to the public/ folder
-    # We prepend /api/ so it matches Laravel's routing
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ public/index.php/api/$1 [L]
+    # ----------------------------------------------------
+    # 🚫 3. BLOCK DIRECT PHP & SENSITIVE PATHS
+    # ----------------------------------------------------
+    <FilesMatch "^(composer\.(json|lock)|package(-lock)?\.json|\.env.*|.*\.log|.*\.bak|.*\.sql)$">
+        Require all denied
+    </FilesMatch>
 
-    # If the request is for a physical file that exists in the public/ folder
-    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{THE_REQUEST} \.php [NC]
+    RewriteCond %{REQUEST_URI} !index\.php
+    RewriteRule ^ - [F,L]
+
+    RewriteCond %{REQUEST_URI} \.(yml|yaml|config|py|js|save|old|backup)$ [NC]
+    RewriteCond %{REQUEST_URI} !(index|app|main)\.(js|json)$
+    RewriteRule ^(wp-admin|wp-content|xmlrpc\.php|\.git|secrets|credentials|auth|settings) - [F,L]
+
+    # ----------------------------------------------------
+    # 🔁 4. ROUTE INTO PUBLIC FOLDER
+    # ----------------------------------------------------
+    # If the request isn't already for /api/public/, send it there.
+    RewriteCond %{REQUEST_URI} !^/api/public/
     RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# ----------------------------------------------------
+# 🚫 BLOCK PHP EXECUTION IN STORAGE / UPLOADS
+# ----------------------------------------------------
+<IfModule mod_authz_core.c>
+    <DirectoryMatch "(storage|uploads)">
+        <FilesMatch "\.php$">
+            Require all denied
+        </FilesMatch>
+    </DirectoryMatch>
+</IfModule>
+
+# ----------------------------------------------------
+# 🔒 BLOCK KNOWN MALICIOUS IPs
+# ----------------------------------------------------
+<RequireAll>
+    Require all granted
+    Require not ip 13.78.21.205
+    Require not ip 48.218.184.140
+    Require not ip 193.32.162.157
+    Require not ip 178.62.201.8
+    Require not ip 2.57.121.112
+    Require not ip 2.57.121.25
+    Require not ip 116.110.144.208
+    Require not ip 62.60.131.157
+    Require not ip 193.32.162.146
+    Require not ip 80.94.92.186
+    Require not ip 158.158.73.136
+    Require not ip 41.141.78.204
+    Require not ip 41.251.32.58
+    Require not ip 74.234.80.3
+    Require not ip 51.107.75.125
+    Require not ip 74.248.146.253
+    Require not ip 2a02:4780:b:b::2
+    Require not ip 41.250.25.98
+    Require not ip 20.109.36.227
+    Require not ip 20.163.83.248
+    Require not ip 172.182.195.230
+    Require not ip 48.217.251.100
+    Require not ip 4.223.136.62
+    Require not ip 54.169.254.113
+    Require not ip 3.1.51.31
+    Require not ip 2a03:b0c0:2:d0::176f:2001 
+    Require not ip 2a03:b0c0:2:d0::10fd:3001
+    Require not ip 160.176.94.73
+    Require not ip 160.177.121.160
+    Require not ip 216.73.216.89
+</RequireAll>
+
+# ----------------------------------------------------
+# ⚡ PERFORMANCE & SECURITY HEADERS
+# ----------------------------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 day"
+    ExpiresByType text/css "access plus 7 days"
+    ExpiresByType application/javascript "access plus 7 days"
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header set Content-Security-Policy "upgrade-insecure-requests"
 </IfModule>
