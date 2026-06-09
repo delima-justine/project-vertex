@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmService } from '../../services/confirm.service';
+import { SettingsService } from '../../services/settings.service';
+import { SystemSettings } from '../../models/smis.model';
 import { interval, Subscription, forkJoin } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -25,9 +27,11 @@ export class EditRis implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
   private confirmService = inject(ConfirmService);
+  private settingsService = inject(SettingsService);
 
   requests = signal<SupplyRequest[]>([]);
   approver = signal(this.authService.currentUser());
+  systemSettings = signal<SystemSettings | null>(null);
 
   combinedPurposes = computed(() => {
     const purposes = this.requests()
@@ -59,6 +63,7 @@ export class EditRis implements OnInit, OnDestroy {
   isPrinted = signal<boolean>(false);
 
   ngOnInit() {
+    this.loadSystemSettings();
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       if (idParam.includes(',')) {
@@ -233,6 +238,12 @@ export class EditRis implements OnInit, OnDestroy {
       const office = (firstReq.user?.office?.office_name || '').trim();
       const purpose = this.combinedPurposes();
 
+      const settings = this.systemSettings();
+      const directorName = settings?.director_name || this.env.identities.directorName;
+      const directorTitle = settings?.director_title || this.env.identities.directorTitle;
+      const custodianName = settings?.custodian_name || this.env.identities.custodianName;
+      const custodianTitle = settings?.custodian_title || this.env.identities.custodianTitle;
+
       const tableRows = reqs.map((req: SupplyRequest) => {
         const data = this.requestData()[req.id];
         const stockYes = data.stockAvailable ? '&#9679;' : '&#9675;';
@@ -295,25 +306,25 @@ export class EditRis implements OnInit, OnDestroy {
                 <div style="font-size: 8pt; margin-bottom: 6px;">Requested by:</div>
                 <div style="height: 32px;"></div>
                 <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 10pt; margin: 6px 0;">${fullName}</div>
+                <div style="font-size: 10pt; margin: 6px 0;">${this.capitalize(fullName)}</div>
                 <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${office}</div>
+                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.capitalize(office)}</div>
               </td>
               <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; width: 25%; vertical-align: top;">
                 <div style="font-size: 8pt; margin-bottom: 6px;">Approved by:</div>
                 <div style="height: 32px;"></div>
                 <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 10pt; margin: 6px 0;">${this.capitalize(this.env.identities.directorName)}</div>
+                <div style="font-size: 10pt; margin: 6px 0;">${this.capitalize(directorName)}</div>
                 <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.env.identities.directorTitle}</div>
+                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.capitalize(directorTitle)}</div>
               </td>
               <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; width: 25%; vertical-align: top;">
                 <div style="font-size: 8pt; margin-bottom: 6px;">Issued by:</div>
                 <div style="height: 32px;"></div>
                 <div style="width: 70%; margin: 0 auto 6px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 10pt; margin: 6px 0;">${this.capitalize(this.env.identities.custodianName)}</div>
+                <div style="font-size: 10pt; margin: 6px 0;">${this.capitalize(custodianName)}</div>
                 <div style="width: 70%; margin: 0 auto 8px auto; border-top: 1pt solid #000; height: 0;"></div>
-                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.env.identities.custodianTitle}</div>
+                <div style="font-size: 9pt; font-weight: bold; margin-top: 4px;">${this.capitalize(custodianTitle)}</div>
               </td>
               <td style="border: 0.5pt solid #000; padding: 4px 6px; text-align: center; width: 25%; vertical-align: top;">
                 <div style="font-size: 8pt; margin-bottom: 6px;">Received by:</div>
@@ -398,5 +409,12 @@ export class EditRis implements OnInit, OnDestroy {
   confirmPrinted() {
     this.isPrinted.set(true);
     this.closeModal();
+  }
+
+  loadSystemSettings() {
+    this.settingsService.getSettings().subscribe({
+      next: (settings) => this.systemSettings.set(settings),
+      error: (err) => console.error('Error loading settings', err)
+    });
   }
 }
