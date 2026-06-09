@@ -64,8 +64,8 @@ export class HelpAndSupport {
       name: 'Vertex',
       icon: 'bi-triangle-half',
       year: '2026',
-      badge: 'Contributors',
-      description: 'Currently enhancing the system with advanced analytics, improved UI/UX, and optimized backend workflows.',
+      badge: 'Enhancement Team',
+      description: 'Enhanced the system with advanced analytics, improved UI/UX, and optimized backend workflows.',
       members: [
         { name: 'Alejandro, Aleck Mcklaiyre R.', role: 'Developer' },
         { name: 'Citron, Kathleen C.', role: 'Quality Assurance Tester' },
