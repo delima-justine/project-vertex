@@ -43,6 +43,14 @@ export const routes: Routes = [
         data: { permissions: ['add_user', 'edit_user', 'delete_user'] }
       },
       {
+        path: 'admin/system-settings',
+        loadComponent: () => import('./system-settings/system-settings')
+          .then(m => m.SystemSettingsComponent),
+        title: 'SMIS | System Settings',
+        canActivate: [permissionGuard],
+        data: { permissions: ['edit_user'] }
+      },
+      {
         path: 'notifications',
         loadComponent: () => import('./notifications/notifications')
           .then(m => m.Notifications),
