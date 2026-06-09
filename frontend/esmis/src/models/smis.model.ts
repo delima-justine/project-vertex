@@ -190,3 +190,10 @@ export type AuditFilters = {
   page?: number;
   limit?: number;
 };
+
+export type SystemSettings = {
+  director_name: string;
+  director_title: string;
+  custodian_name: string;
+  custodian_title: string;
+}
