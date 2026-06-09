@@ -155,10 +155,10 @@
             <input 
               type="text" 
               class="auth-input"
-              [value]="((requests()[0]?.user?.first_name || '') + 
+              [value]="capitalize((requests()[0]?.user?.first_name || '') + 
                 (requests()[0]?.user?.middle_initial ? ' ' + 
                 requests()[0]?.user?.middle_initial + '. ' : ' ') + 
-                (requests()[0]?.user?.last_name || '')).toUpperCase()"
+                (requests()[0]?.user?.last_name || ''))"
               disabled>
 
             <div class="divider"></div>
@@ -166,7 +166,7 @@
             <input 
               type="text" 
               class="auth-input"
-              [value]="(requests()[0]?.user?.office?.office_name || '').toUpperCase()"
+              [value]="capitalize(requests()[0]?.user?.office?.office_name || '')"
               disabled>
           </div>
 
@@ -175,7 +175,7 @@
             <input 
               type="text" 
               class="auth-input" 
-              [value]="env.identities.directorName.toUpperCase()"
+              [value]="capitalize(systemSettings()?.director_name || env.identities.directorName)"
               disabled>
 
             <div class="divider"></div>
@@ -183,7 +183,7 @@
             <input 
               type="text" 
               class="auth-input" 
-              [value]="env.identities.directorTitle.toUpperCase()"
+              [value]="capitalize(systemSettings()?.director_title || env.identities.directorTitle)"
               disabled>
           </div>
 
@@ -192,7 +192,7 @@
             <input 
               type="text" 
               class="auth-input" 
-              [value]="env.identities.custodianName.toUpperCase()"
+              [value]="capitalize(systemSettings()?.custodian_name || env.identities.custodianName)"
               disabled>
 
             <div class="divider"></div>
@@ -200,7 +200,7 @@
             <input 
               type="text" 
               class="auth-input" 
-              [value]="env.identities.custodianTitle.toUpperCase()"
+              [value]="capitalize(systemSettings()?.custodian_title || env.identities.custodianTitle)"
               disabled>
           </div>
 
