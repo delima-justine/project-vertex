@@ -46,6 +46,34 @@ export class HelpAndSupport {
   trackRequestGuideURL = 'https://youtu.be/QVjd2sepO68?si=URznYZyqpBh-l01e';
   userPlaylistURL = 'https://www.youtube.com/playlist?list=PL9WX_LsJ2S4tJb1UHMJ4DyqgEugcZIaQj';
 
+  teams = [
+    {
+      name: 'Astral Angels',
+      icon: 'bi-stars',
+      year: '2025',
+      badge: 'Original Developers',
+      description: 'Laid the foundation of SMIS, designing and implementing the core architecture and features of the system.',
+      members: [
+        { name: 'Dela Cruz, John Clarence A.', role: 'Project Manager/Full Stack Dev' },
+        { name: 'Navora, Lairen T.', role: 'Document Analyst/QA Tester' },
+        { name: 'Rodriguez, John Paul O.', role: 'Full Stack Dev' },
+        { name: 'Rosalia, Rhea Mae T.', role: 'Document Analyst Assistant' }
+      ]
+    },
+    {
+      name: 'Vertex',
+      icon: 'bi-triangle-half',
+      year: '2026',
+      badge: 'Contributors',
+      description: 'Currently enhancing the system with advanced analytics, improved UI/UX, and optimized backend workflows.',
+      members: [
+        { name: 'Alejandro, Aleck Mcklaiyre R.', role: 'Developer' },
+        { name: 'Citron, Kathleen C.', role: 'Quality Assurance Tester' },
+        { name: 'Delima, Justine R.', role: 'Project Manager/Developer' },
+        { name: 'Quiambao, Ma. Patricia Anne D.', role: 'Documentation Analyst' }
+      ]
+    }
+  ];
 
   allFaqs: FaqItem[] = [
     {
