@@ -42,6 +42,9 @@ class DatabaseSeeder extends Seeder
             'office_id' => $offices['Property Custodian']->id,
         ]);
 
-        $this->call(PermissionSeeder::class);
+        $this->call([
+            PermissionSeeder::class,
+            SystemSettingSeeder::class,
+        ]);
     }
 }
