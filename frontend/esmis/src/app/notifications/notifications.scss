@@ -13,7 +13,7 @@
   border: none;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border-radius: 12px;
-  border-top: 4px solid #0d6efd;
+  border-top: 4px solid #800000;
 }
 
 .notifications-card {
@@ -33,77 +33,8 @@
       border-left: none;
       background-color: var(--bs-tertiary-bg);
     }
-
-    .tab-container {
-      overflow-x: auto;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: thin;
-      
-      &::-webkit-scrollbar {
-        height: 4px;
-      }
-      
-      &::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      
-      &::-webkit-scrollbar-thumb {
-        background: rgba(128, 0, 0, 0.2);
-        border-radius: 10px;
-      }
-
-      &:hover::-webkit-scrollbar-thumb {
-        background: rgba(128, 0, 0, 0.5);
-      }
-    }
-
-    .nav-tabs {
-      flex-wrap: nowrap;
-      display: inline-flex;
-      min-width: 100%;
-      border-bottom: none;
-
-      .nav-item {
-        flex: 0 0 auto;
-      }
-
-      .nav-link {
-        border: none;
-        color: var(--bs-secondary-color);
-        font-weight: 500;
-        padding: 12px 20px;
-        transition: all 0.2s ease;
-        border-bottom: 3px solid transparent;
-
-        &:hover {
-          color: var(--bs-primary);
-          background-color: var(--bs-tertiary-bg);
-        }
-
-        &.active {
-          color: var(--bs-primary);
-          background-color: transparent;
-          border-bottom: 3px solid var(--bs-primary);
-
-          &.tab-approved {
-            color: #198754;
-            border-bottom-color: #198754;
-          }
-
-          &.tab-denied {
-            color: #800020;
-            border-bottom-color: #800020;
-          }
-
-          &.tab-system {
-            color: #ffc107; // Yellow for system alerts
-            border-bottom-color: #ffc107;
-          }
-        }
-      }
-    }
-
+    
+    // Title and Icon styling
     .title-with-icon {
       display: flex;
       align-items: center;
@@ -111,6 +42,7 @@
       
       i {
         font-size: 1.2rem;
+        color: #800000 !important; // Maroon icon
       }
 
       span {
@@ -119,6 +51,37 @@
         color: var(--bs-body-color);
       }
     }
+  }
+}
+
+.btn-maroon {
+  background-color: #800000;
+  border-color: #800000;
+  color: white;
+  &:hover {
+    background-color: #600000;
+    border-color: #600000;
+    color: white;
+  }
+}
+
+.btn-outline-maroon {
+  color: #800000;
+  border-color: #800000;
+  &:hover {
+    background-color: #800000;
+    color: white;
+  }
+}
+
+// Unread notification styling
+.notification-item.unread {
+  background-color: rgba(128, 0, 0, 0.05) !important;
+  &::after {
+    background-color: #800000 !important;
+  }
+  .badge.bg-primary {
+    background-color: #800000 !important;
   }
 }
 
