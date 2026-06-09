@@ -90,7 +90,9 @@
             <td>{{ user.middle_initial || '-' }}</td>
             <td>{{ user.last_name }}</td>
             <td>{{ user.email }}</td>
-            <td>{{ (user.role?.role_name || 'N/A') | titlecase }}</td>
+            <td>
+              <span class="badge badge-maroon">{{ (user.role?.role_name || 'N/A') | titlecase }}</span>
+            </td>
             <td>
               @if(authService.hasPermission('edit_user')) {
                 @if (user.role?.role_name?.toLowerCase() !== 'superadmin' || authService.hasRole('superadmin')) {
@@ -146,7 +148,7 @@
             <div class="header-main">
               <span class="user-name">{{ user.first_name }} {{ user.middle_initial || '' }} {{ user.last_name }}</span>
             </div>
-            <span class="user-role badge">{{ (user.role?.role_name || 'N/A') | titlecase }}</span>
+            <span class="badge-maroon badge">{{ (user.role?.role_name || 'N/A') | titlecase }}</span>
           </div>
           <div class="user-card-body">
             <div class="info-row">
@@ -206,22 +208,27 @@
 <!-- Backup Modal -->
 <div class="modal fade" id="backupModal" tabindex="-1" aria-labelledby="backupModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="backupModalLabel">Backup Database</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-content custom-modal">
+    <div class="modal-header custom-modal-header">
+      <h5 class="modal-title" id="backupModalLabel">
+        <i class="bi bi-box-arrow-in-down me-2"></i>
+        Backup Database
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body">
-      <p>Click the button below to download a full SQL backup of the system database.</p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-      <button type="button" class="btn btn-success" (click)="downloadBackup()" [disabled]="isProcessingBackup()">
-        @if (isProcessingBackup()) {
-          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-        }
-        {{ isProcessingBackup() ? 'Generating Backup...' : 'Download SQL' }}
-      </button>
+    <div class="modal-body custom-modal-body">
+      <p class="mb-4">Click the button below to download a full SQL backup of the system database. This file can be used to restore the system state later.</p>
+      
+      <div class="modal-footer-custom d-flex gap-2 justify-content-end">
+        <button class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+        <button type="button" class="btn btn-gradient-success" (click)="downloadBackup()" [disabled]="isProcessingBackup()">
+          @if (isProcessingBackup()) {
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          }
+          <i class="bi bi-download me-1"></i>
+          {{ isProcessingBackup() ? 'GENERATING...' : 'DOWNLOAD SQL' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -230,40 +237,51 @@
 <!-- Restore Modal -->
 <div class="modal fade" id="restoreModal" tabindex="-1" aria-labelledby="restoreModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="restoreModalLabel">Restore Database</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-content custom-modal">
+    <div class="modal-header custom-modal-header">
+      <h5 class="modal-title" id="restoreModalLabel">
+        <i class="bi bi-upload me-2"></i>
+        Restore Database
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body custom-modal-body">
       <div class="mb-3">
-        <label for="restoreFile" class="form-label">Select SQL Backup File</label>
-        <input class="form-control" type="file" id="restoreFile" accept=".sql" (change)="onFileSelected($event)">
+        <label for="restoreFile" class="form-label custom-label">Select SQL Backup File</label>
+        <div class="input-group custom-input-group">
+          <span class="input-group-text"><i class="bi bi-file-earmark-code"></i></span>
+          <input class="form-control" type="file" id="restoreFile" accept=".sql" (change)="onFileSelected($event)">
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="restorePassword" class="form-label">Confirm Password</label>
-        <div class="input-group">
+      <div class="mb-4">
+        <label for="restorePassword" class="form-label custom-label">Confirm Your Password</label>
+        <div class="input-group custom-input-group">
+          <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
           <input [type]="showRestorePassword() ? 'text' : 'password'" class="form-control" id="restorePassword" placeholder="Enter your password" 
                  (input)="restorePassword.set($any($event.target).value)">
-          <button class="btn btn-outline-secondary" type="button" (click)="showRestorePassword.set(!showRestorePassword())">
+          <button class="btn btn-outline-secondary border-start-0" type="button" (click)="showRestorePassword.set(!showRestorePassword())">
             <i class="bi" [ngClass]="showRestorePassword() ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
           </button>
         </div>
       </div>
-      <div class="alert alert-warning">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        <span class="text-emphasis">Warning:</span> Restoring the database will overwrite all current data. 
-        This action cannot be undone and <span class="text-emphasis">you will be automatically logged out</span> once the process is complete.
+      <div class="alert alert-warning border-0 shadow-sm mb-4">
+        <div class="d-flex align-items-center mb-2">
+          <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
+          <span class="fw-bold">CRITICAL WARNING</span>
+        </div>
+        <p class="small mb-0">Restoring the database will <b>overwrite all current data</b>. This action cannot be undone and <b>you will be automatically logged out</b> once the process is complete.</p>
       </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-      <button type="button" class="btn btn-danger" (click)="performRestore()" [disabled]="isProcessingRestore() || !restoreFile || !restorePassword()">
-        @if (isProcessingRestore()) {
-          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-        }
-        {{ isProcessingRestore() ? 'Restoring...' : 'Import SQL' }}
-      </button>
+
+      <div class="modal-footer-custom d-flex gap-2 justify-content-end">
+        <button class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+        <button type="button" class="btn btn-gradient-danger" (click)="performRestore()" [disabled]="isProcessingRestore() || !restoreFile || !restorePassword()">
+          @if (isProcessingRestore()) {
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          }
+          <i class="bi bi-arrow-repeat me-1"></i>
+          {{ isProcessingRestore() ? 'RESTORING...' : 'IMPORT SQL' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>
