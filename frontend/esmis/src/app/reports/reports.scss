@@ -529,3 +529,24 @@
     flex-wrap: nowrap;
   }
 }
+
+.request-logs-pagination {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+  }
+
+  .pagination {
+    flex-wrap: nowrap;
+  }
+}
