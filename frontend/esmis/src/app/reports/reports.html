@@ -195,15 +195,12 @@
                 <th>Requested Qty</th>
                 <th>Status</th>
                 <th>Created At</th>
-                @if (isAdmin) {
-                  <th>Actions</th>
-                }
               </tr>
             </thead>
             <tbody>
               @if (filteredRequests().length === 0) {
                 <tr>
-                  <td colspan="8" class="empty-state">No records found for the selected filters.</td>
+                  <td colspan="7" class="empty-state">No records found for the selected filters.</td>
                 </tr>
               }
               @for (req of paginatedRequests(); track req.id) {
@@ -222,11 +219,6 @@
                     }">{{ req.status }}</span>
                   </td>
                   <td>{{ req.created_at | date:'MMM d, y, h:mm a' }}</td>
-                  @if (isAdmin) {
-                    <td>
-                      <button class="btn btn-sm table-archive-btn" (click)="archiveSingle(req)">Archive</button>
-                    </td>
-                  }
                 </tr>
               }
             </tbody>
