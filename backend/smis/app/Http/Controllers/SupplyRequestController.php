@@ -239,11 +239,16 @@ class SupplyRequestController extends Controller
             $baseQuery->where('user_id', $user->id);
         }
 
-        // We count "Batches". 
-        // A "Batch" is defined by a unique batch_id. 
-        // Requests with NULL batch_id are treated as their own individual batches.
-        $counts = $baseQuery->select('status', 'batch_id', DB::raw('count(*) as item_count'))
-            ->groupBy('status', 'batch_id')
+        // We count "Batches".
+        // A batch is defined by batch_id. If batch_id is NULL (legacy),
+        // it is grouped by user_id and creation date, matching the frontend grouping.
+        $counts = $baseQuery->select(
+            'status',
+            'batch_id',
+            'user_id',
+            DB::raw('DATE(created_at) as created_date')
+        )
+            ->groupBy('status', 'batch_id', 'user_id', 'created_date')
             ->get()
             ->groupBy('status')
             ->map(function ($group) {
