@@ -346,10 +346,14 @@
                   <li class="page-item" [class.disabled]="currentPage() === 1">
                     <button class="page-link" (click)="prevPage()">Previous</button>
                   </li>
-                  @for (page of pageNumbers(); track page) {
-                    <li class="page-item" [class.active]="currentPage() === page">
-                      <button class="page-link" (click)="setPage(page)">{{ page }}</button>
-                    </li>
+                  @for (page of pageNumbers(); track $index) {
+                    @if (page === '...') {
+                      <li class="page-item disabled"><span class="page-link">...</span></li>
+                    } @else {
+                      <li class="page-item" [class.active]="currentPage() === page">
+                        <button class="page-link" (click)="setPage($any(page))">{{ page }}</button>
+                      </li>
+                    }
                   }
                   <li class="page-item" [class.disabled]="currentPage() === totalPages()">
                     <button class="page-link" (click)="nextPage()">Next</button>
