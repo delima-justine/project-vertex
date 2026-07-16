@@ -29,7 +29,7 @@ export class Reports {
   private confirmService = inject(ConfirmService);
   private authService = inject(AuthService);
 
-  timePeriod = signal<'today' | 'week' | 'month' | 'custom'>('today');
+  timePeriod = signal<'today' | 'week' | 'month' | 'custom' | null>(null);
   selectedStatus = signal('');
   selectedOffice = signal('');
   startDate = signal('');
@@ -38,7 +38,7 @@ export class Reports {
   appliedOffice = signal('');
   appliedStartDate = signal('');
   appliedEndDate = signal('');
-  appliedTimePeriod = signal<'today' | 'week' | 'month' | 'custom'>('today');
+  appliedTimePeriod = signal<'today' | 'week' | 'month' | 'custom' | null>(null);
   activeView = signal<'request_logs' | 'admin_audit'>('request_logs');
   allRequests = signal<SupplyRequest[]>([]);
   allOffices = signal<Office[]>([]);
@@ -64,7 +64,9 @@ export class Reports {
   });
 
   requestsPageNumbers = computed(() => {
-    return Array.from({ length: this.requestsPageCount() }, (_, index) => index + 1);
+    const current = this.requestsPage();
+    const total = this.requestsPageCount();
+    return this.getVisiblePages(current, total);
   });
 
   requestsPageStart = computed(() => {
@@ -200,7 +202,9 @@ export class Reports {
   });
 
   archivePageNumbers = computed(() => {
-    return Array.from({ length: this.archivePageCount() }, (_, index) => index + 1);
+    const current = this.archivePage();
+    const total = this.archivePageCount();
+    return this.getVisiblePages(current, total);
   });
 
   paginatedArchives = computed(() => {
@@ -554,12 +558,19 @@ export class Reports {
   }
 
   setTimePeriod(period: 'today' | 'week' | 'month' | 'custom') {
-    this.timePeriod.set(period);
-    this.appliedTimePeriod.set(period);
-
-    if (period !== 'custom') {
+    if (this.timePeriod() === period) {
+      // Toggle off if already selected
+      this.timePeriod.set(null);
+      this.appliedTimePeriod.set(null);
       this.appliedStartDate.set('');
       this.appliedEndDate.set('');
+    } else {
+      this.timePeriod.set(period);
+      this.appliedTimePeriod.set(period);
+      if (period !== 'custom') {
+        this.appliedStartDate.set('');
+        this.appliedEndDate.set('');
+      }
     }
   }
 
@@ -586,7 +597,7 @@ export class Reports {
   }
 
   resetFilters() {
-    this.timePeriod.set('today');
+    this.timePeriod.set(null);
     this.selectedStatus.set('');
     this.selectedOffice.set('');
     this.selectedActionType.set('');
@@ -594,7 +605,7 @@ export class Reports {
     this.startDate.set('');
     this.endDate.set('');
 
-    this.appliedTimePeriod.set('today');
+    this.appliedTimePeriod.set(null);
     this.appliedStatus.set('');
     this.appliedOffice.set('');
     this.appliedActionType.set('');
@@ -622,12 +633,20 @@ export class Reports {
   loadAudits(page = 1) {
     this.isAuditLoading.set(true);
     
-    const filters = {
+    const filters: any = {
       page,
       limit: this.auditLimit,
       action_type: this.appliedActionType(),
       admin_id: this.appliedAdminId() || undefined
     };
+
+    if (this.appliedTimePeriod()) {
+      filters.time_period = this.appliedTimePeriod();
+      if (this.appliedTimePeriod() === 'custom') {
+        filters.start_date = this.appliedStartDate();
+        filters.end_date = this.appliedEndDate();
+      }
+    }
 
     this.auditService.listAudits(filters).subscribe({
       next: (response) => {
@@ -805,5 +824,40 @@ export class Reports {
 
   trackByRequestId(_index: number, request: SupplyRequest) {
     return request.id;
+  }
+
+  getVisiblePages(current: number, total: number): (number | string)[] {
+    const maxVisible = 5;
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages: (number | string)[] = [];
+    pages.push(1);
+
+    let start = Math.max(2, current - 1);
+    let end = Math.min(total - 1, current + 1);
+
+    if (current <= 3) {
+      end = 4;
+    }
+    if (current >= total - 2) {
+      start = total - 3;
+    }
+
+    if (start > 2) {
+      pages.push('...');
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (end < total - 1) {
+      pages.push('...');
+    }
+
+    pages.push(total);
+    return pages;
   }
 }
