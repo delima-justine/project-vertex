@@ -143,22 +143,25 @@
     <div class="pagination-footer mt-4">
       <div class="d-flex justify-content-between align-items-center">
         <span class="text-muted small">Page {{ currentPage() }} of {{ lastPage() }}</span>
-        <div class="pagination-controls d-flex gap-2">
-          <button 
-            class="btn btn-outline-secondary btn-sm" 
-            [disabled]="currentPage() === 1"
-            (click)="changePage(currentPage() - 1)">
-            <i class="bi bi-chevron-left me-1"></i>
-            Previous
-          </button>
-          <button 
-            class="btn btn-outline-secondary btn-sm" 
-            [disabled]="currentPage() === lastPage()"
-            (click)="changePage(currentPage() + 1)">
-            Next
-            <i class="bi bi-chevron-right ms-1"></i>
-          </button>
-        </div>
+        <nav aria-label="Pending requests pagination">
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="currentPage() === 1">
+              <button class="page-link" (click)="changePage(currentPage() - 1)">Previous</button>
+            </li>
+            @for (page of pageNumbers(); track $index) {
+              @if (page === '...') {
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+              } @else {
+                <li class="page-item" [class.active]="currentPage() === page">
+                  <button class="page-link" (click)="changePage($any(page))">{{ page }}</button>
+                </li>
+              }
+            }
+            <li class="page-item" [class.disabled]="currentPage() === lastPage()">
+              <button class="page-link" (click)="changePage(currentPage() + 1)">Next</button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   }
