@@ -41,6 +41,9 @@ class SupplyRequestController extends Controller
             $query->where('batch_id', $request->batch_id);
         }
 
+        // Order from newest requests to oldest requests
+        $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+
         $perPage = $request->get('per_page', 100);
         return response()->json($query->paginate($perPage));
     }
