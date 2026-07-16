@@ -221,7 +221,7 @@
                       'status-disapproved': req.status === 'disapproved'
                     }">{{ req.status }}</span>
                   </td>
-                  <td>{{ req.created_at | date:'MMM d, y' }}</td>
+                  <td>{{ req.created_at | date:'MMM d, y, h:mm a' }}</td>
                   @if (isAdmin) {
                     <td>
                       <button class="btn btn-sm table-archive-btn" (click)="archiveSingle(req)">Archive</button>
@@ -244,10 +244,14 @@
                 <li class="page-item" [class.disabled]="requestsPage() === 1">
                   <button class="page-link" (click)="setRequestsPage(requestsPage() - 1)">Previous</button>
                 </li>
-                @for (page of requestsPageNumbers(); track page) {
-                  <li class="page-item" [class.active]="requestsPage() === page">
-                    <button class="page-link" (click)="setRequestsPage(page)">{{ page }}</button>
-                  </li>
+                @for (page of requestsPageNumbers(); track $index) {
+                  @if (page === '...') {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                  } @else {
+                    <li class="page-item" [class.active]="requestsPage() === page">
+                      <button class="page-link" (click)="setRequestsPage($any(page))">{{ page }}</button>
+                    </li>
+                  }
                 }
                 <li class="page-item" [class.disabled]="requestsPage() === requestsPageCount()">
                   <button class="page-link" (click)="setRequestsPage(requestsPage() + 1)">Next</button>
@@ -402,7 +406,9 @@
               @for (archive of paginatedArchives(); track archive.id) {
                 <tr>
                   <td>
-                    <input class="form-check-input" type="checkbox" [checked]="selectedArchiveIds().includes(archive.id)" (change)="toggleArchiveSelection(archive.id)" />
+                    <div class="form-check d-inline-block">
+                      <input class="form-check-input" type="checkbox" [checked]="selectedArchiveIds().includes(archive.id)" (change)="toggleArchiveSelection(archive.id)" />
+                    </div>
                   </td>
                   <td>
                     <span class="badge badge-teal">requests</span>
@@ -442,10 +448,14 @@
               <li class="page-item" [class.disabled]="archivePage() === 1">
                 <button class="page-link" type="button" (click)="setArchivePage(archivePage() - 1)">Prev</button>
               </li>
-              @for (page of archivePageNumbers(); track page) {
-                <li class="page-item" [class.active]="archivePage() === page">
-                  <button class="page-link" type="button" (click)="setArchivePage(page)">{{ page }}</button>
-                </li>
+              @for (page of archivePageNumbers(); track $index) {
+                @if (page === '...') {
+                  <li class="page-item disabled"><span class="page-link">...</span></li>
+                } @else {
+                  <li class="page-item" [class.active]="archivePage() === page">
+                    <button class="page-link" type="button" (click)="setArchivePage($any(page))">{{ page }}</button>
+                  </li>
+                }
               }
               <li class="page-item" [class.disabled]="archivePage() === archivePageCount()">
                 <button class="page-link" type="button" (click)="setArchivePage(archivePage() + 1)">Next</button>

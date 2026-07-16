@@ -22,6 +22,9 @@ export class AuditService {
     if (filters.search) params = params.set('search', filters.search);
     if (filters.action_type) params = params.set('action_type', filters.action_type);
     if (filters.admin_id) params = params.set('admin_id', filters.admin_id.toString());
+    if (filters.time_period) params = params.set('time_period', filters.time_period);
+    if (filters.start_date) params = params.set('start_date', filters.start_date);
+    if (filters.end_date) params = params.set('end_date', filters.end_date);
 
     return this.http.get<PaginatedResponse<AdminAudit>>(`${this.apiUrl}/admin-audits`, { params });
   }

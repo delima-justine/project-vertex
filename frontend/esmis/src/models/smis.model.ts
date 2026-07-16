@@ -189,6 +189,9 @@ export type AuditFilters = {
   admin_id?: number;
   page?: number;
   limit?: number;
+  time_period?: string;
+  start_date?: string;
+  end_date?: string;
 };
 
 export type SystemSettings = {

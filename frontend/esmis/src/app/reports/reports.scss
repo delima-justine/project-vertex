@@ -279,9 +279,7 @@
   }
 
   .report-table th,
-  .report-table td,
-  .archive-table th,
-  .archive-table td {
+  .report-table td {
     padding: 12px 14px;
     border: 1px solid var(--bs-border-color);
     vertical-align: middle;
@@ -289,28 +287,19 @@
     color: var(--bs-body-color);
   }
 
-  .report-table thead th,
-  .archive-table thead th {
+  .report-table thead th {
     font-weight: 700;
     text-align: left;
     background-color: #800000;
     color: #ffffff;
   }
 
-  .report-table tbody tr:nth-child(even),
-  .archive-table tbody tr:nth-child(even) {
+  .report-table tbody tr:nth-child(even) {
     background-color: var(--bs-tertiary-bg);
   }
 
-  .report-table tbody tr:hover,
-  .archive-table tbody tr:hover {
+  .report-table tbody tr:hover {
     background-color: var(--bs-secondary-bg);
-  }
-
-  .archive-table .form-check-input {
-    accent-color: #800000;
-    background-color: var(--bs-body-bg);
-    border-color: var(--bs-border-color);
   }
 
   .empty-state {
@@ -367,6 +356,49 @@
       background-color: #800000;
       color: #ffffff;
       box-shadow: 0 2px 4px rgba(128, 0, 0, 0.2);
+    }
+  }
+}
+
+.archive-table {
+  margin-top: 1rem;
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 12px 14px;
+    border: 1px solid var(--bs-border-color);
+    vertical-align: middle;
+    font-size: 14px;
+    color: var(--bs-body-color);
+  }
+
+  thead th {
+    font-weight: 700;
+    text-align: left;
+    background-color: #800000 !important;
+    color: #ffffff !important;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: var(--bs-tertiary-bg);
+  }
+
+  tbody tr:hover {
+    background-color: var(--bs-secondary-bg);
+  }
+
+  .form-check-input {
+    accent-color: #800000;
+    border-color: var(--bs-border-color);
+
+    &:not(:checked) {
+      background-color: var(--bs-body-bg);
+    }
+
+    &:checked {
+      background-color: #800000;
+      border-color: #800000;
     }
   }
 }
@@ -474,4 +506,26 @@
   // Archive cards remain side by side as per existing grid
   // Time period grid is already 2x2 via max-width: 768px
   // Dropdowns remain side by side via col-md-6
+}
+
+.archive-pagination {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px 0;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+  }
+
+  .pagination {
+    flex-wrap: nowrap;
+  }
 }
