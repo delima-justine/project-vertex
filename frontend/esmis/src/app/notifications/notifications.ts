@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { NotificationApiService } from '../../services/notification-api.service';
 import { UserManagementService } from '../../services/user-management.service';
 import { AuthService } from '../../services/auth.service';
@@ -24,9 +24,50 @@ export class Notifications implements OnInit {
   notifications: Notification[] = [];
   offices: Office[] = [];
   isLoading = signal(true);
-  currentPage = 1;
-  lastPage = 1;
+  currentPage = signal(1);
+  lastPage = signal(1);
   activeTab = 'all';
+
+  pageNumbers = computed(() => {
+    const current = this.currentPage();
+    const total = this.lastPage();
+    return this.getVisiblePages(current, total);
+  });
+
+  getVisiblePages(current: number, total: number): (number | string)[] {
+    const maxVisible = 5;
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages: (number | string)[] = [];
+    pages.push(1);
+
+    let start = Math.max(2, current - 1);
+    let end = Math.min(total - 1, current + 1);
+
+    if (current <= 3) {
+      end = 4;
+    }
+    if (current >= total - 2) {
+      start = total - 3;
+    }
+
+    if (start > 2) {
+      pages.push('...');
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (end < total - 1) {
+      pages.push('...');
+    }
+
+    pages.push(total);
+    return pages;
+  }
 
   // Filter properties
   filters: NotificationFilters = {
@@ -62,11 +103,11 @@ export class Notifications implements OnInit {
 
   loadNotifications(page: number = 1) {
     this.isLoading.set(true);
-    this.currentPage = page;
+    this.currentPage.set(page);
     this.notifApiService.getNotifications(page, this.filters, this.activeTab).subscribe({
       next: (response) => {
         this.notifications = response.data;
-        this.lastPage = response.last_page;
+        this.lastPage.set(response.last_page);
         this.isLoading.set(false);
         this.cdr.detectChanges();
       },
@@ -103,7 +144,7 @@ export class Notifications implements OnInit {
   }
 
   changePage(page: number) {
-    if (page < 1 || page > this.lastPage) return;
+    if (page < 1 || page > this.lastPage()) return;
     this.loadNotifications(page);
   }
 
