@@ -148,8 +148,8 @@
           </div>
         </div>
 
-        <table class="table table-hover align-middle responsive-table-modal">
-          <thead class="table-light">
+        <table class="table table-hover align-middle responsive-table-modal custom-modal-table">
+          <thead>
             <tr>
               <th style="width: 40px;">
                 <div class="form-check">
@@ -231,10 +231,14 @@
                   </button>
                 </li>
                 
-                @for (page of getPaginationRange(); track page) {
-                  <li class="page-item" [class.active]="currentPage() === page">
-                    <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
-                  </li>
+                @for (page of getPaginationRange(); track $index) {
+                  @if (page === '...') {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                  } @else {
+                    <li class="page-item" [class.active]="currentPage() === page">
+                      <button class="page-link" (click)="goToPage($any(page))">{{ page }}</button>
+                    </li>
+                  }
                 }
                 
                 <li class="page-item" [class.disabled]="currentPage() === totalPages()">

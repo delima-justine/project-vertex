@@ -378,3 +378,12 @@
     color: #adb5bd !important;
   }
 }
+
+.custom-modal-table {
+  thead th {
+    background-color: #800000 !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    border-bottom: 2px solid var(--bs-border-color);
+  }
+}
