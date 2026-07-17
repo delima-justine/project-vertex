@@ -27,7 +27,7 @@
         
         <div class="user-info text-start d-none d-sm-block">
           <span class="user-name d-block">
-            {{ user()?.first_name }} {{ user()?.last_name }}
+            {{ user()?.first_name }} {{ user()?.middle_initial ? user()?.middle_initial + '. ' : '' }}{{ user()?.last_name }}
           </span>
           <small class="user-role text-muted d-block">
             @if(user()?.role?.role_name === 'superadmin') {
@@ -49,7 +49,7 @@
         <!-- Mobile User Info Header -->
         <li class="dropdown-header-mobile d-block d-sm-none">
           <div class="mobile-user-box">
-            <span class="d-block fw-bold text-white">{{ user()?.first_name }} {{ user()?.last_name }}</span>
+            <span class="d-block fw-bold text-white">{{ user()?.first_name }} {{ user()?.middle_initial ? user()?.middle_initial + '. ' : '' }}{{ user()?.last_name }}</span>
             <small class="d-block text-white-50 small text-uppercase">
               @if(user()?.role?.role_name === 'superadmin') {
                 Super Admin

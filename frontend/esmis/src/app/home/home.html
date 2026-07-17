@@ -13,7 +13,7 @@
           <span class="greet">Welcome User, </span>
         }
         
-        <span class="greet">{{ user()?.first_name }} {{ user()?.last_name }}!</span>
+        <span class="greet">{{ user()?.first_name }} {{ user()?.middle_initial ? user()?.middle_initial + '. ' : '' }}{{ user()?.last_name }}!</span>
         <p class="manage">Manage your inventory and track supplies efficiently</p>
       }
     </div>
