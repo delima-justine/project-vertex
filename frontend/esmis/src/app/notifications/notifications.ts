@@ -174,6 +174,34 @@ export class Notifications implements OnInit {
     return `${diffInYears}y ago`;
   }
 
+  onNotificationClick(event: Event, notification: Notification) {
+    const target = event.target as HTMLElement;
+    if (target.closest('.actions')) {
+      return;
+    }
+    this.markAsRead(notification);
+  }
+
+  onNotificationMouseLeave(event: MouseEvent) {
+    const item = event.currentTarget as HTMLElement;
+    if (item) {
+      const toggleEl = item.querySelector('[data-bs-toggle="dropdown"]');
+      if (toggleEl) {
+        if (toggleEl.getAttribute('aria-expanded') === 'true') {
+          const bootstrap = (window as any).bootstrap;
+          if (bootstrap) {
+            const dropdown = bootstrap.Dropdown.getOrCreateInstance(toggleEl);
+            if (dropdown) {
+              dropdown.hide();
+            }
+          } else {
+            (toggleEl as HTMLElement).click();
+          }
+        }
+      }
+    }
+  }
+
   markAsRead(notification: Notification) {
     if (notification.read_at) return;
     
