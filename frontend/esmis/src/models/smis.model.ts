@@ -199,4 +199,6 @@ export type SystemSettings = {
   director_title: string;
   custodian_name: string;
   custodian_title: string;
+  is_form_ready?: string | boolean;
+  form_url?: string;
 }
