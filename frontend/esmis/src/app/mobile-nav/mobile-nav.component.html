@@ -12,34 +12,49 @@
     </div>
 
     <nav class="drawer-nav">
-      <a class="drawer-item" [class.drawer-active]="drawerOpen()" routerLink="/admin/user-management" routerLinkActive="drawer-active" (click)="closeDrawer()">
-        <span class="drawer-icon"><i class="bi bi-people-fill"></i></span>
-        <span>User Management</span>
-      </a>
+      @if (authService.hasAnyPermission(['add_user', 'edit_user', 'delete_user'])) {
+        <a class="drawer-item" routerLink="/admin/user-management" routerLinkActive="drawer-active" (click)="closeDrawer()">
+          <span class="drawer-icon"><i class="bi bi-people-fill"></i></span>
+          <span>User Management</span>
+        </a>
 
-      <a class="drawer-item" routerLink="/pending-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
-        <span class="drawer-icon"><i class="bi bi-clock"></i></span>
-        <span>Pending</span>
-        <span class="drawer-badge" *ngIf="supplyService.statusCounts().pending > 0">{{ supplyService.statusCounts().pending }}</span>
-      </a>
+        <a class="drawer-item" routerLink="/admin/system-settings" routerLinkActive="drawer-active" (click)="closeDrawer()">
+          <span class="drawer-icon"><i class="bi bi-gear-fill"></i></span>
+          <span>System Settings</span>
+        </a>
+      }
 
-      <a class="drawer-item" routerLink="/approved-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
-        <span class="drawer-icon"><i class="bi bi-check-circle"></i></span>
-        <span>Approved</span>
-        <span class="drawer-badge approved" *ngIf="supplyService.statusCounts().approved > 0">{{ supplyService.statusCounts().approved }}</span>
-      </a>
+      @if (authService.hasPermission('view_pending_requests')) {
+        <a class="drawer-item" routerLink="/pending-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
+          <span class="drawer-icon"><i class="bi bi-clock"></i></span>
+          <span>Pending</span>
+          <span class="drawer-badge" *ngIf="supplyService.statusCounts().pending > 0">{{ supplyService.statusCounts().pending }}</span>
+        </a>
+      }
 
-      <a class="drawer-item" routerLink="/released-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
-        <span class="drawer-icon"><i class="bi bi-bag-check"></i></span>
-        <span>Released</span>
-        <span class="drawer-badge released" *ngIf="supplyService.statusCounts().released > 0">{{ supplyService.statusCounts().released }}</span>
-      </a>
+      @if (authService.hasPermission('view_approved_requests')) {
+        <a class="drawer-item" routerLink="/approved-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
+          <span class="drawer-icon"><i class="bi bi-check-circle"></i></span>
+          <span>Approved</span>
+          <span class="drawer-badge approved" *ngIf="supplyService.statusCounts().approved > 0">{{ supplyService.statusCounts().approved }}</span>
+        </a>
+      }
 
-      <a class="drawer-item" routerLink="/disapproved-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
-        <span class="drawer-icon"><i class="bi bi-x-circle"></i></span>
-        <span>Disapproved</span>
-        <span class="drawer-badge disapproved" *ngIf="supplyService.statusCounts().disapproved > 0">{{ supplyService.statusCounts().disapproved }}</span>
-      </a>
+      @if (authService.hasPermission('view_released_requests')) {
+        <a class="drawer-item" routerLink="/released-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
+          <span class="drawer-icon"><i class="bi bi-bag-check"></i></span>
+          <span>Released</span>
+          <span class="drawer-badge released" *ngIf="supplyService.statusCounts().released > 0">{{ supplyService.statusCounts().released }}</span>
+        </a>
+      }
+
+      @if (authService.hasPermission('view_disapproved_requests')) {
+        <a class="drawer-item" routerLink="/disapproved-requests" routerLinkActive="drawer-active" (click)="closeDrawer()">
+          <span class="drawer-icon"><i class="bi bi-x-circle"></i></span>
+          <span>Disapproved</span>
+          <span class="drawer-badge disapproved" *ngIf="supplyService.statusCounts().disapproved > 0">{{ supplyService.statusCounts().disapproved }}</span>
+        </a>
+      }
 
       <a class="drawer-item" routerLink="/help" routerLinkActive="drawer-active" (click)="closeDrawer()">
         <span class="drawer-icon"><i class="bi bi-question-circle-fill"></i></span>
