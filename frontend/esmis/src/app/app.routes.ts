@@ -48,7 +48,7 @@ export const routes: Routes = [
           .then(m => m.SystemSettingsComponent),
         title: 'SMIS | System Settings',
         canActivate: [permissionGuard],
-        data: { permissions: ['edit_user'] }
+        data: { roles: ['superadmin', 'admin'] }
       },
       {
         path: 'notifications',
