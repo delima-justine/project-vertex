@@ -22,7 +22,9 @@ export class SystemSettingsComponent implements OnInit {
     director_name: '',
     director_title: '',
     custodian_name: '',
-    custodian_title: ''
+    custodian_title: '',
+    is_form_ready: false,
+    form_url: ''
   });
 
   isLoading = signal(true);
@@ -41,7 +43,9 @@ export class SystemSettingsComponent implements OnInit {
           director_name: data.director_name || this.env.identities.directorName,
           director_title: data.director_title || this.env.identities.directorTitle,
           custodian_name: data.custodian_name || this.env.identities.custodianName,
-          custodian_title: data.custodian_title || this.env.identities.custodianTitle
+          custodian_title: data.custodian_title || this.env.identities.custodianTitle,
+          is_form_ready: data.is_form_ready === true || data.is_form_ready === '1' || data.is_form_ready === 'true',
+          form_url: data.form_url || ''
         });
         this.isLoading.set(false);
       },
