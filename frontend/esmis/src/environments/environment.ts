@@ -14,7 +14,7 @@ export const environment = {
     custodianName: 'Gina A. Dela Cruz',
     custodianTitle: 'Property Custodian',
     contactEmail: 'smispupttaguig@gmail.com',
-    contactAddress: 'PUP Taguig, Property Custodian Office, Bldg A',
+    contactAddress: 'PUP Taguig, Property Custodian Office, Bldg B',
     formCode: 'PUP-RISL-6-PSMO-010',
     logoPath: 'assets/pup_logo.png',
     appLogoPath: 'assets/pup_logo.png',
