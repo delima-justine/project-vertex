@@ -44,7 +44,9 @@
         <i class="bi bi-people-fill"></i>
         <span>User Management</span>
       </div>
+    }
 
+    @if(authService.hasRole('admin') || authService.hasRole('superadmin')) {
       <div 
         class="nav-link" 
         routerLink="/admin/system-settings"
