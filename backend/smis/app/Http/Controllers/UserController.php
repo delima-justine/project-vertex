@@ -28,8 +28,15 @@ class UserController extends Controller
                     $query->where('first_name', 'like', "%{$search}%")
                         ->orWhere('last_name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ["%{$search}%"])
+                        ->orWhereRaw("CONCAT_WS(' ', first_name, middle_initial, last_name) LIKE ?", ["%{$search}%"])
+                        ->orWhereRaw("CONCAT_WS(', ', last_name, first_name) LIKE ?", ["%{$search}%"])
+                        ->orWhereRaw("CONCAT_WS(' ', last_name, first_name) LIKE ?", ["%{$search}%"])
                         ->orWhereHas('role', function ($query) use ($search) {
                             $query->where('role_name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('office', function ($query) use ($search) {
+                            $query->where('office_name', 'like', "%{$search}%");
                         });
                 });
             })
