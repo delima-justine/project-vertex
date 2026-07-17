@@ -17,7 +17,9 @@
           <span class="drawer-icon"><i class="bi bi-people-fill"></i></span>
           <span>User Management</span>
         </a>
+      }
 
+      @if (authService.hasRole('admin') || authService.hasRole('superadmin')) {
         <a class="drawer-item" routerLink="/admin/system-settings" routerLinkActive="drawer-active" (click)="closeDrawer()">
           <span class="drawer-icon"><i class="bi bi-gear-fill"></i></span>
           <span>System Settings</span>
