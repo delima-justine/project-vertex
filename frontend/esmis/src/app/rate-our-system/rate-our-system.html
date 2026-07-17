@@ -1,0 +1,29 @@
+<div class="rate-our-system-container">
+  <div class="card">
+    @if (isFormReady()) {
+      <!-- Form Ready State -->
+      <div class="icon-wrapper">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <h1>Rate our System</h1>
+      <p class="message">We'd love to hear your feedback!</p>
+      <button class="form-btn" (click)="openForm()">
+        <i class="bi bi-box-arrow-up-right"></i>
+        Go to Form
+      </button>
+    } @else {
+      <!-- In Progress State -->
+      <div class="icon-wrapper">
+        <i class="bi bi-clipboard2-check"></i>
+      </div>
+      <h1>Rate our System</h1>
+      <p class="message">Forms are being created.</p>
+      <div class="progress-indicator">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <p class="sub-message">We're working on it. Check back soon!</p>
+    }
+  </div>
+</div>

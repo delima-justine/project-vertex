@@ -1,0 +1,154 @@
+.rate-our-system-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  padding: 2rem;
+
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 3rem 2.5rem;
+    text-align: center;
+    align-items: center;
+    max-width: 480px;
+    width: 100%;
+
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(128, 0, 0, 0.08);
+      margin-bottom: 1.5rem;
+
+      i {
+        font-size: 36px;
+        color: #800000;
+      }
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 0.75rem;
+    }
+
+    .message {
+      font-size: 1.05rem;
+      color: #636e72;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 1.25rem;
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #800000;
+        opacity: 0.3;
+        animation: pulse 1.4s ease-in-out infinite;
+
+        &:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        &:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+      }
+    }
+
+    .sub-message {
+      font-size: 0.9rem;
+      color: #b2bec3;
+      margin: 0;
+    }
+
+    .form-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 10px;
+      background-color: #800000;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #660000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(128, 0, 0, 0.3);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+// Dark theme support
+:host-context([data-theme='dark']) {
+  .rate-our-system-container .card {
+    background: #1e272e;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+
+    .icon-wrapper {
+      background: rgba(255, 255, 255, 0.08);
+
+      i {
+        color: #e17055;
+      }
+    }
+
+    h1 {
+      color: #dfe6e9;
+    }
+
+    .message {
+      color: #b2bec3;
+    }
+
+    .progress-indicator .dot {
+      background-color: #e17055;
+    }
+
+    .sub-message {
+      color: #636e72;
+    }
+
+    .form-btn {
+      background-color: #e17055;
+
+      &:hover {
+        background-color: #d35f47;
+        box-shadow: 0 4px 12px rgba(225, 112, 85, 0.3);
+      }
+    }
+  }
+}
