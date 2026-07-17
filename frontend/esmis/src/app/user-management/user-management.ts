@@ -109,10 +109,30 @@ export class UserManagement {
       this.loadUsers(1);
     });
 
-    // Only reset permissions to empty when role is cleared
+    // Sync default permissions or filter custom permissions when role_id changes
     this.userForm.get('role_id')?.valueChanges.subscribe(roleId => {
       if (!roleId) {
         this.userForm.patchValue({ permission_ids: [] });
+      } else {
+        const numericRoleId = Number(roleId);
+        if (!this.userForm.get('override_permissions')?.value) {
+          this.updatePermissionsByRole(numericRoleId);
+        } else {
+          this.filterPermissionsByRoleVisibility(numericRoleId);
+        }
+      }
+    });
+
+    // Revert to defaults or filter when override_permissions is toggled
+    this.userForm.get('override_permissions')?.valueChanges.subscribe(override => {
+      const roleIdValue = this.userForm.get('role_id')?.value;
+      if (!roleIdValue) return;
+
+      const numericRoleId = Number(roleIdValue);
+      if (!override) {
+        this.updatePermissionsByRole(numericRoleId);
+      } else {
+        this.filterPermissionsByRoleVisibility(numericRoleId);
       }
     });
   }
@@ -260,6 +280,29 @@ export class UserManagement {
     }
 
     return false;
+  }
+
+  filterPermissionsByRoleVisibility(roleId: number) {
+    const role = this.roleOptions.find(r => Number(r.id) === roleId);
+    if (!role) return;
+
+    const roleName = role.role_name.toLowerCase();
+    const currentIds = (this.userForm.get('permission_ids')?.value as any[] || []).map(id => Number(id));
+    
+    // Filter out permission IDs that are not visible/valid for this new role
+    const filteredIds = currentIds.filter(id => {
+      const permission = this.allPermissions.find(p => Number(p.id) === id);
+      if (!permission) return false;
+      
+      const group = this.permissionGroups.find(g => 
+        g.permissions.some(p => p.name === permission.name)
+      );
+      if (!group) return false;
+      
+      return this.isPermissionVisible(group.label, permission.name);
+    });
+
+    this.userForm.patchValue({ permission_ids: filteredIds }, { emitEvent: false });
   }
 
   onPermissionChange(event: any, permissionId: number) {
