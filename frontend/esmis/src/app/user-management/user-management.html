@@ -141,7 +141,7 @@
   }
 
   @if (!isLoading()) {
-    <ol class="mobile-user-list">
+    <ol class="mobile-user-list" [style.counter-reset]="'user-counter ' + (currentPage() - 1) * 5">
       @for (user of users(); track user.id) {
         <li class="user-card">
           <div class="user-card-header">
@@ -183,12 +183,12 @@
 </div>
 
 @if (!isLoading() && users().length > 0) {
-  <div class="d-flex justify-content-between align-items-center mt-3">
-    <div class="text-secondary small">
+  <div class="pagination-container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-3">
+    <div class="text-secondary small text-center text-md-start">
       Showing {{ (currentPage() - 1) * 5 + 1 }} to {{ currentPage() * 5 > totalUsers() ? totalUsers() : currentPage() * 5 }} of {{ totalUsers() }} results
     </div>
-    <nav aria-label="Users pagination">
-      <ul class="pagination pagination-sm mb-0">
+    <nav aria-label="Users pagination" class="d-flex justify-content-center">
+      <ul class="pagination pagination-sm mb-0 flex-wrap justify-content-center">
         <li class="page-item" [class.disabled]="currentPage() === 1">
           <button class="page-link" (click)="previousPage()">Previous</button>
         </li>

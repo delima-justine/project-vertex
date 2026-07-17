@@ -426,8 +426,23 @@ export class UserManagement {
   }
 
   pageNumbers = computed(() => {
+    const current = this.currentPage();
+    const last = this.lastPage();
+    const delta = 2;
+
+    let start = Math.max(1, current - delta);
+    let end = Math.min(last, current + delta);
+
+    if (end - start + 1 < 5) {
+      if (start === 1) {
+        end = Math.min(last, 5);
+      } else if (end === last) {
+        start = Math.max(1, last - 4);
+      }
+    }
+
     const pages = [];
-    for (let i = 1; i <= this.lastPage(); i++) {
+    for (let i = start; i <= end; i++) {
       pages.push(i);
     }
     return pages;
