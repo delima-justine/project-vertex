@@ -132,7 +132,8 @@
             <div 
               class="notification-item"
               [class.unread]="!notif.read_at"
-              (click)="markAsRead(notif)">
+              (click)="onNotificationClick($event, notif)"
+              (mouseleave)="onNotificationMouseLeave($event)">
               <div class="d-flex align-items-start">
 
                 <div class="icon-wrapper me-3">
@@ -159,7 +160,7 @@
                   </div>
                 </div>
                 <div class="actions">
-                  <div class="dropdown" (click)="$event.stopPropagation()">
+                  <div class="dropdown">
                     <button 
                       class="btn btn-link btn-sm text-secondary p-0 border-0" 
                       type="button" 

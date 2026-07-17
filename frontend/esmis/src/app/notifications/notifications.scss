@@ -105,6 +105,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
+  z-index: 1;
 
   &:last-child {
     border-bottom: none;
@@ -112,11 +113,17 @@
 
   &:hover {
     background-color: var(--bs-tertiary-bg);
+    z-index: 2;
     
     .actions {
       transform: translateX(3px);
       opacity: 1;
     }
+  }
+
+  // Ensure notification item with open dropdown is on top of other notifications
+  &:has(.show), &:has([aria-expanded="true"]) {
+    z-index: 10;
   }
 
   &.unread {
