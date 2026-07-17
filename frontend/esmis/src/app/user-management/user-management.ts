@@ -1,6 +1,7 @@
 import { Component, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { User, Office, Role, Permission } from '../../models/smis.model';
 import { UserManagementService } from '../../services/user-management.service';
 import { AuthService } from '../../services/auth.service';
@@ -99,6 +100,14 @@ export class UserManagement {
     this.loadOffices();
     this.loadRoles();
     this.loadPermissions();
+
+    // Setup reactive debounced auto-search
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.loadUsers(1);
+    });
 
     // Only reset permissions to empty when role is cleared
     this.userForm.get('role_id')?.valueChanges.subscribe(roleId => {
