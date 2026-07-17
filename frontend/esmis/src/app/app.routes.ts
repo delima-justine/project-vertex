@@ -103,6 +103,12 @@ export const routes: Routes = [
         title: 'SMIS | Help and Support'
       },
       {
+        path: 'rate-our-system',
+        loadComponent: () => import('./rate-our-system/rate-our-system')
+          .then(m => m.RateOurSystem),
+        title: 'SMIS | Rate our System'
+      },
+      {
         path: 'requests/edit-ris/:id',
         loadComponent: () => import('./edit-ris/edit-ris')
           .then(m => m.EditRis),
