@@ -65,6 +65,10 @@ export class AuthService {
     return this.normalizeRoleName(user.role.role_name) === this.normalizeRoleName(roleName);
   }
 
+  hasAnyRole(roleNames: string[]): boolean {
+    return roleNames.some(r => this.hasRole(r));
+  }
+
   hasAnyPermission(permissionNames: string[]): boolean {
     return permissionNames.some(p => this.userPermissions().includes(p));
   }
